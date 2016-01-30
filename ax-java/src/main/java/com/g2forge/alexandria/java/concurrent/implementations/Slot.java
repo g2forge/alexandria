@@ -2,11 +2,11 @@ package com.g2forge.alexandria.java.concurrent.implementations;
 
 import java.util.concurrent.CountDownLatch;
 
-import com.g2forge.alexandria.java.concurrent.IAsynchronousMessage;
+import com.g2forge.alexandria.java.concurrent.ISlot;
 import com.g2forge.alexandria.java.concurrent.IFuture;
 import com.g2forge.alexandria.java.concurrent.IPromise;
 
-public class AsynchronousMessage<T> implements IAsynchronousMessage<T> {
+public class Slot<T> implements ISlot<T> {
 	protected final IFuture<T> future = new IFuture<T>() {
 		@Override
 		public T get0() {
@@ -28,7 +28,7 @@ public class AsynchronousMessage<T> implements IAsynchronousMessage<T> {
 
 		@Override
 		public IPromise<T> set0(final T value) {
-			AsynchronousMessage.this.value = value;
+			Slot.this.value = value;
 			return this;
 		}
 	};
@@ -37,7 +37,7 @@ public class AsynchronousMessage<T> implements IAsynchronousMessage<T> {
 
 	protected T value;
 
-	public AsynchronousMessage() {}
+	public Slot() {}
 
 	@Override
 	public IFuture<T> getFuture() {
