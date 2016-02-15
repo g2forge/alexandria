@@ -15,5 +15,6 @@
 	<modules>
 		<module>ax-project</module>
 		<module>ax-java</module>
+		<module>ax-analysis</module>
 	</modules>
 </project>
