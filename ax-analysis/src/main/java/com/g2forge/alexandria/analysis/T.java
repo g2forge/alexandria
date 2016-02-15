@@ -76,7 +76,7 @@ public class T implements Serializable {
 
 		if (start != -1) {
 			final String replace = T.class.getName();
-			if (find.length() != replace.length()) throw new Error("Class names must be the exact same length.");
+			if (find.length() != replace.length()) throw new Error("Class name of the serializable thunk must be the same length as " + find + ".");
 
 			for (int i = 0; i < replace.length(); i++)
 				data[start + i] = (byte) replace.codePointAt(i);
