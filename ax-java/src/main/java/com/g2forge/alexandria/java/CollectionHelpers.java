@@ -15,6 +15,11 @@ public class CollectionHelpers {
 		collection.add(value);
 	}
 
+	public static <T> List<T> asList(Collection<T> collection) {
+		if (collection instanceof List) return (List<T>) collection;
+		return new ArrayList<>(collection);
+	}
+
 	@SafeVarargs
 	public static <T> List<T> asListNonNull(T... elements) {
 		final List<T> retVal = new ArrayList<>(elements.length);
