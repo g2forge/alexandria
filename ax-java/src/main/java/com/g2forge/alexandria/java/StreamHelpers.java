@@ -5,10 +5,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -33,6 +35,21 @@ public class StreamHelpers {
 		final Collection<T> retVal = constructor.get();
 		iterator.forEachRemaining(retVal::add);
 		return retVal;
+	}
+
+	public static <T> Collector<T, ?, T> toOne() {
+		return Collectors.collectingAndThen(Collectors.toList(), list -> {
+			if (list.size() != 1) throw new IllegalStateException("Result set had " + list.size() + " elements instead of 1!");
+			return list.get(0);
+		});
+	}
+
+	public static <T> Collector<T, ?, Optional<T>> toOptional() {
+		return Collectors.collectingAndThen(Collectors.toList(), list -> {
+			if (list.size() > 1) throw new IllegalStateException("Result set had " + list.size() + " elements instead of 0 or 1!");
+			if (list.isEmpty()) return Optional.empty();
+			return Optional.of(list.get(0));
+		});
 	}
 
 	public static <T> Stream<T> toStream(Iterator<T> iterator) {
