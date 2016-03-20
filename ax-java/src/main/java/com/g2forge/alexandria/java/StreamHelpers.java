@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Spliterator;
 import java.util.Spliterators;
+import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -29,6 +31,15 @@ public class StreamHelpers {
 			list0.addAll(list1);
 			return list0;
 		});
+	}
+
+	public static <I0, I1, O> Stream<O> product(BiFunction<I0, I1, O> aggregator, Supplier<Stream<I0>> stream0, Supplier<Stream<I1>> stream1) {
+		return stream0.get().flatMap(v0 -> stream1.get().map(v1 -> aggregator.apply(v0, v1)));
+	}
+
+	@SafeVarargs
+	public static <T> Stream<T> product(BinaryOperator<T> aggregator, Supplier<Stream<T>>... streams) {
+		return Arrays.stream(streams).reduce((s0, s1) -> () -> s0.get().flatMap(v0 -> s1.get().map(v1 -> aggregator.apply(v0, v1)))).orElse(Stream::empty).get();
 	}
 
 	public static <T> Collection<T> toList(Iterator<T> iterator, Supplier<? extends Collection<T>> constructor) {
