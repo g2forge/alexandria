@@ -33,6 +33,19 @@ public class StreamHelpers {
 		});
 	}
 
+	public static <I, O> O iterate(Stream<? extends I> stream, O initial, BiFunction<? super I, ? super O, ? extends O> mutate) {
+		final Object[] value = new Object[] { initial };
+		stream.forEachOrdered(input -> {
+			@SuppressWarnings("unchecked")
+			final O current = (O) value[0];
+			value[0] = mutate.apply(input, current);
+		});
+
+		@SuppressWarnings("unchecked")
+		final O current = (O) value[0];
+		return current;
+	}
+
 	public static <I0, I1, O> Stream<O> product(BiFunction<I0, I1, O> aggregator, Supplier<Stream<I0>> stream0, Supplier<Stream<I1>> stream1) {
 		return stream0.get().flatMap(v0 -> stream1.get().map(v1 -> aggregator.apply(v0, v1)));
 	}
