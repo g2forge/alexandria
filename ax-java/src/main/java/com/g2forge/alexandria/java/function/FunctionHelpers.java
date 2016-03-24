@@ -22,4 +22,10 @@ public class FunctionHelpers {
 	public static <I, O> Function<? super I, ? extends O> override(Function<? super I, ? extends O> function, Predicate<? super I> predicate, Function<? super I, ? extends O> output) {
 		return x -> predicate.test(x) ? output.apply(x) : function.apply(x);
 	}
+
+	public static <I, O> Function<I, O> unmapped() {
+		return input -> {
+			throw new UnmappedInputException(input == null ? "null" : input.toString());
+		};
+	}
 }
