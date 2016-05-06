@@ -4,6 +4,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import com.g2forge.alexandria.annotations.TODO;
+
 public class ConcurrentHelpers {
 	private static <I, O> O internal(final Function<I, O> function, final I input, final Object[] locks, int offset) {
 		if (offset == locks.length - 1) return sync(function, input, locks[offset]);
@@ -27,6 +29,8 @@ public class ConcurrentHelpers {
 		}
 	}
 
+	@Deprecated
+	@TODO(value = "This method makes it really easy to introduce deadlock, need to figure out whether to keep it around.", user = "gdgib")
 	public static <I, O> O sync(final Function<I, O> function, final I input, final Object... locks) {
 		if ((locks == null) || (locks.length < 1)) return function.apply(input);
 		else return internal(function, input, locks, 0);
