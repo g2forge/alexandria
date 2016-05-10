@@ -31,6 +31,10 @@ public class StringHelpers {
 		return Character.toLowerCase(char0) + string.substring(1);
 	}
 
+	public static String nonWhiteSpace(String string) {
+		return ((string == null) || (string.trim().length() < 1)) ? null : string;
+	}
+
 	public static String stripPrefix(String string, String... prefixes) {
 		for (String prefix : prefixes)
 			if (string.startsWith(prefix)) return string.substring(prefix.length());
