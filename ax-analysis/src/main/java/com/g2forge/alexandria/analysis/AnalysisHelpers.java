@@ -14,6 +14,8 @@ import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.bcel.generic.ReturnInstruction;
 
+import com.g2forge.alexandria.java.reflection.RuntimeReflectionException;
+
 public class AnalysisHelpers {
 	public static String getPath(final SerializableFunction<?, ?> function) {
 		final T thunk = T.create(function);
@@ -21,7 +23,7 @@ public class AnalysisHelpers {
 		try {
 			clazz = Repository.lookupClass(thunk.getImplClass());
 		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeReflectionException(e);
 		}
 
 		final StringBuilder retVal = new StringBuilder();
@@ -41,7 +43,7 @@ public class AnalysisHelpers {
 						try {
 							field = T.getField(invoke.getReferenceType(constantPoolGen), invoke.getMethodName(constantPoolGen), invoke.getReturnType(constantPoolGen), invoke.getArgumentTypes(constantPoolGen));
 						} catch (ClassNotFoundException e) {
-							throw new RuntimeException(e);
+							throw new RuntimeReflectionException(e);
 						}
 					} else if (instructions[i] instanceof GETFIELD) {
 						final GETFIELD get = ((GETFIELD) instructions[i]);
