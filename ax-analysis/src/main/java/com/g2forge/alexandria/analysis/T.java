@@ -19,6 +19,8 @@ import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.ReturnInstruction;
 import org.apache.bcel.generic.Type;
 
+import com.g2forge.alexandria.java.reflection.RuntimeReflectionException;
+
 import lombok.Data;
 
 @Data
@@ -36,7 +38,7 @@ public class T implements Serializable {
 			if (retVal instanceof T) return (T) retVal;
 			return null;
 		} catch (Exception exception) {
-			throw new RuntimeException("Failed to expose lambda", exception);
+			throw new RuntimeReflectionException("Failed to expose lambda", exception);
 		}
 
 	}

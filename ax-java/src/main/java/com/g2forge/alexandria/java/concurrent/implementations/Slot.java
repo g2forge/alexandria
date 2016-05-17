@@ -2,9 +2,10 @@ package com.g2forge.alexandria.java.concurrent.implementations;
 
 import java.util.concurrent.CountDownLatch;
 
-import com.g2forge.alexandria.java.concurrent.ISlot;
 import com.g2forge.alexandria.java.concurrent.IFuture;
 import com.g2forge.alexandria.java.concurrent.IPromise;
+import com.g2forge.alexandria.java.concurrent.ISlot;
+import com.g2forge.alexandria.java.concurrent.RuntimeInterruptedException;
 
 public class Slot<T> implements ISlot<T> {
 	protected final IFuture<T> future = new IFuture<T>() {
@@ -14,7 +15,7 @@ public class Slot<T> implements ISlot<T> {
 				latch.await();
 			} catch (final InterruptedException exception) {
 				Thread.currentThread().interrupt();
-				throw new RuntimeException(exception);
+				throw new RuntimeInterruptedException(exception);
 			}
 			return value;
 		}

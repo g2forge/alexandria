@@ -1,6 +1,8 @@
 package com.g2forge.alexandria.java.concurrent;
 
-public class RuntimeInterruptedException extends RuntimeException {
+import com.g2forge.alexandria.java.IRuntimeWrappingException;
+
+public class RuntimeInterruptedException extends RuntimeException implements IRuntimeWrappingException {
 	private static final long serialVersionUID = -2250012381759988490L;
 
 	public RuntimeInterruptedException(final InterruptedException cause) {
