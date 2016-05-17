@@ -61,6 +61,11 @@ class GetterPropertyType implements IPropertyType {
 	}
 
 	@Override
+	public Type getType() {
+		return getGetter().getGenericReturnType();
+	}
+
+	@Override
 	public Object getValue(Object object) {
 		try {
 			return getGetter().invoke(object);

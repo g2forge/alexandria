@@ -79,4 +79,8 @@ public class StreamHelpers {
 	public static <T> Stream<T> toStream(Iterator<T> iterator) {
 		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED), false);
 	}
+
+	public static <T> Stream<T> toStream(Supplier<T> supplier) {
+		return Stream.of(supplier).map(Supplier::get);
+	}
 }
