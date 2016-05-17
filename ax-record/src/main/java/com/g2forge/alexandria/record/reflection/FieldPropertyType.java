@@ -1,6 +1,7 @@
 package com.g2forge.alexandria.record.reflection;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 
 import com.g2forge.alexandria.java.reflection.RuntimeReflectionException;
 import com.g2forge.alexandria.record.IPropertyType;
@@ -19,6 +20,11 @@ class FieldPropertyType implements IPropertyType {
 	@Override
 	public String getName() {
 		return getField().getName();
+	}
+
+	@Override
+	public Type getType() {
+		return field.getGenericType();
 	}
 
 	@Override
