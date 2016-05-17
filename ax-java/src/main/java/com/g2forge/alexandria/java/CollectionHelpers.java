@@ -3,6 +3,7 @@ package com.g2forge.alexandria.java;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -32,5 +33,12 @@ public class CollectionHelpers {
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> getEmpty() {
 		return Collections.EMPTY_LIST;
+	}
+
+	public static <T> T getOne(final Iterable<? extends T> collection) {
+		final Iterator<? extends T> iterator = collection.iterator();
+		final T retVal = iterator.next();
+		if (iterator.hasNext()) throw new IllegalArgumentException("Input collection had more than one element!");
+		return retVal;
 	}
 }
