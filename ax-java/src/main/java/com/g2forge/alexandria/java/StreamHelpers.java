@@ -18,8 +18,8 @@ import java.util.stream.StreamSupport;
 
 public class StreamHelpers {
 	@SafeVarargs
-	public static <T> Stream<T> concat(Stream<T>... streams) {
-		return Arrays.stream(streams).reduce(Stream::concat).get();
+	public static <T> Stream<T> concat(Stream<? extends T>... streams) {
+		return Arrays.stream(streams).reduce(Stream::concat).get().map(t -> t);
 	}
 
 	public static <T> Collector<T, List<T>, List<T>> interleave(T separator) {
