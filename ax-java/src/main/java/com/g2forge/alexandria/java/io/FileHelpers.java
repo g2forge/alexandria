@@ -8,6 +8,8 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.LinkedList;
 
+import com.g2forge.alexandria.java.concurrent.ConcurrentHelpers;
+
 public class FileHelpers {
 	public static void delete(Path path) throws IOException {
 		final LinkedList<Path> onexit = new LinkedList<>();
@@ -46,11 +48,7 @@ public class FileHelpers {
 
 	public static void gc(int repeat, int pause) {
 		for (int i = 0; i < repeat; i++) {
-			if (i > 0) synchronized (FileHelpers.class) {
-				try {
-					FileHelpers.class.wait(pause);
-				} catch (InterruptedException exception) {}
-			}
+			if (i > 0) ConcurrentHelpers.wait(FileHelpers.class, pause);
 			System.gc();
 		}
 	}
