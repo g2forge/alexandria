@@ -49,4 +49,18 @@ public class ConcurrentHelpers {
 			return supplier.get();
 		}
 	}
+
+	public static void wait(int millis) {
+		wait(new Object(), millis);
+	}
+
+	public static void wait(Object object, int millis) {
+		synchronized (object) {
+			try {
+				object.wait(millis);
+			} catch (InterruptedException exception) {
+				Thread.currentThread().interrupt();
+			}
+		}
+	}
 }
