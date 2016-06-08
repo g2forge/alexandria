@@ -15,10 +15,6 @@ public class RuntimeIOException extends RuntimeException implements IRuntimeWrap
 		super(message, cause);
 	}
 
-	public RuntimeIOException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
-
 	public RuntimeIOException(Throwable cause) {
 		super(cause);
 	}

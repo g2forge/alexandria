@@ -20,6 +20,11 @@ public class MapDictionary<I, O> implements IDictionary<I, O> {
 	}
 	
 	@Override
+	public O apply(I input) {
+		return map.get(input);
+	}
+	
+	@Override
 	public Set<I> getInputs() {
 		return map.keySet();
 	}
@@ -95,10 +100,5 @@ public class MapDictionary<I, O> implements IDictionary<I, O> {
 				return map.size();
 			}
 		};
-	}
-	
-	@Override
-	public O map(I input) {
-		return map.get(input);
 	}
 }

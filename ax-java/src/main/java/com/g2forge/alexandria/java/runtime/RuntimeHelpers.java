@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.generic.java.runtime;
+package com.g2forge.alexandria.java.runtime;
 
 import java.net.URL;
 

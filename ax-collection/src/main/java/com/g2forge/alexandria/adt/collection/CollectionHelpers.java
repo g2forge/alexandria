@@ -5,10 +5,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import com.g2forge.alexandria.generic.java.map.IMap1;
 
 public class CollectionHelpers {
 	@SafeVarargs
@@ -77,13 +76,9 @@ public class CollectionHelpers {
 		return retVal;
 	}
 
-	public static <I, O> Collection<O> map(final IMap1<? super I, ? extends O> map, final Collection<? extends I> input) {
+	public static <I, O> Collection<O> map(final Function<? super I, ? extends O> map, final Collection<? extends I> input) {
 		if (input == null) return null;
-		final Collection<O> retVal = new ArrayList<>();
-		for (final I value : input) {
-			retVal.add(map.map(value));
-		}
-		return retVal;
+		return input.stream().map(map).collect(Collectors.toList());
 	}
 
 	public static <T> T removeAny(final Collection<T> collection) {

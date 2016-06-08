@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.generic.java.io;
+package com.g2forge.alexandria.java.io;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -11,7 +11,7 @@ public class BinaryIOHelpers {
 		if (!Arrays.equals(read(input, magic.length), magic)) throw new IllegalDataException("Stored data lacked the magic header, perhaps it's a different object type!");
 		return readInt(input);
 	}
-	
+
 	public static byte[] read(final InputStream input, final int length) {
 		if (length < 0) throw new IllegalArgumentException("Cannot read fewer than zero bytes (" + length + ")!");
 		final byte[] retVal = new byte[length];
@@ -26,7 +26,7 @@ public class BinaryIOHelpers {
 		}
 		return retVal;
 	}
-	
+
 	public static byte readByte(final InputStream input) {
 		final int retVal;
 		try {
@@ -37,7 +37,7 @@ public class BinaryIOHelpers {
 		if (retVal == -1) throw new RuntimeIOException(new EOFException());
 		return (byte) retVal;
 	}
-	
+
 	public static int readInt(final InputStream input) {
 		final int length = Integer.SIZE / Byte.SIZE;
 		final byte[] bytes = read(input, length);
@@ -48,7 +48,7 @@ public class BinaryIOHelpers {
 		}
 		return retVal;
 	}
-	
+
 	public static <T extends OutputStream> T write(final T output, final byte[] data) {
 		try {
 			output.write(data);
@@ -57,7 +57,7 @@ public class BinaryIOHelpers {
 		}
 		return output;
 	}
-	
+
 	public static <T extends OutputStream> T write(final T output, final int value) {
 		final int length = Integer.SIZE / Byte.SIZE;
 		final byte[] bytes = new byte[length];

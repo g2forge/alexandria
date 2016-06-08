@@ -43,11 +43,11 @@ public class TypeEnvironment implements ITypeEnvironment {
 	}
 
 	@Override
-	public IType map(final ITypeVariable input) {
+	public IType apply(final ITypeVariable input) {
 		if ((map != null) && map.containsKey(input)) return map.get(input);
 		if (parents != null) {
 			for (final ITypeEnvironment parent : parents) {
-				return parent.map(input);
+				return parent.apply(input);
 			}
 		}
 		return null;

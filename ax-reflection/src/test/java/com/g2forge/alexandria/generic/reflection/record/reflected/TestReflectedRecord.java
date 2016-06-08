@@ -63,7 +63,7 @@ public class TestReflectedRecord {
 		
 		final String expected = "foo";
 		final Record constructed = new Record(expected);
-		final IField<Record, ?> field = CollectionHelpers.getOne(recordType.getFields()).map(constructed);
+		final IField<Record, ?> field = CollectionHelpers.getOne(recordType.getFields()).apply(constructed);
 		Assert.assertEquals(expected, field.getAccessor().get0());
 		
 		final Record created = recordType.create();

@@ -16,7 +16,7 @@ public class TestMapRecord {
 		final MapRecord record = recordType.create();
 
 		String value = "foo";
-		final ITuple1GS<String> field = fieldType.map(record).getAccessor();
+		final ITuple1GS<String> field = fieldType.apply(record).getAccessor();
 		Assert.assertNull(field.swap0(value));
 		Assert.assertEquals(value, field.get0());
 	}

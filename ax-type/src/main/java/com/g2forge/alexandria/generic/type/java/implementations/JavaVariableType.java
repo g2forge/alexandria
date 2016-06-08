@@ -15,7 +15,7 @@ import com.g2forge.alexandria.generic.type.java.IJavaType;
 import com.g2forge.alexandria.generic.type.java.IJavaTypeVariable;
 import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
 
-public class JavaVariableType extends AJavaType<TypeVariable<?>> implements IJavaTypeVariable {
+public class JavaVariableType extends AJavaType<TypeVariable<?>>implements IJavaTypeVariable {
 	/**
 	 * @param javaType
 	 * @param environment
@@ -23,12 +23,12 @@ public class JavaVariableType extends AJavaType<TypeVariable<?>> implements IJav
 	public JavaVariableType(final TypeVariable<?> javaType, final ITypeEnvironment environment) {
 		super(javaType, environment);
 	}
-	
+
 	@Override
 	public IJavaType eval(final ITypeEnvironment environment) {
-		return (IJavaType) TypeEnvironment.create(this.environment, EmptyTypeEnvironment.create(environment)).map(this);
+		return (IJavaType) TypeEnvironment.create(this.environment, EmptyTypeEnvironment.create(environment)).apply(this);
 	}
-	
+
 	@Override
 	public IJavaClassType erase() {
 		if (environment != null) {
@@ -37,7 +37,7 @@ public class JavaVariableType extends AJavaType<TypeVariable<?>> implements IJav
 		}
 		return CollectionHelpers.get(getUpperBounds(), 0).erase();
 	}
-	
+
 	@Override
 	public Collection<? extends IJavaType> getUpperBounds() {
 		final Type[] bounds = this.getJavaTypeSimple().getBounds();

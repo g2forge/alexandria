@@ -17,6 +17,11 @@ public class ReflectedFieldType<R, T> implements IReflectedFieldType<R, T> {
 	}
 	
 	@Override
+	public IField<R, T> apply(final R input) {
+		return new ReflectedField<R, T>(this, input);
+	}
+	
+	@Override
 	public IJavaAnnotations getAnnotations() {
 		return field.getAnnotations();
 	}
@@ -29,10 +34,5 @@ public class ReflectedFieldType<R, T> implements IReflectedFieldType<R, T> {
 	@Override
 	public IJavaUntype getType() {
 		return field.getType().getType();
-	}
-	
-	@Override
-	public IField<R, T> map(final R input) {
-		return new ReflectedField<R, T>(this, input);
 	}
 }

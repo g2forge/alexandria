@@ -5,7 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
 import com.g2forge.alexandria.adt.collection.CollectionHelpers;
-import com.g2forge.alexandria.generic.java.map.IMap1;
 import com.g2forge.alexandria.generic.reflection.annotations.IJavaAnnotations;
 import com.g2forge.alexandria.generic.reflection.annotations.implementations.JavaAnnotations;
 import com.g2forge.alexandria.generic.reflection.object.AJavaTypeReflection;
@@ -13,7 +12,6 @@ import com.g2forge.alexandria.generic.reflection.object.IJavaClassReflection;
 import com.g2forge.alexandria.generic.reflection.object.IJavaFieldReflection;
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.IJavaClassType;
-import com.g2forge.alexandria.generic.type.java.IJavaFieldType;
 import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
 import com.g2forge.alexandria.generic.type.java.implementations.ReflectionException;
 import com.g2forge.alexandria.generic.type.java.structure.JavaMembership;
@@ -40,13 +38,7 @@ public class JavaClassReflection<T> extends AJavaTypeReflection<T, IJavaClassTyp
 	
 	@Override
 	public Collection<? extends IJavaFieldReflection<T, ?>> getFields(JavaMembership membership) {
-		return CollectionHelpers.map(new IMap1<IJavaFieldType, IJavaFieldReflection<T, ?>>() {
-			@SuppressWarnings({ "rawtypes", "unchecked" })
-			@Override
-			public IJavaFieldReflection<T, ?> map(final IJavaFieldType input) {
-				return new JavaFieldReflection(input);
-			}
-		}, getType().getFields(membership));
+		return CollectionHelpers.map(JavaFieldReflection::new, getType().getFields(membership));
 	}
 	
 	@SuppressWarnings("unchecked")
