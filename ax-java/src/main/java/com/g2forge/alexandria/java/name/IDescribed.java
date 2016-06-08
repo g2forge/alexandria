@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.generic.java.name;
+package com.g2forge.alexandria.java.name;
 
 public interface IDescribed<D> {
 	public D getDescription();

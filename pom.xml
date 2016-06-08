@@ -15,6 +15,7 @@
 	<modules>
 		<module>ax-project</module>
 		<module>ax-java</module>
+		<module>ax-log</module>
 		<module>ax-analysis</module>
 		<module>ax-record</module>
 		<module>ax-test</module>
