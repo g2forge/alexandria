@@ -17,7 +17,7 @@ import com.g2forge.alexandria.generic.type.java.IJavaType;
 import com.g2forge.alexandria.generic.type.java.IJavaTypeVariable;
 import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
 import com.g2forge.alexandria.generic.type.java.structure.JavaMembership;
-import com.g2forge.alexandria.java.function.FunctionHelpers;
+import com.g2forge.alexandria.java.ArrayHelpers;
 
 public class JavaClassType extends AJavaType<Class<?>>implements IJavaClassType {
 	/**
@@ -61,14 +61,14 @@ public class JavaClassType extends AJavaType<Class<?>>implements IJavaClassType 
 
 	@Override
 	public Collection<? extends IJavaFieldType> getFields(final JavaMembership membership) {
-		final Collection<IJavaFieldType> retVal = FunctionHelpers.map(input -> new JavaFieldType(input, environment), javaType.getDeclaredFields());
+		final Collection<IJavaFieldType> retVal = ArrayHelpers.map(input -> new JavaFieldType(input, environment), javaType.getDeclaredFields());
 		if ((membership == JavaMembership.All) && (javaType.getSuperclass() != null)) retVal.addAll(getSuperClass().getFields(membership));
 		return retVal;
 	}
 
 	@Override
 	public List<? extends IJavaTypeVariable> getParameters() {
-		return FunctionHelpers.map(input -> new JavaVariableType(input, environment), javaType.getTypeParameters());
+		return ArrayHelpers.map(input -> new JavaVariableType(input, environment), javaType.getTypeParameters());
 	}
 
 	@Override

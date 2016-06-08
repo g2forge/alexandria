@@ -20,7 +20,7 @@ import com.g2forge.alexandria.generic.type.java.IJavaClassType;
 import com.g2forge.alexandria.generic.type.java.IJavaType;
 import com.g2forge.alexandria.generic.type.java.IJavaUntype;
 import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
-import com.g2forge.alexandria.java.function.FunctionHelpers;
+import com.g2forge.alexandria.java.ArrayHelpers;
 
 public class JavaBoundType extends AJavaType<ParameterizedType>implements IJavaBoundType {
 	public JavaBoundType(final ParameterizedType javaType, final ITypeEnvironment environment) {
@@ -34,7 +34,7 @@ public class JavaBoundType extends AJavaType<ParameterizedType>implements IJavaB
 
 	@Override
 	public Collection<? extends IJavaType> getActuals() {
-		return FunctionHelpers.map(input -> JavaTypeHelpers.toType(input, environment), javaType.getActualTypeArguments());
+		return ArrayHelpers.map(input -> JavaTypeHelpers.toType(input, environment), javaType.getActualTypeArguments());
 	}
 
 	@Override
