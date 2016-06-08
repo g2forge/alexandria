@@ -18,5 +18,10 @@
 		<module>ax-analysis</module>
 		<module>ax-record</module>
 		<module>ax-test</module>
+		<module>ax-environment</module>
+		<module>ax-reflection</module>
+		<module>ax-serialization</module>
+		<module>ax-type</module>
+		<module>ax-collection</module>
 	</modules>
 </project>
