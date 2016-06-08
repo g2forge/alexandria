@@ -1,6 +1,7 @@
 package com.g2forge.alexandria.java;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -28,7 +29,7 @@ public class CollectionHelpers {
 
 	@SafeVarargs
 	public static <T> List<T> asList(T... elements) {
-		return CollectionHelpers.asList(elements);
+		return Arrays.asList(elements);
 	}
 
 	@SafeVarargs
