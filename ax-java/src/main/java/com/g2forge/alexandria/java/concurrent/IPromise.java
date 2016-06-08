@@ -1,6 +1,6 @@
 package com.g2forge.alexandria.java.concurrent;
 
-import com.g2forge.alexandria.java.ICallback;
+import com.g2forge.alexandria.java.core.iface.ICallback;
 import com.g2forge.alexandria.java.tuple.ITuple1_S;
 
 public interface IPromise<T> extends ITuple1_S<T>, ICallback, IOpaquePromise<T> {

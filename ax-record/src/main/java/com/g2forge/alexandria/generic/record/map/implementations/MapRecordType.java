@@ -6,7 +6,7 @@ import java.util.Collections;
 
 import com.g2forge.alexandria.generic.record.IFieldType;
 import com.g2forge.alexandria.generic.record.IRecordType;
-import com.g2forge.alexandria.java.CollectionHelpers;
+import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
 
 public class MapRecordType implements IRecordType<MapRecord> {
 	protected final Collection<MapFieldType<?>> fieldTypes;

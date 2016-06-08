@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 import com.g2forge.alexandria.generic.type.IType;
 import com.g2forge.alexandria.generic.type.ITypeVariable;
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
-import com.g2forge.alexandria.java.CollectionHelpers;
+import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
 
 public class TypeEnvironment implements ITypeEnvironment {
 	protected static final Predicate<Object> PARENT_PREDICATE = CollectionHelpers.asSet(null, EmptyTypeEnvironment.create())::contains;

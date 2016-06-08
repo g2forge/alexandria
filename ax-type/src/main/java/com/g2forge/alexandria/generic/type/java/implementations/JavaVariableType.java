@@ -13,7 +13,7 @@ import com.g2forge.alexandria.generic.type.java.IJavaClassType;
 import com.g2forge.alexandria.generic.type.java.IJavaType;
 import com.g2forge.alexandria.generic.type.java.IJavaTypeVariable;
 import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
-import com.g2forge.alexandria.java.CollectionHelpers;
+import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
 
 public class JavaVariableType extends AJavaType<TypeVariable<?>>implements IJavaTypeVariable {
 	/**

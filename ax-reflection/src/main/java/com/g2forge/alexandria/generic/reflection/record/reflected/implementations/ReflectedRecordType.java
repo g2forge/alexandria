@@ -11,7 +11,7 @@ import com.g2forge.alexandria.generic.reflection.record.reflected.IReflectedReco
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.IJavaClassType;
 import com.g2forge.alexandria.generic.type.java.structure.JavaMembership;
-import com.g2forge.alexandria.java.CollectionHelpers;
+import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
 import com.g2forge.alexandria.java.function.ConcurrentCachingSupplier;
 
 import lombok.AccessLevel;

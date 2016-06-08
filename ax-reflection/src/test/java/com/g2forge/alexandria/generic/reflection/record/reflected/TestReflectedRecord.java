@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import com.g2forge.alexandria.generic.record.IField;
 import com.g2forge.alexandria.generic.reflection.record.reflected.implementations.ReflectedRecordType;
-import com.g2forge.alexandria.java.CollectionHelpers;
+import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
 
 public class TestReflectedRecord {
 	public static class Record {

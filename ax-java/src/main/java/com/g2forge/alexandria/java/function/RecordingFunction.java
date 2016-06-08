@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.function.Function;
 
 import com.g2forge.alexandria.java.tuple.ITuple2G_;
-import com.g2forge.alexandria.java.tuple.implementations.Tuple2GS;
+import com.g2forge.alexandria.java.tuple.Tuple2GS;
 
 import lombok.Data;
 

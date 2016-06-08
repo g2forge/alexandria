@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 import com.g2forge.alexandria.java.associative.cache.Cache;
 import com.g2forge.alexandria.java.associative.cache.NeverCacheEvictionPolicy;
 import com.g2forge.alexandria.java.tuple.ITuple2G_;
-import com.g2forge.alexandria.java.tuple.implementations.Tuple2G_;
+import com.g2forge.alexandria.java.tuple.Tuple2G_;
 
 import lombok.RequiredArgsConstructor;
 

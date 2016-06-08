@@ -20,7 +20,7 @@ import com.g2forge.alexandria.generic.type.java.IJavaClassType;
 import com.g2forge.alexandria.generic.type.java.IJavaType;
 import com.g2forge.alexandria.generic.type.java.IJavaUntype;
 import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
-import com.g2forge.alexandria.java.ArrayHelpers;
+import com.g2forge.alexandria.java.core.helpers.ArrayHelpers;
 
 public class JavaBoundType extends AJavaType<ParameterizedType>implements IJavaBoundType {
 	public JavaBoundType(final ParameterizedType javaType, final ITypeEnvironment environment) {

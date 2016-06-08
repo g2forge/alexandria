@@ -6,7 +6,7 @@ import java.lang.reflect.Type;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.g2forge.alexandria.java.StringHelpers;
+import com.g2forge.alexandria.java.core.helpers.StringHelpers;
 import com.g2forge.alexandria.java.reflection.RuntimeReflectionException;
 import com.g2forge.alexandria.record.IPropertyType;
 

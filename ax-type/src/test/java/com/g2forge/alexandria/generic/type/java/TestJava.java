@@ -9,7 +9,7 @@ import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.implementations.JavaClassType;
 import com.g2forge.alexandria.generic.type.java.structure.JavaMembership;
-import com.g2forge.alexandria.java.CollectionHelpers;
+import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
 
 public class TestJava {
 	public static class Child extends Parent<String> {}

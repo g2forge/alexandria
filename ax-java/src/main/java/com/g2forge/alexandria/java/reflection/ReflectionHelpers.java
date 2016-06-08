@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import com.g2forge.alexandria.java.MapHelpers;
-import com.g2forge.alexandria.java.TreeHelpers;
+import com.g2forge.alexandria.java.core.helpers.MapHelpers;
+import com.g2forge.alexandria.java.core.helpers.TreeHelpers;
 
 public class ReflectionHelpers {
 	protected static class OverrideFilter implements Predicate<Method> {

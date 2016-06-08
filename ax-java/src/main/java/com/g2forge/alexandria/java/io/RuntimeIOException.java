@@ -1,6 +1,6 @@
 package com.g2forge.alexandria.java.io;
 
-import com.g2forge.alexandria.java.IRuntimeWrappingException;
+import com.g2forge.alexandria.java.core.error.IRuntimeWrappingException;
 
 public class RuntimeIOException extends RuntimeException implements IRuntimeWrappingException {
 	private static final long serialVersionUID = -2918473990606425790L;

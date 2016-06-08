@@ -1,6 +1,6 @@
 package com.g2forge.alexandria.java.enums;
 
-import com.g2forge.alexandria.java.CaseException;
+import com.g2forge.alexandria.java.core.error.CaseException;
 
 public class EnumException extends CaseException {
 	private static final long serialVersionUID = -6025158954060585788L;

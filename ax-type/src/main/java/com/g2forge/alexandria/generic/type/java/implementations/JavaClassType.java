@@ -17,7 +17,7 @@ import com.g2forge.alexandria.generic.type.java.IJavaType;
 import com.g2forge.alexandria.generic.type.java.IJavaTypeVariable;
 import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
 import com.g2forge.alexandria.generic.type.java.structure.JavaMembership;
-import com.g2forge.alexandria.java.ArrayHelpers;
+import com.g2forge.alexandria.java.core.helpers.ArrayHelpers;
 
 public class JavaClassType extends AJavaType<Class<?>>implements IJavaClassType {
 	/**

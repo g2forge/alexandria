@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
 import com.g2forge.alexandria.java.reflection.JavaClass;
 import com.g2forge.alexandria.java.reflection.JavaProtection;
 import com.g2forge.alexandria.java.reflection.JavaScope;

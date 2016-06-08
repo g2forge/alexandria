@@ -8,6 +8,9 @@ import java.util.stream.Stream;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
+import com.g2forge.alexandria.java.core.helpers.StreamHelpers;
+
 public class TestStreamHelpers {
 	@Test
 	public void productMulti() {

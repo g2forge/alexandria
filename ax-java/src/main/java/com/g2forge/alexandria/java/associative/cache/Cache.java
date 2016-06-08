@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import com.g2forge.alexandria.java.associative.IAssociation;
-import com.g2forge.alexandria.java.associative.implementations.MapAssociation;
+import com.g2forge.alexandria.java.associative.MapAssociation;
 
 import lombok.Data;
 
