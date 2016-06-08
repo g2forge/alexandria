@@ -5,7 +5,6 @@ import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.g2forge.alexandria.adt.collection.CollectionHelpers;
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.TypeEnvironment;
@@ -14,6 +13,7 @@ import com.g2forge.alexandria.generic.type.java.IJavaClassType;
 import com.g2forge.alexandria.generic.type.java.IJavaType;
 import com.g2forge.alexandria.generic.type.java.IJavaTypeVariable;
 import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
+import com.g2forge.alexandria.java.CollectionHelpers;
 
 public class JavaVariableType extends AJavaType<TypeVariable<?>>implements IJavaTypeVariable {
 	/**

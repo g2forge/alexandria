@@ -4,7 +4,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
-import com.g2forge.alexandria.adt.collection.CollectionHelpers;
 import com.g2forge.alexandria.generic.reflection.annotations.IJavaAnnotations;
 import com.g2forge.alexandria.generic.reflection.annotations.implementations.JavaAnnotations;
 import com.g2forge.alexandria.generic.reflection.object.AJavaTypeReflection;
@@ -15,6 +14,7 @@ import com.g2forge.alexandria.generic.type.java.IJavaClassType;
 import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
 import com.g2forge.alexandria.generic.type.java.implementations.ReflectionException;
 import com.g2forge.alexandria.generic.type.java.structure.JavaMembership;
+import com.g2forge.alexandria.java.CollectionHelpers;
 
 public class JavaClassReflection<T> extends AJavaTypeReflection<T, IJavaClassType> implements IJavaClassReflection<T> {
 	/**

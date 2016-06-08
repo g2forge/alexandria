@@ -5,11 +5,11 @@ import java.lang.reflect.Type;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.adt.collection.CollectionHelpers;
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.implementations.JavaClassType;
 import com.g2forge.alexandria.generic.type.java.structure.JavaMembership;
+import com.g2forge.alexandria.java.CollectionHelpers;
 
 public class TestJava {
 	public static class Child extends Parent<String> {}
@@ -27,7 +27,7 @@ public class TestJava {
 	@Test
 	public void testBind() {
 		final IJavaClassType inner = new JavaClassType(O.I.class, EmptyTypeEnvironment.create());
-		final ITypeEnvironment environment = inner.bind(com.g2forge.alexandria.java.CollectionHelpers.asList(new JavaClassType(String.class, EmptyTypeEnvironment.create()))).toEnvironment();
+		final ITypeEnvironment environment = inner.bind(CollectionHelpers.asList(new JavaClassType(String.class, EmptyTypeEnvironment.create()))).toEnvironment();
 		final Type actual = inner.getParameters().get(0).eval(environment).getJavaType();
 		Assert.assertEquals(String.class, actual);
 	}

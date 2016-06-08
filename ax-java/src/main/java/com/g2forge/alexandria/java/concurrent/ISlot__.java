@@ -8,7 +8,7 @@ package com.g2forge.alexandria.java.concurrent;
  *
  * @param <T>
  */
-public interface IOpaqueSlot<T> {
+public interface ISlot__<T> {
 	public IOpaqueFuture<T> getFuture();
 
 	public IOpaquePromise<T> getPromise();

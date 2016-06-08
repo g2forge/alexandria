@@ -5,9 +5,9 @@ import java.util.Objects;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.adt.collection.CollectionHelpers;
 import com.g2forge.alexandria.generic.record.IField;
 import com.g2forge.alexandria.generic.reflection.record.reflected.implementations.ReflectedRecordType;
+import com.g2forge.alexandria.java.CollectionHelpers;
 
 public class TestReflectedRecord {
 	public static class Record {

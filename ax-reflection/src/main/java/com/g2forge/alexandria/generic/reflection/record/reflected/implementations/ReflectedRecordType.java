@@ -3,8 +3,6 @@ package com.g2forge.alexandria.generic.reflection.record.reflected.implementatio
 import java.util.Collection;
 import java.util.Collections;
 
-import com.g2forge.alexandria.adt.collection.CollectionHelpers;
-import com.g2forge.alexandria.generic.java.delayed.implementations.ALateBound;
 import com.g2forge.alexandria.generic.reflection.object.IJavaClassReflection;
 import com.g2forge.alexandria.generic.reflection.object.implementations.JavaClassReflection;
 import com.g2forge.alexandria.generic.reflection.record.reflected.IReflectedFieldType;
@@ -12,6 +10,8 @@ import com.g2forge.alexandria.generic.reflection.record.reflected.IReflectedReco
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.IJavaClassType;
 import com.g2forge.alexandria.generic.type.java.structure.JavaMembership;
+import com.g2forge.alexandria.java.CollectionHelpers;
+import com.g2forge.alexandria.java.concurrent.implementations.ALateBound;
 import com.g2forge.alexandria.java.tuple.ITuple1G_;
 
 public class ReflectedRecordType<R> implements IReflectedRecordType<R> {

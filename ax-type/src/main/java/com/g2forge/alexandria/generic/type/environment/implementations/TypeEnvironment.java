@@ -15,9 +15,9 @@ public class TypeEnvironment implements ITypeEnvironment {
 	public static ITypeEnvironment create(final Collection<ITypeEnvironment> parents) {
 		if (parents.isEmpty()) return null;
 
-		final Collection<ITypeEnvironment> nonNull = com.g2forge.alexandria.adt.collection.CollectionHelpers.filter(parents, PARENT_PREDICATE);
+		final Collection<ITypeEnvironment> nonNull = CollectionHelpers.filter(parents, PARENT_PREDICATE);
 		if (nonNull.isEmpty()) return EmptyTypeEnvironment.create();
-		if (nonNull.size() == 1) return com.g2forge.alexandria.adt.collection.CollectionHelpers.getAny(nonNull);
+		if (nonNull.size() == 1) return CollectionHelpers.getAny(nonNull);
 		return new TypeEnvironment(null, nonNull);
 	}
 
@@ -35,7 +35,7 @@ public class TypeEnvironment implements ITypeEnvironment {
 
 	public TypeEnvironment(final Map<ITypeVariable, IType> map, final Collection<ITypeEnvironment> parents) {
 		this.map = map;
-		this.parents = com.g2forge.alexandria.adt.collection.CollectionHelpers.filter(parents, PARENT_PREDICATE);
+		this.parents = CollectionHelpers.filter(parents, PARENT_PREDICATE);
 	}
 
 	public TypeEnvironment(final Map<ITypeVariable, IType> map, final ITypeEnvironment... parents) {
