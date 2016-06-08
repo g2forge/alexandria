@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.g2forge.alexandria.generic.java.dictionary.IDictionary;
-import com.g2forge.alexandria.generic.java.tuple.ITuple2GS;
+import com.g2forge.alexandria.java.tuple.ITuple2GS;
 
 public class MapDictionary<I, O> implements IDictionary<I, O> {
 	protected final Map<I, O> map;

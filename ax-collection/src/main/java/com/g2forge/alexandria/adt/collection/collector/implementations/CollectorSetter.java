@@ -1,7 +1,7 @@
 package com.g2forge.alexandria.adt.collection.collector.implementations;
 
 import com.g2forge.alexandria.adt.collection.collector.ICollector;
-import com.g2forge.alexandria.generic.java.tuple.ITuple1_S;
+import com.g2forge.alexandria.java.tuple.ITuple1_S;
 
 public class CollectorSetter<T> implements ITuple1_S<T> {
 	protected final ICollector<? super T> builder;

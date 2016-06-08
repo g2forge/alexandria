@@ -2,12 +2,12 @@ package com.g2forge.alexandria.generic.reflection.object.implementations;
 
 import java.lang.reflect.Field;
 
-import com.g2forge.alexandria.generic.java.tuple.ITuple1GS;
 import com.g2forge.alexandria.generic.reflection.annotations.IJavaAnnotations;
 import com.g2forge.alexandria.generic.reflection.annotations.implementations.JavaAnnotations;
 import com.g2forge.alexandria.generic.reflection.object.IJavaFieldReflection;
 import com.g2forge.alexandria.generic.type.java.IJavaFieldType;
 import com.g2forge.alexandria.generic.type.java.implementations.ReflectionException;
+import com.g2forge.alexandria.java.tuple.ITuple1GS;
 
 public class JavaFieldReflection<O, F> implements IJavaFieldReflection<O, F> {
 	protected final IJavaFieldType type;

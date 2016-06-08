@@ -1,7 +1,7 @@
 package com.g2forge.alexandria.generic.java.delayed;
 
-import com.g2forge.alexandria.generic.java.tuple.ITuple1_S;
 import com.g2forge.alexandria.java.ICallback;
+import com.g2forge.alexandria.java.tuple.ITuple1_S;
 
 public interface IPromise<T> extends ITuple1_S<T>, ICallback {
 	/**
@@ -9,7 +9,7 @@ public interface IPromise<T> extends ITuple1_S<T>, ICallback {
 	 */
 	@Override
 	public void invoke();
-	
+
 	@Override
 	public IPromise<T> set0(T value);
 }

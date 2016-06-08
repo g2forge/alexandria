@@ -1,7 +1,6 @@
 package com.g2forge.alexandria.generic.type.java;
 
 import java.lang.reflect.Type;
-import java.util.Arrays;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,25 +13,25 @@ import com.g2forge.alexandria.generic.type.java.structure.JavaMembership;
 
 public class TestJava {
 	public static class Child extends Parent<String> {}
-	
+
 	public static class O<T> {
 		public class I<S> {
 			public O<T>.I<S> field;
 		}
 	}
-	
+
 	public static class Parent<T> {
 		public T field;
 	}
-	
+
 	@Test
 	public void testBind() {
 		final IJavaClassType inner = new JavaClassType(O.I.class, EmptyTypeEnvironment.create());
-		final ITypeEnvironment environment = inner.bind(Arrays.asList(new JavaClassType(String.class, EmptyTypeEnvironment.create()))).toEnvironment();
+		final ITypeEnvironment environment = inner.bind(com.g2forge.alexandria.java.CollectionHelpers.asList(new JavaClassType(String.class, EmptyTypeEnvironment.create()))).toEnvironment();
 		final Type actual = inner.getParameters().get(0).eval(environment).getJavaType();
 		Assert.assertEquals(String.class, actual);
 	}
-	
+
 	@Test
 	public void testBound() {
 		final IJavaClassType inner = new JavaClassType(O.I.class, EmptyTypeEnvironment.create());
@@ -42,21 +41,21 @@ public class TestJava {
 		Assert.assertEquals(inner, bound.getRaw());
 		Assert.assertEquals(type, type.eval(bound.toEnvironment()));
 	}
-	
+
 	@Test
 	public void testChild() {
 		final IJavaClassType child = new JavaClassType(Child.class, EmptyTypeEnvironment.create());
 		final IJavaFieldType field = CollectionHelpers.get(child.getFields(JavaMembership.All), 0);
 		Assert.assertEquals(String.class, field.getType().getJavaType());
 	}
-	
+
 	@Test
 	public void testResolved() {
 		final IJavaClassType child = new JavaClassType(Child.class, EmptyTypeEnvironment.create());
 		final IJavaFieldType field = CollectionHelpers.get(child.getSuperClass().getFields(JavaMembership.Declared), 0);
 		Assert.assertEquals(String.class, field.getType().getJavaType());
 	}
-	
+
 	@Test
 	public void testUnresolved() {
 		final IJavaClassType child = new JavaClassType(Child.class, null);

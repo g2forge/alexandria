@@ -1,6 +1,6 @@
 package com.g2forge.alexandria.generic.java.delayed.implementations;
 
-import com.g2forge.alexandria.generic.java.tuple.ITuple1G_;
+import com.g2forge.alexandria.java.tuple.ITuple1G_;
 
 public abstract class ALateBound<T> implements ITuple1G_<T> {
 	protected static class Holder<T> implements ITuple1G_<T> {

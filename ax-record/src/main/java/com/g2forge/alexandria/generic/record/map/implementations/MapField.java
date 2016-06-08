@@ -1,8 +1,8 @@
 package com.g2forge.alexandria.generic.record.map.implementations;
 
-import com.g2forge.alexandria.generic.java.tuple.ITuple1GS;
 import com.g2forge.alexandria.generic.record.IField;
 import com.g2forge.alexandria.generic.record.IFieldType;
+import com.g2forge.alexandria.java.tuple.ITuple1GS;
 
 public class MapField<T> implements IField<MapRecord, T> {
 	protected final MapFieldType<T> type;

@@ -1,12 +1,12 @@
 package com.g2forge.alexandria.generic.record.map.implementations;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
 import com.g2forge.alexandria.generic.record.IFieldType;
 import com.g2forge.alexandria.generic.record.IRecordType;
+import com.g2forge.alexandria.java.CollectionHelpers;
 
 public class MapRecordType implements IRecordType<MapRecord> {
 	protected final Collection<MapFieldType<?>> fieldTypes;
@@ -27,7 +27,7 @@ public class MapRecordType implements IRecordType<MapRecord> {
 	 */
 	@SafeVarargs
 	public MapRecordType(final IFieldType<MapRecord, ?>... fieldTypes) {
-		this(Arrays.asList(fieldTypes));
+		this(CollectionHelpers.asList(fieldTypes));
 	}
 
 	@Override

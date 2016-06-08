@@ -1,12 +1,12 @@
 package com.g2forge.alexandria.generic.reflection.record.reflected;
 
+import java.util.Objects;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.g2forge.alexandria.adt.collection.CollectionHelpers;
-import com.g2forge.alexandria.generic.java.ObjectHelpers;
 import com.g2forge.alexandria.generic.record.IField;
-import com.g2forge.alexandria.generic.reflection.record.reflected.IReflectedRecordType;
 import com.g2forge.alexandria.generic.reflection.record.reflected.implementations.ReflectedRecordType;
 
 public class TestReflectedRecord {
@@ -31,7 +31,7 @@ public class TestReflectedRecord {
 			if (!(obj instanceof Record)) return false;
 			
 			final Record that = (Record) obj;
-			if (!ObjectHelpers.equals(getField0(), that.getField0())) return false;
+			if (!Objects.equals(getField0(), that.getField0())) return false;
 			return true;
 		}
 		
@@ -46,7 +46,7 @@ public class TestReflectedRecord {
 		 * @see java.lang.Object#hashCode() */
 		@Override
 		public int hashCode() {
-			return ObjectHelpers.hashCode(getField0());
+			return Objects.hashCode(getField0());
 		}
 		
 		/**

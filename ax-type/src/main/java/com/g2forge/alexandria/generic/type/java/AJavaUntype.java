@@ -1,6 +1,7 @@
 package com.g2forge.alexandria.generic.type.java;
 
-import com.g2forge.alexandria.generic.java.ObjectHelpers;
+import java.util.Objects;
+
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
 
@@ -26,13 +27,13 @@ public abstract class AJavaUntype<JT> implements IJavaUntype {
 		if (!(obj instanceof AJavaUntype)) return false;
 		
 		final AJavaUntype<?> that = (AJavaUntype<?>) obj;
-		return ObjectHelpers.equals(javaType, that.javaType);
+		return Objects.equals(javaType, that.javaType);
 	}
 	
 	/* @see java.lang.Object#hashCode() */
 	@Override
 	public int hashCode() {
-		return ObjectHelpers.hashCode(javaType);
+		return Objects.hashCode(javaType);
 	}
 	
 	@Override

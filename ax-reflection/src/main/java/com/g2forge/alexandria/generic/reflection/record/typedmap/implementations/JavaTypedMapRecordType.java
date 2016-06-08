@@ -1,7 +1,6 @@
 package com.g2forge.alexandria.generic.reflection.record.typedmap.implementations;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -11,6 +10,7 @@ import com.g2forge.alexandria.generic.reflection.record.typedmap.IJavaTypedRecor
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.IJavaUntype;
 import com.g2forge.alexandria.generic.type.java.implementations.JavaClassType;
+import com.g2forge.alexandria.java.CollectionHelpers;
 
 public class JavaTypedMapRecordType implements IJavaTypedRecordType<JavaTypedMapRecord> {
 	protected final Collection<JavaTypedMapFieldType<?>> fieldTypes;
@@ -31,7 +31,7 @@ public class JavaTypedMapRecordType implements IJavaTypedRecordType<JavaTypedMap
 	 */
 	@SafeVarargs
 	public JavaTypedMapRecordType(final IJavaTypedFieldType<JavaTypedMapRecord, ?>... fieldTypes) {
-		this(Arrays.asList(fieldTypes));
+		this(CollectionHelpers.asList(fieldTypes));
 	}
 
 	@Override

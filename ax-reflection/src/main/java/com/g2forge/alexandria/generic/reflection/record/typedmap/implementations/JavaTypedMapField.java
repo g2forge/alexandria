@@ -1,8 +1,8 @@
 package com.g2forge.alexandria.generic.reflection.record.typedmap.implementations;
 
-import com.g2forge.alexandria.generic.java.tuple.ITuple1GS;
 import com.g2forge.alexandria.generic.record.IField;
 import com.g2forge.alexandria.generic.record.IFieldType;
+import com.g2forge.alexandria.java.tuple.ITuple1GS;
 
 public class JavaTypedMapField<T> implements IField<JavaTypedMapRecord, T> {
 	protected final JavaTypedMapFieldType<T> type;

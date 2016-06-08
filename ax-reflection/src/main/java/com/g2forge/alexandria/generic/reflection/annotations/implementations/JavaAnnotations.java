@@ -2,11 +2,11 @@ package com.g2forge.alexandria.generic.reflection.annotations.implementations;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.util.Arrays;
 import java.util.Collection;
 
 import com.g2forge.alexandria.generic.reflection.annotations.IJavaAnnotations;
 import com.g2forge.alexandria.generic.type.java.structure.JavaMembership;
+import com.g2forge.alexandria.java.CollectionHelpers;
 
 public class JavaAnnotations implements IJavaAnnotations {
 	protected final AnnotatedElement annotated;
@@ -27,9 +27,9 @@ public class JavaAnnotations implements IJavaAnnotations {
 	public Collection<? extends Annotation> getAnnotations(JavaMembership membership) {
 		switch (membership) {
 			case Declared:
-				return Arrays.asList(annotated.getDeclaredAnnotations());
+				return CollectionHelpers.asList(annotated.getDeclaredAnnotations());
 			case All:
-				return Arrays.asList(annotated.getAnnotations());
+				return CollectionHelpers.asList(annotated.getAnnotations());
 		}
 		return null;
 	}

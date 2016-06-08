@@ -1,7 +1,8 @@
 package com.g2forge.alexandria.adt.collection.collector.implementations;
 
+import java.util.Objects;
+
 import com.g2forge.alexandria.adt.collection.collector.ICollector;
-import com.g2forge.alexandria.generic.java.ObjectHelpers;
 
 public class StringCollector<T> implements ICollector<T> {
 	protected final StringBuilder internal = new StringBuilder();
@@ -16,7 +17,7 @@ public class StringCollector<T> implements ICollector<T> {
 	
 	@Override
 	public ICollector<T> add(final T value) {
-		internal.append(ObjectHelpers.toString(value));
+		internal.append(Objects.toString(value));
 		return this;
 	}
 	

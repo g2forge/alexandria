@@ -1,8 +1,8 @@
 package com.g2forge.alexandria.generic.reflection.record.typedmap.implementations;
 
 import java.lang.reflect.Type;
+import java.util.Objects;
 
-import com.g2forge.alexandria.generic.java.ObjectHelpers;
 import com.g2forge.alexandria.generic.record.IField;
 import com.g2forge.alexandria.generic.reflection.record.typedmap.IJavaTypedFieldType;
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
@@ -54,7 +54,7 @@ public class JavaTypedMapFieldType<T> implements IJavaTypedFieldType<JavaTypedMa
 		if (!(obj instanceof JavaTypedMapFieldType)) return false;
 		
 		final JavaTypedMapFieldType<?> that = (JavaTypedMapFieldType<?>) obj;
-		return ObjectHelpers.equals(getName(), that.getName()) && ObjectHelpers.equals(getType(), that.getType());
+		return Objects.equals(getName(), that.getName()) && Objects.equals(getType(), that.getType());
 	}
 	
 	@Override
@@ -70,7 +70,8 @@ public class JavaTypedMapFieldType<T> implements IJavaTypedFieldType<JavaTypedMa
 	/* @see java.lang.Object#hashCode() */
 	@Override
 	public int hashCode() {
-		return ObjectHelpers.hashCode(getName(), getType());
+		Object[] objects = { getName(), getType() };
+		return Objects.hash(objects);
 	}
 	
 	@Override

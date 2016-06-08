@@ -3,10 +3,10 @@ package com.g2forge.alexandria.generic.record.map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.generic.java.tuple.ITuple1GS;
 import com.g2forge.alexandria.generic.record.map.implementations.MapFieldType;
 import com.g2forge.alexandria.generic.record.map.implementations.MapRecord;
 import com.g2forge.alexandria.generic.record.map.implementations.MapRecordType;
+import com.g2forge.alexandria.java.tuple.ITuple1GS;
 
 public class TestMapRecord {
 	@Test

@@ -1,6 +1,7 @@
 package com.g2forge.alexandria.generic.record.map.implementations;
 
-import com.g2forge.alexandria.generic.java.ObjectHelpers;
+import java.util.Objects;
+
 import com.g2forge.alexandria.generic.record.IField;
 import com.g2forge.alexandria.generic.record.IFieldType;
 
@@ -29,7 +30,7 @@ public class MapFieldType<T> implements IFieldType<MapRecord, T> {
 		if (!(obj instanceof MapFieldType)) return false;
 		
 		final MapFieldType<?> that = (MapFieldType<?>) obj;
-		return ObjectHelpers.equals(getName(), that.getName());
+		return Objects.equals(getName(), that.getName());
 	}
 	
 	@Override
@@ -40,7 +41,7 @@ public class MapFieldType<T> implements IFieldType<MapRecord, T> {
 	/* @see java.lang.Object#hashCode() */
 	@Override
 	public int hashCode() {
-		return ObjectHelpers.hashCode(getName());
+		return Objects.hashCode(getName());
 	}
 	
 	@Override

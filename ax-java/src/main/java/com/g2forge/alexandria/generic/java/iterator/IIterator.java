@@ -1,6 +1,6 @@
 package com.g2forge.alexandria.generic.java.iterator;
 
-import com.g2forge.alexandria.generic.java.tuple.ITuple1G_;
+import com.g2forge.alexandria.java.tuple.ITuple1G_;
 
 public interface IIterator<T> extends ITuple1G_<T> {
 	public void commit();

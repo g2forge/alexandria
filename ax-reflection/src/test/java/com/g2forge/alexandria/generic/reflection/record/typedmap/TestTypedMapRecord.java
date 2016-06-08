@@ -3,10 +3,10 @@ package com.g2forge.alexandria.generic.reflection.record.typedmap;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.generic.java.tuple.ITuple1GS;
 import com.g2forge.alexandria.generic.reflection.record.typedmap.implementations.JavaTypedMapFieldType;
 import com.g2forge.alexandria.generic.reflection.record.typedmap.implementations.JavaTypedMapRecord;
 import com.g2forge.alexandria.generic.reflection.record.typedmap.implementations.JavaTypedMapRecordType;
+import com.g2forge.alexandria.java.tuple.ITuple1GS;
 
 public class TestTypedMapRecord {
 	@Test

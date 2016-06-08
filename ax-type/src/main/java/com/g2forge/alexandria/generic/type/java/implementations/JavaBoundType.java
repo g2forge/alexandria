@@ -7,8 +7,8 @@ import java.lang.reflect.TypeVariable;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
-import com.g2forge.alexandria.generic.java.ObjectHelpers;
 import com.g2forge.alexandria.generic.java.map.IMap1;
 import com.g2forge.alexandria.generic.java.map.MapHelpers;
 import com.g2forge.alexandria.generic.type.IType;
@@ -68,7 +68,7 @@ public class JavaBoundType extends AJavaType<ParameterizedType> implements IJava
 			for (int i = 0; i < parameters.length; i++) {
 				final JavaVariableType parameter = new JavaVariableType(parameters[i], retVal);
 				final IJavaUntype actual = JavaTypeHelpers.toType(actuals[i], retVal);
-				if (!ObjectHelpers.equals(parameter, actual)) map.put(parameter, actual);
+				if (!Objects.equals(parameter, actual)) map.put(parameter, actual);
 			}
 			
 			return retVal;

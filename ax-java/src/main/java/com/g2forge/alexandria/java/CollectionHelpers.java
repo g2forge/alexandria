@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public class CollectionHelpers {
@@ -22,12 +24,22 @@ public class CollectionHelpers {
 	}
 
 	@SafeVarargs
+	public static <T> List<T> asList(T... elements) {
+		return CollectionHelpers.asList(elements);
+	}
+
+	@SafeVarargs
 	public static <T> List<T> asListNonNull(T... elements) {
 		final List<T> retVal = new ArrayList<>(elements.length);
 		for (T element : elements) {
 			if (element != null) retVal.add(element);
 		}
 		return retVal;
+	}
+
+	@SafeVarargs
+	public static <T> Set<T> asSet(T... elements) {
+		return new LinkedHashSet<>(asList(elements));
 	}
 
 	@SuppressWarnings("unchecked")
