@@ -1,32 +1,37 @@
-package com.g2forge.alexandria.java.concurrent.implementations;
+package com.g2forge.alexandria.java.function;
+
+import java.util.function.Supplier;
 
 import com.g2forge.alexandria.java.tuple.ITuple1G_;
 
-public abstract class ALateBound<T> implements ITuple1G_<T> {
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+public class ConcurrentCachingSupplier<T> implements Supplier<T> {
 	protected static class Holder<T> implements ITuple1G_<T> {
 		protected final T value;
-		
+
 		public Holder(final T value) {
 			this.value = value;
 		}
-		
+
 		@Override
 		public T get0() {
 			return value;
 		}
 	}
-	
+
+	protected final Supplier<? extends T> supplier;
+
 	protected Holder<T> value;
-	
-	protected abstract T compute();
-	
+
 	@Override
-	public T get0() {
+	public T get() {
 		Holder<T> value = this.value;
 		if (value == null) {
 			synchronized (this) {
 				if (this.value == null) {
-					this.value = new Holder<T>(compute());
+					this.value = new Holder<T>(supplier.get());
 				}
 				value = this.value;
 			}
