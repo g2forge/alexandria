@@ -5,7 +5,6 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 
-import com.g2forge.alexandria.generic.java.map.MapHelpers;
 import com.g2forge.alexandria.generic.type.IType;
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
@@ -18,6 +17,7 @@ import com.g2forge.alexandria.generic.type.java.IJavaType;
 import com.g2forge.alexandria.generic.type.java.IJavaTypeVariable;
 import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
 import com.g2forge.alexandria.generic.type.java.structure.JavaMembership;
+import com.g2forge.alexandria.java.function.FunctionHelpers;
 
 public class JavaClassType extends AJavaType<Class<?>>implements IJavaClassType {
 	/**
@@ -61,14 +61,14 @@ public class JavaClassType extends AJavaType<Class<?>>implements IJavaClassType 
 
 	@Override
 	public Collection<? extends IJavaFieldType> getFields(final JavaMembership membership) {
-		final Collection<IJavaFieldType> retVal = MapHelpers.map(input -> new JavaFieldType(input, environment), javaType.getDeclaredFields());
+		final Collection<IJavaFieldType> retVal = FunctionHelpers.map(input -> new JavaFieldType(input, environment), javaType.getDeclaredFields());
 		if ((membership == JavaMembership.All) && (javaType.getSuperclass() != null)) retVal.addAll(getSuperClass().getFields(membership));
 		return retVal;
 	}
 
 	@Override
 	public List<? extends IJavaTypeVariable> getParameters() {
-		return MapHelpers.map(input -> new JavaVariableType(input, environment), javaType.getTypeParameters());
+		return FunctionHelpers.map(input -> new JavaVariableType(input, environment), javaType.getTypeParameters());
 	}
 
 	@Override
