@@ -6,10 +6,10 @@ import java.util.List;
 import com.g2forge.alexandria.java.tuple.ITuple1G_;
 
 public interface IIterator<T> extends ITuple1G_<T> {
-	public default List<T> toList(IIterator<T> iterator) {
+	public default List<T> toList() {
 		final List<T> retVal = new ArrayList<>();
-		for (; iterator.isValid(); iterator.next())
-			retVal.add(iterator.get0());
+		for (; isValid(); next())
+			retVal.add(get0());
 		return retVal;
 	}
 
