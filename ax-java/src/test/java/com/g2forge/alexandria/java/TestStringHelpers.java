@@ -3,6 +3,8 @@ package com.g2forge.alexandria.java;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.g2forge.alexandria.java.core.helpers.StringHelpers;
+
 public class TestStringHelpers {
 	@Test
 	public void lowercase() {

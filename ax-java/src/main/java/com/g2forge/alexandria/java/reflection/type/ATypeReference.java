@@ -3,7 +3,7 @@ package com.g2forge.alexandria.java.reflection.type;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import com.g2forge.alexandria.java.NotYetImplementedError;
+import com.g2forge.alexandria.java.core.error.NotYetImplementedError;
 
 public abstract class ATypeReference<T> implements ITypeReference<T> {
 	protected static Class<?> erase(final Type type) throws NotYetImplementedError {

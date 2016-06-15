@@ -3,7 +3,7 @@ package com.g2forge.alexandria.record.reflection;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.java.CollectionHelpers;
+import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
 import com.g2forge.alexandria.record.IPropertyType;
 import com.g2forge.alexandria.record.IRecordType;
 import com.g2forge.alexandria.record.reflection.ReflectedRecordType;
