@@ -37,12 +37,17 @@ public abstract class AJavaUntype<JT> implements IJavaUntype {
 	}
 	
 	@Override
+	public boolean isEnum() {
+		return false;
+	}
+	
+	@Override
 	public ITypeEnvironment toEnvironment() {
 		return EmptyTypeEnvironment.create();
 	}
 	
 	@Override
-	public boolean isEnum() {
-		return false;
+	public String toString() {
+		return getJavaType().toString() + " in " + environment;
 	}
 }

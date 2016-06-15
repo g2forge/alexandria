@@ -10,7 +10,7 @@ import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
 
 public class TypeEnvironment implements ITypeEnvironment {
-	protected static final Predicate<Object> PARENT_PREDICATE = CollectionHelpers.asSet(null, EmptyTypeEnvironment.create())::contains;
+	protected static final Predicate<Object> PARENT_PREDICATE = ((Predicate<Object>)CollectionHelpers.asSet(null, EmptyTypeEnvironment.create())::contains).negate();
 
 	public static ITypeEnvironment create(final Collection<ITypeEnvironment> parents) {
 		if (parents.isEmpty()) return null;
@@ -45,11 +45,8 @@ public class TypeEnvironment implements ITypeEnvironment {
 	@Override
 	public IType apply(final ITypeVariable input) {
 		if ((map != null) && map.containsKey(input)) return map.get(input);
-		if (parents != null) {
-			for (final ITypeEnvironment parent : parents) {
-				return parent.apply(input);
-			}
-		}
+		if (parents != null) for (final ITypeEnvironment parent : parents)
+			return parent.apply(input);
 		return null;
 	}
 }

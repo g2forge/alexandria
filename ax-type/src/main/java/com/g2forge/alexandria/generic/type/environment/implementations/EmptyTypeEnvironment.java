@@ -22,4 +22,9 @@ public final class EmptyTypeEnvironment implements ITypeEnvironment {
 	public IType apply(final ITypeVariable input) {
 		return input;
 	}
+
+	@Override
+	public String toString() {
+		return "{}";
+	}
 }
