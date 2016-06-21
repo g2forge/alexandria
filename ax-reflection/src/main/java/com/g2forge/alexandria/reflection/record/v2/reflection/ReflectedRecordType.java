@@ -27,7 +27,7 @@ public class ReflectedRecordType implements IRecordType {
 	protected Supplier<Map<String, IPropertyType>> properties = new CachingSupplier<>(() -> {
 		final Map<String, IPropertyType> properties = new LinkedHashMap<>();
 		properties.putAll(getReflection().getFields(JavaScope.Inherited, null).map(field -> new FieldPropertyType((IJavaFieldReflection<Object, Object>) field)).collect(Collectors.toMap(IPropertyType::getName, Function.identity())));
-		properties.putAll(getReflection().getMethods(JavaScope.Inherited, null).filter(method -> !method.getDeclaringClass().equals(Object.class)).filter(GetterPropertyType::isGetter).collect(Collectors.toList()).stream().map(GetterPropertyType::new).collect(Collectors.toMap(IPropertyType::getName, Function.identity())));
+		properties.putAll(getReflection().getMethods(JavaScope.Inherited, null).filter(method -> !Object.class.equals(method.getDeclaringClass().getType().getJavaType())).filter(GetterPropertyType::isGetter).collect(Collectors.toList()).stream().map(GetterPropertyType::new).collect(Collectors.toMap(IPropertyType::getName, Function.identity())));
 		return properties;
 	});
 

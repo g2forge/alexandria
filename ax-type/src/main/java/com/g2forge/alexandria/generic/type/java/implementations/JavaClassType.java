@@ -18,10 +18,10 @@ import com.g2forge.alexandria.generic.type.java.IJavaFieldType;
 import com.g2forge.alexandria.generic.type.java.IJavaMethodType;
 import com.g2forge.alexandria.generic.type.java.IJavaType;
 import com.g2forge.alexandria.generic.type.java.IJavaTypeVariable;
-import com.g2forge.alexandria.generic.type.java.JavaReflectionHelpers;
 import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
 import com.g2forge.alexandria.generic.type.java.structure.JavaProtection;
 import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
+import com.g2forge.alexandria.generic.type.java.structure.JavaStructureAnalyzer;
 import com.g2forge.alexandria.java.associative.cache.Cache;
 import com.g2forge.alexandria.java.associative.cache.NeverCacheEvictionPolicy;
 import com.g2forge.alexandria.java.core.helpers.ArrayHelpers;
@@ -29,9 +29,17 @@ import com.g2forge.alexandria.java.tuple.ITuple2G_;
 import com.g2forge.alexandria.java.tuple.Tuple2G_;
 
 public class JavaClassType extends AJavaType<Class<?>>implements IJavaClassType {
-	protected final Function<ITuple2G_<JavaScope, JavaProtection>, List<IJavaFieldType>> fields = new Cache<>(args -> JavaReflectionHelpers.getFields(javaType, args.get0(), args.get1()).map(input -> new JavaFieldType(input, environment)).collect(Collectors.toList()), NeverCacheEvictionPolicy.create());
+	protected static final JavaStructureAnalyzer<IJavaClassType, IJavaFieldType, IJavaMethodType> analyzer = new JavaStructureAnalyzer<IJavaClassType, IJavaFieldType, IJavaMethodType>(klass -> Object.class.equals(klass.getJavaType()), IJavaClassType::getSuperClass, klass -> {
+		final JavaClassType cast = (JavaClassType) klass;
+		return Stream.of(cast.javaType.getDeclaredMethods()).map(method -> new JavaMethodType(method, cast.environment));
+	} , IJavaMethodType::getJavaMember, klass -> {
+		final JavaClassType cast = (JavaClassType) klass;
+		return Stream.of(cast.javaType.getDeclaredFields()).map(method -> new JavaFieldType(method, cast.environment));
+	} , IJavaFieldType::getJavaMember);
 
-	protected final Function<ITuple2G_<JavaScope, JavaProtection>, List<IJavaMethodType>> methods = new Cache<>(args -> JavaReflectionHelpers.getMethods(javaType, args.get0(), args.get1()).map(input -> new JavaMethodType(input, environment)).collect(Collectors.toList()), NeverCacheEvictionPolicy.create());
+	protected final Function<ITuple2G_<JavaScope, JavaProtection>, List<IJavaFieldType>> fields = new Cache<>(args -> analyzer.getFields(this, args.get0(), args.get1()).collect(Collectors.toList()), NeverCacheEvictionPolicy.create());
+
+	protected final Function<ITuple2G_<JavaScope, JavaProtection>, List<IJavaMethodType>> methods = new Cache<>(args -> analyzer.getMethods(this, args.get0(), args.get1()).collect(Collectors.toList()), NeverCacheEvictionPolicy.create());
 
 	/**
 	 * @param javaType
