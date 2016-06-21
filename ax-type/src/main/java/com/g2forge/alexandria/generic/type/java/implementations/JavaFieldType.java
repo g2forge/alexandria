@@ -7,6 +7,7 @@ import com.g2forge.alexandria.generic.type.environment.implementations.EmptyType
 import com.g2forge.alexandria.generic.type.environment.implementations.TypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.AJavaMemberType;
 import com.g2forge.alexandria.generic.type.java.IJavaFieldType;
+import com.g2forge.alexandria.generic.type.java.IJavaType;
 import com.g2forge.alexandria.generic.type.java.IJavaUntype;
 import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
 
@@ -21,7 +22,7 @@ public class JavaFieldType extends AJavaMemberType<Field>implements IJavaFieldTy
 	}
 
 	@Override
-	public IJavaUntype getType() {
+	public IJavaType getType() {
 		return JavaTypeHelpers.toType(javaType.getGenericType(), environment);
 	}
 }
