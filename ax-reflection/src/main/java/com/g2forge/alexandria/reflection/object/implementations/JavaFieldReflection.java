@@ -8,10 +8,7 @@ import com.g2forge.alexandria.java.tuple.ITuple1GS;
 import com.g2forge.alexandria.reflection.object.AJavaMemberReflection;
 import com.g2forge.alexandria.reflection.object.IJavaFieldReflection;
 
-public class JavaFieldReflection<O, F> extends AJavaMemberReflection<O, F, IJavaFieldType>implements IJavaFieldReflection<O, F> {
-	/**
-	 * @param type
-	 */
+public class JavaFieldReflection<O, F> extends AJavaMemberReflection<O, IJavaFieldType>implements IJavaFieldReflection<O, F> {
 	public JavaFieldReflection(IJavaFieldType type) {
 		super(type);
 	}

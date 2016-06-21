@@ -7,7 +7,7 @@ import com.g2forge.alexandria.reflection.annotations.IJavaAnnotations;
 import com.g2forge.alexandria.reflection.annotations.implementations.JavaAnnotations;
 import com.g2forge.alexandria.reflection.object.implementations.JavaClassReflection;
 
-public abstract class AJavaMemberReflection<O, M, MT extends IJavaMemberType> implements IJavaMemberReflection<O, M> {
+public abstract class AJavaMemberReflection<O, MT extends IJavaMemberType> implements IJavaMemberReflection<O> {
 	protected final MT type;
 
 	/**

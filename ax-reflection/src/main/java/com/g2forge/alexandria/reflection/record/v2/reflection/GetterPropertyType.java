@@ -38,7 +38,7 @@ class GetterPropertyType implements IPropertyType {
 
 	protected static final String[] PREFIXES = Stream.of(GetterType.values()).map(GetterType::getPrefix).collect(Collectors.toList()).toArray(new String[0]);
 
-	public static boolean isGetter(IJavaMethodReflection<?, ?> reflection) {
+	public static boolean isGetter(IJavaMethodReflection<?> reflection) {
 		final Method method = reflection.getType().getJavaMember();
 		if (method.getParameterCount() != 0) return false;
 
@@ -50,9 +50,9 @@ class GetterPropertyType implements IPropertyType {
 		return false;
 	}
 
-	protected final IJavaMethodReflection<?, ?> getter;
+	protected final IJavaMethodReflection<?> getter;
 
-	public GetterPropertyType(IJavaMethodReflection<?, ?> getter) {
+	public GetterPropertyType(IJavaMethodReflection<?> getter) {
 		this.getter = getter;
 	}
 

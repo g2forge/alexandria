@@ -14,6 +14,7 @@ import com.g2forge.alexandria.reflection.annotations.IJavaAnnotations;
 import com.g2forge.alexandria.reflection.annotations.implementations.JavaAnnotations;
 import com.g2forge.alexandria.reflection.object.AJavaTypeReflection;
 import com.g2forge.alexandria.reflection.object.IJavaClassReflection;
+import com.g2forge.alexandria.reflection.object.IJavaConstructorReflection;
 import com.g2forge.alexandria.reflection.object.IJavaFieldReflection;
 import com.g2forge.alexandria.reflection.object.IJavaMethodReflection;
 
@@ -38,6 +39,11 @@ public class JavaClassReflection<T> extends AJavaTypeReflection<T, IJavaClassTyp
 	}
 
 	@Override
+	public Stream<? extends IJavaConstructorReflection<T>> getConstructors(JavaProtection minimum) {
+		return getType().getConstructors(minimum).map(JavaConstructorReflection::new);
+	}
+
+	@Override
 	public Stream<? extends IJavaFieldReflection<T, ?>> getFields(JavaScope scope, JavaProtection minimum) {
 		return getType().getFields(scope, minimum).map(JavaFieldReflection::new);
 	}
@@ -48,7 +54,7 @@ public class JavaClassReflection<T> extends AJavaTypeReflection<T, IJavaClassTyp
 	}
 
 	@Override
-	public Stream<? extends IJavaMethodReflection<T, ?>> getMethods(JavaScope scope, JavaProtection minimum) {
+	public Stream<? extends IJavaMethodReflection<T>> getMethods(JavaScope scope, JavaProtection minimum) {
 		return getType().getMethods(scope, minimum).map(JavaMethodReflection::new);
 	}
 

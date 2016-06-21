@@ -14,6 +14,7 @@ import com.g2forge.alexandria.generic.type.environment.implementations.TypeEnvir
 import com.g2forge.alexandria.generic.type.java.AJavaType;
 import com.g2forge.alexandria.generic.type.java.IJavaBoundType;
 import com.g2forge.alexandria.generic.type.java.IJavaClassType;
+import com.g2forge.alexandria.generic.type.java.IJavaConstructorType;
 import com.g2forge.alexandria.generic.type.java.IJavaFieldType;
 import com.g2forge.alexandria.generic.type.java.IJavaMethodType;
 import com.g2forge.alexandria.generic.type.java.IJavaType;
@@ -40,6 +41,8 @@ public class JavaClassType extends AJavaType<Class<?>>implements IJavaClassType 
 	protected final Function<ITuple2G_<JavaScope, JavaProtection>, List<IJavaFieldType>> fields = new Cache<>(args -> analyzer.getFields(this, args.get0(), args.get1()).collect(Collectors.toList()), NeverCacheEvictionPolicy.create());
 
 	protected final Function<ITuple2G_<JavaScope, JavaProtection>, List<IJavaMethodType>> methods = new Cache<>(args -> analyzer.getMethods(this, args.get0(), args.get1()).collect(Collectors.toList()), NeverCacheEvictionPolicy.create());
+
+	protected final Function<JavaProtection, List<IJavaConstructorType>> constructors = new Cache<JavaProtection, List<IJavaConstructorType>>(minimum -> Stream.of(javaType.getConstructors()).filter(new JavaStructureAnalyzer.ProtectionFilter<>(Function.identity(), minimum)).map(constructor -> new JavaConstructorType(constructor, environment)).collect(Collectors.toList()), NeverCacheEvictionPolicy.create());
 
 	/**
 	 * @param javaType
@@ -83,6 +86,11 @@ public class JavaClassType extends AJavaType<Class<?>>implements IJavaClassType 
 	@Override
 	public IJavaClassType eval(final ITypeEnvironment environment) {
 		return new JavaClassType(javaType, TypeEnvironment.create(this.environment, EmptyTypeEnvironment.create(environment)));
+	}
+
+	@Override
+	public Stream<? extends IJavaConstructorType> getConstructors(JavaProtection minimum) {
+		return constructors.apply(minimum).stream();
 	}
 
 	public Stream<IJavaFieldType> getFields(JavaScope scope, JavaProtection minimum) {

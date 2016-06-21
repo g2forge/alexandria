@@ -22,8 +22,6 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class JavaStructureAnalyzer<C, F, M> {
-	public static final JavaStructureAnalyzer<Class<?>, Field, Method> REFLECTION_ANALYZER = new JavaStructureAnalyzer<Class<?>, Field, Method>(klass -> Object.class.equals(klass), Class::getSuperclass, FunctionHelpers.compose(Class::getDeclaredMethods, Stream::of), Function.identity(), FunctionHelpers.compose(Class::getDeclaredFields, Stream::of), Function.identity());
-
 	protected class OverrideFilter implements Predicate<M> {
 		protected final Map<String, Collection<Method>> map = new HashMap<>();
 
@@ -45,9 +43,25 @@ public class JavaStructureAnalyzer<C, F, M> {
 		}
 	}
 
+	@RequiredArgsConstructor
+	public static class ProtectionFilter<M> implements Predicate<M> {
+		protected final Function<? super M, ? extends Member> function;
+
+		protected final JavaProtection minimum;
+
+		@Override
+		public boolean test(M member) {
+			if (minimum == null) return true;
+			return JavaProtection.of(function.apply(member)).compareTo(minimum) >= 0;
+		}
+
+	}
+
+	public static final JavaStructureAnalyzer<Class<?>, Field, Method> REFLECTION_ANALYZER = new JavaStructureAnalyzer<Class<?>, Field, Method>(klass -> Object.class.equals(klass), Class::getSuperclass, FunctionHelpers.compose(Class::getDeclaredMethods, Stream::of), Function.identity(), FunctionHelpers.compose(Class::getDeclaredFields, Stream::of), Function.identity());
+
 	protected static <T> Stream<T> filter(JavaScope scope, JavaProtection minimum, final Stream<T> members, Function<? super T, ? extends Member> function) {
 		final Stream<T> scoped = members.filter(member -> !(scope.isStatics() ^ Modifier.isStatic(function.apply(member).getModifiers())));
-		final Stream<T> filtered = minimum == null ? scoped : scoped.filter(member -> JavaProtection.of(function.apply(member)).compareTo(minimum) >= 0);
+		final Stream<T> filtered = minimum == null ? scoped : scoped.filter(new ProtectionFilter<>(function, minimum));
 		return filtered;
 	}
 
