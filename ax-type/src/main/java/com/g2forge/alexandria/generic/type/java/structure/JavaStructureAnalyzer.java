@@ -16,11 +16,14 @@ import java.util.stream.Stream;
 
 import com.g2forge.alexandria.java.core.helpers.MapHelpers;
 import com.g2forge.alexandria.java.core.helpers.TreeHelpers;
+import com.g2forge.alexandria.java.function.FunctionHelpers;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class JavaStructureAnalyzer<C, F, M> {
+	public static final JavaStructureAnalyzer<Class<?>, Field, Method> REFLECTION_ANALYZER = new JavaStructureAnalyzer<Class<?>, Field, Method>(klass -> Object.class.equals(klass), Class::getSuperclass, FunctionHelpers.compose(Class::getDeclaredMethods, Stream::of), Function.identity(), FunctionHelpers.compose(Class::getDeclaredFields, Stream::of), Function.identity());
+
 	protected class OverrideFilter implements Predicate<M> {
 		protected final Map<String, Collection<Method>> map = new HashMap<>();
 

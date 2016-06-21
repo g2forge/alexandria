@@ -22,6 +22,11 @@ public class ReflectionHelpers {
 		return toReflection(type, EmptyTypeEnvironment.create());
 	}
 
+	@SuppressWarnings("unchecked")
+	public static <T> IJavaClassReflection<T> toReflection(T value) {
+		return (IJavaClassReflection<T>) toReflection(value.getClass(), EmptyTypeEnvironment.create());
+	}
+
 	public static <T> IJavaClassReflection<T> toReflection(final Class<T> type, final ITypeEnvironment environment) {
 		return new JavaClassReflection<>(type, environment);
 	}

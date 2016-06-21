@@ -3,14 +3,11 @@ package com.g2forge.alexandria.generic.type.java.structure;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
 public enum JavaProtection {
-	Private(Modifier.PRIVATE),
-	Unspecified(0),
-	Protected(Modifier.PROTECTED),
-	Public(Modifier.PUBLIC);
+	Private(JavaModifier.Private),
+	Unspecified(null),
+	Protected(JavaModifier.Protected),
+	Public(JavaModifier.Public);
 
 	protected static final int MASK = Modifier.PUBLIC | Modifier.PROTECTED | Modifier.PRIVATE;
 
@@ -23,6 +20,10 @@ public enum JavaProtection {
 	}
 
 	protected final int modifier;
+
+	private JavaProtection(JavaModifier modifier) {
+		this.modifier = modifier == null ? 0 : modifier.modifier;
+	}
 
 	public boolean isAccessible(Member member) {
 		if (modifier == 0) return (member.getModifiers() & MASK) == 0;
