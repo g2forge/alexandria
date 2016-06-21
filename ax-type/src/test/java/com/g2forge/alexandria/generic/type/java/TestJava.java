@@ -8,7 +8,8 @@ import org.junit.Test;
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.implementations.JavaClassType;
-import com.g2forge.alexandria.generic.type.java.structure.JavaMembership;
+import com.g2forge.alexandria.generic.type.java.structure.JavaProtection;
+import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
 import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
 
 public class TestJava {
@@ -35,7 +36,7 @@ public class TestJava {
 	@Test
 	public void testBound() {
 		final IJavaClassType inner = new JavaClassType(O.I.class, EmptyTypeEnvironment.create());
-		final IJavaUntype type = CollectionHelpers.getAny(inner.getFields(JavaMembership.Declared)).getType();
+		final IJavaUntype type = inner.getFields(JavaScope.Instance, JavaProtection.Private).findAny().get().getType();
 		Assert.assertTrue(type instanceof IJavaBoundType);
 		final IJavaBoundType bound = (IJavaBoundType) type;
 		Assert.assertEquals(inner, bound.getRaw());
@@ -45,21 +46,21 @@ public class TestJava {
 	@Test
 	public void testChild() {
 		final IJavaClassType child = new JavaClassType(Child.class, EmptyTypeEnvironment.create());
-		final IJavaFieldType field = CollectionHelpers.get(child.getFields(JavaMembership.All), 0);
+		final IJavaFieldType field = child.getFields(JavaScope.Inherited, JavaProtection.Private).findFirst().get();
 		Assert.assertEquals(String.class, field.getType().getJavaType());
 	}
 
 	@Test
 	public void testResolved() {
 		final IJavaClassType child = new JavaClassType(Child.class, EmptyTypeEnvironment.create());
-		final IJavaFieldType field = CollectionHelpers.get(child.getSuperClass().getFields(JavaMembership.Declared), 0);
+		final IJavaFieldType field = child.getSuperClass().getFields(JavaScope.Instance, JavaProtection.Private).findFirst().get();
 		Assert.assertEquals(String.class, field.getType().getJavaType());
 	}
 
 	@Test
 	public void testUnresolved() {
 		final IJavaClassType child = new JavaClassType(Child.class, null);
-		final IJavaFieldType field = CollectionHelpers.get(child.getSuperClass().getFields(JavaMembership.Declared), 0);
+		final IJavaFieldType field = child.getSuperClass().getFields(JavaScope.Instance, JavaProtection.Private).findFirst().get();
 		Assert.assertEquals(Parent.class.getTypeParameters()[0], field.getType().getJavaType());
 	}
 }

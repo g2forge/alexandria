@@ -19,7 +19,7 @@ import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.ReturnInstruction;
 import org.apache.bcel.generic.Type;
 
-import com.g2forge.alexandria.java.reflection.RuntimeReflectionException;
+import com.g2forge.alexandria.java.core.error.RuntimeReflectionException;
 
 import lombok.Data;
 

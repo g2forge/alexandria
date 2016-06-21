@@ -5,35 +5,33 @@ import java.lang.reflect.Field;
 import com.g2forge.alexandria.generic.type.java.IJavaFieldType;
 import com.g2forge.alexandria.generic.type.java.implementations.ReflectionException;
 import com.g2forge.alexandria.java.tuple.ITuple1GS;
-import com.g2forge.alexandria.reflection.annotations.IJavaAnnotations;
-import com.g2forge.alexandria.reflection.annotations.implementations.JavaAnnotations;
+import com.g2forge.alexandria.reflection.object.AJavaMemberReflection;
 import com.g2forge.alexandria.reflection.object.IJavaFieldReflection;
 
-public class JavaFieldReflection<O, F> implements IJavaFieldReflection<O, F> {
-	protected final IJavaFieldType type;
-	
+public class JavaFieldReflection<O, F> extends AJavaMemberReflection<O, F, IJavaFieldType>implements IJavaFieldReflection<O, F> {
 	/**
 	 * @param type
 	 */
 	public JavaFieldReflection(IJavaFieldType type) {
-		this.type = type;
+		super(type);
 	}
-	
+
 	@Override
 	public ITuple1GS<F> getAccessor(final O object) {
-		final Field field = getInternal();
+		final Field field = getType().getJavaMember();
 		field.setAccessible(true);
 		return new ITuple1GS<F>() {
 			@Override
 			public F get0() {
 				try {
-					@SuppressWarnings("unchecked") final F retVal = (F) field.get(object);
+					@SuppressWarnings("unchecked")
+					final F retVal = (F) field.get(object);
 					return retVal;
 				} catch (IllegalArgumentException | IllegalAccessException exception) {
 					throw new ReflectionException(exception);
 				}
 			}
-			
+
 			@Override
 			public ITuple1GS<F> set0(F value) {
 				try {
@@ -43,7 +41,7 @@ public class JavaFieldReflection<O, F> implements IJavaFieldReflection<O, F> {
 				}
 				return this;
 			}
-			
+
 			@Override
 			public F swap0(F value) {
 				final F retVal = get0();
@@ -51,19 +49,5 @@ public class JavaFieldReflection<O, F> implements IJavaFieldReflection<O, F> {
 				return retVal;
 			}
 		};
-	}
-
-	@Override
-	public IJavaAnnotations getAnnotations() {
-		return new JavaAnnotations(getInternal());
-	}
-	
-	protected Field getInternal() {
-		return getType().getJavaField();
-	}
-
-	@Override
-	public IJavaFieldType getType() {
-		return type;
 	}
 }

@@ -18,6 +18,10 @@ public class ReflectionHelpers {
 		throw new IllegalArgumentException("Collection type \"" + typed.getType() + "\" is not recognized, so we can't help you here (sorry)!");
 	}
 
+	public static <T> IJavaClassReflection<T> toReflection(final Class<T> type) {
+		return toReflection(type, EmptyTypeEnvironment.create());
+	}
+
 	public static <T> IJavaClassReflection<T> toReflection(final Class<T> type, final ITypeEnvironment environment) {
 		return new JavaClassReflection<>(type, environment);
 	}
