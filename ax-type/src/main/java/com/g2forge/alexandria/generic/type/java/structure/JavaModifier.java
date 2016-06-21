@@ -28,7 +28,7 @@ public enum JavaModifier {
 		for (JavaModifier modifier : values()) {
 			if ((modifier.modifier & modifiers) != 0) retVal.add(modifier);
 		}
-		throw new IllegalArgumentException();
+		return retVal;
 	}
 
 	protected final int modifier;
