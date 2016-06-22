@@ -14,7 +14,7 @@ public class JavaTypeReflection<T> extends AJavaTypeReflection<T, IJavaType> {
 	public JavaTypeReflection(IJavaType type) {
 		super(type);
 	}
-	
+
 	/**
 	 * @param type
 	 */
