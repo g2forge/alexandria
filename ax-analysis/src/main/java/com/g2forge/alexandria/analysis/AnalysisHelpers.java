@@ -14,7 +14,7 @@ import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.bcel.generic.ReturnInstruction;
 
-import com.g2forge.alexandria.java.reflection.RuntimeReflectionException;
+import com.g2forge.alexandria.java.core.error.RuntimeReflectionException;
 
 public class AnalysisHelpers {
 	public static String getPath(final SerializableFunction<?, ?> function) {

@@ -13,7 +13,7 @@ public class JavaTypeHelpers {
 	public static IJavaClassType toType(final Class<?> type, final ITypeEnvironment environment) {
 		return new JavaClassType(type, environment);
 	}
-	
+
 	public static IJavaType toType(final Type type, final ITypeEnvironment environment) {
 		if (type == null) return null;
 		if (type instanceof Class) return new JavaClassType((Class<?>) type, environment);
