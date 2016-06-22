@@ -4,8 +4,8 @@ import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -33,7 +33,7 @@ public class JavaBoundType extends AJavaType<ParameterizedType>implements IJavaB
 	}
 
 	@Override
-	public Collection<? extends IJavaType> getActuals() {
+	public List<? extends IJavaType> getActuals() {
 		return ArrayHelpers.map(input -> JavaTypeHelpers.toType(input, environment), javaType.getActualTypeArguments());
 	}
 
