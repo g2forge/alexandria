@@ -48,6 +48,11 @@ public class JavaClassReflection<T> extends AJavaTypeReflection<T, IJavaClassTyp
 		return getType().getFields(scope, minimum).map(JavaFieldReflection::new);
 	}
 
+	@Override
+	public Stream<? extends IJavaClassReflection<?>> getInterfaces() {
+		return getType().getInterfaces().map(JavaClassReflection::new);
+	}
+
 	@SuppressWarnings("unchecked")
 	protected Class<T> getInternal() {
 		return (Class<T>) type.getJavaType();

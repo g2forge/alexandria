@@ -48,6 +48,6 @@ public abstract class AJavaUntype<JT> implements IJavaUntype {
 	
 	@Override
 	public String toString() {
-		return getJavaType().toString() + " in " + environment;
+		return javaType.toString() + " in " + environment;
 	}
 }

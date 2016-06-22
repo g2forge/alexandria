@@ -97,6 +97,16 @@ public class JavaClassType extends AJavaType<Class<?>>implements IJavaClassType 
 		return fields.apply(new Tuple2G_<>(scope, minimum)).stream();
 	}
 
+	@Override
+	public Stream<? extends IJavaClassType> getInterfaces() {
+		final Type[] generic = javaType.getGenericInterfaces();
+		final Class<?>[] interfaces = javaType.getInterfaces();
+		final IJavaClassType[] retVal = new IJavaClassType[generic.length];
+		for (int i = 0; i < generic.length; i++)
+			retVal[i] = getParent(generic[i], interfaces[i]);
+		return Stream.of(retVal);
+	}
+
 	public Stream<IJavaMethodType> getMethods(JavaScope scope, JavaProtection minimum) {
 		return methods.apply(new Tuple2G_<>(scope, minimum)).stream();
 	}
@@ -106,10 +116,15 @@ public class JavaClassType extends AJavaType<Class<?>>implements IJavaClassType 
 		return ArrayHelpers.map(input -> new JavaVariableType(input, environment), javaType.getTypeParameters());
 	}
 
+	protected IJavaClassType getParent(final Type generic, final Class<?> parent) {
+		if (generic == null) return null;
+		final ITypeEnvironment environment = (this.environment != null) ? JavaTypeHelpers.toType(generic, this.environment).toEnvironment() : null;
+		return new JavaClassType(parent, environment);
+	}
+
 	@Override
 	public IJavaClassType getSuperClass() {
-		final ITypeEnvironment environment = (this.environment != null) ? JavaTypeHelpers.toType(javaType.getGenericSuperclass(), this.environment).toEnvironment() : null;
-		return new JavaClassType(javaType.getSuperclass(), environment);
+		return getParent(javaType.getGenericSuperclass(), javaType.getSuperclass());
 	}
 
 	@Override

@@ -7,6 +7,8 @@ public interface IJavaClassStructure<C, F, M, S> extends IJavaTypeStructure<C> {
 
 	public Stream<? extends F> getFields(JavaScope scope, JavaProtection minimum);
 
+	public Stream<? extends C> getInterfaces();
+
 	public Stream<? extends M> getMethods(JavaScope scope, JavaProtection minimum);
 
 	public C getSuperClass();
