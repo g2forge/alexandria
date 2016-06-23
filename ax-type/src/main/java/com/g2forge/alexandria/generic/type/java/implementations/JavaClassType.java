@@ -1,9 +1,12 @@
 package com.g2forge.alexandria.generic.type.java.implementations;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,8 +21,7 @@ import com.g2forge.alexandria.generic.type.java.IJavaConstructorType;
 import com.g2forge.alexandria.generic.type.java.IJavaFieldType;
 import com.g2forge.alexandria.generic.type.java.IJavaMethodType;
 import com.g2forge.alexandria.generic.type.java.IJavaType;
-import com.g2forge.alexandria.generic.type.java.IJavaTypeVariable;
-import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
+import com.g2forge.alexandria.generic.type.java.IJavaVariableType;
 import com.g2forge.alexandria.generic.type.java.structure.JavaProtection;
 import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
 import com.g2forge.alexandria.generic.type.java.structure.JavaStructureAnalyzer;
@@ -30,13 +32,23 @@ import com.g2forge.alexandria.java.tuple.ITuple2G_;
 import com.g2forge.alexandria.java.tuple.Tuple2G_;
 
 public class JavaClassType extends AJavaType<Class<?>>implements IJavaClassType {
-	protected static final JavaStructureAnalyzer<IJavaClassType, IJavaFieldType, IJavaMethodType> analyzer = new JavaStructureAnalyzer<IJavaClassType, IJavaFieldType, IJavaMethodType>(klass -> Object.class.equals(klass.getJavaType()), IJavaClassType::getSuperClass, klass -> {
-		final JavaClassType cast = (JavaClassType) klass;
-		return Stream.of(cast.javaType.getDeclaredMethods()).map(method -> new JavaMethodType(method, cast.environment));
-	} , IJavaMethodType::getJavaMember, klass -> {
-		final JavaClassType cast = (JavaClassType) klass;
-		return Stream.of(cast.javaType.getDeclaredFields()).map(method -> new JavaFieldType(method, cast.environment));
-	} , IJavaFieldType::getJavaMember);
+	protected static final JavaStructureAnalyzer<IJavaType, IJavaFieldType, IJavaMethodType> analyzer;
+
+	static {
+		final Predicate<? super IJavaType> object = klass -> Object.class.equals(klass.getJavaType());
+		final Function<? super IJavaType, ? extends IJavaType> superclass = IJavaType::getSuperClass;
+		final Function<? super IJavaType, ? extends Stream<? extends IJavaMethodType>> methods = klass -> {
+			final JavaClassType cast = (JavaClassType) klass;
+			return Stream.of(cast.javaType.getDeclaredMethods()).map(m -> new JavaMethodType(m, cast.environment));
+		};
+		final Function<? super IJavaMethodType, ? extends Method> method = IJavaMethodType::getJavaMember;
+		final Function<? super IJavaType, ? extends Stream<? extends IJavaFieldType>> fields = klass -> {
+			final JavaClassType cast = (JavaClassType) klass;
+			return Stream.of(cast.javaType.getDeclaredFields()).map(f -> new JavaFieldType(f, cast.environment));
+		};
+		final Function<? super IJavaFieldType, ? extends Field> field = IJavaFieldType::getJavaMember;
+		analyzer = new JavaStructureAnalyzer<>(object, superclass, methods, method, fields, field);
+	}
 
 	protected final Function<ITuple2G_<JavaScope, JavaProtection>, List<IJavaFieldType>> fields = new Cache<>(args -> analyzer.getFields(this, args.get0(), args.get1()).collect(Collectors.toList()), NeverCacheEvictionPolicy.create());
 
@@ -112,14 +124,8 @@ public class JavaClassType extends AJavaType<Class<?>>implements IJavaClassType 
 	}
 
 	@Override
-	public List<? extends IJavaTypeVariable> getParameters() {
+	public List<? extends IJavaVariableType> getParameters() {
 		return ArrayHelpers.map(input -> new JavaVariableType(input, environment), javaType.getTypeParameters());
-	}
-
-	protected IJavaClassType getParent(final Type generic, final Class<?> parent) {
-		if (generic == null) return null;
-		final ITypeEnvironment environment = (this.environment != null) ? JavaTypeHelpers.toType(generic, this.environment).toEnvironment() : null;
-		return new JavaClassType(parent, environment);
 	}
 
 	@Override

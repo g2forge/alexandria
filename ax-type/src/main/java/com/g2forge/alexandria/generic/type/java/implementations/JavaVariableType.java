@@ -11,11 +11,11 @@ import com.g2forge.alexandria.generic.type.environment.implementations.TypeEnvir
 import com.g2forge.alexandria.generic.type.java.AJavaType;
 import com.g2forge.alexandria.generic.type.java.IJavaClassType;
 import com.g2forge.alexandria.generic.type.java.IJavaType;
-import com.g2forge.alexandria.generic.type.java.IJavaTypeVariable;
+import com.g2forge.alexandria.generic.type.java.IJavaVariableType;
 import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
 import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
 
-public class JavaVariableType extends AJavaType<TypeVariable<?>>implements IJavaTypeVariable {
+public class JavaVariableType extends AJavaType<TypeVariable<?>>implements IJavaVariableType {
 	/**
 	 * @param javaType
 	 * @param environment
@@ -25,17 +25,17 @@ public class JavaVariableType extends AJavaType<TypeVariable<?>>implements IJava
 	}
 
 	@Override
-	public IJavaType eval(final ITypeEnvironment environment) {
-		return (IJavaType) TypeEnvironment.create(this.environment, EmptyTypeEnvironment.create(environment)).apply(this);
-	}
-
-	@Override
 	public IJavaClassType erase() {
 		if (environment != null) {
 			final IJavaType evaluated = eval(null);
 			if (!evaluated.equals(this)) { return evaluated.erase(); }
 		}
 		return CollectionHelpers.get(getUpperBounds(), 0).erase();
+	}
+
+	@Override
+	public IJavaType eval(final ITypeEnvironment environment) {
+		return (IJavaType) TypeEnvironment.create(this.environment, EmptyTypeEnvironment.create(environment)).apply(this);
 	}
 
 	@Override

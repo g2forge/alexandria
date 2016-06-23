@@ -2,7 +2,7 @@ package com.g2forge.alexandria.generic.type.java.structure;
 
 import java.util.stream.Stream;
 
-public interface IJavaClassStructure<C, F, M, S> extends IJavaTypeStructure<C> {
+public interface IJavaClassStructure<E, C, F, M, S> extends IJavaTypeStructure<E> {
 	public Stream<? extends S> getConstructors(JavaProtection minimum);
 
 	public Stream<? extends F> getFields(JavaScope scope, JavaProtection minimum);

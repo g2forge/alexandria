@@ -14,5 +14,5 @@ public interface IJavaParameterizedType extends IParameterizedType {
 	public IJavaParameterizedType eval(ITypeEnvironment environment);
 	
 	@Override
-	public List<? extends IJavaTypeVariable> getParameters();
+	public List<? extends IJavaVariableType> getParameters();
 }

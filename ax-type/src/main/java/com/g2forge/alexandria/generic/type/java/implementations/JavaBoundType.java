@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import com.g2forge.alexandria.generic.type.IType;
 import com.g2forge.alexandria.generic.type.ITypeVariable;
@@ -17,9 +18,14 @@ import com.g2forge.alexandria.generic.type.environment.implementations.TypeEnvir
 import com.g2forge.alexandria.generic.type.java.AJavaType;
 import com.g2forge.alexandria.generic.type.java.IJavaBoundType;
 import com.g2forge.alexandria.generic.type.java.IJavaClassType;
+import com.g2forge.alexandria.generic.type.java.IJavaConstructorType;
+import com.g2forge.alexandria.generic.type.java.IJavaFieldType;
+import com.g2forge.alexandria.generic.type.java.IJavaMethodType;
 import com.g2forge.alexandria.generic.type.java.IJavaType;
 import com.g2forge.alexandria.generic.type.java.IJavaUntype;
 import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
+import com.g2forge.alexandria.generic.type.java.structure.JavaProtection;
+import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
 import com.g2forge.alexandria.java.core.helpers.ArrayHelpers;
 
 public class JavaBoundType extends AJavaType<ParameterizedType>implements IJavaBoundType {
@@ -74,5 +80,37 @@ public class JavaBoundType extends AJavaType<ParameterizedType>implements IJavaB
 	@Override
 	public IJavaClassType erase() {
 		return getRaw().erase();
+	}
+
+	@Override
+	public Stream<? extends IJavaConstructorType> getConstructors(JavaProtection minimum) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Stream<? extends IJavaFieldType> getFields(JavaScope scope, JavaProtection minimum) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Stream<? extends IJavaType> getInterfaces() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Stream<? extends IJavaMethodType> getMethods(JavaScope scope, JavaProtection minimum) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IJavaType getSuperClass() {
+		//this.getRaw().getSuperClass()
+		return getParent(javaType.getGenericSuperclass(), javaType.getSuperclass());
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
