@@ -3,10 +3,10 @@ package com.g2forge.alexandria.adt.collection.strategy;
 import java.util.Collection;
 
 import com.g2forge.alexandria.adt.collection.collector.ICollectionBuilder;
-import com.g2forge.alexandria.adt.collection.collector.implementations.CollectionCollector;
+import com.g2forge.alexandria.adt.collection.collector.implementations.CollectionCollectionBuilder;
 
 public abstract class ACollectionStrategy<C extends Collection<T>, T> implements ICollectionStrategy<C, T> {
-	protected class Builder extends CollectionCollector<C, T> {
+	protected class Builder extends CollectionCollectionBuilder<C, T> {
 		public Builder() {
 			super(ACollectionStrategy.this.create(null));
 		}
