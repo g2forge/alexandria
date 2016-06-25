@@ -1,11 +1,14 @@
-package com.g2forge.alexandria.generic.type.java;
+package com.g2forge.alexandria.generic.type.java.member;
 
 import java.lang.reflect.Member;
 import java.lang.reflect.Type;
 import java.util.Set;
 
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
+import com.g2forge.alexandria.generic.type.java.AJavaUntype;
+import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
 import com.g2forge.alexandria.generic.type.java.structure.JavaModifier;
+import com.g2forge.alexandria.generic.type.java.type.IJavaClassType;
 
 public abstract class AJavaMemberType<M extends Member> extends AJavaUntype<M>implements IJavaMemberType {
 	public AJavaMemberType(final M member, final ITypeEnvironment environment) {

@@ -5,9 +5,11 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
-import com.g2forge.alexandria.generic.type.java.implementations.JavaBoundType;
-import com.g2forge.alexandria.generic.type.java.implementations.JavaClassType;
-import com.g2forge.alexandria.generic.type.java.implementations.JavaVariableType;
+import com.g2forge.alexandria.generic.type.java.type.IJavaClassType;
+import com.g2forge.alexandria.generic.type.java.type.IJavaType;
+import com.g2forge.alexandria.generic.type.java.type.implementations.JavaBoundType;
+import com.g2forge.alexandria.generic.type.java.type.implementations.JavaClassType;
+import com.g2forge.alexandria.generic.type.java.type.implementations.JavaVariableType;
 
 public class JavaTypeHelpers {
 	public static IJavaClassType toType(final Class<?> type, final ITypeEnvironment environment) {

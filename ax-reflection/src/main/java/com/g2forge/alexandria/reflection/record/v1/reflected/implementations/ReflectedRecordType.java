@@ -6,8 +6,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
-import com.g2forge.alexandria.generic.type.java.IJavaClassType;
 import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
+import com.g2forge.alexandria.generic.type.java.type.IJavaClassType;
 import com.g2forge.alexandria.java.function.ConcurrentCachingSupplier;
 import com.g2forge.alexandria.reflection.object.IJavaClassReflection;
 import com.g2forge.alexandria.reflection.object.implementations.JavaClassReflection;

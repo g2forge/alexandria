@@ -2,7 +2,7 @@ package com.g2forge.alexandria.reflection.object.implementations;
 
 import java.lang.reflect.InvocationTargetException;
 
-import com.g2forge.alexandria.generic.type.java.IJavaConstructorType;
+import com.g2forge.alexandria.generic.type.java.member.IJavaConstructorType;
 import com.g2forge.alexandria.java.core.error.RuntimeReflectionException;
 import com.g2forge.alexandria.reflection.object.AJavaMemberReflection;
 import com.g2forge.alexandria.reflection.object.IJavaConstructorReflection;

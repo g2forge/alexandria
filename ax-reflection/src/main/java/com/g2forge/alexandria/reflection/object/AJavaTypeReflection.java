@@ -1,6 +1,6 @@
 package com.g2forge.alexandria.reflection.object;
 
-import com.g2forge.alexandria.generic.type.java.IJavaType;
+import com.g2forge.alexandria.generic.type.java.type.IJavaType;
 import com.g2forge.alexandria.reflection.object.implementations.JavaClassReflection;
 
 public abstract class AJavaTypeReflection<T, Y extends IJavaType> implements IJavaTypeReflection<T> {

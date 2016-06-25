@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.generic.type.java.implementations;
+package com.g2forge.alexandria.generic.type.java.type.implementations;
 
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -8,11 +8,11 @@ import java.util.Collection;
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.TypeEnvironment;
-import com.g2forge.alexandria.generic.type.java.AJavaType;
-import com.g2forge.alexandria.generic.type.java.IJavaClassType;
-import com.g2forge.alexandria.generic.type.java.IJavaType;
-import com.g2forge.alexandria.generic.type.java.IJavaVariableType;
 import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
+import com.g2forge.alexandria.generic.type.java.type.AJavaType;
+import com.g2forge.alexandria.generic.type.java.type.IJavaClassType;
+import com.g2forge.alexandria.generic.type.java.type.IJavaType;
+import com.g2forge.alexandria.generic.type.java.type.IJavaVariableType;
 import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
 
 public class JavaVariableType extends AJavaType<TypeVariable<?>>implements IJavaVariableType {

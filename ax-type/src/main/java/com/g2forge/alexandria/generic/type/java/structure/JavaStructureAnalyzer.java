@@ -21,7 +21,7 @@ import com.g2forge.alexandria.java.function.FunctionHelpers;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class JavaStructureAnalyzer<C, F, M> {
+public class JavaStructureAnalyzer<T, F, M> {
 	protected class OverrideFilter implements Predicate<M> {
 		protected final Map<String, Collection<Method>> map = new HashMap<>();
 
@@ -65,27 +65,27 @@ public class JavaStructureAnalyzer<C, F, M> {
 		return filtered;
 	}
 
-	protected final Predicate<? super C> object;
+	protected final Predicate<? super T> object;
 
-	protected final Function<? super C, ? extends C> superclass;
+	protected final Function<? super T, ? extends T> superclass;
 
-	protected final Function<? super C, ? extends Stream<? extends M>> methods;
+	protected final Function<? super T, ? extends Stream<? extends M>> methods;
 
 	protected final Function<? super M, ? extends Method> method;
 
-	protected final Function<? super C, ? extends Stream<? extends F>> fields;
+	protected final Function<? super T, ? extends Stream<? extends F>> fields;
 
 	protected final Function<? super F, ? extends Field> field;
 
-	public Stream<C> getClasses(C klass, JavaScope scope) {
-		return scope.isInherited() ? TreeHelpers.<C>dfs(klass, c -> object.test(c) ? Collections.emptyList() : Arrays.asList(superclass.apply(c)), true) : Stream.of(klass);
+	public Stream<T> getClasses(T klass, JavaScope scope) {
+		return scope.isInherited() ? TreeHelpers.<T>dfs(klass, c -> object.test(c) ? Collections.emptyList() : Arrays.asList(superclass.apply(c)), true) : Stream.of(klass);
 	}
 
-	public Stream<F> getFields(C klass, JavaScope scope, JavaProtection minimum) {
+	public Stream<F> getFields(T klass, JavaScope scope, JavaProtection minimum) {
 		return filter(scope, minimum, getClasses(klass, scope).map(fields).flatMap(Function.identity()), field);
 	}
 
-	public Stream<M> getMethods(C klass, JavaScope scope, JavaProtection minimum) {
+	public Stream<M> getMethods(T klass, JavaScope scope, JavaProtection minimum) {
 		final Stream<M> basic = filter(scope, minimum, getClasses(klass, scope).map(methods).flatMap(Function.identity()), method);
 		return basic.sequential().filter(new OverrideFilter());
 	}

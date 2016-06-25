@@ -1,9 +1,11 @@
-package com.g2forge.alexandria.generic.type.java;
+package com.g2forge.alexandria.generic.type.java.type;
 
 import java.lang.reflect.Type;
 
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
-import com.g2forge.alexandria.generic.type.java.implementations.JavaClassType;
+import com.g2forge.alexandria.generic.type.java.AJavaUntype;
+import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
+import com.g2forge.alexandria.generic.type.java.type.implementations.JavaClassType;
 
 public abstract class AJavaType<JT extends Type> extends AJavaUntype<JT>implements IJavaType {
 	protected IJavaClassType getParent(final Type generic, final Class<?> parent) {

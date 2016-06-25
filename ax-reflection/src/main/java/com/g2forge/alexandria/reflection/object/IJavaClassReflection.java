@@ -1,7 +1,7 @@
 package com.g2forge.alexandria.reflection.object;
 
-import com.g2forge.alexandria.generic.type.java.IJavaClassType;
 import com.g2forge.alexandria.generic.type.java.structure.IJavaClassStructure;
+import com.g2forge.alexandria.generic.type.java.type.IJavaClassType;
 import com.g2forge.alexandria.generic.type.java.typed.IJavaGenericTyped;
 import com.g2forge.alexandria.reflection.annotations.IJavaAnnotated;
 

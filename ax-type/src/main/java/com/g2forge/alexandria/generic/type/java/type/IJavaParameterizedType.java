@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.generic.type.java;
+package com.g2forge.alexandria.generic.type.java.type;
 
 import java.util.List;
 
