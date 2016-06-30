@@ -25,12 +25,18 @@ import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
 import com.g2forge.alexandria.generic.type.java.type.AJavaType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaBoundType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaClassType;
+import com.g2forge.alexandria.generic.type.java.type.IJavaConcreteType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaType;
 import com.g2forge.alexandria.java.core.helpers.ArrayHelpers;
 
 public class JavaBoundType extends AJavaType<ParameterizedType>implements IJavaBoundType {
 	public JavaBoundType(final ParameterizedType javaType, final ITypeEnvironment environment) {
 		super(javaType, environment);
+	}
+
+	@Override
+	public IJavaClassType erase() {
+		return getRaw().resolve().erase();
 	}
 
 	@Override
@@ -44,6 +50,30 @@ public class JavaBoundType extends AJavaType<ParameterizedType>implements IJavaB
 	}
 
 	@Override
+	public Stream<? extends IJavaConstructorType> getConstructors(JavaProtection minimum) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Stream<? extends IJavaFieldType> getFields(JavaScope scope, JavaProtection minimum) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Stream<? extends IJavaConcreteType> getInterfaces() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Stream<? extends IJavaMethodType> getMethods(JavaScope scope, JavaProtection minimum) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
 	public IJavaType getOwner() {
 		return JavaTypeHelpers.toType(javaType.getOwnerType(), environment);
 	}
@@ -54,9 +84,27 @@ public class JavaBoundType extends AJavaType<ParameterizedType>implements IJavaB
 	}
 
 	@Override
+	public IJavaConcreteType getSuperClass() {
+		// this.getRaw().getSuperClass()
+		return getParent(javaType.getGenericSuperclass(), javaType.getSuperclass());
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isEnum() {
+		return false;
+	}
+
+	@Override
+	public IJavaConcreteType resolve() {
+		return this;
+	}
+
+	@Override
 	public ITypeEnvironment toEnvironment() {
 		final IJavaUntype owner = getOwner();
-		final ITypeEnvironment parent = (owner instanceof IJavaBoundType) ? ((IJavaBoundType) owner).toEnvironment() : EmptyTypeEnvironment.create();
+		final ITypeEnvironment parent = owner.toEnvironment();
 
 		if (javaType.getRawType() instanceof GenericDeclaration) {
 			final TypeVariable<?>[] parameters = ((GenericDeclaration) javaType.getRawType()).getTypeParameters();
@@ -75,42 +123,5 @@ public class JavaBoundType extends AJavaType<ParameterizedType>implements IJavaB
 		}
 
 		return TypeEnvironment.create(parent);
-	}
-
-	@Override
-	public IJavaClassType erase() {
-		return getRaw().erase();
-	}
-
-	@Override
-	public Stream<? extends IJavaConstructorType> getConstructors(JavaProtection minimum) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Stream<? extends IJavaFieldType> getFields(JavaScope scope, JavaProtection minimum) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Stream<? extends IJavaType> getInterfaces() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Stream<? extends IJavaMethodType> getMethods(JavaScope scope, JavaProtection minimum) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public IJavaType getSuperClass() {
-		//this.getRaw().getSuperClass()
-		return getParent(javaType.getGenericSuperclass(), javaType.getSuperclass());
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

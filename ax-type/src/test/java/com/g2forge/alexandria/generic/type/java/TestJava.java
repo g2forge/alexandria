@@ -39,7 +39,7 @@ public class TestJava {
 	@Test
 	public void testBound() {
 		final IJavaClassType inner = new JavaClassType(O.I.class, EmptyTypeEnvironment.create());
-		final IJavaUntype type = inner.toConcrete().getFields(JavaScope.Instance, JavaProtection.Private).findAny().get().getType();
+		final IJavaUntype type = inner.resolve().getFields(JavaScope.Instance, JavaProtection.Private).findAny().get().getType();
 		Assert.assertTrue(type instanceof IJavaBoundType);
 		final IJavaBoundType bound = (IJavaBoundType) type;
 		Assert.assertEquals(inner, bound.getRaw());

@@ -26,4 +26,6 @@ public interface IJavaClassStructure<R, T, F, M, C> extends IJavaTypeStructure<R
 	public Stream<? extends M> getMethods(JavaScope scope, JavaProtection minimum);
 
 	public T getSuperClass();
+
+	public boolean isEnum();
 }

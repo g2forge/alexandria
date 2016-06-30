@@ -4,6 +4,6 @@ import java.util.Collection;
 
 import com.g2forge.alexandria.generic.type.IVariableType;
 
-public interface IJavaVariableType extends IVariableType, IJavaType {
+public interface IJavaVariableType extends IJavaType, IVariableType {
 	public Collection<? extends IJavaType> getUpperBounds();
 }
