@@ -15,6 +15,6 @@ public class JavaMethodType extends AJavaInvocableType<Method>implements IJavaMe
 
 	@Override
 	public IJavaMethodType eval(ITypeEnvironment environment) {
-		return new JavaMethodType(javaType, TypeEnvironment.create(this.environment, EmptyTypeEnvironment.create(environment)));
+		return new JavaMethodType(javaType, TypeEnvironment.create(null, this.environment, EmptyTypeEnvironment.create(environment)));
 	}
 }

@@ -17,7 +17,7 @@ public class JavaFieldType extends AJavaMemberType<Field>implements IJavaFieldTy
 
 	@Override
 	public IJavaFieldType eval(ITypeEnvironment environment) {
-		return new JavaFieldType(javaType, TypeEnvironment.create(this.environment, EmptyTypeEnvironment.create(environment)));
+		return new JavaFieldType(javaType, TypeEnvironment.create(null, this.environment, EmptyTypeEnvironment.create(environment)));
 	}
 
 	@Override

@@ -35,13 +35,13 @@ public abstract class AJavaConcreteType<JT extends Type> extends AJavaType<JT>im
 		final Function<? super IJavaConcreteType, ? extends IJavaConcreteType> superclass = IJavaConcreteType::getSuperClass;
 		final Function<? super IJavaConcreteType, ? extends Stream<? extends IJavaMethodType>> methods = klass -> {
 			final JavaClassType cast = (JavaClassType) klass.erase();
-			final ITypeEnvironment environment = TypeEnvironment.create(cast.environment, klass.toEnvironment());
+			final ITypeEnvironment environment = TypeEnvironment.create(null, cast.environment, klass.toEnvironment());
 			return Stream.of(cast.javaType.getDeclaredMethods()).map(m -> new JavaMethodType(m, environment));
 		};
 		final Function<? super IJavaMethodType, ? extends Method> method = IJavaMethodType::getJavaMember;
 		final Function<? super IJavaConcreteType, ? extends Stream<? extends IJavaFieldType>> fields = klass -> {
 			final JavaClassType cast = (JavaClassType) klass.erase();
-			final ITypeEnvironment environment = TypeEnvironment.create(cast.environment, klass.toEnvironment());
+			final ITypeEnvironment environment = TypeEnvironment.create(null, cast.environment, klass.toEnvironment());
 			return Stream.of(cast.javaType.getDeclaredFields()).map(f -> new JavaFieldType(f, environment));
 		};
 		final Function<? super IJavaFieldType, ? extends Field> field = IJavaFieldType::getJavaMember;
@@ -88,8 +88,10 @@ public abstract class AJavaConcreteType<JT extends Type> extends AJavaType<JT>im
 		if (rawThis.equals(rawParent)) return this;
 
 		final Function<IJavaConcreteType, IJavaConcreteType> function = type -> {
+			if (type == null) return null;
 			try {
-				return type.getParent(parent);
+				final IJavaConcreteType retVal = type.getParent(parent);
+				return retVal != null ? retVal.eval(environment) : null;
 			} catch (IllegalArgumentException e) {
 				return null;
 			}
@@ -109,7 +111,9 @@ public abstract class AJavaConcreteType<JT extends Type> extends AJavaType<JT>im
 
 	@Override
 	public IJavaConcreteType getSuperClass() {
-		return erase().getSuperClass().eval(toEnvironment());
+		final IJavaConcreteType superclass = erase().getSuperClass();
+		if (superclass == null) return null;
+		return superclass.eval(toEnvironment());
 	}
 
 	@Override

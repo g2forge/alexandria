@@ -8,7 +8,7 @@ import com.g2forge.alexandria.adt.collection.strategy.ICollectionStrategy;
 import com.g2forge.alexandria.adt.collection.strategy.implementations.CollectionStrategy;
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
-import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
+import com.g2forge.alexandria.generic.type.java.type.implementations.JavaBoundType;
 import com.g2forge.alexandria.reflection.object.implementations.JavaConcreteReflection;
 import com.g2forge.alexandria.reflection.object.implementations.JavaTypeReflection;
 import com.g2forge.alexandria.reflection.typed.IReflectionGenericTyped;
@@ -46,8 +46,7 @@ public class ReflectionHelpers {
 		}
 		if (type instanceof ParameterizedType) {
 			final ParameterizedType parameterized = (ParameterizedType) type;
-			JavaTypeHelpers.toType(parameterized, null).toEnvironment();
-			return toReflection(parameterized.getRawType(), JavaTypeHelpers.toType(parameterized, null).toEnvironment());
+			return toReflection(parameterized.getRawType(), new JavaBoundType(parameterized, null).toEnvironment());
 		}
 		return new JavaTypeReflection<T>(type, environment);
 	}

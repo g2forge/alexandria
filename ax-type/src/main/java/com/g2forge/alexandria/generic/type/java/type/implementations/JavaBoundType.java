@@ -17,12 +17,12 @@ import com.g2forge.alexandria.generic.type.environment.implementations.TypeEnvir
 import com.g2forge.alexandria.generic.type.java.IJavaUntype;
 import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
 import com.g2forge.alexandria.generic.type.java.type.AJavaConcreteType;
-import com.g2forge.alexandria.generic.type.java.type.IJavaBoundType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaClassType;
+import com.g2forge.alexandria.generic.type.java.type.IJavaConcreteType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaType;
 import com.g2forge.alexandria.java.core.helpers.ArrayHelpers;
 
-public class JavaBoundType extends AJavaConcreteType<ParameterizedType>implements IJavaBoundType {
+public class JavaBoundType extends AJavaConcreteType<ParameterizedType> {
 	public JavaBoundType(final ParameterizedType javaType, final ITypeEnvironment environment) {
 		super(javaType, environment);
 	}
@@ -33,8 +33,8 @@ public class JavaBoundType extends AJavaConcreteType<ParameterizedType>implement
 	}
 
 	@Override
-	public IJavaBoundType eval(final ITypeEnvironment environment) {
-		return new JavaBoundType(javaType, TypeEnvironment.create(this.environment, EmptyTypeEnvironment.create(environment)));
+	public IJavaConcreteType eval(final ITypeEnvironment environment) {
+		return new JavaBoundType(javaType, TypeEnvironment.create(null, this.environment, EmptyTypeEnvironment.create(environment)));
 	}
 
 	@Override
@@ -57,10 +57,9 @@ public class JavaBoundType extends AJavaConcreteType<ParameterizedType>implement
 		return false;
 	}
 
-	@Override
 	public ITypeEnvironment toEnvironment() {
 		final IJavaUntype owner = getOwner();
-		final ITypeEnvironment parent = owner.toEnvironment();
+		final ITypeEnvironment parent = ((owner != null) && (owner instanceof IJavaConcreteType)) ? ((IJavaConcreteType) owner).toEnvironment() : null;
 
 		if (javaType.getRawType() instanceof GenericDeclaration) {
 			final TypeVariable<?>[] parameters = ((GenericDeclaration) javaType.getRawType()).getTypeParameters();
@@ -70,7 +69,7 @@ public class JavaBoundType extends AJavaConcreteType<ParameterizedType>implement
 			final ITypeEnvironment retVal = new TypeEnvironment(map, parent);
 
 			for (int i = 0; i < parameters.length; i++) {
-				final JavaVariableType parameter = new JavaVariableType(parameters[i], retVal);
+				final JavaVariableType parameter = new JavaVariableType(parameters[i], null);
 				final IJavaUntype actual = JavaTypeHelpers.toType(actuals[i], retVal);
 				if (!Objects.equals(parameter, actual)) map.put(parameter, actual);
 			}
