@@ -15,6 +15,6 @@ public class JavaConstructorType extends AJavaInvocableType<Constructor<?>>imple
 
 	@Override
 	public IJavaConstructorType eval(ITypeEnvironment environment) {
-		return new JavaConstructorType(javaType, TypeEnvironment.create(this.environment, EmptyTypeEnvironment.create(environment)));
+		return new JavaConstructorType(javaType, TypeEnvironment.create(null, this.environment, EmptyTypeEnvironment.create(environment)));
 	}
 }

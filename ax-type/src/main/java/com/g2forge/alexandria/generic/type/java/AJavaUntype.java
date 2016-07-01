@@ -3,7 +3,6 @@ package com.g2forge.alexandria.generic.type.java;
 import java.util.Objects;
 
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
-import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
 
 public abstract class AJavaUntype<JT> implements IJavaUntype {
 	protected final JT javaType;
@@ -32,11 +31,6 @@ public abstract class AJavaUntype<JT> implements IJavaUntype {
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(javaType);
-	}
-
-	@Override
-	public ITypeEnvironment toEnvironment() {
-		return EmptyTypeEnvironment.create();
 	}
 
 	@Override

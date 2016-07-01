@@ -10,8 +10,8 @@ import com.g2forge.alexandria.generic.type.environment.implementations.EmptyType
 import com.g2forge.alexandria.generic.type.java.member.IJavaFieldType;
 import com.g2forge.alexandria.generic.type.java.structure.JavaProtection;
 import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
-import com.g2forge.alexandria.generic.type.java.type.IJavaBoundType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaClassType;
+import com.g2forge.alexandria.generic.type.java.type.IJavaConcreteType;
 import com.g2forge.alexandria.generic.type.java.type.implementations.JavaClassType;
 import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
 
@@ -40,8 +40,8 @@ public class TestJava {
 	public void testBound() {
 		final IJavaClassType inner = new JavaClassType(O.I.class, EmptyTypeEnvironment.create());
 		final IJavaUntype type = inner.resolve().getFields(JavaScope.Instance, JavaProtection.Private).findAny().get().getType();
-		Assert.assertTrue(type instanceof IJavaBoundType);
-		final IJavaBoundType bound = (IJavaBoundType) type;
+		Assert.assertTrue(type instanceof IJavaConcreteType);
+		final IJavaConcreteType bound = (IJavaConcreteType) type;
 		Assert.assertEquals(inner, bound.getRaw());
 		Assert.assertEquals(type, type.eval(bound.toEnvironment()));
 		Assert.assertEquals(bound, bound.getFields(JavaScope.Instance, JavaProtection.Private).findAny().get().getType());
