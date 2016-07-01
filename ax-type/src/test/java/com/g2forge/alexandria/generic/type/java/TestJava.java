@@ -44,6 +44,7 @@ public class TestJava {
 		final IJavaBoundType bound = (IJavaBoundType) type;
 		Assert.assertEquals(inner, bound.getRaw());
 		Assert.assertEquals(type, type.eval(bound.toEnvironment()));
+		Assert.assertEquals(bound, bound.getFields(JavaScope.Instance, JavaProtection.Private).findAny().get().getType());
 	}
 
 	@Test

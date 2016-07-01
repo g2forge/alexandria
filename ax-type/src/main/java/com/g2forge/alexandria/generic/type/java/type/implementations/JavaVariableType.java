@@ -16,10 +16,6 @@ import com.g2forge.alexandria.generic.type.java.type.IJavaType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaVariableType;
 
 public class JavaVariableType extends AJavaType<TypeVariable<?>>implements IJavaVariableType {
-	/**
-	 * @param javaType
-	 * @param environment
-	 */
 	public JavaVariableType(final TypeVariable<?> javaType, final ITypeEnvironment environment) {
 		super(javaType, environment);
 	}

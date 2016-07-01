@@ -11,4 +11,6 @@ public interface IJavaConcreteType extends IJavaType, IConcreteType, IJavaClassS
 	@Override
 	public IJavaConcreteType eval(ITypeEnvironment environment);
 
+	@Override
+	public IJavaClassType erase();
 }
