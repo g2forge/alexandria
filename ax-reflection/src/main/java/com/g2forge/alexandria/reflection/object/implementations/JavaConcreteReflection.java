@@ -17,6 +17,8 @@ import com.g2forge.alexandria.reflection.object.IJavaConcreteReflection;
 import com.g2forge.alexandria.reflection.object.IJavaConstructorReflection;
 import com.g2forge.alexandria.reflection.object.IJavaFieldReflection;
 import com.g2forge.alexandria.reflection.object.IJavaMethodReflection;
+import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;
+import com.g2forge.alexandria.reflection.object.ReflectionHelpers;
 
 public class JavaConcreteReflection<T> extends AJavaTypeReflection<T, IJavaConcreteType>implements IJavaConcreteReflection<T> {
 	public JavaConcreteReflection(Class<T> type, final ITypeEnvironment environment) {
@@ -55,6 +57,11 @@ public class JavaConcreteReflection<T> extends AJavaTypeReflection<T, IJavaConcr
 	@Override
 	public Stream<? extends IJavaMethodReflection<T>> getMethods(JavaScope scope, JavaProtection minimum) {
 		return getType().getMethods(scope, minimum).map(JavaMethodReflection::new);
+	}
+
+	@Override
+	public IJavaTypeReflection<?> getParent(IJavaTypeReflection<?> parent) {
+		return ReflectionHelpers.toReflection(getType().getParent(parent.getType().resolve()));
 	}
 
 	@SuppressWarnings("rawtypes")

@@ -25,7 +25,7 @@ public interface IJavaClassStructure<R, T, F, M, C> extends IJavaTypeStructure<R
 
 	public Stream<? extends M> getMethods(JavaScope scope, JavaProtection minimum);
 
-	public T getParent(R parent);
+	public T getParent(T parent);
 
 	public T getSuperClass();
 

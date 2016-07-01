@@ -81,7 +81,7 @@ public abstract class AJavaConcreteType<JT extends Type> extends AJavaType<JT>im
 	}
 
 	@Override
-	public IJavaConcreteType getParent(IJavaClassType parent) {
+	public IJavaConcreteType getParent(IJavaConcreteType parent) {
 		final Class<?> rawThis = (Class<?>) erase().getJavaType();
 		final Class<?> rawParent = (Class<?>) parent.erase().getJavaType();
 		if (!rawParent.isAssignableFrom(rawThis)) throw new IllegalArgumentException();
