@@ -23,6 +23,7 @@ import com.g2forge.alexandria.generic.type.java.structure.JavaStructureAnalyzer;
 import com.g2forge.alexandria.generic.type.java.type.implementations.JavaClassType;
 import com.g2forge.alexandria.java.associative.cache.Cache;
 import com.g2forge.alexandria.java.associative.cache.NeverCacheEvictionPolicy;
+import com.g2forge.alexandria.java.core.error.UnreachableCodeError;
 import com.g2forge.alexandria.java.tuple.ITuple2G_;
 import com.g2forge.alexandria.java.tuple.Tuple2G_;
 
@@ -77,6 +78,33 @@ public abstract class AJavaConcreteType<JT extends Type> extends AJavaType<JT>im
 
 	public Stream<IJavaMethodType> getMethods(JavaScope scope, JavaProtection minimum) {
 		return methods.apply(new Tuple2G_<>(scope, minimum)).stream();
+	}
+
+	@Override
+	public IJavaConcreteType getParent(IJavaClassType parent) {
+		final Class<?> rawThis = (Class<?>) erase().getJavaType();
+		final Class<?> rawParent = (Class<?>) parent.erase().getJavaType();
+		if (!rawParent.isAssignableFrom(rawThis)) throw new IllegalArgumentException();
+		if (rawThis.equals(rawParent)) return this;
+
+		final Function<IJavaConcreteType, IJavaConcreteType> function = type -> {
+			try {
+				return type.getParent(parent);
+			} catch (IllegalArgumentException e) {
+				return null;
+			}
+		};
+
+		{
+			final IJavaConcreteType retVal = function.apply(getSuperClass());
+			if (retVal != null) return retVal;
+		}
+		for (IJavaConcreteType i : getInterfaces().collect(Collectors.toList())) {
+			final IJavaConcreteType retVal = function.apply(i);
+			if (retVal != null) return retVal;
+		}
+
+		throw new UnreachableCodeError();
 	}
 
 	@Override

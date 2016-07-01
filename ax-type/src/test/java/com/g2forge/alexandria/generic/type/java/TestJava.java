@@ -55,6 +55,12 @@ public class TestJava {
 	}
 
 	@Test
+	public void testParent() {
+		final IJavaClassType child = new JavaClassType(Child.class, EmptyTypeEnvironment.create());
+		Assert.assertEquals(child.getSuperClass(), child.getParent(new JavaClassType(Parent.class, EmptyTypeEnvironment.create())));
+	}
+
+	@Test
 	public void testResolved() {
 		final IJavaClassType child = new JavaClassType(Child.class, EmptyTypeEnvironment.create());
 		final IJavaFieldType field = child.getSuperClass().getFields(JavaScope.Instance, JavaProtection.Private).findFirst().get();
