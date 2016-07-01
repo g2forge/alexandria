@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.generic.type.java.implementations;
+package com.g2forge.alexandria.generic.type.java.type.implementations;
 
 import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.ParameterizedType;
@@ -10,21 +10,26 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.g2forge.alexandria.generic.type.IType;
-import com.g2forge.alexandria.generic.type.ITypeVariable;
+import com.g2forge.alexandria.generic.type.IVariableType;
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.TypeEnvironment;
-import com.g2forge.alexandria.generic.type.java.AJavaType;
-import com.g2forge.alexandria.generic.type.java.IJavaBoundType;
-import com.g2forge.alexandria.generic.type.java.IJavaClassType;
-import com.g2forge.alexandria.generic.type.java.IJavaType;
 import com.g2forge.alexandria.generic.type.java.IJavaUntype;
 import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
+import com.g2forge.alexandria.generic.type.java.type.AJavaConcreteType;
+import com.g2forge.alexandria.generic.type.java.type.IJavaBoundType;
+import com.g2forge.alexandria.generic.type.java.type.IJavaClassType;
+import com.g2forge.alexandria.generic.type.java.type.IJavaType;
 import com.g2forge.alexandria.java.core.helpers.ArrayHelpers;
 
-public class JavaBoundType extends AJavaType<ParameterizedType>implements IJavaBoundType {
+public class JavaBoundType extends AJavaConcreteType<ParameterizedType>implements IJavaBoundType {
 	public JavaBoundType(final ParameterizedType javaType, final ITypeEnvironment environment) {
 		super(javaType, environment);
+	}
+
+	@Override
+	public IJavaClassType erase() {
+		return getRaw().resolve().erase();
 	}
 
 	@Override
@@ -48,16 +53,21 @@ public class JavaBoundType extends AJavaType<ParameterizedType>implements IJavaB
 	}
 
 	@Override
+	public boolean isEnum() {
+		return false;
+	}
+
+	@Override
 	public ITypeEnvironment toEnvironment() {
 		final IJavaUntype owner = getOwner();
-		final ITypeEnvironment parent = (owner instanceof IJavaBoundType) ? ((IJavaBoundType) owner).toEnvironment() : EmptyTypeEnvironment.create();
+		final ITypeEnvironment parent = owner.toEnvironment();
 
 		if (javaType.getRawType() instanceof GenericDeclaration) {
 			final TypeVariable<?>[] parameters = ((GenericDeclaration) javaType.getRawType()).getTypeParameters();
 			final Type[] actuals = javaType.getActualTypeArguments();
 
-			final Map<ITypeVariable, IType> map = new LinkedHashMap<>();
-			final ITypeEnvironment retVal = new TypeEnvironment(map, environment, parent);
+			final Map<IVariableType, IType> map = new LinkedHashMap<>();
+			final ITypeEnvironment retVal = new TypeEnvironment(map, parent);
 
 			for (int i = 0; i < parameters.length; i++) {
 				final JavaVariableType parameter = new JavaVariableType(parameters[i], retVal);
@@ -69,10 +79,5 @@ public class JavaBoundType extends AJavaType<ParameterizedType>implements IJavaB
 		}
 
 		return TypeEnvironment.create(parent);
-	}
-
-	@Override
-	public IJavaClassType erase() {
-		return getRaw().erase();
 	}
 }

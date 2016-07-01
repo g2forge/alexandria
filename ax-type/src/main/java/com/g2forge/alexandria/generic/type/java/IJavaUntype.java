@@ -8,8 +8,6 @@ import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 public interface IJavaUntype extends IType {
 	@Override
 	public IJavaUntype eval(ITypeEnvironment environment);
-	
+
 	public Type getJavaType();
-	
-	public boolean isEnum();
 }

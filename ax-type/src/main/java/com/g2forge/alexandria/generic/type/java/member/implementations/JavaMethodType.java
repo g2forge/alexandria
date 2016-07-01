@@ -1,21 +1,20 @@
-package com.g2forge.alexandria.generic.type.java.implementations;
+package com.g2forge.alexandria.generic.type.java.member.implementations;
 
 import java.lang.reflect.Method;
 
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.TypeEnvironment;
-import com.g2forge.alexandria.generic.type.java.AJavaMemberType;
-import com.g2forge.alexandria.generic.type.java.IJavaMethodType;
-import com.g2forge.alexandria.generic.type.java.IJavaUntype;
+import com.g2forge.alexandria.generic.type.java.member.AJavaInvocableType;
+import com.g2forge.alexandria.generic.type.java.member.IJavaMethodType;
 
-public class JavaMethodType extends AJavaMemberType<Method>implements IJavaMethodType {
+public class JavaMethodType extends AJavaInvocableType<Method>implements IJavaMethodType {
 	public JavaMethodType(final Method method, final ITypeEnvironment environment) {
 		super(method, environment);
 	}
 
 	@Override
-	public IJavaUntype eval(ITypeEnvironment environment) {
+	public IJavaMethodType eval(ITypeEnvironment environment) {
 		return new JavaMethodType(javaType, TypeEnvironment.create(this.environment, EmptyTypeEnvironment.create(environment)));
 	}
 }

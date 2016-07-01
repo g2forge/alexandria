@@ -7,9 +7,12 @@ import org.junit.Test;
 
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
-import com.g2forge.alexandria.generic.type.java.implementations.JavaClassType;
+import com.g2forge.alexandria.generic.type.java.member.IJavaFieldType;
 import com.g2forge.alexandria.generic.type.java.structure.JavaProtection;
 import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
+import com.g2forge.alexandria.generic.type.java.type.IJavaBoundType;
+import com.g2forge.alexandria.generic.type.java.type.IJavaClassType;
+import com.g2forge.alexandria.generic.type.java.type.implementations.JavaClassType;
 import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
 
 public class TestJava {
@@ -36,11 +39,12 @@ public class TestJava {
 	@Test
 	public void testBound() {
 		final IJavaClassType inner = new JavaClassType(O.I.class, EmptyTypeEnvironment.create());
-		final IJavaUntype type = inner.getFields(JavaScope.Instance, JavaProtection.Private).findAny().get().getType();
+		final IJavaUntype type = inner.resolve().getFields(JavaScope.Instance, JavaProtection.Private).findAny().get().getType();
 		Assert.assertTrue(type instanceof IJavaBoundType);
 		final IJavaBoundType bound = (IJavaBoundType) type;
 		Assert.assertEquals(inner, bound.getRaw());
 		Assert.assertEquals(type, type.eval(bound.toEnvironment()));
+		Assert.assertEquals(bound, bound.getFields(JavaScope.Instance, JavaProtection.Private).findAny().get().getType());
 	}
 
 	@Test
@@ -48,6 +52,12 @@ public class TestJava {
 		final IJavaClassType child = new JavaClassType(Child.class, EmptyTypeEnvironment.create());
 		final IJavaFieldType field = child.getFields(JavaScope.Inherited, JavaProtection.Private).findFirst().get();
 		Assert.assertEquals(String.class, field.getType().getJavaType());
+	}
+
+	@Test
+	public void testParent() {
+		final IJavaClassType child = new JavaClassType(Child.class, EmptyTypeEnvironment.create());
+		Assert.assertEquals(child.getSuperClass(), child.getParent(new JavaClassType(Parent.class, EmptyTypeEnvironment.create())));
 	}
 
 	@Test

@@ -6,7 +6,7 @@ import java.util.Collections;
 
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.IJavaUntype;
-import com.g2forge.alexandria.generic.type.java.implementations.JavaClassType;
+import com.g2forge.alexandria.generic.type.java.type.implementations.JavaClassType;
 import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
 import com.g2forge.alexandria.record.IFieldType;
 import com.g2forge.alexandria.reflection.record.v1.typedmap.IJavaTypedFieldType;

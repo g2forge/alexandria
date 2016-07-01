@@ -9,7 +9,7 @@ import com.g2forge.alexandria.adt.collection.strategy.implementations.Collection
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
-import com.g2forge.alexandria.reflection.object.implementations.JavaClassReflection;
+import com.g2forge.alexandria.reflection.object.implementations.JavaConcreteReflection;
 import com.g2forge.alexandria.reflection.object.implementations.JavaTypeReflection;
 import com.g2forge.alexandria.reflection.typed.IReflectionGenericTyped;
 
@@ -20,17 +20,17 @@ public class ReflectionHelpers {
 		throw new IllegalArgumentException("Collection type \"" + typed.getType() + "\" is not recognized, so we can't help you here (sorry)!");
 	}
 
-	public static <T> IJavaClassReflection<T> toReflection(final Class<T> type) {
+	public static <T> IJavaConcreteReflection<T> toReflection(final Class<T> type) {
 		return toReflection(type, EmptyTypeEnvironment.create());
 	}
 
-	public static <T> IJavaClassReflection<T> toReflection(final Class<T> type, final ITypeEnvironment environment) {
-		return new JavaClassReflection<>(type, environment);
+	public static <T> IJavaConcreteReflection<T> toReflection(final Class<T> type, final ITypeEnvironment environment) {
+		return new JavaConcreteReflection<>(type, environment);
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> IJavaClassReflection<T> toReflection(T value) {
-		return (IJavaClassReflection<T>) toReflection(value.getClass(), EmptyTypeEnvironment.create());
+	public static <T> IJavaConcreteReflection<T> toReflection(T value) {
+		return (IJavaConcreteReflection<T>) toReflection(value.getClass(), EmptyTypeEnvironment.create());
 	}
 
 	public static <T> IJavaTypeReflection<T> toReflection(final Type type) {

@@ -2,10 +2,10 @@ package com.g2forge.alexandria.reflection.object;
 
 import java.lang.reflect.AnnotatedElement;
 
-import com.g2forge.alexandria.generic.type.java.IJavaMemberType;
+import com.g2forge.alexandria.generic.type.java.member.IJavaMemberType;
 import com.g2forge.alexandria.reflection.annotations.IJavaAnnotations;
 import com.g2forge.alexandria.reflection.annotations.implementations.JavaAnnotations;
-import com.g2forge.alexandria.reflection.object.implementations.JavaClassReflection;
+import com.g2forge.alexandria.reflection.object.implementations.JavaConcreteReflection;
 
 public abstract class AJavaMemberReflection<O, MT extends IJavaMemberType> implements IJavaMemberReflection<O> {
 	protected final MT type;
@@ -23,8 +23,8 @@ public abstract class AJavaMemberReflection<O, MT extends IJavaMemberType> imple
 	}
 
 	@Override
-	public IJavaClassReflection<O> getDeclaringClass() {
-		return new JavaClassReflection<>(type.getDeclaringClass());
+	public IJavaConcreteReflection<O> getDeclaringClass() {
+		return new JavaConcreteReflection<>(type.getDeclaringClass());
 	}
 
 	@Override

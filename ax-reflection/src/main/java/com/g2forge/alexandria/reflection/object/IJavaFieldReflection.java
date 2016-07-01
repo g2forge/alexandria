@@ -1,6 +1,6 @@
 package com.g2forge.alexandria.reflection.object;
 
-import com.g2forge.alexandria.generic.type.java.IJavaFieldType;
+import com.g2forge.alexandria.generic.type.java.member.IJavaFieldType;
 import com.g2forge.alexandria.generic.type.java.typed.IJavaGenericTyped;
 import com.g2forge.alexandria.java.tuple.ITuple1GS;
 

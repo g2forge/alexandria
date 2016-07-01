@@ -1,7 +1,7 @@
 package com.g2forge.alexandria.generic.type.environment.implementations;
 
 import com.g2forge.alexandria.generic.type.IType;
-import com.g2forge.alexandria.generic.type.ITypeVariable;
+import com.g2forge.alexandria.generic.type.IVariableType;
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 
 public final class EmptyTypeEnvironment implements ITypeEnvironment {
@@ -19,7 +19,7 @@ public final class EmptyTypeEnvironment implements ITypeEnvironment {
 	private EmptyTypeEnvironment() {}
 
 	@Override
-	public IType apply(final ITypeVariable input) {
+	public IType apply(final IVariableType input) {
 		return input;
 	}
 

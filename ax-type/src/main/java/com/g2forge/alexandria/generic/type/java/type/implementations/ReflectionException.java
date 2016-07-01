@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.generic.type.java.implementations;
+package com.g2forge.alexandria.generic.type.java.type.implementations;
 
 public class ReflectionException extends RuntimeException {
 	private static final long serialVersionUID = -7775511988672940108L;
