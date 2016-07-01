@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
 import com.g2forge.alexandria.java.function.CachingSupplier;
-import com.g2forge.alexandria.reflection.object.IJavaClassReflection;
+import com.g2forge.alexandria.reflection.object.IJavaConcreteReflection;
 import com.g2forge.alexandria.reflection.object.IJavaFieldReflection;
 import com.g2forge.alexandria.reflection.object.ReflectionHelpers;
 import com.g2forge.alexandria.reflection.record.v2.IPropertyType;
@@ -21,7 +21,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class ReflectedRecordType implements IRecordType {
-	protected final IJavaClassReflection<?> reflection;
+	protected final IJavaConcreteReflection<?> reflection;
 
 	@SuppressWarnings("unchecked")
 	protected Supplier<Map<String, IPropertyType>> properties = new CachingSupplier<>(() -> {
@@ -39,7 +39,7 @@ public class ReflectedRecordType implements IRecordType {
 		return properties.get().values();
 	}
 
-	protected IJavaClassReflection<?> getReflection() {
+	protected IJavaConcreteReflection<?> getReflection() {
 		return reflection;
 	}
 }

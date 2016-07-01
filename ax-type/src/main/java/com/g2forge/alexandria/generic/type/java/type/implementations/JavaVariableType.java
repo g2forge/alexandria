@@ -3,7 +3,7 @@ package com.g2forge.alexandria.generic.type.java.type.implementations;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import com.g2forge.alexandria.generic.type.TypeNotConcreteException;
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
@@ -11,6 +11,7 @@ import com.g2forge.alexandria.generic.type.environment.implementations.EmptyType
 import com.g2forge.alexandria.generic.type.environment.implementations.TypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
 import com.g2forge.alexandria.generic.type.java.type.AJavaType;
+import com.g2forge.alexandria.generic.type.java.type.IJavaClassType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaConcreteType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaVariableType;
@@ -21,14 +22,19 @@ public class JavaVariableType extends AJavaType<TypeVariable<?>>implements IJava
 	}
 
 	@Override
+	public IJavaClassType erase() {
+		return getUpperBounds().get(0).erase();
+	}
+
+	@Override
 	public IJavaType eval(final ITypeEnvironment environment) {
 		return (IJavaType) TypeEnvironment.create(this.environment, EmptyTypeEnvironment.create(environment)).apply(this);
 	}
 
 	@Override
-	public Collection<? extends IJavaType> getUpperBounds() {
+	public List<? extends IJavaType> getUpperBounds() {
 		final Type[] bounds = this.getJavaTypeSimple().getBounds();
-		final Collection<IJavaType> retVal = new ArrayList<>(bounds.length);
+		final List<IJavaType> retVal = new ArrayList<>(bounds.length);
 		for (Type bound : bounds) {
 			retVal.add(JavaTypeHelpers.toType(bound, environment));
 		}

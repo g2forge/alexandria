@@ -8,28 +8,22 @@ import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
 import com.g2forge.alexandria.generic.type.java.structure.JavaProtection;
 import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
-import com.g2forge.alexandria.generic.type.java.type.IJavaClassType;
+import com.g2forge.alexandria.generic.type.java.type.IJavaConcreteType;
 import com.g2forge.alexandria.generic.type.java.type.implementations.ReflectionException;
 import com.g2forge.alexandria.reflection.annotations.IJavaAnnotations;
 import com.g2forge.alexandria.reflection.annotations.implementations.JavaAnnotations;
 import com.g2forge.alexandria.reflection.object.AJavaTypeReflection;
-import com.g2forge.alexandria.reflection.object.IJavaClassReflection;
+import com.g2forge.alexandria.reflection.object.IJavaConcreteReflection;
 import com.g2forge.alexandria.reflection.object.IJavaConstructorReflection;
 import com.g2forge.alexandria.reflection.object.IJavaFieldReflection;
 import com.g2forge.alexandria.reflection.object.IJavaMethodReflection;
 
-public class JavaClassReflection<T> extends AJavaTypeReflection<T, IJavaClassType>implements IJavaClassReflection<T> {
-	/**
-	 * @param type
-	 */
-	public JavaClassReflection(Class<T> type, final ITypeEnvironment environment) {
+public class JavaConcreteReflection<T> extends AJavaTypeReflection<T, IJavaConcreteType>implements IJavaConcreteReflection<T> {
+	public JavaConcreteReflection(Class<T> type, final ITypeEnvironment environment) {
 		this(JavaTypeHelpers.toType(type, environment));
 	}
 
-	/**
-	 * @param type
-	 */
-	public JavaClassReflection(IJavaClassType type) {
+	public JavaConcreteReflection(IJavaConcreteType type) {
 		super(type);
 	}
 
@@ -49,8 +43,8 @@ public class JavaClassReflection<T> extends AJavaTypeReflection<T, IJavaClassTyp
 	}
 
 	@Override
-	public Stream<? extends IJavaClassReflection<?>> getInterfaces() {
-		return getType().getInterfaces().map(JavaClassReflection::new);
+	public Stream<? extends IJavaConcreteReflection<?>> getInterfaces() {
+		return getType().getInterfaces().map(JavaConcreteReflection::new);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -65,13 +59,18 @@ public class JavaClassReflection<T> extends AJavaTypeReflection<T, IJavaClassTyp
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public IJavaClassReflection<?> getSuperClass() {
-		return new JavaClassReflection(getType().getSuperClass());
+	public IJavaConcreteReflection<?> getSuperClass() {
+		return new JavaConcreteReflection(getType().getSuperClass());
 	}
 
 	@Override
-	public IJavaClassType getType() {
+	public IJavaConcreteType getType() {
 		return type;
+	}
+
+	@Override
+	public boolean isEnum() {
+		return getType().isEnum();
 	}
 
 	@Override

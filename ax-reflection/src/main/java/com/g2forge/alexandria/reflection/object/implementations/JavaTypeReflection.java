@@ -8,16 +8,10 @@ import com.g2forge.alexandria.generic.type.java.type.IJavaType;
 import com.g2forge.alexandria.reflection.object.AJavaTypeReflection;
 
 public class JavaTypeReflection<T> extends AJavaTypeReflection<T, IJavaType> {
-	/**
-	 * @param type
-	 */
 	public JavaTypeReflection(IJavaType type) {
 		super(type);
 	}
 
-	/**
-	 * @param type
-	 */
 	public JavaTypeReflection(Type type, final ITypeEnvironment environment) {
 		super(JavaTypeHelpers.toType(type, environment));
 	}

@@ -7,10 +7,10 @@ import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
-import com.g2forge.alexandria.generic.type.java.type.IJavaClassType;
+import com.g2forge.alexandria.generic.type.java.type.IJavaConcreteType;
 import com.g2forge.alexandria.java.function.ConcurrentCachingSupplier;
-import com.g2forge.alexandria.reflection.object.IJavaClassReflection;
-import com.g2forge.alexandria.reflection.object.implementations.JavaClassReflection;
+import com.g2forge.alexandria.reflection.object.IJavaConcreteReflection;
+import com.g2forge.alexandria.reflection.object.implementations.JavaConcreteReflection;
 import com.g2forge.alexandria.reflection.record.v1.reflected.IReflectedFieldType;
 import com.g2forge.alexandria.reflection.record.v1.reflected.IReflectedRecordType;
 
@@ -19,7 +19,7 @@ import lombok.Getter;
 
 public class ReflectedRecordType<R> implements IReflectedRecordType<R> {
 	@Getter(AccessLevel.PROTECTED)
-	protected final IJavaClassReflection<R> reflection;
+	protected final IJavaConcreteReflection<R> reflection;
 
 	protected final Supplier<Collection<IReflectedFieldType<R, ?>>> fields = new ConcurrentCachingSupplier<>(() -> Collections.unmodifiableCollection(getReflection().getFields(JavaScope.Inherited, null).map(field -> new ReflectedFieldType<>(field)).collect(Collectors.toList())));
 
@@ -27,13 +27,13 @@ public class ReflectedRecordType<R> implements IReflectedRecordType<R> {
 	 * @param type
 	 */
 	public ReflectedRecordType(final Class<R> type, final ITypeEnvironment environment) {
-		this(new JavaClassReflection<R>(type, environment));
+		this(new JavaConcreteReflection<R>(type, environment));
 	}
 
 	/**
 	 * @param reflection
 	 */
-	public ReflectedRecordType(IJavaClassReflection<R> reflection) {
+	public ReflectedRecordType(IJavaConcreteReflection<R> reflection) {
 		this.reflection = reflection;
 	}
 
@@ -48,7 +48,7 @@ public class ReflectedRecordType<R> implements IReflectedRecordType<R> {
 	}
 
 	@Override
-	public IJavaClassType getType() {
+	public IJavaConcreteType getType() {
 		return getReflection().getType();
 	}
 }

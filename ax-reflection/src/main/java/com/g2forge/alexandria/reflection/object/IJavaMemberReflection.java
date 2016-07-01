@@ -8,5 +8,5 @@ public interface IJavaMemberReflection<O> extends IJavaTyped, IJavaAnnotated {
 	@Override
 	public IJavaMemberType getType();
 	
-	public IJavaClassReflection<O> getDeclaringClass();
+	public IJavaConcreteReflection<O> getDeclaringClass();
 }
