@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.reflection.record.v1;
+package com.g2forge.alexandria.reflection.record.v2.reflection;
 
 import org.junit.Assert;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.reflection.record.v2.typedmap;
+package com.g2forge.alexandria.reflection.record.v1.typedmap;
 
 import org.junit.Assert;
 import org.junit.Test;
