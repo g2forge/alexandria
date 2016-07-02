@@ -21,13 +21,24 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class ReflectedRecordType implements IRecordType {
+	protected static void putAll(Map<String, APropertyType> properties, Map<String, APropertyType> next) {
+		for (Map.Entry<String, APropertyType> entry : next.entrySet()) {
+			final String name = entry.getKey();
+			final APropertyType property = entry.getValue();
+
+			final APropertyType prev = properties.get(name);
+			if (prev != null) property.setOverride(prev);
+			properties.put(name, property);
+		}
+	}
+
 	protected final IJavaConcreteReflection<?> reflection;
 
 	@SuppressWarnings("unchecked")
-	protected Supplier<Map<String, IPropertyType>> properties = new CachingSupplier<>(() -> {
-		final Map<String, IPropertyType> properties = new LinkedHashMap<>();
-		properties.putAll(getReflection().getFields(JavaScope.Inherited, null).map(field -> new FieldPropertyType((IJavaFieldReflection<Object, Object>) field)).collect(Collectors.toMap(IPropertyType::getName, Function.identity())));
-		properties.putAll(getReflection().getMethods(JavaScope.Inherited, null).filter(method -> !Object.class.equals(method.getDeclaringClass().getType().getJavaType())).filter(GetterPropertyType::isGetter).collect(Collectors.toList()).stream().map(GetterPropertyType::new).collect(Collectors.toMap(IPropertyType::getName, Function.identity())));
+	protected Supplier<Map<String, APropertyType>> properties = new CachingSupplier<>(() -> {
+		final Map<String, APropertyType> properties = new LinkedHashMap<>();
+		putAll(properties, getReflection().getFields(JavaScope.Inherited, null).map(field -> new FieldPropertyType((IJavaFieldReflection<Object, Object>) field)).collect(Collectors.toMap(IPropertyType::getName, Function.identity())));
+		putAll(properties, getReflection().getMethods(JavaScope.Inherited, null).filter(method -> !Object.class.equals(method.getDeclaringClass().getType().getJavaType())).filter(GetterPropertyType::isGetter).collect(Collectors.toList()).stream().map(GetterPropertyType::new).collect(Collectors.toMap(IPropertyType::getName, Function.identity())));
 		return properties;
 	});
 
@@ -35,7 +46,7 @@ public class ReflectedRecordType implements IRecordType {
 		this.reflection = ReflectionHelpers.toReflection(type);
 	}
 
-	public Collection<IPropertyType> getProperties() {
+	public Collection<? extends IPropertyType> getProperties() {
 		return properties.get().values();
 	}
 

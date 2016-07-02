@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.reflection.record.v2.reflected;
+package com.g2forge.alexandria.reflection.record.v1.reflected;
 
 import java.util.Objects;
 

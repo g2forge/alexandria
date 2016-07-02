@@ -2,14 +2,23 @@ package com.g2forge.alexandria.reflection.record.v2.reflection;
 
 import java.lang.reflect.Type;
 
+import com.g2forge.alexandria.reflection.annotations.IJavaAnnotated;
 import com.g2forge.alexandria.reflection.object.IJavaFieldReflection;
-import com.g2forge.alexandria.reflection.record.v2.IPropertyType;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@Data
-class FieldPropertyType implements IPropertyType {
+@RequiredArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+class FieldPropertyType extends APropertyType {
+	@Getter
 	protected final IJavaFieldReflection<Object, Object> field;
+
+	@Override
+	protected IJavaAnnotated getAnnotated() {
+		return getField();
+	}
 
 	@Override
 	public String getName() {

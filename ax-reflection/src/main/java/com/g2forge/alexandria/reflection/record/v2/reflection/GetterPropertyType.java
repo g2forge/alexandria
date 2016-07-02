@@ -8,13 +8,16 @@ import java.util.stream.Stream;
 
 import com.g2forge.alexandria.java.core.error.RuntimeReflectionException;
 import com.g2forge.alexandria.java.core.helpers.StringHelpers;
+import com.g2forge.alexandria.reflection.annotations.IJavaAnnotated;
 import com.g2forge.alexandria.reflection.object.IJavaMethodReflection;
-import com.g2forge.alexandria.reflection.record.v2.IPropertyType;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@Data
-class GetterPropertyType implements IPropertyType {
+@RequiredArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+class GetterPropertyType extends APropertyType {
 	public enum GetterType {
 		GET {
 			@Override
@@ -50,10 +53,12 @@ class GetterPropertyType implements IPropertyType {
 		return false;
 	}
 
+	@Getter
 	protected final IJavaMethodReflection<?> getter;
 
-	public GetterPropertyType(IJavaMethodReflection<?> getter) {
-		this.getter = getter;
+	@Override
+	protected IJavaAnnotated getAnnotated() {
+		return getGetter();
 	}
 
 	@Override
