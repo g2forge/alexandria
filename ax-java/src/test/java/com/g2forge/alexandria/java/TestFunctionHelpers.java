@@ -6,7 +6,7 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.java.function.MapFunction;
+import com.g2forge.alexandria.java.function.OptionalFunction;
 
 public class TestFunctionHelpers {
 	@Test
@@ -17,7 +17,7 @@ public class TestFunctionHelpers {
 		Assert.assertEquals(1, map.get("A").intValue());
 		Assert.assertEquals(2, map.get("B").intValue());
 
-		final MapFunction<? super String, ? extends Integer> override = MapFunction.of(map).override(MapFunction.of("A", 3));
+		final OptionalFunction<? super String, ? extends Integer> override = OptionalFunction.of(map).override(OptionalFunction.of("A", 3));
 		Assert.assertEquals(3, override.apply("A").get().intValue());
 		Assert.assertEquals(2, override.apply("B").get().intValue());
 	}

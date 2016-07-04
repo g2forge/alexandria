@@ -23,6 +23,7 @@
 		<springsecurity.version>4.0.4.RELEASE</springsecurity.version>
 		<jackson.version>2.7.3</jackson.version>
 		<jjwt.version>0.4</jjwt.version>
+		<jgit.version>4.0.2.201509141540-r</jgit.version>
 
 		<alexandria.version>0.0.2-SNAPSHOT</alexandria.version>
 	</properties>
@@ -64,7 +65,7 @@
 		<dependency>
 			<groupId>com.g2forge.alexandria</groupId>
 			<artifactId>ax-annotations</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
+			<version>${alexandria.version}</version>
 		</dependency>
 	</dependencies>
 </project>
