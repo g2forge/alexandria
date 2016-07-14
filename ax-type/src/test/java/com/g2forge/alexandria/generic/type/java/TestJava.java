@@ -69,8 +69,8 @@ public class TestJava {
 
 	@Test
 	public void testUnresolved() {
-		final IJavaClassType child = new JavaClassType(Child.class, null);
-		final IJavaFieldType field = child.getSuperClass().getFields(JavaScope.Instance, JavaProtection.Private).findFirst().get();
+		final IJavaClassType parent = new JavaClassType(Parent.class, null);
+		final IJavaFieldType field = parent.getFields(JavaScope.Instance, JavaProtection.Private).findFirst().get();
 		Assert.assertEquals(Parent.class.getTypeParameters()[0], field.getType().getJavaType());
 	}
 }

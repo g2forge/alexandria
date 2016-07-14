@@ -66,10 +66,8 @@ public class TestReflectedRecordType {
 		final OverrideRecord object = new OverrideRecord("abc");
 		Assert.assertEquals("bar", property.getValue(object));
 		Assert.assertEquals("abc", object.foo);
-		try {
-			property.setValue(object, "def");
-			Assert.fail();
-		} catch (UnsupportedOperationException exception) {}
+		property.setValue(object, "def");
+		Assert.assertEquals("def", object.foo);
 
 		object.foo = "ghi";
 		Assert.assertEquals("bar", property.getValue(object));
