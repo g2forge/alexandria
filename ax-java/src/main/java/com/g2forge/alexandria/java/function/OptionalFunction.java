@@ -29,4 +29,11 @@ public interface OptionalFunction<I, O> extends Function<I, Optional<? extends O
 			return o.isPresent() ? o : apply(i);
 		};
 	}
+
+	public default Function<I, O> fallback(Function<? super I, ? extends O> function) {
+		return i -> {
+			final Optional<? extends O> o = apply(i);
+			return o.isPresent() ? o.get() : function.apply(i);
+		};
+	}
 }
