@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.core.helpers;
+package com.g2forge.alexandria.java.associative.map;
 
 import java.util.Map;
 import java.util.function.Function;
