@@ -1,5 +1,6 @@
 package com.g2forge.alexandria.reflection.record.v2.reflection;
 
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -10,6 +11,7 @@ import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
 import com.g2forge.alexandria.java.function.CachingSupplier;
 import com.g2forge.alexandria.reflection.object.IJavaConcreteReflection;
 import com.g2forge.alexandria.reflection.object.IJavaFieldReflection;
+import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;
 import com.g2forge.alexandria.reflection.object.ReflectionHelpers;
 import com.g2forge.alexandria.reflection.record.v2.IPropertyType;
 import com.g2forge.alexandria.reflection.record.v2.IRecordType;
@@ -40,8 +42,12 @@ public class ReflectedRecordType implements IRecordType {
 		return properties;
 	});
 
-	public ReflectedRecordType(Class<?> type) {
-		this.reflection = ReflectionHelpers.toReflection(type);
+	public ReflectedRecordType(IJavaTypeReflection<?> reflection) {
+		this.reflection = reflection.erase();
+	}
+	
+	public ReflectedRecordType(Type type) {
+		this(ReflectionHelpers.toReflection(type));
 	}
 
 	public Collection<? extends IPropertyType> getProperties() {
