@@ -16,7 +16,7 @@ public class JavaConstructorReflection<O> extends AJavaMemberReflection<O, IJava
 	public O newInstance(Object... args) {
 		try {
 			@SuppressWarnings("unchecked")
-			O retVal = (O) type.getJavaMember().newInstance(args);
+			final O retVal = (O) type.getJavaMember().newInstance(args);
 			return retVal;
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException exception) {
 			throw new RuntimeReflectionException(exception);
