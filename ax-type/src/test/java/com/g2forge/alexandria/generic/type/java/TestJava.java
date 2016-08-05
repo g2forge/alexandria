@@ -39,19 +39,19 @@ public class TestJava {
 	@Test
 	public void testBound() {
 		final IJavaClassType inner = new JavaClassType(O.I.class, EmptyTypeEnvironment.create());
-		final IJavaUntype type = inner.resolve().getFields(JavaScope.Instance, JavaProtection.Private).findAny().get().getType();
+		final IJavaUntype type = inner.resolve().getFields(JavaScope.Instance, JavaProtection.Private).findAny().get().getFieldType();
 		Assert.assertTrue(type instanceof IJavaConcreteType);
 		final IJavaConcreteType bound = (IJavaConcreteType) type;
 		Assert.assertEquals(inner, bound.getRaw());
 		Assert.assertEquals(type, type.eval(bound.toEnvironment()));
-		Assert.assertEquals(bound, bound.getFields(JavaScope.Instance, JavaProtection.Private).findAny().get().getType());
+		Assert.assertEquals(bound, bound.getFields(JavaScope.Instance, JavaProtection.Private).findAny().get().getFieldType());
 	}
 
 	@Test
 	public void testChild() {
 		final IJavaClassType child = new JavaClassType(Child.class, EmptyTypeEnvironment.create());
 		final IJavaFieldType field = child.getFields(JavaScope.Inherited, JavaProtection.Private).findFirst().get();
-		Assert.assertEquals(String.class, field.getType().getJavaType());
+		Assert.assertEquals(String.class, field.getFieldType().getJavaType());
 	}
 
 	@Test
@@ -64,13 +64,13 @@ public class TestJava {
 	public void testResolved() {
 		final IJavaClassType child = new JavaClassType(Child.class, EmptyTypeEnvironment.create());
 		final IJavaFieldType field = child.getSuperClass().getFields(JavaScope.Instance, JavaProtection.Private).findFirst().get();
-		Assert.assertEquals(String.class, field.getType().getJavaType());
+		Assert.assertEquals(String.class, field.getFieldType().getJavaType());
 	}
 
 	@Test
 	public void testUnresolved() {
 		final IJavaClassType parent = new JavaClassType(Parent.class, null);
 		final IJavaFieldType field = parent.getFields(JavaScope.Instance, JavaProtection.Private).findFirst().get();
-		Assert.assertEquals(Parent.class.getTypeParameters()[0], field.getType().getJavaType());
+		Assert.assertEquals(Parent.class.getTypeParameters()[0], field.getFieldType().getJavaType());
 	}
 }

@@ -29,7 +29,7 @@ public class TestReflectedRecordAnnotations {
 	@Test
 	public void annotation() {
 		final IRecordType recordType = new ReflectedRecordType(FieldRecord.class);
-		final IPropertyType property = CollectionHelpers.getOne(recordType.getProperties());
+		final IPropertyType<?> property = CollectionHelpers.getOne(recordType.getProperties());
 		Assert.assertEquals("foo", property.getName());
 		Assert.assertTrue(property instanceof MethodPropertyType);
 		Assert.assertTrue(property.getAnnotations().isAnnotated(TestAnnotation.class));

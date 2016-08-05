@@ -10,6 +10,7 @@ import com.g2forge.alexandria.java.core.error.RuntimeReflectionException;
 import com.g2forge.alexandria.java.core.helpers.StringHelpers;
 import com.g2forge.alexandria.reflection.annotations.IJavaAnnotated;
 import com.g2forge.alexandria.reflection.object.IJavaMethodReflection;
+import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -17,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-class MethodPropertyType extends APropertyType {
+class MethodPropertyType<P> extends APropertyType<P> {
 	public enum MethodType {
 		GET {
 			@Override
@@ -64,7 +65,7 @@ class MethodPropertyType extends APropertyType {
 
 	protected static final String[] PREFIXES = Stream.of(MethodType.values()).map(MethodType::getPrefix).collect(Collectors.toList()).toArray(new String[0]);
 
-	public static boolean isAccessor(IJavaMethodReflection<?> reflection) {
+	public static boolean isAccessor(IJavaMethodReflection<?, ?> reflection) {
 		final Method method = reflection.getType().getJavaMember();
 
 		final String name = method.getName();
@@ -77,10 +78,10 @@ class MethodPropertyType extends APropertyType {
 	}
 
 	@Getter
-	protected APropertyType previous;
+	protected APropertyType<P> previous;
 
 	@Getter
-	protected final IJavaMethodReflection<?> method;
+	protected final IJavaMethodReflection<?, P> method;
 
 	@Override
 	protected IJavaAnnotated getAnnotated() {
@@ -93,31 +94,32 @@ class MethodPropertyType extends APropertyType {
 	}
 
 	@Override
-	public Type getType() {
+	public IJavaTypeReflection<P> getType() {
 		if (!getMethod().getType().getParameterTypes().isEmpty()) return previous.getType();
-		return getMethod().getType().getJavaMember().getGenericReturnType();
+		return getMethod().getReturnType();
 	}
 
 	@Override
-	public Object getValue(Object object) {
+	public P getValue(Object object) {
 		if (!getMethod().getType().getParameterTypes().isEmpty()) {
 			if (previous != null) return previous.getValue(object);
 			throw new UnsupportedOperationException();
 		}
-		try {
-			return getMethod().getType().getJavaMember().invoke(object);
-		} catch (IllegalAccessException | InvocationTargetException exception) {
-			throw new RuntimeReflectionException(exception);
-		}
-	}
 
-	protected void setOverride(APropertyType previous) {
-		super.setOverride(previous);
-		this.previous = previous;
+		@SuppressWarnings("unchecked")
+		final IJavaMethodReflection<Object, P> method = (IJavaMethodReflection<Object, P>) getMethod();
+		return method.invoke(object);
 	}
 
 	@Override
-	public void setValue(Object object, Object value) {
+	@SuppressWarnings("unchecked")
+	protected void setOverride(APropertyType<?> previous) {
+		super.setOverride(previous);
+		this.previous = (APropertyType<P>) previous;
+	}
+
+	@Override
+	public void setValue(Object object, P value) {
 		if (getMethod().getType().getParameterTypes().isEmpty()) {
 			if (previous != null) {
 				previous.setValue(object, value);
