@@ -4,7 +4,7 @@ import com.g2forge.alexandria.generic.type.java.structure.IJavaTypeStructure;
 import com.g2forge.alexandria.generic.type.java.type.IJavaType;
 import com.g2forge.alexandria.generic.type.java.typed.IJavaGenericTyped;
 
-public interface IJavaTypeReflection<T> extends IJavaGenericTyped<T>, IJavaTypeStructure<IJavaConcreteReflection<?>> {
+public interface IJavaTypeReflection<T> extends IJavaReflection, IJavaGenericTyped<T>, IJavaTypeStructure<IJavaConcreteReflection<?>> {
 	@Override
 	public IJavaType getType();
 
