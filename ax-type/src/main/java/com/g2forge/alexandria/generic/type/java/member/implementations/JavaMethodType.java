@@ -21,7 +21,7 @@ public class JavaMethodType extends AJavaInvocableType<Method>implements IJavaMe
 	}
 
 	@Override
-	public IJavaType getType() {
+	public IJavaType getReturnType() {
 		return JavaTypeHelpers.toType(javaType.getGenericReturnType(), environment);
 	}
 }

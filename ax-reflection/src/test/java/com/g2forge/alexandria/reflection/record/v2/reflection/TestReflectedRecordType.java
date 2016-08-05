@@ -38,7 +38,8 @@ public class TestReflectedRecordType {
 	@Test
 	public void field() {
 		final IRecordType recordType = new ReflectedRecordType(FieldRecord.class);
-		final IPropertyType property = CollectionHelpers.getOne(recordType.getProperties());
+		@SuppressWarnings("unchecked")
+		final IPropertyType<String> property = (IPropertyType<String>) CollectionHelpers.getOne(recordType.getProperties());
 		Assert.assertEquals("foo", property.getName());
 		Assert.assertEquals("bar", property.getValue(new FieldRecord("bar")));
 
@@ -52,7 +53,8 @@ public class TestReflectedRecordType {
 	@Test
 	public void method() {
 		final IRecordType recordType = new ReflectedRecordType(MethodRecord.class);
-		final IPropertyType property = CollectionHelpers.getOne(recordType.getProperties());
+		@SuppressWarnings("unchecked")
+		final IPropertyType<String> property = (IPropertyType<String>) CollectionHelpers.getOne(recordType.getProperties());
 		Assert.assertEquals("foo", property.getName());
 		Assert.assertEquals("bar", property.getValue(new MethodRecord()));
 	}
@@ -60,7 +62,8 @@ public class TestReflectedRecordType {
 	@Test
 	public void override() {
 		final IRecordType recordType = new ReflectedRecordType(OverrideRecord.class);
-		final IPropertyType property = CollectionHelpers.getOne(recordType.getProperties());
+		@SuppressWarnings("unchecked")
+		final IPropertyType<String> property = (IPropertyType<String>) CollectionHelpers.getOne(recordType.getProperties());
 		Assert.assertEquals("foo", property.getName());
 
 		final OverrideRecord object = new OverrideRecord("abc");

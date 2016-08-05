@@ -55,7 +55,7 @@ public class JavaConcreteReflection<T> extends AJavaTypeReflection<T, IJavaConcr
 	}
 
 	@Override
-	public Stream<? extends IJavaMethodReflection<T>> getMethods(JavaScope scope, JavaProtection minimum) {
+	public Stream<? extends IJavaMethodReflection<T, ?>> getMethods(JavaScope scope, JavaProtection minimum) {
 		return getType().getMethods(scope, minimum).map(JavaMethodReflection::new);
 	}
 

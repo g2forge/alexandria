@@ -7,16 +7,16 @@ import com.g2forge.alexandria.java.core.error.RuntimeReflectionException;
 import com.g2forge.alexandria.reflection.object.AJavaMemberReflection;
 import com.g2forge.alexandria.reflection.object.IJavaConstructorReflection;
 
-public class JavaConstructorReflection<O> extends AJavaMemberReflection<O, IJavaConstructorType>implements IJavaConstructorReflection<O> {
+public class JavaConstructorReflection<T> extends AJavaMemberReflection<T, IJavaConstructorType>implements IJavaConstructorReflection<T> {
 	public JavaConstructorReflection(IJavaConstructorType type) {
 		super(type);
 	}
 
 	@Override
-	public O newInstance(Object... args) {
+	public T newInstance(Object... args) {
 		try {
 			@SuppressWarnings("unchecked")
-			final O retVal = (O) type.getJavaMember().newInstance(args);
+			final T retVal = (T) type.getJavaMember().newInstance(args);
 			return retVal;
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException exception) {
 			throw new RuntimeReflectionException(exception);

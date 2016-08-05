@@ -7,14 +7,16 @@ import com.g2forge.alexandria.generic.type.java.type.implementations.ReflectionE
 import com.g2forge.alexandria.java.tuple.ITuple1GS;
 import com.g2forge.alexandria.reflection.object.AJavaMemberReflection;
 import com.g2forge.alexandria.reflection.object.IJavaFieldReflection;
+import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;
+import com.g2forge.alexandria.reflection.object.ReflectionHelpers;
 
-public class JavaFieldReflection<O, F> extends AJavaMemberReflection<O, IJavaFieldType>implements IJavaFieldReflection<O, F> {
+public class JavaFieldReflection<T, F> extends AJavaMemberReflection<T, IJavaFieldType>implements IJavaFieldReflection<T, F> {
 	public JavaFieldReflection(IJavaFieldType type) {
 		super(type);
 	}
 
 	@Override
-	public ITuple1GS<F> getAccessor(final O object) {
+	public ITuple1GS<F> getAccessor(final T object) {
 		final Field field = getType().getJavaMember();
 		field.setAccessible(true);
 		return new ITuple1GS<F>() {
@@ -46,5 +48,10 @@ public class JavaFieldReflection<O, F> extends AJavaMemberReflection<O, IJavaFie
 				return retVal;
 			}
 		};
+	}
+
+	@Override
+	public IJavaTypeReflection<F> getFieldType() {
+		return ReflectionHelpers.toReflection(getType().getJavaMember().getGenericType());
 	}
 }
