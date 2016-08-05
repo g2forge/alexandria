@@ -7,6 +7,11 @@ import com.g2forge.alexandria.reflection.annotations.IJavaAnnotations;
 import com.g2forge.alexandria.reflection.annotations.implementations.JavaAnnotations;
 import com.g2forge.alexandria.reflection.object.implementations.JavaConcreteReflection;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+@EqualsAndHashCode
+@ToString
 public abstract class AJavaMemberReflection<T, MT extends IJavaMemberType> implements IJavaMemberReflection<T> {
 	protected final MT type;
 
