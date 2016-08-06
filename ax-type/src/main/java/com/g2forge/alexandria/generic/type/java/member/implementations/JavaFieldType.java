@@ -21,7 +21,7 @@ public class JavaFieldType extends AJavaMemberType<Field>implements IJavaFieldTy
 	}
 
 	@Override
-	public IJavaType getType() {
+	public IJavaType getFieldType() {
 		return JavaTypeHelpers.toType(javaType.getGenericType(), environment);
 	}
 }

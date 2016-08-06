@@ -1,17 +1,16 @@
 package com.g2forge.alexandria.reflection.record.v2;
 
-import java.lang.reflect.Type;
-
 import com.g2forge.alexandria.reflection.annotations.IJavaAnnotations;
+import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;
 
-public interface IPropertyType {
+public interface IPropertyType<P> {
 	public IJavaAnnotations getAnnotations();
 
 	public String getName();
 
-	public Type getType();
+	public IJavaTypeReflection<P> getType();
 
-	public Object getValue(Object object);
+	public P getValue(Object object);
 
-	public void setValue(Object object, Object value);
+	public void setValue(Object object, P value);
 }

@@ -7,7 +7,12 @@ import com.g2forge.alexandria.reflection.annotations.IJavaAnnotations;
 import com.g2forge.alexandria.reflection.annotations.implementations.JavaAnnotations;
 import com.g2forge.alexandria.reflection.object.implementations.JavaConcreteReflection;
 
-public abstract class AJavaMemberReflection<O, MT extends IJavaMemberType> implements IJavaMemberReflection<O> {
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+@EqualsAndHashCode
+@ToString
+public abstract class AJavaMemberReflection<T, MT extends IJavaMemberType> implements IJavaMemberReflection<T> {
 	protected final MT type;
 
 	/**
@@ -23,7 +28,7 @@ public abstract class AJavaMemberReflection<O, MT extends IJavaMemberType> imple
 	}
 
 	@Override
-	public IJavaConcreteReflection<O> getDeclaringClass() {
+	public IJavaConcreteReflection<T> getDeclaringClass() {
 		return new JavaConcreteReflection<>(type.getDeclaringClass());
 	}
 

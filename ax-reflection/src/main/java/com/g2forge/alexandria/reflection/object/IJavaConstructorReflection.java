@@ -2,9 +2,9 @@ package com.g2forge.alexandria.reflection.object;
 
 import com.g2forge.alexandria.generic.type.java.member.IJavaConstructorType;
 
-public interface IJavaConstructorReflection<O> extends IJavaMemberReflection<O> {
+public interface IJavaConstructorReflection<T> extends IJavaMemberReflection<T> {
 	@Override
 	public IJavaConstructorType getType();
 
-	public O newInstance(Object... args);
+	public T newInstance(Object... args);
 }

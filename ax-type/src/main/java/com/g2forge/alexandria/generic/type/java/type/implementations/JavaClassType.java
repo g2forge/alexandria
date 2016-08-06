@@ -86,7 +86,7 @@ public class JavaClassType extends AJavaConcreteType<Class<?>>implements IJavaCl
 
 	protected IJavaClassType getParent(final Type generic, final Class<?> parent) {
 		if (generic == null) return null;
-		final ITypeEnvironment environment = (this.environment != null) ? ((IJavaConcreteType) JavaTypeHelpers.toType(generic, this.environment)).toEnvironment() : null;
+		final ITypeEnvironment environment = ((IJavaConcreteType) JavaTypeHelpers.toType(generic, this.environment)).toEnvironment();
 		return new JavaClassType(parent, environment);
 	}
 
