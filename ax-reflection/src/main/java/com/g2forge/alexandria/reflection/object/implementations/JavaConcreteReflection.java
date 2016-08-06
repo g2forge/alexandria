@@ -90,4 +90,9 @@ public class JavaConcreteReflection<T> extends AJavaTypeReflection<T, IJavaConcr
 			throw new ReflectionException(exception);
 		}
 	}
+
+	@Override
+	public IJavaConcreteReflection<T> toNonPrimitive() {
+		return new JavaConcreteReflection<>(getType().toNonPrimitive());
+	}
 }

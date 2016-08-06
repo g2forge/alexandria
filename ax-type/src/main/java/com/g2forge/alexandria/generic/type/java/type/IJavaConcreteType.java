@@ -25,4 +25,6 @@ public interface IJavaConcreteType extends IJavaType, IConcreteType, IBoundType,
 	public IJavaType getRaw();
 
 	public ITypeEnvironment toEnvironment();
+
+	public IJavaConcreteType toNonPrimitive();
 }

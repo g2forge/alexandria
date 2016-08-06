@@ -10,4 +10,6 @@ public interface IJavaConcreteReflection<T> extends IJavaGenericTyped<T>, IJavaA
 	public IJavaConcreteType getType();
 
 	public T newInstance();
+
+	public IJavaConcreteReflection<T> toNonPrimitive();
 }
