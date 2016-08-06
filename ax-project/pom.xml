@@ -23,6 +23,7 @@
 		<jackson.version>2.7.3</jackson.version>
 		<jjwt.version>0.4</jjwt.version>
 		<jgit.version>4.0.2.201509141540-r</jgit.version>
+		<logback.version>1.1.7</logback.version>
 
 		<alexandria.version>0.0.2</alexandria.version>
 	</properties>
