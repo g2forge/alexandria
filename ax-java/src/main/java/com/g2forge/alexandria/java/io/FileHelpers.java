@@ -1,44 +1,51 @@
 package com.g2forge.alexandria.java.io;
 
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
+import java.nio.file.CopyOption;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.StandardCopyOption;
+import java.util.EnumSet;
 import java.util.LinkedList;
+import java.util.function.Function;
 
 import com.g2forge.alexandria.java.concurrent.ConcurrentHelpers;
 
 public class FileHelpers {
+	public static void copy(Path source, Path target, boolean preserve, Function<Path, Boolean> overwrite) {
+		final Path destination = Files.isDirectory(target) ? target.resolve(source.getFileName()) : target;
+
+		final DirectoryTreeCopyVisitor visitor = new DirectoryTreeCopyVisitor(source, destination, preserve, overwrite);
+		try {
+			Files.walkFileTree(source, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, visitor);
+		} catch (IOException exception) {
+			visitor.getThrowables().add(exception);
+		}
+
+		// If there were any exceptions, then report them!
+		if (!visitor.getThrowables().isEmpty()) {
+			final RuntimeIOException toThrow = new RuntimeIOException(String.format("Error while copying %s to %s", source, target));
+			for (Throwable throwable : visitor.getThrowables())
+				toThrow.addSuppressed(throwable);
+			throw toThrow;
+		}
+	}
+
+	public static void copyFile(Path source, Path target, boolean preserve, Function<Path, Boolean> overwrite) {
+		final CopyOption[] options = preserve ? new CopyOption[] { StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING } : new CopyOption[] { StandardCopyOption.REPLACE_EXISTING };
+		if (Files.notExists(target) || overwrite.apply(target)) {
+			try {
+				Files.copy(source, target, options);
+			} catch (IOException exception) {
+				throw new RuntimeIOException(String.format("Unable to copy %s to %s", source, target), exception);
+			}
+		}
+	}
+
 	public static void delete(Path path) throws IOException {
 		final LinkedList<Path> onexit = new LinkedList<>();
-		Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
-			protected FileVisitResult deleteAndContinue(Path path) throws IOException {
-				try {
-					Files.deleteIfExists(path);
-				} catch (IOException exception) {
-					onexit.addFirst(path);
-				}
-				return FileVisitResult.CONTINUE;
-			}
-
-			@Override
-			public FileVisitResult postVisitDirectory(Path directory, IOException exception) throws IOException {
-				if (exception == null) return deleteAndContinue(directory);
-				else throw exception;
-			}
-
-			@Override
-			public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) throws IOException {
-				return deleteAndContinue(file);
-			}
-
-			@Override
-			public FileVisitResult visitFileFailed(Path file, IOException exception) throws IOException {
-				return deleteAndContinue(file);
-			}
-		});
+		Files.walkFileTree(path, new DirectoryTreeDeleteVisitor(onexit));
 		onexit.forEach(toDelete -> toDelete.toFile().deleteOnExit());
 	}
 
