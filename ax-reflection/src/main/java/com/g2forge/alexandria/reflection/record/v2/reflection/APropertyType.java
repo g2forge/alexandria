@@ -9,12 +9,12 @@ import com.g2forge.alexandria.reflection.annotations.IJavaAnnotations;
 import com.g2forge.alexandria.reflection.annotations.implementations.MergedJavaAnnotations;
 import com.g2forge.alexandria.reflection.record.v2.IPropertyType;
 
-abstract class APropertyType implements IPropertyType {
+abstract class APropertyType<P> implements IPropertyType<P> {
 	protected List<IJavaAnnotated> annotated = null;
 
 	protected abstract IJavaAnnotated getAnnotated();
 
-	protected void setOverride(APropertyType previous) {
+	protected void setOverride(APropertyType<?> previous) {
 		annotated = new ArrayList<>();
 		if (previous.annotated != null) annotated.addAll(previous.annotated);
 		else annotated.add(previous.getAnnotated());

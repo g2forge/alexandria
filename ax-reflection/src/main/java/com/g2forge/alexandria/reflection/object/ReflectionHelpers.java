@@ -8,6 +8,7 @@ import com.g2forge.alexandria.adt.collection.strategy.ICollectionStrategy;
 import com.g2forge.alexandria.adt.collection.strategy.implementations.CollectionStrategy;
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
+import com.g2forge.alexandria.generic.type.java.IJavaUntype;
 import com.g2forge.alexandria.generic.type.java.type.implementations.JavaBoundType;
 import com.g2forge.alexandria.reflection.object.implementations.JavaConcreteReflection;
 import com.g2forge.alexandria.reflection.object.implementations.JavaTypeReflection;
@@ -26,6 +27,10 @@ public class ReflectionHelpers {
 
 	public static <T> IJavaConcreteReflection<T> toReflection(final Class<T> type, final ITypeEnvironment environment) {
 		return new JavaConcreteReflection<>(type, environment);
+	}
+
+	public static <T> IJavaTypeReflection<T> toReflection(IJavaUntype type) {
+		return toReflection(type.getJavaType(), EmptyTypeEnvironment.create());
 	}
 
 	@SuppressWarnings("unchecked")

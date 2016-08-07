@@ -55,7 +55,7 @@ public class JavaConcreteReflection<T> extends AJavaTypeReflection<T, IJavaConcr
 	}
 
 	@Override
-	public Stream<? extends IJavaMethodReflection<T>> getMethods(JavaScope scope, JavaProtection minimum) {
+	public Stream<? extends IJavaMethodReflection<T, ?>> getMethods(JavaScope scope, JavaProtection minimum) {
 		return getType().getMethods(scope, minimum).map(JavaMethodReflection::new);
 	}
 
@@ -89,5 +89,10 @@ public class JavaConcreteReflection<T> extends AJavaTypeReflection<T, IJavaConcr
 		} catch (InstantiationException | IllegalAccessException | SecurityException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException exception) {
 			throw new ReflectionException(exception);
 		}
+	}
+
+	@Override
+	public IJavaConcreteReflection<T> toNonPrimitive() {
+		return new JavaConcreteReflection<>(getType().toNonPrimitive());
 	}
 }

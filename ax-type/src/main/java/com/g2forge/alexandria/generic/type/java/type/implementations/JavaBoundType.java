@@ -79,4 +79,9 @@ public class JavaBoundType extends AJavaConcreteType<ParameterizedType> {
 
 		return TypeEnvironment.create(parent);
 	}
+
+	@Override
+	public IJavaConcreteType toNonPrimitive() {
+		return this;
+	}
 }

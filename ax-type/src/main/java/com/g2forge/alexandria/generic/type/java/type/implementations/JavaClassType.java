@@ -16,6 +16,7 @@ import com.g2forge.alexandria.generic.type.java.type.IJavaClassType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaConcreteType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaVariableType;
+import com.g2forge.alexandria.java.core.error.UnreachableCodeError;
 import com.g2forge.alexandria.java.core.helpers.ArrayHelpers;
 
 public class JavaClassType extends AJavaConcreteType<Class<?>>implements IJavaClassType {
@@ -86,7 +87,7 @@ public class JavaClassType extends AJavaConcreteType<Class<?>>implements IJavaCl
 
 	protected IJavaClassType getParent(final Type generic, final Class<?> parent) {
 		if (generic == null) return null;
-		final ITypeEnvironment environment = (this.environment != null) ? ((IJavaConcreteType) JavaTypeHelpers.toType(generic, this.environment)).toEnvironment() : null;
+		final ITypeEnvironment environment = ((IJavaConcreteType) JavaTypeHelpers.toType(generic, this.environment)).toEnvironment();
 		return new JavaClassType(parent, environment);
 	}
 
@@ -108,5 +109,24 @@ public class JavaClassType extends AJavaConcreteType<Class<?>>implements IJavaCl
 	@Override
 	public ITypeEnvironment toEnvironment() {
 		return EmptyTypeEnvironment.create();
+	}
+
+	@Override
+	public IJavaConcreteType toNonPrimitive() {
+		if ((javaType instanceof Class) && ((Class<?>) javaType).isPrimitive()) {
+			final Class<?> retVal;
+			if (Boolean.TYPE.equals(javaType)) retVal = Boolean.class;
+			else if (Character.TYPE.equals(javaType)) retVal = Character.class;
+			else if (Byte.TYPE.equals(javaType)) retVal = Byte.class;
+			else if (Short.TYPE.equals(javaType)) retVal = Short.class;
+			else if (Integer.TYPE.equals(javaType)) retVal = Integer.class;
+			else if (Long.TYPE.equals(javaType)) retVal = Long.class;
+			else if (Float.TYPE.equals(javaType)) retVal = Float.class;
+			else if (Double.TYPE.equals(javaType)) retVal = Double.class;
+			else if (Void.TYPE.equals(javaType)) retVal = Void.class;
+			else throw new UnreachableCodeError();
+			return new JavaClassType(retVal, environment);
+		}
+		return this;
 	}
 }
