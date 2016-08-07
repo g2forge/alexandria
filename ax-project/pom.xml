@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.g2forge.alexandria</groupId>
 	<artifactId>ax-project</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<licenses>
@@ -25,7 +25,7 @@
 		<jgit.version>4.0.2.201509141540-r</jgit.version>
 		<logback.version>1.1.7</logback.version>
 
-		<alexandria.version>0.0.2</alexandria.version>
+		<alexandria.version>0.0.3-SNAPSHOT</alexandria.version>
 	</properties>
 
 	<build>
