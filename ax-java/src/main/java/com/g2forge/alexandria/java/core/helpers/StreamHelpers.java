@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -15,6 +16,9 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+
+import com.g2forge.alexandria.java.tuple.ITuple2G_;
+import com.g2forge.alexandria.java.tuple.Tuple2G_;
 
 public class StreamHelpers {
 	@SafeVarargs
@@ -59,6 +63,10 @@ public class StreamHelpers {
 		final Collection<T> retVal = constructor.get();
 		iterator.forEachRemaining(retVal::add);
 		return retVal;
+	}
+
+	public static <K, V> Collector<Tuple2G_<K, V>, ?, Map<K, V>> toMap() {
+		return Collectors.toMap(ITuple2G_::get0, ITuple2G_::get1);
 	}
 
 	public static <T> Collector<T, ?, T> toOne() {
