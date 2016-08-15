@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.test;
+package com.g2forge.alexandria.java.core.helpers;
 
 import java.util.Scanner;
 
