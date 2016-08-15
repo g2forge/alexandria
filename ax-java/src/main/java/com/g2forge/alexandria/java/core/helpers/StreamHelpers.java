@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -66,7 +67,9 @@ public class StreamHelpers {
 	}
 
 	public static <K, V> Collector<Tuple2G_<K, V>, ?, Map<K, V>> toMap() {
-		return Collectors.toMap(ITuple2G_::get0, ITuple2G_::get1);
+		return Collectors.toMap(ITuple2G_::get0, ITuple2G_::get1, (u, v) -> {
+			throw new IllegalStateException(String.format("Duplicate key %s", u));
+		} , () -> new LinkedHashMap<>());
 	}
 
 	public static <T> Collector<T, ?, T> toOne() {
