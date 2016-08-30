@@ -51,7 +51,7 @@ public class ReflectionHelpers {
 		}
 		if (type instanceof ParameterizedType) {
 			final ParameterizedType parameterized = (ParameterizedType) type;
-			return toReflection(parameterized.getRawType(), new JavaBoundType(parameterized, null).toEnvironment());
+			return new JavaConcreteReflection<>(new JavaBoundType(parameterized, environment));
 		}
 		return new JavaTypeReflection<T>(type, environment);
 	}
