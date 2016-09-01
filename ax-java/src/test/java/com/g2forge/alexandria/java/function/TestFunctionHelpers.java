@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java;
+package com.g2forge.alexandria.java.function;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,7 +6,7 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.java.function.OptionalFunction;
+import com.g2forge.alexandria.java.function.optional.OptionalFunction;
 
 public class TestFunctionHelpers {
 	@Test

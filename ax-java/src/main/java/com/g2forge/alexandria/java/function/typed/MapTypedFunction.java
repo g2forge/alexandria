@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.function;
+package com.g2forge.alexandria.java.function.typed;
 
 import java.util.HashMap;
 import java.util.Map;

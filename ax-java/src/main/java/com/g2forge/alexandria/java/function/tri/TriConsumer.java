@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.function;
+package com.g2forge.alexandria.java.function.tri;
 
 import java.util.Objects;
 

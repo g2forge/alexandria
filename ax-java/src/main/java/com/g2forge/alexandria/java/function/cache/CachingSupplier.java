@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.function;
+package com.g2forge.alexandria.java.function.cache;
 
 import java.util.function.Supplier;
 

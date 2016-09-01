@@ -11,7 +11,7 @@ import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.IJavaInvocableType;
 import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
 import com.g2forge.alexandria.generic.type.java.type.IJavaType;
-import com.g2forge.alexandria.java.function.CachingSupplier;
+import com.g2forge.alexandria.java.function.cache.CachingSupplier;
 
 public abstract class AJavaInvocableType<M extends Executable> extends AJavaMemberType<M>implements IJavaInvocableType {
 	protected final Supplier<List<IJavaType>> parameterTypes = new CachingSupplier<>(() -> Collections.unmodifiableList(Stream.of(getJavaMember().getGenericParameterTypes()).map(type -> JavaTypeHelpers.toType(type, environment)).collect(Collectors.toList())));
