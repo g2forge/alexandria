@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.function;
+package com.g2forge.alexandria.java.function.typed;
 
 @FunctionalInterface
 public interface TypedFunction<T> {

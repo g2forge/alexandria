@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
-import com.g2forge.alexandria.java.function.RecordingFunction;
+import com.g2forge.alexandria.java.function.tee.RecordingFunction;
 import com.g2forge.alexandria.java.tuple.ITuple2G_;
 
 public class TestCache {
