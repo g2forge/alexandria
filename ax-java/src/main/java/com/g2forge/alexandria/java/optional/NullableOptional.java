@@ -1,0 +1,45 @@
+package com.g2forge.alexandria.java.optional;
+
+public class NullableOptional<T> extends AOptional<T> {
+	protected static final NullableOptional<?> EMPTY = new NullableOptional<>();
+
+	public static <T> NullableOptional<T> empty() {
+		@SuppressWarnings("unchecked")
+		final NullableOptional<T> retVal = (NullableOptional<T>) EMPTY;
+		return retVal;
+	}
+
+	public static <T> NullableOptional<T> of(T value) {
+		return new NullableOptional<>(value);
+	}
+
+	public static <T> NullableOptional<T> ofNullable(T value) {
+		return value == null ? empty() : of(value);
+	}
+
+	protected final boolean isValid;
+
+	protected NullableOptional() {
+		super();
+		this.isValid = false;
+	}
+
+	protected NullableOptional(T value) {
+		super(value);
+		this.isValid = true;
+	}
+
+	@Override
+	protected <_T> AOptional<_T> create() {
+		return NullableOptional.empty();
+	}
+
+	@Override
+	protected <_T> AOptional<_T> create(_T value) {
+		return NullableOptional.of(value);
+	}
+
+	public boolean isPresent() {
+		return isValid;
+	}
+}
