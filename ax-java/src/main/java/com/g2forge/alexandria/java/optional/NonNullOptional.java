@@ -5,6 +5,23 @@ import java.util.Objects;
 public class NonNullOptional<T> extends AOptional<T> {
 	protected static final NonNullOptional<?> EMPTY = new NonNullOptional<>();
 
+	public static final IOptionalFactory FACTORY = new IOptionalFactory() {
+		@Override
+		public <T> NonNullOptional<T> empty() {
+			return NonNullOptional.empty();
+		}
+
+		@Override
+		public <T> NonNullOptional<T> of(T value) {
+			return NonNullOptional.of(value);
+		}
+
+		@Override
+		public <T> NonNullOptional<T> ofNullable(T value) {
+			return NonNullOptional.ofNullable(value);
+		}
+	};
+
 	public static <T> NonNullOptional<T> empty() {
 		@SuppressWarnings("unchecked")
 		final NonNullOptional<T> retVal = (NonNullOptional<T>) EMPTY;
