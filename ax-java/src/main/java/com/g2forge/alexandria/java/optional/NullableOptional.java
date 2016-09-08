@@ -3,6 +3,23 @@ package com.g2forge.alexandria.java.optional;
 public class NullableOptional<T> extends AOptional<T> {
 	protected static final NullableOptional<?> EMPTY = new NullableOptional<>();
 
+	public static final IOptionalFactory FACTORY = new IOptionalFactory() {
+		@Override
+		public <T> NullableOptional<T> empty() {
+			return NullableOptional.empty();
+		}
+
+		@Override
+		public <T> NullableOptional<T> of(T value) {
+			return NullableOptional.of(value);
+		}
+
+		@Override
+		public <T> NullableOptional<T> ofNullable(T value) {
+			return NullableOptional.ofNullable(value);
+		}
+	};
+
 	public static <T> NullableOptional<T> empty() {
 		@SuppressWarnings("unchecked")
 		final NullableOptional<T> retVal = (NullableOptional<T>) EMPTY;

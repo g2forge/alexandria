@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.fluent.optional;
+package com.g2forge.alexandria.java.optional;
 
 import java.util.Optional;
 
