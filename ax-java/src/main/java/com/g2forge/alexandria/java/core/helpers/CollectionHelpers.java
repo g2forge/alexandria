@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -101,13 +105,45 @@ public class CollectionHelpers {
 		}
 	}
 
-	public static <T> T getAny(final Iterable<? extends T> collection) {
-		return collection.iterator().next();
+	public static <T> T getAny(final Iterable<? extends T> iterable) {
+		return getFirst(iterable);
 	}
 
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> getEmpty() {
 		return Collections.EMPTY_LIST;
+	}
+
+	public static <T> T getFirst(final Iterable<? extends T> iterable) {
+		return iterable.iterator().next();
+	}
+
+	public static <T> T getLast(final Iterable<? extends T> iterable) {
+		if (iterable instanceof Deque) return ((Deque<? extends T>) iterable).getLast();
+		if (iterable instanceof List) {
+			final List<? extends T> list = (List<? extends T>) iterable;
+			return list.get(list.size() - 1);
+		}
+
+		final Iterator<? extends T> iterator = iterable.iterator();
+		if (!iterator.hasNext()) throw new NoSuchElementException();
+		T retVal = null;
+		while (iterator.hasNext()) {
+			retVal = iterator.next();
+		}
+		return retVal;
+	}
+
+	public static <T> int getLast(List<? extends T> list, Predicate<? super T> test) {
+		return getLast(list, (position, value) -> test.test(value));
+	}
+
+	public static <T> int getLast(List<? extends T> list, BiPredicate<Integer, ? super T> test) {
+		for (final ListIterator<? extends T> iterator = list.listIterator(list.size()); iterator.hasPrevious();) {
+			final int retVal = iterator.previousIndex();
+			if (test.test(retVal, iterator.previous())) return retVal;
+		}
+		return -1;
 	}
 
 	public static <T> T getOne(final Iterable<? extends T> collection) {
