@@ -15,6 +15,6 @@ public class ScalarRelationship<L, R> extends ARelationship<L, R, R> {
 
 	@Override
 	protected void setRemote(R field, L local) {
-		setRemote.accept(field, local);
+		if (setRemote != null) setRemote.accept(field, local);
 	}
 }
