@@ -2,16 +2,13 @@ package com.g2forge.alexandria.java.function.cache;
 
 import java.util.function.Supplier;
 
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
-public class CachingSupplier<T> implements Supplier<T> {
+public class LazySupplier<T> implements Supplier<T> {
 	/** The supplier to cache. Set to <code>null</code> after use to indicate that we already have the result. */
 	protected Supplier<? extends T> supplier;
 
 	protected T value;
 
-	public CachingSupplier(Supplier<? extends T> supplier) {
+	public LazySupplier(Supplier<? extends T> supplier) {
 		this.supplier = supplier;
 		this.value = null;
 	}
