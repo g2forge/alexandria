@@ -1,18 +1,20 @@
-package com.g2forge.alexandria.java.tuple;
+package com.g2forge.alexandria.java.tuple.implementations;
 
 import java.util.Objects;
 
-public class Tuple2GS<T0, T1> extends Tuple1GS<T0>implements ITuple2GS<T0, T1> {
+import com.g2forge.alexandria.java.tuple.ITuple2GS;
+
+public class Tuple2GSO<T0, T1> extends Tuple1GSO<T0>implements ITuple2GS<T0, T1> {
 	protected T1 value1;
 
-	public Tuple2GS() {
+	public Tuple2GSO() {
 		this(null, null);
 	}
 
 	/**
 	 * @param value1
 	 */
-	public Tuple2GS(final T0 value0, final T1 value1) {
+	public Tuple2GSO(final T0 value0, final T1 value1) {
 		super(value0);
 		this.value1 = value1;
 	}
@@ -23,7 +25,7 @@ public class Tuple2GS<T0, T1> extends Tuple1GS<T0>implements ITuple2GS<T0, T1> {
 		if (!super.equals(obj)) return false;
 		if (getClass() != obj.getClass()) return false;
 
-		final Tuple2G_<?, ?> that = (Tuple2G_<?, ?>) obj;
+		final Tuple2G_O<?, ?> that = (Tuple2G_O<?, ?>) obj;
 		return Objects.equals(get0(), that.get0()) && Objects.equals(get1(), that.get1());
 	}
 

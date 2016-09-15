@@ -25,7 +25,7 @@ import com.g2forge.alexandria.java.associative.cache.Cache;
 import com.g2forge.alexandria.java.associative.cache.NeverCacheEvictionPolicy;
 import com.g2forge.alexandria.java.core.error.UnreachableCodeError;
 import com.g2forge.alexandria.java.tuple.ITuple2G_;
-import com.g2forge.alexandria.java.tuple.Tuple2G_;
+import com.g2forge.alexandria.java.tuple.implementations.Tuple2G_O;
 
 public abstract class AJavaConcreteType<JT extends Type> extends AJavaType<JT>implements IJavaConcreteType {
 	protected static final JavaStructureAnalyzer<IJavaConcreteType, IJavaFieldType, IJavaMethodType> analyzer;
@@ -67,7 +67,7 @@ public abstract class AJavaConcreteType<JT extends Type> extends AJavaType<JT>im
 	}
 
 	public Stream<IJavaFieldType> getFields(JavaScope scope, JavaProtection minimum) {
-		return fields.apply(new Tuple2G_<>(scope, minimum)).stream();
+		return fields.apply(new Tuple2G_O<>(scope, minimum)).stream();
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public abstract class AJavaConcreteType<JT extends Type> extends AJavaType<JT>im
 	}
 
 	public Stream<IJavaMethodType> getMethods(JavaScope scope, JavaProtection minimum) {
-		return methods.apply(new Tuple2G_<>(scope, minimum)).stream();
+		return methods.apply(new Tuple2G_O<>(scope, minimum)).stream();
 	}
 
 	@Override
