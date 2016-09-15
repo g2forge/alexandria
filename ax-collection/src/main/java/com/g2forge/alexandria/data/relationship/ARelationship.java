@@ -18,7 +18,7 @@ public abstract class ARelationship<L, R, F> {
 		if (current != field) {
 			if (isInitialized(current)) throw new IllegalStateException("Cannot change relationship once initialized");
 			set.accept(local, field);
-			setRemote(field, local);
+			if (setRemote != null) setRemote(field, local);
 		}
 		return local;
 	}

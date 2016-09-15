@@ -18,7 +18,7 @@ public class CollectionRelationship<L, R, C extends Collection<R>> extends ARela
 		if (collection == null) set.accept(local, collection = supplier.get());
 		if (!collection.contains(remote)) {
 			collection.add(remote);
-			setRemote.accept(remote, local);
+			if (setRemote != null) setRemote.accept(remote, local);
 		}
 		return local;
 	}
@@ -30,6 +30,6 @@ public class CollectionRelationship<L, R, C extends Collection<R>> extends ARela
 
 	@Override
 	protected void setRemote(C field, L local) {
-		field.forEach(r -> setRemote.accept(r, local));
+		if (setRemote != null) field.forEach(r -> setRemote.accept(r, local));
 	}
 }
