@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import com.g2forge.alexandria.java.tuple.ITuple2G_;
-import com.g2forge.alexandria.java.tuple.Tuple2G_;
+import com.g2forge.alexandria.java.tuple.implementations.Tuple2G_O;
 
 public class StreamHelpers {
 	@SafeVarargs
@@ -66,7 +66,7 @@ public class StreamHelpers {
 		return retVal;
 	}
 
-	public static <K, V> Collector<Tuple2G_<K, V>, ?, Map<K, V>> toMap() {
+	public static <K, V> Collector<Tuple2G_O<K, V>, ?, Map<K, V>> toMap() {
 		return Collectors.toMap(ITuple2G_::get0, ITuple2G_::get1, (u, v) -> {
 			throw new IllegalStateException(String.format("Duplicate key %s", u));
 		} , () -> new LinkedHashMap<>());

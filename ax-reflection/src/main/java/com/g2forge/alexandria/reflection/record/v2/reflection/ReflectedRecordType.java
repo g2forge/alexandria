@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
-import com.g2forge.alexandria.java.function.cache.CachingSupplier;
+import com.g2forge.alexandria.java.function.cache.LazySupplier;
 import com.g2forge.alexandria.reflection.object.IJavaConcreteReflection;
 import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;
 import com.g2forge.alexandria.reflection.object.ReflectionHelpers;
@@ -34,7 +34,7 @@ public class ReflectedRecordType implements IRecordType {
 	protected final IJavaConcreteReflection<?> reflection;
 
 	@SuppressWarnings("unchecked")
-	protected Supplier<Map<String, APropertyType<?>>> properties = new CachingSupplier<>(() -> {
+	protected Supplier<Map<String, APropertyType<?>>> properties = new LazySupplier<>(() -> {
 		final Map<String, APropertyType<?>> properties = new LinkedHashMap<>();
 		final IJavaConcreteReflection<Object> reflection = (IJavaConcreteReflection<Object>) getReflection();
 		putAll(properties, reflection.getFields(JavaScope.Inherited, null).map(FieldPropertyType::new).collect(Collectors.toList()));

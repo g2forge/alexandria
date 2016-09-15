@@ -1,18 +1,18 @@
-package com.g2forge.alexandria.java.tuple;
+package com.g2forge.alexandria.java.tuple.implementations;
 
-import java.util.Objects;
+import com.g2forge.alexandria.java.tuple.ITuple1GS;
 
-public class Tuple1GS<T0> implements ITuple1GS<T0> {
+public class Tuple1GSI<T0> implements ITuple1GS<T0> {
 	protected T0 value0;
 
-	public Tuple1GS() {
+	public Tuple1GSI() {
 		this(null);
 	}
 
 	/**
 	 * @param value0
 	 */
-	public Tuple1GS(final T0 value0) {
+	public Tuple1GSI(final T0 value0) {
 		this.value0 = value0;
 	}
 
@@ -22,8 +22,8 @@ public class Tuple1GS<T0> implements ITuple1GS<T0> {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 
-		final Tuple1G_<?> that = (Tuple1G_<?>) obj;
-		return Objects.equals(get0(), that.get0());
+		final Tuple1G_O<?> that = (Tuple1G_O<?>) obj;
+		return get0() == that.get0();
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class Tuple1GS<T0> implements ITuple1GS<T0> {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(get0());
+		return System.identityHashCode(get0());
 	}
 
 	@Override

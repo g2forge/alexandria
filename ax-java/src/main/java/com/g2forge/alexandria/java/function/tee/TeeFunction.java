@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.g2forge.alexandria.java.tuple.ITuple2G_;
-import com.g2forge.alexandria.java.tuple.Tuple2GS;
+import com.g2forge.alexandria.java.tuple.implementations.Tuple2GSO;
 
 import lombok.AllArgsConstructor;
 
@@ -17,7 +17,7 @@ public class TeeFunction<I, O> implements Function<I, O> {
 	@Override
 	public O apply(I input) {
 		final O retVal = function.apply(input);
-		consumer.accept(new Tuple2GS<>(input, retVal));
+		consumer.accept(new Tuple2GSO<>(input, retVal));
 		return retVal;
 	}
 }

@@ -7,7 +7,7 @@ import com.g2forge.alexandria.java.tuple.ITuple1G_;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class ConcurrentCachingSupplier<T> implements Supplier<T> {
+public class ConcurrentLazySupplier<T> implements Supplier<T> {
 	protected static class Holder<T> implements ITuple1G_<T> {
 		protected final T value;
 
