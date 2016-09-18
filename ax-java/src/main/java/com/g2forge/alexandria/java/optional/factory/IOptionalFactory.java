@@ -1,4 +1,6 @@
-package com.g2forge.alexandria.java.optional;
+package com.g2forge.alexandria.java.optional.factory;
+
+import com.g2forge.alexandria.java.optional.IOptional;
 
 public interface IOptionalFactory {
 	public <T> IOptional<T> empty();
