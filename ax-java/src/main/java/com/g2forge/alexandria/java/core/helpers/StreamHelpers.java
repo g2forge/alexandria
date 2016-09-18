@@ -15,6 +15,7 @@ import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -93,5 +94,9 @@ public class StreamHelpers {
 
 	public static <T> Stream<T> toStream(Supplier<T> supplier) {
 		return Stream.of(supplier).map(Supplier::get);
+	}
+
+	public static <T> Stream<? extends ITuple2G_<Integer, T>> toStreamIndexed(List<T> list) {
+		return IntStream.range(0, list.size()).mapToObj(i -> new Tuple2G_O<>(i, list.get(i)));
 	}
 }
