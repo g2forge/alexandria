@@ -8,12 +8,12 @@ import org.junit.Test;
 import com.g2forge.alexandria.java.tuple.ITuple1GS;
 import com.g2forge.alexandria.java.tuple.implementations.Tuple1GSO;
 
-public class TestLazySupplier {
+public class TestFixedCachingSupplier {
 	@Test
 	public void lazy() {
 		final ITuple1GS<Integer> count = new Tuple1GSO<>(0);
 		final String string = "Hello, World!";
-		final Supplier<String> supplier = new LazySupplier<>(() -> {
+		final Supplier<String> supplier = new FixedCachingSupplier<>(() -> {
 			count.set0(count.get0() + 1);
 			return string;
 		});

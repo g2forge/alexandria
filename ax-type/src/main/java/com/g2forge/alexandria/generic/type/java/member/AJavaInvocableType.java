@@ -11,10 +11,10 @@ import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.IJavaInvocableType;
 import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
 import com.g2forge.alexandria.generic.type.java.type.IJavaType;
-import com.g2forge.alexandria.java.function.cache.LazySupplier;
+import com.g2forge.alexandria.java.function.cache.FixedCachingSupplier;
 
 public abstract class AJavaInvocableType<M extends Executable> extends AJavaMemberType<M>implements IJavaInvocableType {
-	protected final Supplier<List<IJavaType>> parameterTypes = new LazySupplier<>(() -> Collections.unmodifiableList(Stream.of(getJavaMember().getGenericParameterTypes()).map(type -> JavaTypeHelpers.toType(type, environment)).collect(Collectors.toList())));
+	protected final Supplier<List<IJavaType>> parameterTypes = new FixedCachingSupplier<>(() -> Collections.unmodifiableList(Stream.of(getJavaMember().getGenericParameterTypes()).map(type -> JavaTypeHelpers.toType(type, environment)).collect(Collectors.toList())));
 
 	public AJavaInvocableType(final M member, final ITypeEnvironment environment) {
 		super(member, environment);

@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
 import com.g2forge.alexandria.generic.type.java.type.IJavaConcreteType;
-import com.g2forge.alexandria.java.function.cache.ConcurrentLazySupplier;
+import com.g2forge.alexandria.java.function.cache.ConcurrentFixedSupplier;
 import com.g2forge.alexandria.reflection.object.IJavaConcreteReflection;
 import com.g2forge.alexandria.reflection.object.implementations.JavaConcreteReflection;
 import com.g2forge.alexandria.reflection.record.v1.reflected.IReflectedFieldType;
@@ -21,7 +21,7 @@ public class ReflectedRecordType<R> implements IReflectedRecordType<R> {
 	@Getter(AccessLevel.PROTECTED)
 	protected final IJavaConcreteReflection<R> reflection;
 
-	protected final Supplier<Collection<IReflectedFieldType<R, ?>>> fields = new ConcurrentLazySupplier<>(() -> Collections.unmodifiableCollection(getReflection().getFields(JavaScope.Inherited, null).map(field -> new ReflectedFieldType<>(field)).collect(Collectors.toList())));
+	protected final Supplier<Collection<IReflectedFieldType<R, ?>>> fields = new ConcurrentFixedSupplier<>(() -> Collections.unmodifiableCollection(getReflection().getFields(JavaScope.Inherited, null).map(field -> new ReflectedFieldType<>(field)).collect(Collectors.toList())));
 
 	/**
 	 * @param type
