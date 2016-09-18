@@ -11,11 +11,11 @@ public interface OptionalFunction<I, O> extends Function<I, Optional<? extends O
 		return i -> Optional.empty();
 	}
 
-	public static <I, O> OptionalFunction<I, O> of(I input, O output) {
+	public static <I, O> OptionalFunction<I, O> of(Object input, O output) {
 		return of(input, () -> output);
 	}
 
-	public static <I, O> OptionalFunction<I, O> of(I input, Supplier<? extends O> output) {
+	public static <I, O> OptionalFunction<I, O> of(Object input, Supplier<? extends O> output) {
 		return i -> input.equals(i) ? Optional.of(output.get()) : Optional.empty();
 	}
 

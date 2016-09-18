@@ -2,6 +2,8 @@ package com.g2forge.alexandria.java.optional;
 
 import java.util.Objects;
 
+import com.g2forge.alexandria.java.optional.factory.IOptionalFactory;
+
 public class NonNullOptional<T> extends AOptional<T> {
 	protected static final NonNullOptional<?> EMPTY = new NonNullOptional<>();
 

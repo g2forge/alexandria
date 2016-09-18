@@ -2,11 +2,33 @@ package com.g2forge.alexandria.java.resource;
 
 import java.util.Stack;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import com.g2forge.alexandria.java.close.ICloseable;
+import com.g2forge.alexandria.java.function.LiteralSupplier;
 
-public class StackThreadResource<T> implements IThreadResource<T> {
-	protected final ThreadLocal<Stack<T>> local = ThreadLocal.withInitial(Stack::new);
+public class StackThreadResource<T> implements ICloseableResource<T> {
+	protected final ThreadLocal<Stack<T>> local;
+
+	public StackThreadResource() {
+		this.local = ThreadLocal.withInitial(Stack::new);
+	}
+
+	public StackThreadResource(Supplier<? extends T> initial) {
+		this.local = ThreadLocal.withInitial(() -> {
+			final Stack<T> stack = new Stack<>();
+			stack.add(initial.get());
+			return stack;
+		});
+	}
+
+	public StackThreadResource(T initial) {
+		this(new LiteralSupplier<>(initial));
+	}
+
+	public int depth() {
+		return local.get().size();
+	}
 
 	@Override
 	public T get() {
