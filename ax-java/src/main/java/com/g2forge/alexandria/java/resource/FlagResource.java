@@ -2,7 +2,7 @@ package com.g2forge.alexandria.java.resource;
 
 import com.g2forge.alexandria.java.close.ICloseable;
 
-public class FlagResource implements IThreadResource<Boolean> {
+public class FlagResource implements ICloseableResource<Boolean> {
 	protected boolean inside;
 
 	public void close(boolean previous) {

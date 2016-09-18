@@ -5,7 +5,7 @@ import java.util.function.Function;
 
 import com.g2forge.alexandria.java.close.ICloseable;
 
-public class StackThreadResource<T> implements IThreadResource<T> {
+public class StackThreadResource<T> implements ICloseableResource<T> {
 	protected final ThreadLocal<Stack<T>> local = ThreadLocal.withInitial(Stack::new);
 
 	public int depth() {

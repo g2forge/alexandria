@@ -2,7 +2,7 @@ package com.g2forge.alexandria.java.resource;
 
 import com.g2forge.alexandria.java.close.ICloseable;
 
-public class SimpleThreadResource<T> implements IThreadResource<T> {
+public class SimpleThreadResource<T> implements ICloseableResource<T> {
 	protected boolean valid;
 
 	protected T value;

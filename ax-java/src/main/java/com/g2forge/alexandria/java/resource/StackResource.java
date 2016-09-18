@@ -5,7 +5,7 @@ import java.util.function.Function;
 
 import com.g2forge.alexandria.java.close.ICloseable;
 
-public class StackResource<T> implements IThreadResource<T> {
+public class StackResource<T> implements ICloseableResource<T> {
 	protected final Stack<T> stack = new Stack<>();
 
 	public int depth() {

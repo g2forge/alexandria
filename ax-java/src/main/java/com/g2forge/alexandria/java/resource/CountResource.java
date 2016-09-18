@@ -2,7 +2,7 @@ package com.g2forge.alexandria.java.resource;
 
 import com.g2forge.alexandria.java.close.ICloseable;
 
-public class CountResource implements IThreadResource<Integer> {
+public class CountResource implements ICloseableResource<Integer> {
 	protected int nesting;
 
 	public void close(int previous) {
