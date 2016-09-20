@@ -96,7 +96,7 @@ public class StreamHelpers {
 		return Stream.of(supplier).map(Supplier::get);
 	}
 
-	public static <T> Stream<? extends ITuple2G_<Integer, T>> toStreamIndexed(List<T> list) {
+	public static <T> Stream<? extends ITuple2G_<Integer, T>> toStreamIndexed(List<? extends T> list) {
 		return IntStream.range(0, list.size()).mapToObj(i -> new Tuple2G_O<>(i, list.get(i)));
 	}
 }
