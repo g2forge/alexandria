@@ -2,7 +2,10 @@ package com.g2forge.alexandria.test;
 
 import org.junit.Assert;
 
-public class AssertHelpers {
+import com.g2forge.alexandria.java.function.FunctionHelpers;
+import com.g2forge.alexandria.java.function.IConsumer;
+
+public class AssertHelpers extends Assert {
 	public static void assertException(Class<? extends Throwable> type, Runnable runnable) {
 		try {
 			runnable.run();
@@ -10,6 +13,20 @@ public class AssertHelpers {
 			if (!type.isInstance(throwable)) throw throwable;
 			else return;
 		}
-		Assert.fail("Did not receive expected exception of type " + type);
+		fail("Did not receive expected exception of type " + type);
+	}
+
+	public static void assertInstanceOf(Class<?> expected, Object actual) {
+		if (!expected.isInstance(actual)) {
+			fail("Expected an instance of " + expected + " was \"" + actual + "\"!");
+		}
+	}
+
+	public static <T> IConsumer<? super T> testEquals(T expected) {
+		return FunctionHelpers.create(AssertHelpers::assertEquals).curry0(expected);
+	}
+
+	public static <T> IConsumer<? super T> testInstanceOf(Class<?> expected) {
+		return FunctionHelpers.create(AssertHelpers::assertInstanceOf).curry0(expected);
 	}
 }
