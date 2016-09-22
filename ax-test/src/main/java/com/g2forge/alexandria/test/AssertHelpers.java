@@ -26,6 +26,10 @@ public class AssertHelpers extends Assert {
 		return FunctionHelpers.create(AssertHelpers::assertEquals).curry0(expected);
 	}
 
+	public static <T> IConsumer<? super T> testNotEquals(T unexpected) {
+		return FunctionHelpers.create(AssertHelpers::assertNotEquals).curry0(unexpected);
+	}
+
 	public static <T> IConsumer<? super T> testInstanceOf(Class<?> expected) {
 		return FunctionHelpers.create(AssertHelpers::assertInstanceOf).curry0(expected);
 	}
