@@ -1,8 +1,8 @@
-package com.g2forge.alexandria.java.optional;
+package com.g2forge.alexandria.java.fluent.optional;
 
 import java.util.Objects;
 
-import com.g2forge.alexandria.java.optional.factory.IOptionalFactory;
+import com.g2forge.alexandria.java.fluent.optional.factory.IOptionalFactory;
 
 public class NonNullOptional<T> extends AOptional<T> {
 	protected static final NonNullOptional<?> EMPTY = new NonNullOptional<>();
@@ -47,21 +47,21 @@ public class NonNullOptional<T> extends AOptional<T> {
 	}
 
 	@Override
-	protected <_T> AOptional<_T> create() {
+	protected <U> AOptional<U> create() {
 		return NonNullOptional.empty();
 	}
 
 	@Override
-	protected <_T> AOptional<_T> create(_T value) {
+	protected <U> AOptional<U> create(U value) {
 		return NonNullOptional.of(value);
 	}
 
 	@Override
-	public boolean isPresent() {
-		return value != null;
+	public boolean isEmpty() {
+		return value == null;
 	}
 
-	protected <_T> _T require(_T value) {
+	protected <U> U require(U value) {
 		return Objects.requireNonNull(value);
 	}
 }

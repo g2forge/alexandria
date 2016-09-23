@@ -1,6 +1,6 @@
-package com.g2forge.alexandria.java.optional;
+package com.g2forge.alexandria.java.fluent.optional;
 
-import com.g2forge.alexandria.java.optional.factory.IOptionalFactory;
+import com.g2forge.alexandria.java.fluent.optional.factory.IOptionalFactory;
 
 public class NullableOptional<T> extends AOptional<T> {
 	protected static final NullableOptional<?> EMPTY = new NullableOptional<>();
@@ -58,7 +58,8 @@ public class NullableOptional<T> extends AOptional<T> {
 		return NullableOptional.of(value);
 	}
 
-	public boolean isPresent() {
-		return isValid;
+	@Override
+	public boolean isEmpty() {
+		return !isValid;
 	}
 }

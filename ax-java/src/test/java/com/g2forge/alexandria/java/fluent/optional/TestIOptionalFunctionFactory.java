@@ -1,10 +1,10 @@
-package com.g2forge.alexandria.java.optional;
+package com.g2forge.alexandria.java.fluent.optional;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.java.optional.factory.IOptionalFunctionFactory;
-import com.g2forge.alexandria.java.optional.function.IOptionalFunction;
+import com.g2forge.alexandria.java.fluent.optional.factory.IOptionalFunctionFactory;
+import com.g2forge.alexandria.java.fluent.optional.function.IOptionalFunction;
 
 public class TestIOptionalFunctionFactory {
 	protected final IOptionalFunctionFactory<String, String, IOptionalFunction<String, String>> factory = new IOptionalFunctionFactory<String, String, IOptionalFunction<String, String>>() {
@@ -19,13 +19,13 @@ public class TestIOptionalFunctionFactory {
 		final IOptionalFunction<String, String> function = factory.build().add("a", "b").add("b", "c").build();
 		Assert.assertEquals("b", function.apply("a").get());
 		Assert.assertEquals("c", function.apply("b").get());
-		Assert.assertFalse(function.apply("c").isPresent());
+		Assert.assertTrue(function.apply("c").isEmpty());
 	}
 
 	@Test
 	public void simple() {
 		final IOptionalFunction<String, String> function = factory.of("Hello", "World");
-		Assert.assertFalse(function.apply("a").isPresent());
+		Assert.assertTrue(function.apply("a").isEmpty());
 		Assert.assertEquals("World", function.apply("Hello").get());
 	}
 }

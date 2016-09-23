@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.optional.factory;
+package com.g2forge.alexandria.java.fluent.optional.factory;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -1,9 +1,9 @@
-package com.g2forge.alexandria.java.optional.function;
+package com.g2forge.alexandria.java.fluent.optional.function;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import com.g2forge.alexandria.java.optional.factory.IOptionalFactory;
+import com.g2forge.alexandria.java.fluent.optional.factory.IOptionalFactory;
 
 public interface IOptionalFunctional<I, O, F extends IOptionalFunctional<? super I, ? extends O, ?>> {
 	/**
