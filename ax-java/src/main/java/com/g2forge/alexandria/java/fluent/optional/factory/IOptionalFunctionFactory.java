@@ -1,11 +1,11 @@
-package com.g2forge.alexandria.java.optional.factory;
+package com.g2forge.alexandria.java.fluent.optional.factory;
 
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import com.g2forge.alexandria.java.optional.NonNullOptional;
-import com.g2forge.alexandria.java.optional.function.IOptionalFunction;
+import com.g2forge.alexandria.java.fluent.optional.NonNullOptional;
+import com.g2forge.alexandria.java.fluent.optional.function.IOptionalFunction;
 
 public interface IOptionalFunctionFactory<I, O, R> {
 	public default OptionalFunctionBuilder<I, O, R> build() {

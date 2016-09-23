@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.optional.function;
+package com.g2forge.alexandria.java.fluent.optional.function;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +10,9 @@ import java.util.function.Supplier;
 import com.g2forge.alexandria.java.core.error.UnreachableCodeError;
 import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
 import com.g2forge.alexandria.java.core.helpers.ObjectHelpers;
+import com.g2forge.alexandria.java.fluent.optional.IOptional;
+import com.g2forge.alexandria.java.fluent.optional.factory.IOptionalFactory;
 import com.g2forge.alexandria.java.function.LiteralSupplier;
-import com.g2forge.alexandria.java.optional.IOptional;
-import com.g2forge.alexandria.java.optional.factory.IOptionalFactory;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public interface IOptionalFunction<I, O> extends Function<I, IOptional<? extends
 		public IOptional<? extends O> apply(I i) {
 			for (IOptionalFunction<? super I, ? extends O> function : getFunctions()) {
 				final IOptional<? extends O> o = function.apply(i);
-				if (o.isPresent()) return o;
+				if (!o.isEmpty()) return o;
 			}
 			throw new UnreachableCodeError();
 		}
@@ -112,7 +112,7 @@ public interface IOptionalFunction<I, O> extends Function<I, IOptional<? extends
 	public default Function<I, O> fallback(Function<? super I, ? extends O> fallback) {
 		return i -> {
 			final IOptional<? extends O> o = apply(i);
-			return o.isPresent() ? o.get() : fallback.apply(i);
+			return o.isEmpty() ? fallback.apply(i) : o.get();
 		};
 	}
 
