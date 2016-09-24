@@ -1,18 +1,21 @@
 package com.g2forge.alexandria.adt.collection;
 
 import java.util.AbstractList;
+import java.util.function.IntFunction;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class LongRangeList extends AbstractList<Long> {
-	protected final long base;
+public class IndexedGeneratorList<T> extends AbstractList<T> {
+	protected final IntFunction<T> generator;
+
+	protected final int base;
 
 	protected final int size;
 
 	@Override
-	public Long get(int index) {
-		return base + index;
+	public T get(int index) {
+		return generator.apply(base + index);
 	}
 
 	@Override

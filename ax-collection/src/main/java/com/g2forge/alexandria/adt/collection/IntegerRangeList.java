@@ -2,23 +2,21 @@ package com.g2forge.alexandria.adt.collection;
 
 import java.util.AbstractList;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class IntegerRangeList extends AbstractList<Integer> {
-  protected final int base;
-   
-  protected final int size;
-  
-  public IntegerRangeList(int base, int size) {
-    this.base = base;
-    this.size = size;
-  }
+	protected final int base;
 
-  @Override
-  public Integer get(int index) {
-    return base + index;
-  }
+	protected final int size;
 
-  @Override
-  public int size() {
-    return size;
-  }
+	@Override
+	public Integer get(int index) {
+		return base + index;
+	}
+
+	@Override
+	public int size() {
+		return size;
+	}
 }
