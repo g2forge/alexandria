@@ -11,7 +11,7 @@ import org.junit.Test;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.core.helpers.HStream;
 
-public class TestStreamHelpers {
+public class TestHStream {
 	@Test
 	public void productMulti() {
 		final List<Integer> actual = HStream.product((a, b) -> a | b, () -> Stream.of(0, 4), () -> Stream.of(0, 2), () -> Stream.of(0, 1)).collect(Collectors.toList());

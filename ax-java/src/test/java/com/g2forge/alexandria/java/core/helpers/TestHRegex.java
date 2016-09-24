@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestRegexHelpers {
+public class TestHRegex {
 	@Test
 	public void list() {
 		final String regex = "(" + HRegex.toList("[a-z]+", ",\\s*") + ")(_foo)";

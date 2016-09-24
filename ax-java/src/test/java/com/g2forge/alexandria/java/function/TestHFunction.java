@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import com.g2forge.alexandria.java.function.optional.OptionalFunction;
 
-public class TestFunctionHelpers {
+public class TestHFunction {
 	@Test
 	public void override() {
 		final Map<String, Integer> map = new HashMap<>();
