@@ -11,7 +11,7 @@ import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
 import com.g2forge.alexandria.java.function.cache.FixedCachingSupplier;
 import com.g2forge.alexandria.reflection.object.IJavaConcreteReflection;
 import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;
-import com.g2forge.alexandria.reflection.object.ReflectionHelpers;
+import com.g2forge.alexandria.reflection.object.HReflection;
 import com.g2forge.alexandria.reflection.record.v2.IPropertyType;
 import com.g2forge.alexandria.reflection.record.v2.IRecordType;
 
@@ -47,7 +47,7 @@ public class ReflectedRecordType implements IRecordType {
 	}
 
 	public ReflectedRecordType(Type type) {
-		this(ReflectionHelpers.toReflection(type));
+		this(HReflection.toReflection(type));
 	}
 
 	public Collection<? extends IPropertyType<?>> getProperties() {

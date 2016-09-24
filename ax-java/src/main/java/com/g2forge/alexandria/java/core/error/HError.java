@@ -4,7 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Consumer;
 
-public class ErrorHelpers {
+import com.g2forge.alexandria.java.marker.Helpers;
+
+import lombok.experimental.UtilityClass;
+
+@Helpers
+@UtilityClass
+public class HError {
 	@SafeVarargs
 	public static <T> void multiprocess(Consumer<? super T> consumer, String message, T... values) {
 		final Collection<Throwable> throwables = new ArrayList<>();
@@ -16,7 +22,7 @@ public class ErrorHelpers {
 				throwables.add(throwable);
 			}
 		}
-		throw ErrorHelpers.multithrow(message, throwables);
+		throw HError.multithrow(message, throwables);
 	}
 
 	public static RuntimeException multithrow(String message, Iterable<? extends Throwable> throwables) {

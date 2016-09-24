@@ -6,7 +6,7 @@ import java.util.Set;
 
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.AJavaUntype;
-import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
+import com.g2forge.alexandria.generic.type.java.HJavaType;
 import com.g2forge.alexandria.generic.type.java.structure.JavaModifier;
 import com.g2forge.alexandria.generic.type.java.type.IJavaClassType;
 
@@ -17,7 +17,7 @@ public abstract class AJavaMemberType<M extends Member> extends AJavaUntype<M>im
 
 	@Override
 	public IJavaClassType getDeclaringClass() {
-		return JavaTypeHelpers.toType(getJavaMember().getDeclaringClass(), environment);
+		return HJavaType.toType(getJavaMember().getDeclaringClass(), environment);
 	}
 
 	@Override

@@ -7,7 +7,7 @@ import java.util.Collection;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
-import com.g2forge.alexandria.analysis.AnalysisHelpers;
+import com.g2forge.alexandria.analysis.HAnalysis;
 import com.g2forge.alexandria.analysis.SerializableFunction;
 
 import lombok.Data;
@@ -43,7 +43,7 @@ public class FieldMatcher<T> extends BaseMatcher<T> {
 	protected <F> void check(final T actual, final Collection<Mismatch<?>> retVal, SerializableFunction<T, F> field) {
 		final F expectedField = field.apply(expected);
 		final F actualField = field.apply(actual);
-		if (!equals(expectedField, actualField)) retVal.add(new Mismatch<>(AnalysisHelpers.getPath(field), expectedField, actualField));
+		if (!equals(expectedField, actualField)) retVal.add(new Mismatch<>(HAnalysis.getPath(field), expectedField, actualField));
 	}
 
 	@Override

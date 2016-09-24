@@ -5,7 +5,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.util.Collection;
 
 import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
-import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
+import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.reflection.annotations.IJavaAnnotations;
 
 public class JavaAnnotations implements IJavaAnnotations {
@@ -28,9 +28,9 @@ public class JavaAnnotations implements IJavaAnnotations {
 		switch (scope) {
 			case Instance:
 			case Static:
-				return CollectionHelpers.asList(annotated.getDeclaredAnnotations());
+				return HCollection.asList(annotated.getDeclaredAnnotations());
 			case Inherited:
-				return CollectionHelpers.asList(annotated.getAnnotations());
+				return HCollection.asList(annotated.getAnnotations());
 		}
 		return null;
 	}

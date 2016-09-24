@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
+import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.function.LiteralSupplier;
 
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,7 @@ public class OptionalFunctionBuilder<I, O, R> {
 	public R build() {
 		if (map.isEmpty()) return factory.empty();
 		else if (map.size() == 1) {
-			final Map.Entry<Object, Supplier<? extends O>> entry = CollectionHelpers.getOne(map.entrySet());
+			final Map.Entry<Object, Supplier<? extends O>> entry = HCollection.getOne(map.entrySet());
 			if (entry.getValue() instanceof LiteralSupplier) return factory.of(entry.getKey(), LiteralSupplier.unwrap(entry.getValue()));
 			else return factory.of(entry.getKey(), entry.getValue());
 		} else {

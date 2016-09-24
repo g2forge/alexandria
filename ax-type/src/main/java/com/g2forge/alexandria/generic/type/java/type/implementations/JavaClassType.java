@@ -10,14 +10,14 @@ import com.g2forge.alexandria.generic.type.IType;
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.TypeEnvironment;
-import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
+import com.g2forge.alexandria.generic.type.java.HJavaType;
 import com.g2forge.alexandria.generic.type.java.type.AJavaConcreteType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaClassType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaConcreteType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaVariableType;
 import com.g2forge.alexandria.java.core.error.UnreachableCodeError;
-import com.g2forge.alexandria.java.core.helpers.ArrayHelpers;
+import com.g2forge.alexandria.java.core.helpers.HArray;
 
 public class JavaClassType extends AJavaConcreteType<Class<?>>implements IJavaClassType {
 	public JavaClassType(final Class<?> javaType, final ITypeEnvironment environment) {
@@ -77,17 +77,17 @@ public class JavaClassType extends AJavaConcreteType<Class<?>>implements IJavaCl
 
 	@Override
 	public IJavaType getOwner() {
-		return JavaTypeHelpers.toType(javaType.getEnclosingClass(), environment);
+		return HJavaType.toType(javaType.getEnclosingClass(), environment);
 	}
 
 	@Override
 	public List<? extends IJavaVariableType> getParameters() {
-		return ArrayHelpers.map(input -> new JavaVariableType(input, environment), javaType.getTypeParameters());
+		return HArray.map(input -> new JavaVariableType(input, environment), javaType.getTypeParameters());
 	}
 
 	protected IJavaClassType getParent(final Type generic, final Class<?> parent) {
 		if (generic == null) return null;
-		final ITypeEnvironment environment = ((IJavaConcreteType) JavaTypeHelpers.toType(generic, this.environment)).toEnvironment();
+		final ITypeEnvironment environment = ((IJavaConcreteType) HJavaType.toType(generic, this.environment)).toEnvironment();
 		return new JavaClassType(parent, environment);
 	}
 

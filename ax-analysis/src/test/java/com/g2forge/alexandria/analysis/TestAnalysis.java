@@ -18,6 +18,6 @@ public class TestAnalysis {
 
 	@Test
 	public void test() throws ClassNotFoundException, Error {
-		Assert.assertEquals("foo.bar", AnalysisHelpers.getPath((TestClass0 test) -> test.getFoo().getBar()));
+		Assert.assertEquals("foo.bar", HAnalysis.getPath((TestClass0 test) -> test.getFoo().getBar()));
 	}
 }

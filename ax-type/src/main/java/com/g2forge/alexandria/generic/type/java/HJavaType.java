@@ -10,8 +10,13 @@ import com.g2forge.alexandria.generic.type.java.type.IJavaType;
 import com.g2forge.alexandria.generic.type.java.type.implementations.JavaBoundType;
 import com.g2forge.alexandria.generic.type.java.type.implementations.JavaClassType;
 import com.g2forge.alexandria.generic.type.java.type.implementations.JavaVariableType;
+import com.g2forge.alexandria.java.marker.Helpers;
 
-public class JavaTypeHelpers {
+import lombok.experimental.UtilityClass;
+
+@Helpers
+@UtilityClass
+public class HJavaType {
 	public static IJavaClassType toType(final Class<?> type, final ITypeEnvironment environment) {
 		return new JavaClassType(type, environment);
 	}

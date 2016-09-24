@@ -8,8 +8,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import com.g2forge.alexandria.java.core.error.UnreachableCodeError;
-import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
-import com.g2forge.alexandria.java.core.helpers.ObjectHelpers;
+import com.g2forge.alexandria.java.core.helpers.HCollection;
+import com.g2forge.alexandria.java.core.helpers.HObject;
 import com.g2forge.alexandria.java.fluent.optional.IOptional;
 import com.g2forge.alexandria.java.fluent.optional.factory.IOptionalFactory;
 import com.g2forge.alexandria.java.function.LiteralSupplier;
@@ -26,7 +26,7 @@ public interface IOptionalFunction<I, O> extends Function<I, IOptional<? extends
 
 		@SafeVarargs
 		public Overridden(IOptionalFunction<? super I, ? extends O>... functions) {
-			this(CollectionHelpers.asList(functions));
+			this(HCollection.asList(functions));
 		}
 
 		@Override
@@ -71,7 +71,7 @@ public interface IOptionalFunction<I, O> extends Function<I, IOptional<? extends
 
 			@Override
 			public String toString() {
-				return ObjectHelpers.toString(this, "empty");
+				return HObject.toString(this, "empty");
 			}
 		};
 	}
@@ -85,7 +85,7 @@ public interface IOptionalFunction<I, O> extends Function<I, IOptional<? extends
 
 			@Override
 			public String toString() {
-				return ObjectHelpers.toString(this, map);
+				return HObject.toString(this, map);
 			}
 		};
 	}
@@ -103,7 +103,7 @@ public interface IOptionalFunction<I, O> extends Function<I, IOptional<? extends
 
 			@Override
 			public String toString() {
-				return ObjectHelpers.toString(this, b -> b.append(input).append('=').append(output));
+				return HObject.toString(this, b -> b.append(input).append('=').append(output));
 			}
 		};
 	}

@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.g2forge.alexandria.java.core.error.RuntimeReflectionException;
-import com.g2forge.alexandria.java.core.helpers.StringHelpers;
+import com.g2forge.alexandria.java.core.helpers.HString;
 import com.g2forge.alexandria.reflection.annotations.IJavaAnnotated;
 import com.g2forge.alexandria.reflection.object.IJavaMethodReflection;
 import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;
@@ -90,7 +90,7 @@ class MethodPropertyType<P> extends APropertyType<P> {
 
 	@Override
 	public String getName() {
-		return StringHelpers.lowercase(StringHelpers.stripPrefix(getMethod().getType().getName(), PREFIXES));
+		return HString.lowercase(HString.stripPrefix(getMethod().getType().getName(), PREFIXES));
 	}
 
 	@Override

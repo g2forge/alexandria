@@ -2,7 +2,7 @@ package com.g2forge.alexandria.java.function;
 
 import java.util.function.Supplier;
 
-import com.g2forge.alexandria.java.core.helpers.ObjectHelpers;
+import com.g2forge.alexandria.java.core.helpers.HObject;
 
 import lombok.Data;
 
@@ -30,6 +30,6 @@ public class LiteralSupplier<T> implements Supplier<T> {
 
 	@Override
 	public String toString() {
-		return ObjectHelpers.toString(this, getValue());
+		return HObject.toString(this, getValue());
 	}
 }

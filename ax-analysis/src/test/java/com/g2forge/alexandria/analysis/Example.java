@@ -14,6 +14,6 @@ public class Example {
 	}
 
 	public static void main(String[] args) throws ClassNotFoundException {
-		System.out.println(AnalysisHelpers.getPath((SerializableFunction<TestClass0, ?>) (TestClass0 test) -> test.getFoo().getBar()));
+		System.out.println(HAnalysis.getPath((SerializableFunction<TestClass0, ?>) (TestClass0 test) -> test.getFoo().getBar()));
 	}
 }

@@ -3,7 +3,7 @@ package com.g2forge.alexandria.reflection.record.v2.reflection;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
+import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.reflection.record.v2.IPropertyType;
 import com.g2forge.alexandria.reflection.record.v2.IRecordType;
 import com.g2forge.alexandria.reflection.record.v2.reflection.ReflectedRecordType;
@@ -39,7 +39,7 @@ public class TestReflectedRecordType {
 	public void field() {
 		final IRecordType recordType = new ReflectedRecordType(FieldRecord.class);
 		@SuppressWarnings("unchecked")
-		final IPropertyType<String> property = (IPropertyType<String>) CollectionHelpers.getOne(recordType.getProperties());
+		final IPropertyType<String> property = (IPropertyType<String>) HCollection.getOne(recordType.getProperties());
 		Assert.assertEquals("foo", property.getName());
 		Assert.assertEquals("bar", property.getValue(new FieldRecord("bar")));
 
@@ -54,7 +54,7 @@ public class TestReflectedRecordType {
 	public void method() {
 		final IRecordType recordType = new ReflectedRecordType(MethodRecord.class);
 		@SuppressWarnings("unchecked")
-		final IPropertyType<String> property = (IPropertyType<String>) CollectionHelpers.getOne(recordType.getProperties());
+		final IPropertyType<String> property = (IPropertyType<String>) HCollection.getOne(recordType.getProperties());
 		Assert.assertEquals("foo", property.getName());
 		Assert.assertEquals("bar", property.getValue(new MethodRecord()));
 	}
@@ -63,7 +63,7 @@ public class TestReflectedRecordType {
 	public void override() {
 		final IRecordType recordType = new ReflectedRecordType(OverrideRecord.class);
 		@SuppressWarnings("unchecked")
-		final IPropertyType<String> property = (IPropertyType<String>) CollectionHelpers.getOne(recordType.getProperties());
+		final IPropertyType<String> property = (IPropertyType<String>) HCollection.getOne(recordType.getProperties());
 		Assert.assertEquals("foo", property.getName());
 
 		final OverrideRecord object = new OverrideRecord("abc");

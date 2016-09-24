@@ -5,8 +5,13 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.g2forge.alexandria.annotations.TODO;
+import com.g2forge.alexandria.java.marker.Helpers;
 
-public class ConcurrentHelpers {
+import lombok.experimental.UtilityClass;
+
+@Helpers
+@UtilityClass
+public class HConcurrent {
 	private static <I, O> O internal(final Function<I, O> function, final I input, final Object[] locks, int offset) {
 		if (offset == locks.length - 1) return sync(function, input, locks[offset]);
 		else if (locks[offset] == null) return internal(function, input, locks, offset + 1);

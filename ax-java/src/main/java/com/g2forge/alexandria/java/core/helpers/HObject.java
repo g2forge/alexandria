@@ -4,10 +4,13 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import com.g2forge.alexandria.java.marker.Helpers;
+
 import lombok.experimental.UtilityClass;
 
+@Helpers
 @UtilityClass
-public class ObjectHelpers {
+public class HObject {
 	@SafeVarargs
 	public static <T> boolean equals(boolean type, T _this, Object obj, Function<? super T, ?>... accessors) {
 		if (_this == obj) return true;

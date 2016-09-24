@@ -5,7 +5,7 @@ import java.lang.reflect.Field;
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.TypeEnvironment;
-import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
+import com.g2forge.alexandria.generic.type.java.HJavaType;
 import com.g2forge.alexandria.generic.type.java.member.AJavaMemberType;
 import com.g2forge.alexandria.generic.type.java.member.IJavaFieldType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaType;
@@ -22,6 +22,6 @@ public class JavaFieldType extends AJavaMemberType<Field>implements IJavaFieldTy
 
 	@Override
 	public IJavaType getFieldType() {
-		return JavaTypeHelpers.toType(javaType.getGenericType(), environment);
+		return HJavaType.toType(javaType.getGenericType(), environment);
 	}
 }

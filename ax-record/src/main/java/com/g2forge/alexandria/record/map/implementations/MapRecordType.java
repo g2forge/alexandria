@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
+import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.record.IFieldType;
 import com.g2forge.alexandria.record.IRecordType;
 
@@ -27,7 +27,7 @@ public class MapRecordType implements IRecordType<MapRecord> {
 	 */
 	@SafeVarargs
 	public MapRecordType(final IFieldType<MapRecord, ?>... fieldTypes) {
-		this(CollectionHelpers.asList(fieldTypes));
+		this(HCollection.asList(fieldTypes));
 	}
 
 	@Override

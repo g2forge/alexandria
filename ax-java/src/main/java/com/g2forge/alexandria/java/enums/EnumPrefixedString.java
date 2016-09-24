@@ -8,7 +8,7 @@ public class EnumPrefixedString<E extends Enum<E>> {
 		final int index = string.indexOf(separator);
 		if (index < 0) return new EnumPrefixedString<>(unspecified, separator, string);
 		else {
-			final E value = EnumHelpers.valueOfInsensitive(unspecified.getDeclaringClass(), string.substring(0, index));
+			final E value = HEnum.valueOfInsensitive(unspecified.getDeclaringClass(), string.substring(0, index));
 			return new EnumPrefixedString<>(value, separator, string.substring(index + separator.length()));
 		}
 	}

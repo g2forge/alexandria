@@ -7,10 +7,10 @@ import java.util.function.Predicate;
 import com.g2forge.alexandria.generic.type.IType;
 import com.g2forge.alexandria.generic.type.IVariableType;
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
-import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
+import com.g2forge.alexandria.java.core.helpers.HCollection;
 
 public class TypeEnvironment implements ITypeEnvironment {
-	protected static final Predicate<Object> PARENT_PREDICATE = ((Predicate<Object>) CollectionHelpers.asSet(null, EmptyTypeEnvironment.create())::contains).negate();
+	protected static final Predicate<Object> PARENT_PREDICATE = ((Predicate<Object>) HCollection.asSet(null, EmptyTypeEnvironment.create())::contains).negate();
 
 	public static ITypeEnvironment create(final ITypeEnvironment parent) {
 		return parent;
@@ -20,16 +20,16 @@ public class TypeEnvironment implements ITypeEnvironment {
 		final boolean noMap = (map == null) || map.isEmpty();
 		if (noMap && parents.isEmpty()) return null;
 
-		final Collection<ITypeEnvironment> nonEmpty = CollectionHelpers.filter(parents, PARENT_PREDICATE);
+		final Collection<ITypeEnvironment> nonEmpty = HCollection.filter(parents, PARENT_PREDICATE);
 		if (noMap) {
 			if (nonEmpty.isEmpty()) return EmptyTypeEnvironment.create();
-			if (nonEmpty.size() == 1) return CollectionHelpers.getAny(nonEmpty);
+			if (nonEmpty.size() == 1) return HCollection.getAny(nonEmpty);
 		}
 		return new TypeEnvironment(map, nonEmpty);
 	}
 
 	public static ITypeEnvironment create(Map<IVariableType, IType> map, final ITypeEnvironment... parents) {
-		return create(map, CollectionHelpers.asList(parents));
+		return create(map, HCollection.asList(parents));
 	}
 
 	protected final Map<IVariableType, IType> map;
@@ -38,12 +38,12 @@ public class TypeEnvironment implements ITypeEnvironment {
 
 	public TypeEnvironment(final Map<IVariableType, IType> map, final Collection<ITypeEnvironment> parents) {
 		this.map = map;
-		final Collection<ITypeEnvironment> filtered = CollectionHelpers.filter(parents, PARENT_PREDICATE);
+		final Collection<ITypeEnvironment> filtered = HCollection.filter(parents, PARENT_PREDICATE);
 		this.parents = filtered.isEmpty() ? null : filtered;
 	}
 
 	public TypeEnvironment(final Map<IVariableType, IType> map, final ITypeEnvironment... parents) {
-		this(map, CollectionHelpers.asList(parents));
+		this(map, HCollection.asList(parents));
 	}
 
 	@Override

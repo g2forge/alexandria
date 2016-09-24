@@ -10,9 +10,14 @@ import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.function.Function;
 
-import com.g2forge.alexandria.java.concurrent.ConcurrentHelpers;
+import com.g2forge.alexandria.java.concurrent.HConcurrent;
+import com.g2forge.alexandria.java.marker.Helpers;
 
-public class FileHelpers {
+import lombok.experimental.UtilityClass;
+
+@Helpers
+@UtilityClass
+public class HFile {
 	public static void copy(Path source, Path target, boolean preserve, Function<Path, Boolean> overwrite) {
 		final Path destination = Files.isDirectory(target) ? target.resolve(source.getFileName()) : target;
 
@@ -55,7 +60,7 @@ public class FileHelpers {
 
 	public static void gc(int repeat, int pause) {
 		for (int i = 0; i < repeat; i++) {
-			if (i > 0) ConcurrentHelpers.wait(FileHelpers.class, pause);
+			if (i > 0) HConcurrent.wait(HFile.class, pause);
 			System.gc();
 		}
 	}

@@ -6,7 +6,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
-public class ArrayHelpers {
+import com.g2forge.alexandria.java.marker.Helpers;
+
+import lombok.experimental.UtilityClass;
+
+@Helpers
+@UtilityClass
+public class HArray {
 	@SafeVarargs
 	public static <T> boolean contains(T value, T... array) {
 		for (int i = 0; i < array.length; i++)

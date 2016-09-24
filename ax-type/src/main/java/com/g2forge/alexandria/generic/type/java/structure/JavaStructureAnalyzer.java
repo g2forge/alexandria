@@ -14,9 +14,9 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import com.g2forge.alexandria.java.associative.map.MapHelpers;
-import com.g2forge.alexandria.java.core.helpers.TreeHelpers;
-import com.g2forge.alexandria.java.function.FunctionHelpers;
+import com.g2forge.alexandria.java.associative.map.HMap;
+import com.g2forge.alexandria.java.core.helpers.HTree;
+import com.g2forge.alexandria.java.function.HFunction;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,7 +29,7 @@ public class JavaStructureAnalyzer<T, F, M> {
 		public boolean test(M m) {
 			final Method method = JavaStructureAnalyzer.this.method.apply(m);
 
-			final Collection<Method> methods = MapHelpers.createOrGet(map, method.getName(), name -> new ArrayList<>());
+			final Collection<Method> methods = HMap.createOrGet(map, method.getName(), name -> new ArrayList<>());
 			METHOD: for (Method prior : methods) {
 				if (method.getParameterCount() != prior.getParameterCount()) continue;
 				if (!prior.getReturnType().isAssignableFrom(method.getReturnType())) continue;
@@ -57,7 +57,7 @@ public class JavaStructureAnalyzer<T, F, M> {
 
 	}
 
-	public static final JavaStructureAnalyzer<Class<?>, Field, Method> REFLECTION_ANALYZER = new JavaStructureAnalyzer<Class<?>, Field, Method>(klass -> Object.class.equals(klass), Class::getSuperclass, FunctionHelpers.compose(Class::getDeclaredMethods, Stream::of), Function.identity(), FunctionHelpers.compose(Class::getDeclaredFields, Stream::of), Function.identity());
+	public static final JavaStructureAnalyzer<Class<?>, Field, Method> REFLECTION_ANALYZER = new JavaStructureAnalyzer<Class<?>, Field, Method>(klass -> Object.class.equals(klass), Class::getSuperclass, HFunction.compose(Class::getDeclaredMethods, Stream::of), Function.identity(), HFunction.compose(Class::getDeclaredFields, Stream::of), Function.identity());
 
 	protected static <T> Stream<T> filter(JavaScope scope, JavaProtection minimum, final Stream<T> members, Function<? super T, ? extends Member> function) {
 		final Stream<T> scoped = members.filter(member -> !(scope.isStatics() ^ Modifier.isStatic(function.apply(member).getModifiers())));
@@ -78,7 +78,7 @@ public class JavaStructureAnalyzer<T, F, M> {
 	protected final Function<? super F, ? extends Field> field;
 
 	public Stream<T> getClasses(T klass, JavaScope scope) {
-		return scope.isInherited() ? TreeHelpers.<T>dfs(klass, c -> object.test(c) ? Collections.emptyList() : Arrays.asList(superclass.apply(c)), true) : Stream.of(klass);
+		return scope.isInherited() ? HTree.<T>dfs(klass, c -> object.test(c) ? Collections.emptyList() : Arrays.asList(superclass.apply(c)), true) : Stream.of(klass);
 	}
 
 	public Stream<F> getFields(T klass, JavaScope scope, JavaProtection minimum) {

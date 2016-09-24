@@ -11,9 +11,14 @@ import java.util.function.Function;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import lombok.Data;
+import com.g2forge.alexandria.java.marker.Helpers;
 
-public class ZipHelpers {
+import lombok.Data;
+import lombok.experimental.UtilityClass;
+
+@Helpers
+@UtilityClass
+public class HZip {
 	@Data
 	public static class Entry {
 		protected final Path root;

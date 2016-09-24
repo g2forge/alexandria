@@ -2,7 +2,13 @@ package com.g2forge.alexandria.java.fluent.optional;
 
 import java.util.Optional;
 
-public class OptionalHelpers {
+import com.g2forge.alexandria.java.marker.Helpers;
+
+import lombok.experimental.UtilityClass;
+
+@Helpers
+@UtilityClass
+public class HOptional {
 	public static <T> Optional<T> upcast(Optional<? extends T> optional) {
 		return Optional.ofNullable(optional.orElseGet(null));
 	}

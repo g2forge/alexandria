@@ -10,11 +10,16 @@ import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.IJavaUntype;
 import com.g2forge.alexandria.generic.type.java.type.implementations.JavaBoundType;
+import com.g2forge.alexandria.java.marker.Helpers;
 import com.g2forge.alexandria.reflection.object.implementations.JavaConcreteReflection;
 import com.g2forge.alexandria.reflection.object.implementations.JavaTypeReflection;
 import com.g2forge.alexandria.reflection.typed.IReflectionGenericTyped;
 
-public class ReflectionHelpers {
+import lombok.experimental.UtilityClass;
+
+@Helpers
+@UtilityClass
+public class HReflection {
 	@SuppressWarnings("unchecked")
 	public static <C extends Collection<T>, T> ICollectionStrategy<C, T> create(IReflectionGenericTyped<C> typed) {
 		if (Collection.class.equals(typed.getType().erase().getType().getJavaType())) { return (ICollectionStrategy<C, T>) new CollectionStrategy<T>(); }
