@@ -6,13 +6,12 @@ import java.util.function.Supplier;
 import com.g2forge.alexandria.java.function.IBiFunction;
 import com.g2forge.alexandria.java.function.IFunction;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class Tester<T> {
-	@Getter(AccessLevel.PROTECTED)
+	@Getter
 	protected final T value;
 
 	public <U> Tester<T> assertEquals(U expected) {
