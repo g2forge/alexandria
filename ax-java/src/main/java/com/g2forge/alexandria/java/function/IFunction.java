@@ -6,6 +6,11 @@ import java.util.function.Supplier;
 
 @FunctionalInterface
 public interface IFunction<I, O> extends Function<I, O> {
+	@SuppressWarnings("unchecked")
+	public static <I, O> IFunction<I, O> cast() {
+		return i -> (O) i;
+	}
+
 	public static <T> IFunction<T, T> identity() {
 		return t -> t;
 	}
