@@ -10,7 +10,7 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-public class TreeHelpers {
+public class HTree {
 	public static <N> Stream<N> dfs(N node, final Function<N, Collection<N>> getChildren, boolean postorder) {
 		final Collection<N> children = getChildren.apply(node);
 		if ((children == null) || children.isEmpty()) return Stream.of(node);

@@ -11,7 +11,7 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-public class LogHelpers {
+public class HLog {
 	public static void log(Logger logger, Level level, Marker marker, String format, Throwable throwable, Object... arguments) {
 		switch (level) {
 			case ERROR:

@@ -9,7 +9,7 @@ import org.junit.Test;
 public class TestRegexHelpers {
 	@Test
 	public void list() {
-		final String regex = "(" + RegexHelpers.toList("[a-z]+", ",\\s*") + ")(_foo)";
+		final String regex = "(" + HRegex.toList("[a-z]+", ",\\s*") + ")(_foo)";
 		final Matcher matcher = Pattern.compile(regex).matcher("one, two_foo");
 		Assert.assertTrue(matcher.matches());
 		Assert.assertEquals("one, two", matcher.group(1));

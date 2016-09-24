@@ -34,8 +34,8 @@ public class TempDirectory extends AGuaranteeClose {
 	protected void closeInternal() {
 		try {
 			if (path != null && Files.exists(path)) {
-				FileHelpers.gc();
-				FileHelpers.delete(path);
+				HFile.gc();
+				HFile.delete(path);
 			}
 		} catch (IOException exception) {
 			throw new RuntimeIOException(exception);

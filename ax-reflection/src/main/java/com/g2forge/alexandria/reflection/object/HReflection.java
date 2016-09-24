@@ -19,7 +19,7 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-public class ReflectionHelpers {
+public class HReflection {
 	@SuppressWarnings("unchecked")
 	public static <C extends Collection<T>, T> ICollectionStrategy<C, T> create(IReflectionGenericTyped<C> typed) {
 		if (Collection.class.equals(typed.getType().erase().getType().getJavaType())) { return (ICollectionStrategy<C, T>) new CollectionStrategy<T>(); }

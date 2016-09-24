@@ -15,12 +15,12 @@ import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.TypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.IJavaUntype;
-import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
+import com.g2forge.alexandria.generic.type.java.HJavaType;
 import com.g2forge.alexandria.generic.type.java.type.AJavaConcreteType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaClassType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaConcreteType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaType;
-import com.g2forge.alexandria.java.core.helpers.ArrayHelpers;
+import com.g2forge.alexandria.java.core.helpers.HArray;
 
 public class JavaBoundType extends AJavaConcreteType<ParameterizedType> {
 	public JavaBoundType(final ParameterizedType javaType, final ITypeEnvironment environment) {
@@ -39,17 +39,17 @@ public class JavaBoundType extends AJavaConcreteType<ParameterizedType> {
 
 	@Override
 	public List<? extends IJavaType> getActuals() {
-		return ArrayHelpers.map(input -> JavaTypeHelpers.toType(input, environment), javaType.getActualTypeArguments());
+		return HArray.map(input -> HJavaType.toType(input, environment), javaType.getActualTypeArguments());
 	}
 
 	@Override
 	public IJavaType getOwner() {
-		return JavaTypeHelpers.toType(javaType.getOwnerType(), environment);
+		return HJavaType.toType(javaType.getOwnerType(), environment);
 	}
 
 	@Override
 	public IJavaType getRaw() {
-		return JavaTypeHelpers.toType(javaType.getRawType(), environment);
+		return HJavaType.toType(javaType.getRawType(), environment);
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class JavaBoundType extends AJavaConcreteType<ParameterizedType> {
 
 			for (int i = 0; i < parameters.length; i++) {
 				final JavaVariableType parameter = new JavaVariableType(parameters[i], null);
-				final IJavaUntype actual = JavaTypeHelpers.toType(actuals[i], retVal);
+				final IJavaUntype actual = HJavaType.toType(actuals[i], retVal);
 				if (!Objects.equals(parameter, actual)) map.put(parameter, actual);
 			}
 

@@ -2,7 +2,7 @@ package com.g2forge.alexandria.test;
 
 import org.junit.Assert;
 
-import com.g2forge.alexandria.java.function.FunctionHelpers;
+import com.g2forge.alexandria.java.function.HFunction;
 import com.g2forge.alexandria.java.function.IConsumer;
 import com.g2forge.alexandria.java.marker.Helpers;
 
@@ -10,7 +10,7 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-public class AssertHelpers extends Assert {
+public class HAssert extends Assert {
 	public static void assertException(Class<? extends Throwable> type, Runnable runnable) {
 		try {
 			runnable.run();
@@ -28,14 +28,14 @@ public class AssertHelpers extends Assert {
 	}
 
 	public static <T> IConsumer<? super T> testEquals(T expected) {
-		return FunctionHelpers.create(AssertHelpers::assertEquals).curry0(expected);
+		return HFunction.create(HAssert::assertEquals).curry0(expected);
 	}
 
 	public static <T> IConsumer<? super T> testNotEquals(T unexpected) {
-		return FunctionHelpers.create(AssertHelpers::assertNotEquals).curry0(unexpected);
+		return HFunction.create(HAssert::assertNotEquals).curry0(unexpected);
 	}
 
 	public static <T> IConsumer<? super T> testInstanceOf(Class<?> expected) {
-		return FunctionHelpers.create(AssertHelpers::assertInstanceOf).curry0(expected);
+		return HFunction.create(HAssert::assertInstanceOf).curry0(expected);
 	}
 }

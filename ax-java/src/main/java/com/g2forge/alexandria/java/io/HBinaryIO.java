@@ -12,7 +12,7 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-public class BinaryIOHelpers {
+public class HBinaryIO {
 	public static int checkMagicAndGetVersion(final InputStream input, final byte[] magic) {
 		if (!Arrays.equals(read(input, magic.length), magic)) throw new IllegalDataException("Stored data lacked the magic header, perhaps it's a different object type!");
 		return readInt(input);

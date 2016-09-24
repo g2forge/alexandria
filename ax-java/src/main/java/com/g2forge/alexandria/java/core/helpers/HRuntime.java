@@ -8,7 +8,7 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-public class RuntimeHelpers {
+public class HRuntime {
 	public static URL whereFrom(Object object) {
 		if (object == null) return null;
 		final Class<?> type = object.getClass();

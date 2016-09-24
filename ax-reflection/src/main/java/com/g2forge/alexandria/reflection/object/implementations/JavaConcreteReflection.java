@@ -5,7 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.stream.Stream;
 
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
-import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
+import com.g2forge.alexandria.generic.type.java.HJavaType;
 import com.g2forge.alexandria.generic.type.java.structure.JavaProtection;
 import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
 import com.g2forge.alexandria.generic.type.java.type.IJavaConcreteType;
@@ -18,11 +18,11 @@ import com.g2forge.alexandria.reflection.object.IJavaConstructorReflection;
 import com.g2forge.alexandria.reflection.object.IJavaFieldReflection;
 import com.g2forge.alexandria.reflection.object.IJavaMethodReflection;
 import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;
-import com.g2forge.alexandria.reflection.object.ReflectionHelpers;
+import com.g2forge.alexandria.reflection.object.HReflection;
 
 public class JavaConcreteReflection<T> extends AJavaTypeReflection<T, IJavaConcreteType>implements IJavaConcreteReflection<T> {
 	public JavaConcreteReflection(Class<T> type, final ITypeEnvironment environment) {
-		this(JavaTypeHelpers.toType(type, environment));
+		this(HJavaType.toType(type, environment));
 	}
 
 	public JavaConcreteReflection(IJavaConcreteType type) {
@@ -61,7 +61,7 @@ public class JavaConcreteReflection<T> extends AJavaTypeReflection<T, IJavaConcr
 
 	@Override
 	public IJavaTypeReflection<?> getParent(IJavaTypeReflection<?> parent) {
-		return ReflectionHelpers.toReflection(getType().getParent(parent.getType().resolve()));
+		return HReflection.toReflection(getType().getParent(parent.getType().resolve()));
 	}
 
 	@SuppressWarnings("rawtypes")

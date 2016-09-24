@@ -9,7 +9,7 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-public class EnumHelpers {
+public class HEnum {
 	public static <E extends Enum<E>> E valueOfInsensitive(Class<E> klass, String text) {
 		final Map<String, E> map = new LinkedHashMap<>();
 		for (E value : klass.getEnumConstants()) {

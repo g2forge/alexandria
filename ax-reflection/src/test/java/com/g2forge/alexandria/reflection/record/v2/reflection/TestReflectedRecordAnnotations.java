@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
+import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.reflection.record.v2.IPropertyType;
 import com.g2forge.alexandria.reflection.record.v2.IRecordType;
 import com.g2forge.alexandria.reflection.record.v2.reflection.ReflectedRecordType;
@@ -29,7 +29,7 @@ public class TestReflectedRecordAnnotations {
 	@Test
 	public void annotation() {
 		final IRecordType recordType = new ReflectedRecordType(FieldRecord.class);
-		final IPropertyType<?> property = CollectionHelpers.getOne(recordType.getProperties());
+		final IPropertyType<?> property = HCollection.getOne(recordType.getProperties());
 		Assert.assertEquals("foo", property.getName());
 		Assert.assertTrue(property instanceof MethodPropertyType);
 		Assert.assertTrue(property.getAnnotations().isAnnotated(TestAnnotation.class));

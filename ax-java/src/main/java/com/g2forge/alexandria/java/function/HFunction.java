@@ -9,7 +9,7 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-public class FunctionHelpers {
+public class HFunction {
 	public static <I, X, O> Function<? super I, ? extends O> compose(Function<? super I, ? extends X> f0, Function<? super X, ? extends O> f1) {
 		return f0.andThen(f1);
 	}

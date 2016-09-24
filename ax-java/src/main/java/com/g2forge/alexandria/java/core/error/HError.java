@@ -10,7 +10,7 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-public class ErrorHelpers {
+public class HError {
 	@SafeVarargs
 	public static <T> void multiprocess(Consumer<? super T> consumer, String message, T... values) {
 		final Collection<Throwable> throwables = new ArrayList<>();
@@ -22,7 +22,7 @@ public class ErrorHelpers {
 				throwables.add(throwable);
 			}
 		}
-		throw ErrorHelpers.multithrow(message, throwables);
+		throw HError.multithrow(message, throwables);
 	}
 
 	public static RuntimeException multithrow(String message, Iterable<? extends Throwable> throwables) {

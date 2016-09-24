@@ -8,7 +8,7 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-public class ResourceHelpers {
+public class HResource {
 	public static String read(Class<?> klass, String resource) {
 		try (final Scanner scanner = new Scanner(klass.getResourceAsStream(resource), "UTF-8")) {
 			return scanner.useDelimiter("\\A").next();

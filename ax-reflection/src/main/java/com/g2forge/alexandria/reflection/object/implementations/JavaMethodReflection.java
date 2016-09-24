@@ -8,7 +8,7 @@ import com.g2forge.alexandria.java.core.error.RuntimeReflectionException;
 import com.g2forge.alexandria.reflection.object.AJavaMemberReflection;
 import com.g2forge.alexandria.reflection.object.IJavaMethodReflection;
 import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;
-import com.g2forge.alexandria.reflection.object.ReflectionHelpers;
+import com.g2forge.alexandria.reflection.object.HReflection;
 
 public class JavaMethodReflection<T, O> extends AJavaMemberReflection<T, IJavaMethodType>implements IJavaMethodReflection<T, O> {
 	public JavaMethodReflection(IJavaMethodType type) {
@@ -17,7 +17,7 @@ public class JavaMethodReflection<T, O> extends AJavaMemberReflection<T, IJavaMe
 
 	@Override
 	public IJavaTypeReflection<O> getReturnType() {
-		return ReflectionHelpers.toReflection(getType().getJavaMember().getGenericReturnType());
+		return HReflection.toReflection(getType().getJavaMember().getGenericReturnType());
 	}
 
 	@Override

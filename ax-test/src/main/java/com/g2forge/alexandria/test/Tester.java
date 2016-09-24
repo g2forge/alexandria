@@ -19,19 +19,19 @@ public class Tester<T> {
 	}
 
 	public <U, I> Tester<T> assertEquals(U expected, IBiFunction<? super T, ? super I, ? extends U> function, I argument) {
-		return assertTest(AssertHelpers.testEquals(expected), function, argument);
+		return assertTest(HAssert.testEquals(expected), function, argument);
 	}
 
 	public <U> Tester<T> assertEquals(U expected, IFunction<? super T, ? extends U> function) {
-		return assertTest(AssertHelpers.testEquals(expected), function);
+		return assertTest(HAssert.testEquals(expected), function);
 	}
 
 	public <U, I> Tester<T> assertException(Class<? extends Throwable> type, IBiFunction<? super T, ? super I, ? extends U> function, I argument) {
-		return assertExec(s -> AssertHelpers.assertException(type, s::get), function, argument);
+		return assertExec(s -> HAssert.assertException(type, s::get), function, argument);
 	}
 
 	public <U> Tester<T> assertException(Class<? extends Throwable> type, IFunction<? super T, ? extends U> function) {
-		return assertExec(s -> AssertHelpers.assertException(type, s::get), function);
+		return assertExec(s -> HAssert.assertException(type, s::get), function);
 	}
 
 	public <U> Tester<T> assertExec(Consumer<? super Supplier<? extends T>> executor) {
@@ -57,11 +57,11 @@ public class Tester<T> {
 	}
 
 	public <U, I> Tester<T> assertInstanceOf(Class<?> expected, IBiFunction<? super T, ? super I, ? extends U> function, I argument) {
-		return assertTest(AssertHelpers.testInstanceOf(expected), function, argument);
+		return assertTest(HAssert.testInstanceOf(expected), function, argument);
 	}
 
 	public <U> Tester<T> assertInstanceOf(Class<?> expected, IFunction<? super T, ? extends U> function) {
-		return assertTest(AssertHelpers.testInstanceOf(expected), function);
+		return assertTest(HAssert.testInstanceOf(expected), function);
 	}
 
 	public <U> Tester<T> assertTest(Consumer<? super T> tester) {

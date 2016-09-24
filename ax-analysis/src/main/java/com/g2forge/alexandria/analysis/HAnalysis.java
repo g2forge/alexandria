@@ -21,7 +21,7 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-public class AnalysisHelpers {
+public class HAnalysis {
 	public static String getPath(final SerializableFunction<?, ?> function) {
 		final T thunk = T.create(function);
 		final JavaClass clazz;

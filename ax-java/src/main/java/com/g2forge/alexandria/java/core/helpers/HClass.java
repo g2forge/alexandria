@@ -8,7 +8,7 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-public class ClassHelpers {
+public class HClass {
 	public static <T> T cast(Class<T> klass, Object object, Supplier<? extends T> supplier) {
 		try {
 			return klass.cast(object);

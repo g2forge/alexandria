@@ -24,7 +24,7 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-public class CollectionHelpers {
+public class HCollection {
 	public static <K, C extends Collection<V>, V> void add(Map<K, C> map, Supplier<? extends C> constructor, K key, V value) {
 		final C collection;
 		if (!map.containsKey(key)) map.put(key, collection = constructor.get());
@@ -74,7 +74,7 @@ public class CollectionHelpers {
 
 	@SafeVarargs
 	public static <T> Collection<T> difference(final Collection<? extends T> minuend, final T... subtrahend) {
-		return difference(minuend, com.g2forge.alexandria.java.core.helpers.CollectionHelpers.asList(subtrahend));
+		return difference(minuend, com.g2forge.alexandria.java.core.helpers.HCollection.asList(subtrahend));
 	}
 
 	public static <T> Collection<T> filter(final Collection<? extends T> collection, final Predicate<? super T> predicate) {

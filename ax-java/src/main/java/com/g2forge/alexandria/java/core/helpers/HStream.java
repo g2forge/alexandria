@@ -27,7 +27,7 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-public class StreamHelpers {
+public class HStream {
 	@SafeVarargs
 	public static <T> Stream<T> concat(Stream<? extends T>... streams) {
 		return Arrays.stream(streams).reduce(Stream::concat).get().map(t -> t);

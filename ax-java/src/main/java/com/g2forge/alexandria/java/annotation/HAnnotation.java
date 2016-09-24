@@ -8,7 +8,7 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-public class AnnotationHelpers {
+public class HAnnotation {
 	/**
 	 * This is necessary because annotations on annotations don't translate through the dynamic proxy the JVM generates.
 	 * 

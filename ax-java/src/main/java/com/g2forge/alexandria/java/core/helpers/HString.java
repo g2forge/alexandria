@@ -6,7 +6,7 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-public class StringHelpers {
+public class HString {
 	public static String lowercase(String string) {
 		// Handle already lower-cased strings, we don't want to change them
 		final char char0 = string.charAt(0);

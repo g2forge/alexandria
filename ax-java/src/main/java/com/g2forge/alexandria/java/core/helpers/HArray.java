@@ -12,7 +12,7 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-public class ArrayHelpers {
+public class HArray {
 	@SafeVarargs
 	public static <T> boolean contains(T value, T... array) {
 		for (int i = 0; i < array.length; i++)

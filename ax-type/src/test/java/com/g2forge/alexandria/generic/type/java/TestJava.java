@@ -13,7 +13,7 @@ import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
 import com.g2forge.alexandria.generic.type.java.type.IJavaClassType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaConcreteType;
 import com.g2forge.alexandria.generic.type.java.type.implementations.JavaClassType;
-import com.g2forge.alexandria.java.core.helpers.CollectionHelpers;
+import com.g2forge.alexandria.java.core.helpers.HCollection;
 
 public class TestJava {
 	public static class Child extends Parent<String> {}
@@ -31,7 +31,7 @@ public class TestJava {
 	@Test
 	public void testBind() {
 		final IJavaClassType inner = new JavaClassType(O.I.class, EmptyTypeEnvironment.create());
-		final ITypeEnvironment environment = inner.bind(CollectionHelpers.asList(new JavaClassType(String.class, EmptyTypeEnvironment.create()))).toEnvironment();
+		final ITypeEnvironment environment = inner.bind(HCollection.asList(new JavaClassType(String.class, EmptyTypeEnvironment.create()))).toEnvironment();
 		final Type actual = inner.getParameters().get(0).eval(environment).getJavaType();
 		Assert.assertEquals(String.class, actual);
 	}

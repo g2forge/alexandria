@@ -8,7 +8,7 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-public class OptionalHelpers {
+public class HOptional {
 	public static <T> Optional<T> upcast(Optional<? extends T> optional) {
 		return Optional.ofNullable(optional.orElseGet(null));
 	}

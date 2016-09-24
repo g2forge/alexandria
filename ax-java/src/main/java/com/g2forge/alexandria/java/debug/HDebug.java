@@ -6,11 +6,11 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-public class DebugHelpers {
+public class HDebug {
 	protected static boolean isDebugEnabled;
 
 	static {
-		final String string = System.getProperty(DebugHelpers.class.getName() + ".isDebugEnabled");
+		final String string = System.getProperty(HDebug.class.getName() + ".isDebugEnabled");
 		if (string == null) isDebugEnabled = false;
 		else isDebugEnabled = Boolean.valueOf(string);
 	}

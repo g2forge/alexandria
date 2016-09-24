@@ -65,7 +65,7 @@ import lombok.Getter;
 
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-		FileHelpers.copyFile(file, getTarget(file), preserve, overwrite);
+		HFile.copyFile(file, getTarget(file), preserve, overwrite);
 		return FileVisitResult.CONTINUE;
 	}
 

@@ -6,7 +6,7 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.test.AssertHelpers;
+import com.g2forge.alexandria.test.HAssert;
 
 public class TestRelationships {
 	@Test
@@ -19,8 +19,8 @@ public class TestRelationships {
 	protected void assertRelationship(final HasCollection collection, final HasScalar scalar) {
 		Assert.assertEquals(collection.getScalars(), Arrays.asList(scalar));
 		Assert.assertEquals(collection, scalar.getCollection());
-		AssertHelpers.assertException(IllegalStateException.class, () -> scalar.setCollection(new HasCollection()));
-		AssertHelpers.assertException(IllegalStateException.class, () -> collection.setScalars(new ArrayList<>()));
+		HAssert.assertException(IllegalStateException.class, () -> scalar.setCollection(new HasCollection()));
+		HAssert.assertException(IllegalStateException.class, () -> collection.setScalars(new ArrayList<>()));
 	}
 
 	@Test

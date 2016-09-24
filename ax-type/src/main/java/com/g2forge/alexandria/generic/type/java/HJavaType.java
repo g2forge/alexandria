@@ -16,7 +16,7 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-public class JavaTypeHelpers {
+public class HJavaType {
 	public static IJavaClassType toType(final Class<?> type, final ITypeEnvironment environment) {
 		return new JavaClassType(type, environment);
 	}

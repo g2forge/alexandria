@@ -8,7 +8,7 @@ public class Trace {
 	protected final Throwable throwable;
 
 	public Trace() {
-		this.throwable = DebugHelpers.isDebugEnabled() ? new Throwable("Creation point") : null;
+		this.throwable = HDebug.isDebugEnabled() ? new Throwable("Creation point") : null;
 	}
 
 	public <T extends Throwable> T addTrace(T throwable) {

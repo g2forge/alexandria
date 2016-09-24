@@ -9,7 +9,7 @@ import com.g2forge.alexandria.generic.type.IVariableType;
 import com.g2forge.alexandria.generic.type.TypeNotConcreteException;
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.TypeEnvironment;
-import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
+import com.g2forge.alexandria.generic.type.java.HJavaType;
 import com.g2forge.alexandria.generic.type.java.type.AJavaType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaClassType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaConcreteType;
@@ -43,7 +43,7 @@ public class JavaVariableType extends AJavaType<TypeVariable<?>>implements IJava
 		final Type[] bounds = this.getJavaTypeSimple().getBounds();
 		final List<IJavaType> retVal = new ArrayList<>(bounds.length);
 		for (Type bound : bounds) {
-			retVal.add(JavaTypeHelpers.toType(bound, environment));
+			retVal.add(HJavaType.toType(bound, environment));
 		}
 		return retVal;
 	}

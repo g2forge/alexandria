@@ -3,7 +3,7 @@ package com.g2forge.alexandria.reflection.typed;
 import java.lang.reflect.Type;
 
 import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;
-import com.g2forge.alexandria.reflection.object.ReflectionHelpers;
+import com.g2forge.alexandria.reflection.object.HReflection;
 
 import lombok.Data;
 
@@ -16,6 +16,6 @@ public class TypeReference<T> implements ITypeReference<T> {
 	}
 
 	public TypeReference(Type type) {
-		this(ReflectionHelpers.toReflection(type));
+		this(HReflection.toReflection(type));
 	}
 }

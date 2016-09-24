@@ -9,7 +9,7 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-public class MapHelpers {
+public class HMap {
 	public static <K, V> V createOrGet(Map<K, V> map, K key, Function<? super K, ? extends V> function) {
 		if (map.containsKey(key)) return map.get(key);
 

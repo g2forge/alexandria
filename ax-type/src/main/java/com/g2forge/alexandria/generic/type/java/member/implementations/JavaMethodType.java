@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.TypeEnvironment;
-import com.g2forge.alexandria.generic.type.java.JavaTypeHelpers;
+import com.g2forge.alexandria.generic.type.java.HJavaType;
 import com.g2forge.alexandria.generic.type.java.member.AJavaInvocableType;
 import com.g2forge.alexandria.generic.type.java.member.IJavaMethodType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaType;
@@ -22,6 +22,6 @@ public class JavaMethodType extends AJavaInvocableType<Method>implements IJavaMe
 
 	@Override
 	public IJavaType getReturnType() {
-		return JavaTypeHelpers.toType(javaType.getGenericReturnType(), environment);
+		return HJavaType.toType(javaType.getGenericReturnType(), environment);
 	}
 }

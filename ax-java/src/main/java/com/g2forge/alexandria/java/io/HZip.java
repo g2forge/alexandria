@@ -18,7 +18,7 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-public class ZipHelpers {
+public class HZip {
 	@Data
 	public static class Entry {
 		protected final Path root;
