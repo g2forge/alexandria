@@ -1,9 +1,19 @@
 package com.g2forge.alexandria.adt.collection.collector;
 
 public interface ICollector<T> {
-	public ICollector<T> add(Iterable<? extends T> values);
-	
+	public default ICollector<T> add(Iterable<? extends T> values) {
+		for (T value : values) {
+			add(value);
+		}
+		return this;
+	}
+
 	public ICollector<T> add(T value);
-	
-	public ICollector<T> add(@SuppressWarnings("unchecked") T... values);
+
+	public default ICollector<T> add(@SuppressWarnings("unchecked") T... values) {
+		for (T value : values) {
+			add(value);
+		}
+		return this;
+	}
 }
