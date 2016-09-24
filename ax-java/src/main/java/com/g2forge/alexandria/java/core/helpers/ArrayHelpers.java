@@ -6,6 +6,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
+import com.g2forge.alexandria.java.marker.Helpers;
+
+import lombok.experimental.UtilityClass;
+
+@Helpers
+@UtilityClass
 public class ArrayHelpers {
 	@SafeVarargs
 	public static <T> boolean contains(T value, T... array) {

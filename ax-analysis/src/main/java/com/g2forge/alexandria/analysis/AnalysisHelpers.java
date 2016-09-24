@@ -15,7 +15,12 @@ import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.bcel.generic.ReturnInstruction;
 
 import com.g2forge.alexandria.java.core.error.RuntimeReflectionException;
+import com.g2forge.alexandria.java.marker.Helpers;
 
+import lombok.experimental.UtilityClass;
+
+@Helpers
+@UtilityClass
 public class AnalysisHelpers {
 	public static String getPath(final SerializableFunction<?, ?> function) {
 		final T thunk = T.create(function);

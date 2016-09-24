@@ -19,9 +19,14 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import com.g2forge.alexandria.java.marker.Helpers;
 import com.g2forge.alexandria.java.tuple.ITuple2G_;
 import com.g2forge.alexandria.java.tuple.implementations.Tuple2G_O;
 
+import lombok.experimental.UtilityClass;
+
+@Helpers
+@UtilityClass
 public class StreamHelpers {
 	@SafeVarargs
 	public static <T> Stream<T> concat(Stream<? extends T>... streams) {

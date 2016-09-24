@@ -1,5 +1,11 @@
 package com.g2forge.alexandria.java.core.helpers;
 
+import com.g2forge.alexandria.java.marker.Helpers;
+
+import lombok.experimental.UtilityClass;
+
+@Helpers
+@UtilityClass
 public class StringHelpers {
 	public static String lowercase(String string) {
 		// Handle already lower-cased strings, we don't want to change them

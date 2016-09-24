@@ -4,7 +4,12 @@ import org.junit.Assert;
 
 import com.g2forge.alexandria.java.function.FunctionHelpers;
 import com.g2forge.alexandria.java.function.IConsumer;
+import com.g2forge.alexandria.java.marker.Helpers;
 
+import lombok.experimental.UtilityClass;
+
+@Helpers
+@UtilityClass
 public class AssertHelpers extends Assert {
 	public static void assertException(Class<? extends Throwable> type, Runnable runnable) {
 		try {

@@ -11,7 +11,12 @@ import java.util.LinkedList;
 import java.util.function.Function;
 
 import com.g2forge.alexandria.java.concurrent.ConcurrentHelpers;
+import com.g2forge.alexandria.java.marker.Helpers;
 
+import lombok.experimental.UtilityClass;
+
+@Helpers
+@UtilityClass
 public class FileHelpers {
 	public static void copy(Path source, Path target, boolean preserve, Function<Path, Boolean> overwrite) {
 		final Path destination = Files.isDirectory(target) ? target.resolve(source.getFileName()) : target;

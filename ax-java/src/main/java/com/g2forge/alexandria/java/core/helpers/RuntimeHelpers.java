@@ -2,6 +2,12 @@ package com.g2forge.alexandria.java.core.helpers;
 
 import java.net.URL;
 
+import com.g2forge.alexandria.java.marker.Helpers;
+
+import lombok.experimental.UtilityClass;
+
+@Helpers
+@UtilityClass
 public class RuntimeHelpers {
 	public static URL whereFrom(Object object) {
 		if (object == null) return null;

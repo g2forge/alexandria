@@ -5,7 +5,12 @@ import org.slf4j.Marker;
 import org.slf4j.event.Level;
 
 import com.g2forge.alexandria.java.enums.EnumException;
+import com.g2forge.alexandria.java.marker.Helpers;
 
+import lombok.experimental.UtilityClass;
+
+@Helpers
+@UtilityClass
 public class LogHelpers {
 	public static void log(Logger logger, Level level, Marker marker, String format, Throwable throwable, Object... arguments) {
 		switch (level) {

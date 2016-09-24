@@ -4,6 +4,12 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import com.g2forge.alexandria.java.marker.Helpers;
+
+import lombok.experimental.UtilityClass;
+
+@Helpers
+@UtilityClass
 public class TreeHelpers {
 	public static <N> Stream<N> dfs(N node, final Function<N, Collection<N>> getChildren, boolean postorder) {
 		final Collection<N> children = getChildren.apply(node);

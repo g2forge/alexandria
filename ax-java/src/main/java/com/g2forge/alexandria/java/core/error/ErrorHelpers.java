@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Consumer;
 
+import com.g2forge.alexandria.java.marker.Helpers;
+
+import lombok.experimental.UtilityClass;
+
+@Helpers
+@UtilityClass
 public class ErrorHelpers {
 	@SafeVarargs
 	public static <T> void multiprocess(Consumer<? super T> consumer, String message, T... values) {

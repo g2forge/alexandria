@@ -1,5 +1,11 @@
 package com.g2forge.alexandria.java.debug;
 
+import com.g2forge.alexandria.java.marker.Helpers;
+
+import lombok.experimental.UtilityClass;
+
+@Helpers
+@UtilityClass
 public class DebugHelpers {
 	protected static boolean isDebugEnabled;
 
