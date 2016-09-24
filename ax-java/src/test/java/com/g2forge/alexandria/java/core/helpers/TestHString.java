@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import com.g2forge.alexandria.java.core.helpers.HString;
 
-public class TestStringHelpers {
+public class TestHString {
 	@Test
 	public void lowercase() {
 		Assert.assertEquals("word", HString.lowercase("Word"));

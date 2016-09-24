@@ -5,7 +5,7 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestCollectionHelpers {
+public class TestHCollection {
 	@Test
 	public void getLast() {
 		Assert.assertEquals(-1, HCollection.getLast(Arrays.asList(1, 2, 3), v -> false));
