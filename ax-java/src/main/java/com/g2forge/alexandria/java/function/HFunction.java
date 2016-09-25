@@ -3,6 +3,8 @@ package com.g2forge.alexandria.java.function;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import com.g2forge.alexandria.java.function.tri.ITriConsumer;
+import com.g2forge.alexandria.java.function.tri.ITriFunction;
 import com.g2forge.alexandria.java.marker.Helpers;
 
 import lombok.experimental.UtilityClass;
@@ -22,7 +24,15 @@ public class HFunction {
 		return consumer;
 	}
 
+	public static <I0, I1, I2> ITriConsumer<I0, I1, I2> create(ITriConsumer<I0, I1, I2> consumer) {
+		return consumer;
+	}
+
 	public static <I0, I1, O> IBiFunction<I0, I1, O> create(IBiFunction<I0, I1, O> function) {
+		return function;
+	}
+
+	public static <I0, I1, I2, O> ITriFunction<I0, I1, I2, O> create(ITriFunction<I0, I1, I2, O> function) {
 		return function;
 	}
 
