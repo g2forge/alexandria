@@ -53,6 +53,12 @@ public class HCollector {
 		return multiGroupingBy(classifier, HashMap::new, Collectors.toList());
 	}
 
+	public static <T> BinaryOperator<T> mergeFail() {
+		return (k0, k1) -> {
+			throw new IllegalStateException("Duplicate key " + k0);
+		};
+	}
+
 	public static <T, K, D, A, M extends Map<K, D>> Collector<T, ?, M> multiGroupingBy(Function<? super T, ? extends Iterable<? extends K>> classifier, Supplier<M> mapFactory, Collector<? super T, A, D> downstream) {
 		final Supplier<A> downstreamSupplier = downstream.supplier();
 		final BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
