@@ -7,7 +7,7 @@ import com.g2forge.alexandria.java.core.helpers.HObject;
 import lombok.Data;
 
 @Data
-public class LiteralSupplier<T> implements Supplier<T> {
+public class LiteralSupplier<T> implements ISupplier<T> {
 	protected static final LiteralSupplier<Object> NULL = new LiteralSupplier<>(null);
 
 	@SuppressWarnings("unchecked")

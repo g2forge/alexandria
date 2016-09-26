@@ -116,8 +116,13 @@ public class HCollection {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> List<T> getEmpty() {
+	public static <T> List<T> emptyList() {
 		return Collections.EMPTY_LIST;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> Set<T> emptySet() {
+		return Collections.EMPTY_SET;
 	}
 
 	public static <T> T getFirst(final Iterable<? extends T> iterable) {
