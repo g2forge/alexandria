@@ -55,9 +55,8 @@ public class HGraph {
 		}
 
 		// Check to see if there's a cycle
-		for (Node<N> node : nodeMap.values()) {
-			if (!node.getIn().isEmpty()) throw new IllegalArgumentException("Input graph is cyclic!");
-		}
+		final List<N> cyclic = nodeMap.values().stream().filter(node -> !node.getIn().isEmpty()).map(Node::getNode).collect(Collectors.toList());
+		if (!cyclic.isEmpty()) throw new IllegalArgumentException("Input graph is cyclic, remaining nodes are: " + cyclic);
 
 		return retVal.stream().map(Node::getNode).collect(Collectors.toList());
 	}
