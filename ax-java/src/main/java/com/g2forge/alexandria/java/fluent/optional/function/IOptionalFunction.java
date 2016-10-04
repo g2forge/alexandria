@@ -7,7 +7,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import com.g2forge.alexandria.java.core.error.UnreachableCodeError;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.core.helpers.HObject;
 import com.g2forge.alexandria.java.fluent.optional.IOptional;
@@ -31,11 +30,12 @@ public interface IOptionalFunction<I, O> extends Function<I, IOptional<? extends
 
 		@Override
 		public IOptional<? extends O> apply(I i) {
+			IOptional<? extends O> o = null;
 			for (IOptionalFunction<? super I, ? extends O> function : getFunctions()) {
-				final IOptional<? extends O> o = function.apply(i);
+				o = function.apply(i);
 				if (!o.isEmpty()) return o;
 			}
-			throw new UnreachableCodeError();
+			return o;
 		}
 
 		@Override
