@@ -11,6 +11,7 @@ import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.core.helpers.HObject;
 import com.g2forge.alexandria.java.fluent.optional.IOptional;
 import com.g2forge.alexandria.java.fluent.optional.factory.IOptionalFactory;
+import com.g2forge.alexandria.java.function.IBiPredicate;
 import com.g2forge.alexandria.java.function.LiteralSupplier;
 
 import lombok.Data;
@@ -90,20 +91,31 @@ public interface IOptionalFunction<I, O> extends Function<I, IOptional<? extends
 		};
 	}
 
-	public static <I, O> IOptionalFunction<I, O> of(IOptionalFactory factory, Object input, O output) {
+	public static <I, O> IOptionalFunction<I, O> of(IOptionalFactory factory, I input, O output) {
 		return of(factory, input, new LiteralSupplier<>(output));
 	}
 
-	public static <I, O> IOptionalFunction<I, O> of(IOptionalFactory factory, Object input, Supplier<? extends O> output) {
+	public static <I, O> IOptionalFunction<I, O> of(IOptionalFactory factory, I input, Supplier<? extends O> output) {
+		return of(factory, null, input, output);
+	}
+
+	public static <I, O> IOptionalFunction<I, O> of(IOptionalFactory factory, IBiPredicate<? super I, ? super I> equals, I input, O output) {
+		return of(factory, equals, input, new LiteralSupplier<>(output));
+	}
+
+	public static <I, O> IOptionalFunction<I, O> of(IOptionalFactory factory, IBiPredicate<? super I, ? super I> equals, I input, Supplier<? extends O> output) {
 		return new IOptionalFunction<I, O>() {
 			@Override
 			public IOptional<? extends O> apply(I i) {
-				return input.equals(i) ? factory.of(output.get()) : factory.empty();
+				return (equals == null ? input.equals(i) : equals.test(input, i)) ? factory.of(output.get()) : factory.empty();
 			}
 
 			@Override
 			public String toString() {
-				return HObject.toString(this, b -> b.append(input).append('=').append(output));
+				return HObject.toString(this, b -> {
+					b.append(input).append('=').append(output);
+					if (equals != null) b.append("(using ").append(equals).append(")");
+				});
 			}
 		};
 	}
