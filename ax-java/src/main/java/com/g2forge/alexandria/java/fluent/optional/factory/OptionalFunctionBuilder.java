@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class OptionalFunctionBuilder<I, O, R> {
 	protected final IOptionalFunctionFactory<I, O, R> factory;
 
-	protected final Map<Object, Supplier<? extends O>> map = new LinkedHashMap<>();
+	protected final Map<I, Supplier<? extends O>> map = new LinkedHashMap<>();
 
 	public OptionalFunctionBuilder<I, O, R> add(I input, O output) {
 		map.put(input, new LiteralSupplier<>(output));
@@ -26,7 +26,7 @@ public class OptionalFunctionBuilder<I, O, R> {
 		return this;
 	}
 
-	public OptionalFunctionBuilder<I, O, R> add(Map<? super I, ? extends O> map) {
+	public OptionalFunctionBuilder<I, O, R> add(Map<I, ? extends O> map) {
 		map.entrySet().forEach(e -> this.map.put(e.getKey(), new LiteralSupplier<>(e.getValue())));
 		return this;
 	}
@@ -34,7 +34,7 @@ public class OptionalFunctionBuilder<I, O, R> {
 	public R build() {
 		if (map.isEmpty()) return factory.empty();
 		else if (map.size() == 1) {
-			final Map.Entry<Object, Supplier<? extends O>> entry = HCollection.getOne(map.entrySet());
+			final Map.Entry<I, Supplier<? extends O>> entry = HCollection.getOne(map.entrySet());
 			if (entry.getValue() instanceof LiteralSupplier) return factory.of(entry.getKey(), LiteralSupplier.unwrap(entry.getValue()));
 			else return factory.of(entry.getKey(), entry.getValue());
 		} else {
