@@ -42,7 +42,7 @@ public interface IOptionalFunction<I, O> extends Function<I, IOptional<? extends
 		@Override
 		public IOptionalFunction<I, O> override(IOptionalFunction<? super I, ? extends O> override) {
 			final List<IOptionalFunction<? super I, ? extends O>> functions = new ArrayList<>(getFunctions());
-			functions.add(override);
+			functions.add(0, override);
 			return new Overridden<I, O>(functions);
 		}
 	}
@@ -77,20 +77,6 @@ public interface IOptionalFunction<I, O> extends Function<I, IOptional<? extends
 		};
 	}
 
-	public static <I, O> IOptionalFunction<I, O> of(IOptionalFactory factory, Map<? super I, ? extends O> map) {
-		return new IOptionalFunction<I, O>() {
-			@Override
-			public IOptional<? extends O> apply(I i) {
-				return map.containsKey(i) ? factory.of(map.get(i)) : factory.empty();
-			}
-
-			@Override
-			public String toString() {
-				return HObject.toString(this, map);
-			}
-		};
-	}
-
 	public static <I, O> IOptionalFunction<I, O> of(IOptionalFactory factory, I input, O output) {
 		return of(factory, input, new LiteralSupplier<>(output));
 	}
@@ -120,6 +106,20 @@ public interface IOptionalFunction<I, O> extends Function<I, IOptional<? extends
 		};
 	}
 
+	public static <I, O> IOptionalFunction<I, O> of(IOptionalFactory factory, Map<? super I, ? extends O> map) {
+		return new IOptionalFunction<I, O>() {
+			@Override
+			public IOptional<? extends O> apply(I i) {
+				return map.containsKey(i) ? factory.of(map.get(i)) : factory.empty();
+			}
+
+			@Override
+			public String toString() {
+				return HObject.toString(this, map);
+			}
+		};
+	}
+
 	@Override
 	public default Function<I, O> fallback(Function<? super I, ? extends O> fallback) {
 		return i -> {
@@ -130,7 +130,7 @@ public interface IOptionalFunction<I, O> extends Function<I, IOptional<? extends
 
 	@Override
 	public default IOptionalFunction<I, O> override(IOptionalFunction<? super I, ? extends O> override) {
-		return new Overridden<I, O>(this, override);
+		return new Overridden<I, O>(override, this);
 	}
 
 	@Override
