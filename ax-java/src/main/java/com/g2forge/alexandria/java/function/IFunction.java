@@ -11,6 +11,11 @@ public interface IFunction<I, O> extends Function<I, O> {
 		return i -> (O) i;
 	}
 
+	@SuppressWarnings("unchecked")
+	public static <I, O> IFunction<I, O> isInstanceOf(Class<O> type) {
+		return i -> type.isInstance(i) ? (O) i : null;
+	}
+
 	public static <T> IFunction<T, T> identity() {
 		return t -> t;
 	}
