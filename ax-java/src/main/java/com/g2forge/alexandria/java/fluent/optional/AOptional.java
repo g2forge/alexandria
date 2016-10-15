@@ -51,7 +51,9 @@ public abstract class AOptional<T> implements IOptional<T> {
 	}
 
 	public T get() {
-		if (isEmpty()) { throw new NoSuchElementException("No value present"); }
+		if (isEmpty()) {
+			throw new NoSuchElementException("No value present");
+		}
 		return value;
 	}
 

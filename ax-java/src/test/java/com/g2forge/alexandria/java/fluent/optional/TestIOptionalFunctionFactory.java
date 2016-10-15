@@ -4,15 +4,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.g2forge.alexandria.java.fluent.optional.factory.IOptionalFunctionFactory;
+import com.g2forge.alexandria.java.fluent.optional.factory.OptionalFunctionFactory;
 import com.g2forge.alexandria.java.fluent.optional.function.IOptionalFunction;
 
 public class TestIOptionalFunctionFactory {
-	protected final IOptionalFunctionFactory<String, String, IOptionalFunction<String, String>> factory = new IOptionalFunctionFactory<String, String, IOptionalFunction<String, String>>() {
-		@Override
-		public IOptionalFunction<String, String> wrap(IOptionalFunction<String, String> function) {
-			return function;
-		}
-	};
+	protected final IOptionalFunctionFactory<String, String, IOptionalFunction<String, String>> factory = new OptionalFunctionFactory<>();
 
 	@Test
 	public void builder() {
