@@ -1,5 +1,6 @@
 package com.g2forge.alexandria.java.fluent.optional.function;
 
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -22,7 +23,7 @@ public interface IOptionalFunctional<I, O, F extends IOptionalFunctional<? super
 	 */
 	public IOptionalFunctional<I, O, F> override(F override);
 
-	public IOptionalFunctional<I, O, F> recursive(Predicate<? super I> terminate, boolean prior, Class<I> type);
+	public IOptionalFunctional<I, O, F> recursive(BiPredicate<? super I, ? super I> terminate, boolean prior, Class<I> type);
 
 	/**
 	 * Create a function which returns an empty value for all of those not accepted by the specified predicate.
