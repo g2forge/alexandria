@@ -3,6 +3,7 @@ package com.g2forge.alexandria.java.fluent.optional.function;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -64,7 +65,7 @@ public interface IOptionalFunction<I, O> extends Function<I, IOptional<? extends
 
 	@Data
 	public static class Recursive<I, O> implements IOptionalFunction<I, O> {
-		protected final Predicate<? super I> terminate;
+		protected final BiPredicate<? super I, ? super I> terminate;
 
 		protected final boolean prior;
 
@@ -74,10 +75,12 @@ public interface IOptionalFunction<I, O> extends Function<I, IOptional<? extends
 
 		@Override
 		public IOptional<? extends O> apply(I i) {
+			I priorI = i;
 			IOptional<? extends O> currentO = getFunction().apply(i);
 			while (!currentO.isEmpty() && type.isInstance(currentO.get())) {
 				final I currentI = type.cast(currentO.get());
-				if (getTerminate().test(currentI)) return currentO;
+				if (getTerminate().test(priorI, currentI)) return currentO;
+				priorI = currentI;
 
 				final IOptional<? extends O> optional = getFunction().apply(currentI);
 				if (optional.isEmpty()) {
@@ -167,7 +170,7 @@ public interface IOptionalFunction<I, O> extends Function<I, IOptional<? extends
 	}
 
 	@Override
-	public default IOptionalFunction<I, O> recursive(Predicate<? super I> terminate, boolean prior, Class<I> type) {
+	public default IOptionalFunction<I, O> recursive(BiPredicate<? super I, ? super I> terminate, boolean prior, Class<I> type) {
 		return new Recursive<I, O>(terminate, prior, type, this);
 	}
 
