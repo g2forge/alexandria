@@ -22,7 +22,7 @@ public interface IOptionalFunctional<I, O, F extends IOptionalFunctional<? super
 	 */
 	public IOptionalFunctional<I, O, F> override(F override);
 
-	public IOptionalFunction<I, O> recursive(Predicate<? super I> terminate, boolean prior, Class<I> type);
+	public IOptionalFunctional<I, O, F> recursive(Predicate<? super I> terminate, boolean prior, Class<I> type);
 
 	/**
 	 * Create a function which returns an empty value for all of those not accepted by the specified predicate.
