@@ -1,7 +1,6 @@
 package com.g2forge.alexandria.java.function;
 
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 import com.g2forge.alexandria.java.function.tri.ITriConsumer;
 import com.g2forge.alexandria.java.function.tri.ITriFunction;
@@ -42,9 +41,5 @@ public class HFunction {
 
 	public static <I, O> IFunction<I, O> create(IFunction<I, O> function) {
 		return function;
-	}
-
-	public static <T> Predicate<T> predicate(boolean value) {
-		return t -> value;
 	}
 }

@@ -20,6 +20,21 @@ import lombok.RequiredArgsConstructor;
 @FunctionalInterface
 public interface IOptionalFunction<I, O> extends Function<I, IOptional<? extends O>>, IOptionalFunctional<I, O, IOptionalFunction<? super I, ? extends O>> {
 	@Data
+	public static class Empty<I, O> implements IOptionalFunction<I, O> {
+		protected final IOptionalFactory factory;
+
+		@Override
+		public IOptional<? extends O> apply(I i) {
+			return factory.empty();
+		}
+
+		@Override
+		public String toString() {
+			return HObject.toString(this, "empty");
+		}
+	}
+
+	@Data
 	@RequiredArgsConstructor
 	public static class Overridden<I, O> implements IOptionalFunction<I, O> {
 		protected final List<IOptionalFunction<? super I, ? extends O>> functions;
@@ -48,6 +63,34 @@ public interface IOptionalFunction<I, O> extends Function<I, IOptional<? extends
 	}
 
 	@Data
+	public static class Recursive<I, O> implements IOptionalFunction<I, O> {
+		protected final Predicate<? super I> terminate;
+
+		protected final boolean prior;
+
+		protected final Class<I> type;
+
+		protected final IOptionalFunction<? super I, ? extends O> function;
+
+		@Override
+		public IOptional<? extends O> apply(I i) {
+			IOptional<? extends O> currentO = getFunction().apply(i);
+			while (!currentO.isEmpty() && type.isInstance(currentO.get())) {
+				final I currentI = type.cast(currentO.get());
+				if (getTerminate().test(currentI)) return currentO;
+
+				final IOptional<? extends O> optional = getFunction().apply(currentI);
+				if (optional.isEmpty()) {
+					if (prior) break;
+					return optional;
+				}
+				currentO = optional;
+			}
+			return currentO;
+		}
+	}
+
+	@Data
 	@RequiredArgsConstructor
 	public static class Restricted<I, O> implements IOptionalFunction<I, O> {
 		protected final IOptionalFunction<? super I, ? extends O> function;
@@ -64,17 +107,7 @@ public interface IOptionalFunction<I, O> extends Function<I, IOptional<? extends
 	}
 
 	public static <I, O> IOptionalFunction<I, O> empty(IOptionalFactory factory) {
-		return new IOptionalFunction<I, O>() {
-			@Override
-			public IOptional<? extends O> apply(I i) {
-				return factory.empty();
-			}
-
-			@Override
-			public String toString() {
-				return HObject.toString(this, "empty");
-			}
-		};
+		return new Empty<I, O>(factory);
 	}
 
 	public static <I, O> IOptionalFunction<I, O> of(IOptionalFactory factory, I input, O output) {
@@ -131,6 +164,11 @@ public interface IOptionalFunction<I, O> extends Function<I, IOptional<? extends
 	@Override
 	public default IOptionalFunction<I, O> override(IOptionalFunction<? super I, ? extends O> override) {
 		return new Overridden<I, O>(override, this);
+	}
+
+	@Override
+	public default IOptionalFunction<I, O> recursive(Predicate<? super I> terminate, boolean prior, Class<I> type) {
+		return new Recursive<I, O>(terminate, prior, type, this);
 	}
 
 	@Override
