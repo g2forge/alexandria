@@ -4,6 +4,10 @@ import java.util.function.Supplier;
 
 @FunctionalInterface
 public interface ISupplier<T> extends Supplier<T> {
+	public static <T> ISupplier<T> create(T value) {
+		return new LiteralSupplier<>(value);
+	}
+
 	public default <I> IFunction<I, T> toFunction() {
 		return t -> get();
 	}

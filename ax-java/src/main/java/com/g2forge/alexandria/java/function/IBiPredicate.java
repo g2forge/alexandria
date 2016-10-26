@@ -10,6 +10,10 @@ public interface IBiPredicate<I0, I1> extends BiPredicate<I0, I1> {
 		return (i0, i1) -> value;
 	}
 
+	public static <I0, I1> IBiPredicate<I0, I1> create(IBiPredicate<I0, I1> predicate) {
+		return predicate;
+	}
+
 	public default IPredicate<I1> compose0(Supplier<? extends I0> before) {
 		Objects.requireNonNull(before);
 		return i1 -> test(before.get(), i1);
