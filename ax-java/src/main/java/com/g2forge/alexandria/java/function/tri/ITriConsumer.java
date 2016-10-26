@@ -6,6 +6,10 @@ import com.g2forge.alexandria.java.function.IBiConsumer;
 
 @FunctionalInterface
 public interface ITriConsumer<I0, I1, I2> {
+	public static <I0, I1, I2> ITriConsumer<I0, I1, I2> create(ITriConsumer<I0, I1, I2> consumer) {
+		return consumer;
+	}
+
 	public void accept(I0 i0, I1 i1, I2 i2);
 
 	public default ITriConsumer<I0, I1, I2> andThen(ITriConsumer<? super I0, ? super I1, ? super I2> after) {

@@ -6,6 +6,10 @@ import java.util.function.Supplier;
 
 @FunctionalInterface
 public interface IBiFunction<I0, I1, O> extends BiFunction<I0, I1, O> {
+	public static <I0, I1, O> IBiFunction<I0, I1, O> create(IBiFunction<I0, I1, O> function) {
+		return function;
+	}
+
 	public default IFunction<I1, O> compose0(Supplier<? extends I0> before) {
 		Objects.requireNonNull(before);
 		return i1 -> apply(before.get(), i1);

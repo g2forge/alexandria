@@ -8,6 +8,10 @@ import com.g2forge.alexandria.java.function.IBiFunction;
 
 @FunctionalInterface
 public interface ITriFunction<I0, I1, I2, O> {
+	public static <I0, I1, I2, O> ITriFunction<I0, I1, I2, O> create(ITriFunction<I0, I1, I2, O> function) {
+		return function;
+	}
+
 	public default <_O> ITriFunction<I0, I1, I2, _O> andThen(Function<? super O, ? extends _O> after) {
 		Objects.requireNonNull(after);
 		return (I0 i0, I1 i1, I2 i2) -> after.apply(apply(i0, i1, i2));
