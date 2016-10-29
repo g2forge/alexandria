@@ -22,5 +22,6 @@
 		<module>ax-reflection</module>
 		<module>ax-type</module>
 		<module>ax-collection</module>
+		<module>ax-compiler</module>
 	</modules>
 </project>
