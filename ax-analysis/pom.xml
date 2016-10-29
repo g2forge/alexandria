@@ -5,9 +5,9 @@
 
 	<parent>
 		<groupId>com.g2forge.alexandria</groupId>
-		<artifactId>ax-project</artifactId>
+		<artifactId>ax-root</artifactId>
 		<version>0.0.3-SNAPSHOT</version>
-		<relativePath>../ax-project/pom.xml</relativePath>
+		<relativePath>../ax-root/pom.xml</relativePath>
 	</parent>
 
 	<dependencies>

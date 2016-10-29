@@ -1,71 +1,29 @@
-<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.g2forge.alexandria</groupId>
 	<artifactId>ax-project</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<licenses>
-		<license>
-			<name>Apache License, Version 2.0</name>
-			<url>https://github.com/g2forge/alexandria/blob/master/LICENSE</url>
-		</license>
-	</licenses>
-
-	<properties>
-		<slf4j.version>1.7.21</slf4j.version>
-		<junit.version>4.12</junit.version>
-		<commons.lang.version>3.4</commons.lang.version>
-		<springboot.version>1.4.0.RELEASE</springboot.version>
-		<spring.version>4.3.2.RELEASE</spring.version>
-		<springsecurity.version>4.1.3.RELEASE</springsecurity.version>
-		<jackson.version>2.7.4</jackson.version>
-		<jjwt.version>0.4</jjwt.version>
-		<jgit.version>4.0.2.201509141540-r</jgit.version>
-		<logback.version>1.1.7</logback.version>
-
-		<alexandria.version>0.0.3-SNAPSHOT</alexandria.version>
-	</properties>
-
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.3</version>
-				<configuration>
-					<sourcepath>target/generated-sources/delombok</sourcepath>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+	<parent>
+		<groupId>com.g2forge.alexandria</groupId>
+		<artifactId>ax-root</artifactId>
+		<version>0.0.3-SNAPSHOT</version>
+		<relativePath>../ax-root/pom.xml</relativePath>
+	</parent>
 
 	<dependencies>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.16.6</version>
-			<scope>provided</scope>
+			<groupId>com.g2forge.alexandria</groupId>
+			<artifactId>ax-java</artifactId>
+			<version>${alexandria.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.g2forge.alexandria</groupId>
-			<artifactId>ax-annotations</artifactId>
+			<artifactId>ax-test</artifactId>
 			<version>${alexandria.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

@@ -12,6 +12,7 @@
 	</parent>
 
 	<modules>
+		<module>ax-root</module>
 		<module>ax-project</module>
 		<module>ax-java</module>
 		<module>ax-log</module>

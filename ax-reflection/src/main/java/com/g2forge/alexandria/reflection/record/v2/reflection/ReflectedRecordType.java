@@ -9,9 +9,9 @@ import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
 import com.g2forge.alexandria.java.function.cache.FixedCachingSupplier;
+import com.g2forge.alexandria.reflection.object.HReflection;
 import com.g2forge.alexandria.reflection.object.IJavaConcreteReflection;
 import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;
-import com.g2forge.alexandria.reflection.object.HReflection;
 import com.g2forge.alexandria.reflection.record.v2.IPropertyType;
 import com.g2forge.alexandria.reflection.record.v2.IRecordType;
 
@@ -38,7 +38,7 @@ public class ReflectedRecordType implements IRecordType {
 		final Map<String, APropertyType<?>> properties = new LinkedHashMap<>();
 		final IJavaConcreteReflection<Object> reflection = (IJavaConcreteReflection<Object>) getReflection();
 		putAll(properties, reflection.getFields(JavaScope.Inherited, null).map(FieldPropertyType::new).collect(Collectors.toList()));
-		putAll(properties, reflection.getMethods(JavaScope.Inherited, null).filter(method -> !Object.class.equals(method.getDeclaringClass().getType().getJavaType())).filter(MethodPropertyType::isAccessor).collect(Collectors.toList()).stream().map(MethodPropertyType::new).collect(Collectors.toList()));
+		putAll(properties, reflection.getMethods(JavaScope.Inherited, null).filter(method -> !Object.class.equals(method.getDeclaringClass().getType().getJavaType())).filter(m -> m.toAccessorMethod().getAccessorType() != null).collect(Collectors.toList()).stream().map(MethodPropertyType::new).collect(Collectors.toList()));
 		return properties;
 	});
 

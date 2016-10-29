@@ -42,14 +42,16 @@ public class HString {
 	}
 
 	public static String stripPrefix(String string, String... prefixes) {
-		for (String prefix : prefixes)
+		for (String prefix : prefixes) {
 			if (string.startsWith(prefix)) return string.substring(prefix.length());
+		}
 		return string;
 	}
 
 	public static String stripSuffix(String string, String... suffixes) {
-		for (String suffix : suffixes)
+		for (String suffix : suffixes) {
 			if (string.endsWith(suffix)) return string.substring(0, string.length() - suffix.length());
+		}
 		return string;
 	}
 }

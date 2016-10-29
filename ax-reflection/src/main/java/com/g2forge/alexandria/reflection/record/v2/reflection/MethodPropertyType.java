@@ -1,13 +1,9 @@
 package com.g2forge.alexandria.reflection.record.v2.reflection;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.g2forge.alexandria.java.core.error.RuntimeReflectionException;
-import com.g2forge.alexandria.java.core.helpers.HString;
+import com.g2forge.alexandria.java.reflect.IJavaAccessorMethod;
 import com.g2forge.alexandria.reflection.annotations.IJavaAnnotated;
 import com.g2forge.alexandria.reflection.object.IJavaMethodReflection;
 import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;
@@ -16,67 +12,12 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * @see com.g2forge.alexandria.analysis.HAnalysis which has similar code!
+ */
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 class MethodPropertyType<P> extends APropertyType<P> {
-	public enum MethodType {
-		GET {
-			@Override
-			public boolean isMatchingParameterTypes(Type[] types) {
-				return types.length == 0;
-			}
-
-			@Override
-			public boolean isMatchingReturnType(Type type) {
-				return !Void.TYPE.equals(type);
-			}
-		},
-		IS {
-			@Override
-			public boolean isMatchingParameterTypes(Type[] types) {
-				return types.length == 0;
-			}
-
-			@Override
-			public boolean isMatchingReturnType(Type type) {
-				return Boolean.TYPE.equals(type) || Boolean.class.equals(type);
-			}
-		},
-		SET {
-			@Override
-			public boolean isMatchingParameterTypes(Type[] types) {
-				return types.length == 1;
-			}
-
-			@Override
-			public boolean isMatchingReturnType(Type type) {
-				return true;
-			}
-		};
-
-		public String getPrefix() {
-			return name().toLowerCase();
-		}
-
-		public abstract boolean isMatchingParameterTypes(Type[] types);
-
-		public abstract boolean isMatchingReturnType(Type type);
-	}
-
-	protected static final String[] PREFIXES = Stream.of(MethodType.values()).map(MethodType::getPrefix).collect(Collectors.toList()).toArray(new String[0]);
-
-	public static boolean isAccessor(IJavaMethodReflection<?, ?> reflection) {
-		final Method method = reflection.getType().getJavaMember();
-
-		final String name = method.getName();
-		final Type[] parameterTypes = method.getGenericParameterTypes();
-		final Type returnType = method.getGenericReturnType();
-		for (MethodType methodType : MethodType.values()) {
-			if (name.startsWith(methodType.getPrefix()) && methodType.isMatchingReturnType(returnType) && methodType.isMatchingParameterTypes(parameterTypes)) return true;
-		}
-		return false;
-	}
-
 	@Getter
 	protected APropertyType<P> previous;
 
@@ -90,7 +31,7 @@ class MethodPropertyType<P> extends APropertyType<P> {
 
 	@Override
 	public String getName() {
-		return HString.lowercase(HString.stripPrefix(getMethod().getType().getName(), PREFIXES));
+		return IJavaAccessorMethod.Accessor.getFieldName(getMethod().getType().getName());
 	}
 
 	@Override

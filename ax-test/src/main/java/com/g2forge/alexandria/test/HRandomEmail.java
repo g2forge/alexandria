@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.generic.test;
+package com.g2forge.alexandria.test;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
