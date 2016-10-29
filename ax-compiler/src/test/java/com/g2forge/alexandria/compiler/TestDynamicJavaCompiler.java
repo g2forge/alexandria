@@ -1,19 +1,45 @@
 package com.g2forge.alexandria.compiler;
 
 import java.net.URISyntaxException;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.tools.Diagnostic;
+import javax.tools.JavaFileObject;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.g2forge.alexandria.compiler.diagnostic.DataDiagnostic;
+import com.g2forge.alexandria.compiler.diagnostic.DiagnosticMatcher;
+import com.g2forge.alexandria.java.core.helpers.HCollection;
+
 public class TestDynamicJavaCompiler {
-	public interface Interface {
+	public interface Invocable {
 		public String get();
 	}
 
+	public interface Typed<T extends Invocable> {}
+
+	public static String toString(Class<?> type) {
+		return type.getName().replace('$', '.');
+	}
+
 	@Test
-	public void test() throws InstantiationException, IllegalAccessException, ClassNotFoundException, URISyntaxException {
+	public void error() throws ClassNotFoundException, URISyntaxException {
+		final String text = "package foo.bar; public class MyClass { public void method(" + toString(Typed.class) + "<String> foo) { } }";
+		try {
+			new DynamicJavaCompiler().compile("foo.bar.MyClass", text);
+		} catch (DynamicJavaCompilerException exception) {
+			final List<? extends Diagnostic<? extends JavaFileObject>> diagnostics = exception.getDiagnostics().stream().filter(d -> !d.getCode().startsWith("compiler.warn.proc.")).collect(Collectors.toList());
+			Assert.assertThat(HCollection.getOne(diagnostics), new DiagnosticMatcher<>(new DataDiagnostic<>(Diagnostic.Kind.ERROR, null, 1l, text.indexOf("String"), "compiler.err.not.within.bounds", null)));
+		}
+	}
+
+	@Test
+	public void invoke() throws InstantiationException, IllegalAccessException, ClassNotFoundException, URISyntaxException {
 		final String string = "Hello";
-		final Class<?> type = new DynamicJavaCompiler().compile("foo.bar.MyClass", "package foo.bar; public class MyClass implements " + Interface.class.getName().replace('$', '.') + " { @Override public String get() { return \"" + string + "\"; } }");
-		Assert.assertEquals(string, ((Interface) type.newInstance()).get());
+		final Class<?> type = new DynamicJavaCompiler().compile("foo.bar.MyClass", "package foo.bar; public class MyClass implements " + toString(Invocable.class) + " { @Override public String get() { return \"" + string + "\"; } }");
+		Assert.assertEquals(string, ((Invocable) type.newInstance()).get());
 	}
 }

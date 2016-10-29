@@ -1,5 +1,7 @@
 package com.g2forge.alexandria.analysis;
 
+import java.util.stream.Stream;
+
 import org.apache.bcel.Repository;
 import org.apache.bcel.classfile.Code;
 import org.apache.bcel.classfile.JavaClass;
@@ -7,6 +9,7 @@ import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ALOAD;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.GETFIELD;
+import org.apache.bcel.generic.INVOKEINTERFACE;
 import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.Instruction;
@@ -16,6 +19,8 @@ import org.apache.bcel.generic.ReturnInstruction;
 
 import com.g2forge.alexandria.java.core.error.RuntimeReflectionException;
 import com.g2forge.alexandria.java.marker.Helpers;
+import com.g2forge.alexandria.java.reflect.IJavaAccessorMethod;
+import com.g2forge.alexandria.java.reflect.JavaPrimitive;
 
 import lombok.experimental.UtilityClass;
 
@@ -55,9 +60,30 @@ public class HAnalysis {
 						field = get.getFieldName(constantPoolGen);
 					} else if (instructions[i] instanceof INVOKESTATIC) {
 						final InvokeInstruction invoke = (InvokeInstruction) instructions[i];
-						if (!Integer.class.getName().equals(invoke.getReferenceType(constantPoolGen).toString()) || !"valueOf".equals(invoke.getMethodName(constantPoolGen))) throw new Error();
+						if (!"valueOf".equals(invoke.getMethodName(constantPoolGen))) throw new Error();
+						final String name = invoke.getReferenceType(constantPoolGen).toString();
+						if (!Stream.of(JavaPrimitive.values()).filter(primitive -> primitive.getBoxed().getName().equals(name)).findAny().isPresent()) throw new Error();
 						field = null;
-					} else throw new Error();
+					} else if (instructions[i] instanceof INVOKEINTERFACE) {
+						final INVOKEINTERFACE invoke = ((INVOKEINTERFACE) instructions[i]);
+						field = new IJavaAccessorMethod() {
+							@Override
+							public String getName() {
+								return invoke.getMethodName(constantPoolGen);
+							}
+
+							@Override
+							public java.lang.reflect.Type[] getParameterTypes() {
+								return HBCEL.getTypes(invoke.getArgumentTypes(constantPoolGen));
+							}
+
+							@Override
+							public java.lang.reflect.Type getReturnType() {
+								return HBCEL.getType(invoke.getReturnType(constantPoolGen));
+							}
+						}.getFieldName();
+						if (field == null) throw new Error("Method was not an accessor");
+					} else throw new Error(String.format("Instruction %d (%s) is of type %s which not recognized!", i, instructions[i], instructions[i].getClass().getSimpleName()));
 
 					if (field != null) {
 						if (retVal.length() > 0) retVal.append('.');
