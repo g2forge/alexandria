@@ -33,6 +33,14 @@ public interface IFunction<I, O> extends Function<I, O> {
 		return () -> apply(input);
 	}
 
+	public default <T> IFunction<I, T> lift(T equal, IFunction<? super O, ? extends T> lift) {
+		return i -> {
+			final O o = apply(i);
+			if (i == o) return equal;
+			return lift.apply(o);
+		};
+	}
+
 	public default IConsumer<I> noReturn() {
 		return i -> apply(i);
 	}
