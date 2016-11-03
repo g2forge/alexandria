@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 
 import com.g2forge.alexandria.java.associative.map.HMap;
 import com.g2forge.alexandria.java.core.helpers.HTree;
-import com.g2forge.alexandria.java.function.IFunction;
+import com.g2forge.alexandria.java.function.IFunction1;
 
 import lombok.RequiredArgsConstructor;
 
@@ -57,7 +57,7 @@ public class JavaStructureAnalyzer<T, F, M> {
 
 	}
 
-	public static final JavaStructureAnalyzer<Class<?>, Field, Method> REFLECTION_ANALYZER = new JavaStructureAnalyzer<Class<?>, Field, Method>(klass -> Object.class.equals(klass), Class::getSuperclass, IFunction.<Class<?>, Method[]>create(Class::getDeclaredMethods).andThen(Stream::of), Function.identity(), IFunction.<Class<?>, Field[]>create(Class::getDeclaredFields).andThen(Stream::of), Function.identity());
+	public static final JavaStructureAnalyzer<Class<?>, Field, Method> REFLECTION_ANALYZER = new JavaStructureAnalyzer<Class<?>, Field, Method>(klass -> Object.class.equals(klass), Class::getSuperclass, IFunction1.<Class<?>, Method[]>create(Class::getDeclaredMethods).andThen(Stream::of), Function.identity(), IFunction1.<Class<?>, Field[]>create(Class::getDeclaredFields).andThen(Stream::of), Function.identity());
 
 	protected static <T> Stream<T> filter(JavaScope scope, JavaProtection minimum, final Stream<T> members, Function<? super T, ? extends Member> function) {
 		final Stream<T> scoped = members.filter(member -> !(scope.isStatics() ^ Modifier.isStatic(function.apply(member).getModifiers())));

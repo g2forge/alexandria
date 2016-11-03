@@ -8,7 +8,7 @@ public interface ISupplier<T> extends Supplier<T> {
 		return new LiteralSupplier<>(value);
 	}
 
-	public default <I> IFunction<I, T> toFunction() {
+	public default <I> IFunction1<I, T> toFunction() {
 		return t -> get();
 	}
 }

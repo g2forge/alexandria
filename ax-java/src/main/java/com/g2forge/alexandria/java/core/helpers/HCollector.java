@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import com.g2forge.alexandria.java.function.IFunction;
+import com.g2forge.alexandria.java.function.IFunction1;
 import com.g2forge.alexandria.java.marker.Helpers;
 import com.g2forge.alexandria.java.tuple.ITuple2G_;
 import com.g2forge.alexandria.java.tuple.implementations.Tuple2G_O;
@@ -103,7 +103,7 @@ public class HCollector {
 		protected final Set<Characteristics> characteristics;
 
 		public SimpleCollector(Supplier<A> supplier, BiConsumer<A, T> accumulator, BinaryOperator<A> combiner, Set<Characteristics> characteristics) {
-			this(supplier, accumulator, combiner, IFunction.cast(), characteristics);
+			this(supplier, accumulator, combiner, IFunction1.cast(), characteristics);
 		}
 
 		@Override

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.core.helpers.HCollector;
-import com.g2forge.alexandria.java.function.IFunction;
+import com.g2forge.alexandria.java.function.IFunction1;
 
 public class HGraph {
 	public static <N> List<N> toposort(Collection<N> nodes, Function<N, Set<N>> accessor, boolean isOut) {
@@ -21,7 +21,7 @@ public class HGraph {
 			if (isOut) retVal.setIn(new HashSet<>());
 			else retVal.setOut(new HashSet<>());
 			return retVal;
-		}).collect(Collectors.toMap(Node::getNode, IFunction.identity(), HCollector.mergeFail(), HashMap::new));
+		}).collect(Collectors.toMap(Node::getNode, IFunction1.identity(), HCollector.mergeFail(), HashMap::new));
 		for (N n : nodes) {
 			final Node<N> node = nodeMap.get(n);
 			final Set<Edge<N>> edges = accessor.apply(n).stream().map(o -> {
