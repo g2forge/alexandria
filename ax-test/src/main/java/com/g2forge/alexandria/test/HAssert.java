@@ -2,8 +2,8 @@ package com.g2forge.alexandria.test;
 
 import org.junit.Assert;
 
-import com.g2forge.alexandria.java.function.IBiConsumer;
-import com.g2forge.alexandria.java.function.IConsumer;
+import com.g2forge.alexandria.java.function.IConsumer2;
+import com.g2forge.alexandria.java.function.IConsumer1;
 import com.g2forge.alexandria.java.marker.Helpers;
 
 import lombok.experimental.UtilityClass;
@@ -27,15 +27,15 @@ public class HAssert extends Assert {
 		}
 	}
 
-	public static <T> IConsumer<? super T> testEquals(T expected) {
-		return IBiConsumer.create(HAssert::assertEquals).curry0(expected);
+	public static <T> IConsumer1<? super T> testEquals(T expected) {
+		return IConsumer2.create(HAssert::assertEquals).curry0(expected);
 	}
 
-	public static <T> IConsumer<? super T> testNotEquals(T unexpected) {
-		return IBiConsumer.create(HAssert::assertNotEquals).curry0(unexpected);
+	public static <T> IConsumer1<? super T> testNotEquals(T unexpected) {
+		return IConsumer2.create(HAssert::assertNotEquals).curry0(unexpected);
 	}
 
-	public static <T> IConsumer<? super T> testInstanceOf(Class<?> expected) {
-		return IBiConsumer.create(HAssert::assertInstanceOf).curry0(expected);
+	public static <T> IConsumer1<? super T> testInstanceOf(Class<?> expected) {
+		return IConsumer2.create(HAssert::assertInstanceOf).curry0(expected);
 	}
 }

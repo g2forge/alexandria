@@ -3,8 +3,8 @@ package com.g2forge.alexandria.java.function;
 import java.util.function.Consumer;
 
 @FunctionalInterface
-public interface IConsumer<I> extends Consumer<I> {
-	public static <I> IConsumer<I> create(IConsumer<I> consumer) {
+public interface IConsumer1<I> extends Consumer<I> {
+	public static <I> IConsumer1<I> create(IConsumer1<I> consumer) {
 		return consumer;
 	}
 
