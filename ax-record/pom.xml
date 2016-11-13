@@ -11,4 +11,7 @@
 		<version>0.0.3-SNAPSHOT</version>
 		<relativePath>../ax-project/pom.xml</relativePath>
 	</parent>
+	
+	<name>${alexandria.name} Record</name>
+	<description>Common library for creating, manipulating and reflecting over record and record-like abstractions.</description>
 </project>

@@ -9,6 +9,9 @@
 		<version>0.0.3-SNAPSHOT</version>
 		<relativePath>../ax-root/pom.xml</relativePath>
 	</parent>
+	
+	<name>${alexandria.name} Analysis</name>
+	<description>Java reflection and bytecode analysis toolkit, usable for all kinds of introspection and analysis of running code.</description>
 
 	<dependencies>
 		<dependency>

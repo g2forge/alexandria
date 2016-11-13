@@ -11,4 +11,7 @@
 		<version>0.0.3-SNAPSHOT</version>
 		<relativePath>../ax-project/pom.xml</relativePath>
 	</parent>
+	
+	<name>${alexandria.name} Compiler</name>
+	<description>Library to support in-memory compilation and execution of dynamically generated Java code.</description>
 </project>

@@ -8,13 +8,6 @@
 	<version>0.0.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<licenses>
-		<license>
-			<name>Apache License, Version 2.0</name>
-			<url>https://github.com/g2forge/alexandria/blob/master/LICENSE</url>
-		</license>
-	</licenses>
-
 	<properties>
 		<slf4j.version>1.7.21</slf4j.version>
 		<junit.version>4.12</junit.version>
@@ -28,7 +21,34 @@
 		<logback.version>1.1.7</logback.version>
 
 		<alexandria.version>0.0.3-SNAPSHOT</alexandria.version>
+		
+		<alexandria.organization>g2forge</alexandria.organization>
+		<alexandria.name>Alexandria</alexandria.name>
+		<alexandria.repository>alexandria</alexandria.repository>
 	</properties>
+	
+	<name>${alexandria.name} Root</name>
+	<description>Parent project for the critical base code for ${alexandria.name}.  Generally one would us "ax-project" instead.</description>
+	<url>https://github.com/${alexandria.organization}/${alexandria.repository}/tree/${project.version}/${project.artifactId}</url>
+	<developers>
+		<developer>
+			<name>Greg Gibeling</name>
+			<email>gdgib@outlook.com</email>
+			<organization>G2Forge</organization>
+			<organizationUrl>http://www.g2forge.com</organizationUrl>
+		</developer>
+	</developers>
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>https://github.com/${alexandria.organization}/${alexandria.repository}/blob/${project.version}/LICENSE</url>
+		</license>
+	</licenses>
+	<scm>
+		<connection>scm:git:git://github.com/${alexandria.organization}/${alexandria.repository}.git</connection>
+		<developerConnection>scm:git:ssh://github.com:${alexandria.organization}/${alexandria.repository}.git</developerConnection>
+		<url>http://github.com/${alexandria.organization}/${alexandria.repository}/tree/${project.version}</url>
+	</scm>
 
 	<build>
 		<plugins>
@@ -63,11 +83,6 @@
 			<artifactId>lombok</artifactId>
 			<version>1.16.6</version>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.g2forge.alexandria</groupId>
-			<artifactId>ax-annotations</artifactId>
-			<version>${alexandria.version}</version>
 		</dependency>
 	</dependencies>
 </project>

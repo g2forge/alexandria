@@ -11,6 +11,9 @@
 		<version>0.0.3-SNAPSHOT</version>
 		<relativePath>../ax-project/pom.xml</relativePath>
 	</parent>
+	
+	<name>${alexandria.name} Reflection</name>
+	<description>Generic type safe reflection library, which adds significant usability over the standard Java runtime.</description>
 
 	<dependencies>
 		<dependency>

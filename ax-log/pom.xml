@@ -9,6 +9,9 @@
 		<version>0.0.3-SNAPSHOT</version>
 		<relativePath>../ax-project/pom.xml</relativePath>
 	</parent>
+	
+	<name>${alexandria.name} Log</name>
+	<description>Logging support and extensions.</description>
 
 	<dependencies>
 		<dependency>

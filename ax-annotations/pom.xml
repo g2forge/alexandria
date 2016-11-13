@@ -26,4 +26,27 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<name>Alexandria Annotations</name>
+	<description>A general set of developer-relevant annotations and a processor for them. Includes annotations like TODO and Hack to mark relevant code.</description>
+	<url>https://github.com/g2forge/alexandria/tree/${project.version}/${project.artifactId}</url>
+	<developers>
+		<developer>
+			<name>Greg Gibeling</name>
+			<email>gdgib@outlook.com</email>
+			<organization>G2Forge</organization>
+			<organizationUrl>http://www.g2forge.com</organizationUrl>
+		</developer>
+	</developers>
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>https://github.com/g2forge/alexandria/blob/${project.version}/LICENSE</url>
+		</license>
+	</licenses>
+	<scm>
+		<connection>scm:git:git://github.com/g2forge/alexandria.git</connection>
+		<developerConnection>scm:git:ssh://github.com:g2forge/alexandria.git</developerConnection>
+		<url>http://github.com/g2forge/alexandria/tree/${project.version}</url>
+	</scm>
 </project>
