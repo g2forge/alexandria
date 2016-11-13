@@ -13,6 +13,9 @@
 		<relativePath>../ax-root/pom.xml</relativePath>
 	</parent>
 
+	<name>${alexandria.name} Project</name>
+	<description>Parent project for most of the code in ${alexandria.name}.  Note that while ${alexandria.organization} repositories always have a "xx-project", ${alexandria.name} also has "ax-root" due to the need to avoid circular dependencies of this base library.</description>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.g2forge.alexandria</groupId>

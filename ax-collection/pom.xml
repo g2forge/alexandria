@@ -11,4 +11,7 @@
 		<version>0.0.3-SNAPSHOT</version>
 		<relativePath>../ax-project/pom.xml</relativePath>
 	</parent>
+	
+	<name>${alexandria.name} Collection</name>
+	<description>Extended collection API, which will evolve to encompass all ADTs.</description>
 </project>

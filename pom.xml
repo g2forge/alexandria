@@ -10,6 +10,9 @@
 		<version>0.0.3-SNAPSHOT</version>
 		<relativePath>ax-project/pom.xml</relativePath>
 	</parent>
+	
+	<name>${alexandria.name}</name>
+	<description>A standard library of commonly used Java code.</description>
 
 	<modules>
 		<module>ax-root</module>
