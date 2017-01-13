@@ -48,7 +48,7 @@ public class HZip {
 						while ((len = in.read(buffer)) > 0)
 							out.write(buffer, 0, len);
 					}
-				} catch (Exception exception) {
+				} catch (IOException exception) {
 					throw new RuntimeIOException(String.format("Failed to create zip entry for %s", entry.getAbsolute()), exception);
 				}
 			}

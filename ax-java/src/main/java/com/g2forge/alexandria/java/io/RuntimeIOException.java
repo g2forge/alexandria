@@ -1,5 +1,7 @@
 package com.g2forge.alexandria.java.io;
 
+import java.io.IOException;
+
 import com.g2forge.alexandria.java.core.error.IRuntimeWrappingException;
 
 public class RuntimeIOException extends RuntimeException implements IRuntimeWrappingException {
@@ -11,11 +13,15 @@ public class RuntimeIOException extends RuntimeException implements IRuntimeWrap
 		super(message);
 	}
 
-	public RuntimeIOException(String message, Throwable cause) {
+	public RuntimeIOException(String message, IOException cause) {
 		super(message, cause);
 	}
 
-	public RuntimeIOException(Throwable cause) {
+	public RuntimeIOException(IOException cause) {
 		super(cause);
+	}
+
+	public IOException getCause() {
+		return (IOException) super.getCause();
 	}
 }
