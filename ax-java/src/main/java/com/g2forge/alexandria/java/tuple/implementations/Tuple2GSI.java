@@ -2,7 +2,7 @@ package com.g2forge.alexandria.java.tuple.implementations;
 
 import com.g2forge.alexandria.java.tuple.ITuple2GS;
 
-public class Tuple2GSI<T0, T1> extends Tuple1GSI<T0>implements ITuple2GS<T0, T1> {
+public class Tuple2GSI<T0, T1> extends Tuple1GSI<T0> implements ITuple2GS<T0, T1> {
 	protected T1 value1;
 
 	public Tuple2GSI() {
@@ -55,7 +55,7 @@ public class Tuple2GSI<T0, T1> extends Tuple1GSI<T0>implements ITuple2GS<T0, T1>
 
 	@Override
 	public T1 swap1(final T1 value) {
-		final T1 retVal = value1;
+		final T1 retVal = get1();
 		set1(value);
 		return retVal;
 	}
