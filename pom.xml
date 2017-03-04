@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>alexandria</artifactId>
@@ -10,7 +12,7 @@
 		<version>0.0.3-SNAPSHOT</version>
 		<relativePath>ax-project/pom.xml</relativePath>
 	</parent>
-	
+
 	<name>${alexandria.name}</name>
 	<description>A standard library of commonly used Java code.</description>
 
@@ -27,5 +29,6 @@
 		<module>ax-type</module>
 		<module>ax-collection</module>
 		<module>ax-compiler</module>
+		<module>ax-expression</module>
 	</modules>
 </project>
