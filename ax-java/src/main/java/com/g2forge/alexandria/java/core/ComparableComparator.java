@@ -2,11 +2,13 @@ package com.g2forge.alexandria.java.core;
 
 import java.util.Comparator;
 
-public class ComparableComparator<T extends Comparable<? super T>> implements Comparator<T> {
+import com.g2forge.alexandria.java.core.iface.ISingleton;
+
+public class ComparableComparator<T extends Comparable<? super T>> implements Comparator<T>, ISingleton {
 	protected static final ComparableComparator<?> singleton = new ComparableComparator<>();
 
 	@SuppressWarnings("unchecked")
-	public static <T extends Comparable<? super T>> ComparableComparator<T> getSingleton() {
+	public static <T extends Comparable<? super T>> ComparableComparator<T> create() {
 		return (ComparableComparator<T>) singleton;
 	}
 
