@@ -44,9 +44,7 @@ public class HCollector {
 	}
 
 	public static <K, V> Collector<Tuple2G_O<K, V>, ?, Map<K, V>> toMap() {
-		return Collectors.toMap(ITuple2G_::get0, ITuple2G_::get1, (u, v) -> {
-			throw new IllegalStateException(String.format("Duplicate key %s", u));
-		} , () -> new LinkedHashMap<>());
+		return Collectors.toMap(ITuple2G_::get0, ITuple2G_::get1, mergeFail(), () -> new LinkedHashMap<>());
 	}
 
 	public static <T, K> Collector<? super T, ?, Map<K, List<T>>> multiGroupingBy(Function<? super T, ? extends Iterable<? extends K>> classifier) {
@@ -55,7 +53,7 @@ public class HCollector {
 
 	public static <T> BinaryOperator<T> mergeFail() {
 		return (k0, k1) -> {
-			throw new IllegalStateException("Duplicate key " + k0);
+			throw new IllegalStateException(String.format("Duplicate key %s", k0));
 		};
 	}
 
@@ -136,7 +134,7 @@ public class HCollector {
 		return Collector.of(ArrayList::new, (list, element) -> {
 			if (!list.isEmpty()) list.add(separator);
 			list.add(element);
-		} , (list0, list1) -> {
+		}, (list0, list1) -> {
 			if (!list0.isEmpty()) list0.add(separator);
 			list0.addAll(list1);
 			return list0;

@@ -3,8 +3,9 @@ package com.g2forge.alexandria.generic.type.environment.implementations;
 import com.g2forge.alexandria.generic.type.IType;
 import com.g2forge.alexandria.generic.type.IVariableType;
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
+import com.g2forge.alexandria.java.core.iface.ISingleton;
 
-public final class EmptyTypeEnvironment implements ITypeEnvironment {
+public final class EmptyTypeEnvironment implements ITypeEnvironment, ISingleton {
 	protected static final EmptyTypeEnvironment singleton = new EmptyTypeEnvironment();
 
 	public static EmptyTypeEnvironment create() {

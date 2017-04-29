@@ -3,12 +3,12 @@ package com.g2forge.alexandria.java.function.typed;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MapTypedFunction<T> implements TypedFunction<T> {
+public class MapTypedFunction1<T> implements ITypedFunction1<T> {
 	protected final Map<Class<?>, Object> map = new HashMap<>();
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <_T extends T> _T map(final Class<_T> type) {
+	public <_T extends T> _T apply(final Class<_T> type) {
 		return (_T) map.get(type);
 	}
 

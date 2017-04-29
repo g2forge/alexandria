@@ -20,7 +20,7 @@ public class TypedEnvReference<T> implements IEnvReference<T, ITypedMapEnvironme
 	
 	@Override
 	public T eval(final ITypedMapEnvironment environment) {
-		return environment.map(type);
+		return environment.apply(type);
 	}
 	
 }
