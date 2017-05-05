@@ -73,6 +73,15 @@ public class HCollection {
 	}
 
 	@SafeVarargs
+	public static <T> Collection<T> intersection(final Collection<? extends T>... collections) {
+		final Collection<T> temp = new LinkedHashSet<>(collections[0]);
+		for (int i = 1; i < collections.length; i++) {
+			temp.retainAll(collections[i]);
+		}
+		return temp;
+	}
+
+	@SafeVarargs
 	public static <T> Collection<T> difference(final Collection<? extends T> minuend, final T... subtrahend) {
 		return difference(minuend, com.g2forge.alexandria.java.core.helpers.HCollection.asList(subtrahend));
 	}
