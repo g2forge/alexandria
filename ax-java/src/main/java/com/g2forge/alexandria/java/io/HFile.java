@@ -20,21 +20,8 @@ import lombok.experimental.UtilityClass;
 public class HFile {
 	public static void copy(Path source, Path target, boolean preserve, Function<Path, Boolean> overwrite) {
 		final Path destination = Files.isDirectory(target) ? target.resolve(source.getFileName()) : target;
-
 		final DirectoryTreeCopyVisitor visitor = new DirectoryTreeCopyVisitor(source, destination, preserve, overwrite);
-		try {
-			Files.walkFileTree(source, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, visitor);
-		} catch (IOException exception) {
-			visitor.getThrowables().add(exception);
-		}
-
-		// If there were any exceptions, then report them!
-		if (!visitor.getThrowables().isEmpty()) {
-			final RuntimeIOException toThrow = new RuntimeIOException(String.format("Error while copying %s to %s", source, target));
-			for (Throwable throwable : visitor.getThrowables())
-				toThrow.addSuppressed(throwable);
-			throw toThrow;
-		}
+		visitor.walkFileTree(source, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE);
 	}
 
 	public static void copyFile(Path source, Path target, boolean preserve, Function<Path, Boolean> overwrite) {
