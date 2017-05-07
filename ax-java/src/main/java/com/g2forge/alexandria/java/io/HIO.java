@@ -6,6 +6,8 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.java.core.error.HError;
 import com.g2forge.alexandria.java.core.helpers.HStream;
+import com.g2forge.alexandria.java.function.IThrowFunction1;
 import com.g2forge.alexandria.java.marker.Helpers;
 
 import lombok.experimental.UtilityClass;
@@ -80,5 +83,27 @@ public class HIO {
 		} finally {
 			closeAll(list);
 		}
+	}
+
+	public static <T> byte[] sha1(T value, IThrowFunction1<T, InputStream, IOException> open) {
+		final MessageDigest digest;
+		try {
+			digest = MessageDigest.getInstance("SHA-1");
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		}
+		try (final InputStream stream = open.apply(value)) {
+			final byte[] buffer = new byte[getRecommendedBufferSize()];
+			int n = 0;
+			while (n != -1) {
+				n = stream.read(buffer);
+				if (n > 0) {
+					digest.update(buffer, 0, n);
+				}
+			}
+		} catch (IOException e) {
+			throw new RuntimeIOException(e);
+		}
+		return digest.digest();
 	}
 }
