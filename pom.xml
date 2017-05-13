@@ -30,5 +30,6 @@
 		<module>ax-collection</module>
 		<module>ax-compiler</module>
 		<module>ax-expression</module>
+		<module>ax-service</module>
 	</modules>
 </project>
