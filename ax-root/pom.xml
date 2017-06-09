@@ -21,12 +21,12 @@
 		<logback.version>1.1.7</logback.version>
 
 		<alexandria.version>0.0.3-SNAPSHOT</alexandria.version>
-		
+
 		<alexandria.organization>g2forge</alexandria.organization>
 		<alexandria.name>Alexandria</alexandria.name>
 		<alexandria.repository>alexandria</alexandria.repository>
 	</properties>
-	
+
 	<name>${alexandria.name} Root</name>
 	<description>Parent project for the critical base code for ${alexandria.name}.  Generally one would us "ax-project" instead.</description>
 	<url>https://github.com/${alexandria.organization}/${alexandria.repository}/tree/${project.version}/${project.artifactId}</url>
