@@ -22,10 +22,25 @@ public interface ITypeRef<T> {
 		return () -> type;
 	}
 
+	public default T cast(Object value) {
+		return getErasedType().cast(value);
+	}
+
+	public default Class<T> getErasedType() {
+		// TODO: Properly implement erasure here
+		@SuppressWarnings("unchecked")
+		final Class<T> klass = (Class<T>) getType();
+		return klass;
+	}
+
 	/**
 	 * Get the dynamic (runtime) type of <code>T</code>.
 	 * 
 	 * @return The dynamic (runtime) type of <code>T</code>.
 	 */
 	public Type getType();
+
+	public default boolean isInstance(Object value) {
+		return getErasedType().isInstance(value);
+	}
 }
