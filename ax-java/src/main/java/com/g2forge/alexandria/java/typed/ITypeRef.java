@@ -10,7 +10,7 @@ import java.lang.reflect.Type;
  *            The (static) type of this type reference.
  */
 @FunctionalInterface
-public interface ITypeRef<T> {
+public interface ITypeRef<T> extends IDynamicType<T> {
 	/**
 	 * Construct an instance of {@link ITypeRef} for a Java {@link Class}. This is most useful for non-parameterized classes.
 	 * 
