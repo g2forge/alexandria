@@ -2,6 +2,15 @@ package com.g2forge.alexandria.java.identity;
 
 import com.g2forge.alexandria.java.core.iface.ISingleton;
 
+/**
+ * Identity based on same-ness of objects. Two objects must literally be the same object (not just have similar field values or something) in memory for this identity to
+ * consider them equal.
+ * 
+ * @author greg
+ *
+ * @see StandardIdentity
+ * @see IIdentity#same()
+ */
 public class SameIdentity implements IIdentity<Object>, ISingleton {
 	protected static final SameIdentity SINGLETON = new SameIdentity();
 
