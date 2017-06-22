@@ -2,6 +2,12 @@ package com.g2forge.alexandria.java.typed;
 
 import java.lang.reflect.Type;
 
+import com.g2forge.alexandria.annotations.TODO;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+
 /**
  * Captures the relationship between the static type <code>T</code> and the runtime type {@link #getType()}. Due to the lack of proper generic support in the Java reflection
  * library, this interface is currently not statically type safe. As such implementors are responsible for type safety.
@@ -11,6 +17,13 @@ import java.lang.reflect.Type;
  */
 @FunctionalInterface
 public interface ITypeRef<T> extends IDynamicType<T> {
+	@RequiredArgsConstructor
+	@ToString
+	@Getter
+	public static class ClassTypeRef<T> extends ATypeRefIdentity<T> {
+		protected final Class<T> type;
+	}
+
 	/**
 	 * Construct an instance of {@link ITypeRef} for a Java {@link Class}. This is most useful for non-parameterized classes.
 	 * 
@@ -19,7 +32,7 @@ public interface ITypeRef<T> extends IDynamicType<T> {
 	 * @return An instance of {@link ITypeRef} whose {@link #getType()} returns <code>type</code>.
 	 */
 	public static <T> ITypeRef<T> of(Class<T> type) {
-		return () -> type;
+		return new ClassTypeRef<>(type);
 	}
 
 	public default T cast(Object value) {
