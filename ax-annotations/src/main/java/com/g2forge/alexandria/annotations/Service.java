@@ -7,6 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.SOURCE)
 @Target({ ElementType.TYPE })
+@Handler(ServiceAnnotationHandler.class)
 public @interface Service {
 	/**
 	 * The service interfaces which the annotated type supports.
