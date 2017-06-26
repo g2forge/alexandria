@@ -7,7 +7,8 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.SOURCE)
 @Target({ ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.CONSTRUCTOR, ElementType.LOCAL_VARIABLE, ElementType.ANNOTATION_TYPE, ElementType.PACKAGE, ElementType.TYPE_PARAMETER, ElementType.TYPE_USE })
-@MessageAnnotation("%s is a hack")
+@Handler(StandardMessageAnnotationHandler.class)
+@Message("%s is a hack")
 public @interface Hack {
 	/**
 	 * An optional message which should be reported during compilation.

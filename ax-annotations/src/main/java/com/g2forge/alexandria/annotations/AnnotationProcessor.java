@@ -15,7 +15,7 @@ import javax.lang.model.element.TypeElement;
 @SupportedAnnotationTypes({ "com.g2forge.alexandria.annotations.Hack", "com.g2forge.alexandria.annotations.TODO" })
 public class AnnotationProcessor extends AbstractProcessor {
 	@SuppressWarnings("unchecked")
-	protected static final Class<? extends Annotation>[] ANNOTATIONS = new Class[] { Hack.class, TODO.class };
+	protected static final Class<? extends Annotation>[] ANNOTATIONS = new Class[] { Hack.class, TODO.class, Service.class };
 
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnvironment) {
@@ -33,19 +33,19 @@ public class AnnotationProcessor extends AbstractProcessor {
 				for (Class<? extends Annotation> annotationType : ANNOTATIONS) {
 					final Annotation actualAnnotation = element.getAnnotation(annotationType);
 					if (actualAnnotation == null) continue;
-					final MessageAnnotation messageAnnotation = annotationType.getAnnotation(MessageAnnotation.class);
+					final Handler handlerAnnotation = annotationType.getAnnotation(Handler.class);
 
-					final Class<? extends IMessageAnnotationHandler<?>> handlerType = messageAnnotation.handler();
-					final IMessageAnnotationHandler<Annotation> handler;
+					final Class<? extends IAnnotationHandler<?>> handlerType = handlerAnnotation.value();
+					final IAnnotationHandler<Annotation> handler;
 					try {
 						@SuppressWarnings({ "unchecked", "rawtypes" })
-						final IMessageAnnotationHandler<Annotation> temp = (IMessageAnnotationHandler) handlerType.newInstance();
+						final IAnnotationHandler<Annotation> temp = (IAnnotationHandler) handlerType.newInstance();
 						handler = temp;
 					} catch (InstantiationException | IllegalAccessException e) {
 						throw new Error(e);
 					}
 
-					handler.handle(processingEnv, element, path, messageAnnotation, actualAnnotation);
+					handler.handle(processingEnv, element, path, annotationType, actualAnnotation);
 				}
 			}
 		}

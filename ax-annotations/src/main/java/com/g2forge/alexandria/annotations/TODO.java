@@ -7,7 +7,8 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.SOURCE)
 @Target({ ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.CONSTRUCTOR, ElementType.LOCAL_VARIABLE, ElementType.ANNOTATION_TYPE, ElementType.PACKAGE, ElementType.TYPE_PARAMETER, ElementType.TYPE_USE })
-@MessageAnnotation(value = "TODO", handler = TODOMessageAnnotationHandler.class)
+@Handler(TODOMessageAnnotationHandler.class)
+@Message(value = "TODO")
 public @interface TODO {
 	/**
 	 * A message which should be reported during compilation.

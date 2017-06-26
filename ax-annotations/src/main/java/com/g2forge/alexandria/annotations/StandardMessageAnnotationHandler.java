@@ -8,9 +8,11 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.tools.Diagnostic;
 
-public class StandardMessageAnnotationHandler implements IMessageAnnotationHandler<Annotation> {
+public class StandardMessageAnnotationHandler implements IAnnotationHandler<Annotation> {
 	@Override
-	public void handle(ProcessingEnvironment processingEnvironment, Element element, String path, MessageAnnotation message, Annotation annotation) {
+	public void handle(ProcessingEnvironment processingEnvironment, Element element, String path, Class<? extends Annotation> annotationType, Annotation annotation) {
+		final Message message = annotationType.getAnnotation(Message.class);
+
 		String value = null;
 		try {
 			value = (String) annotation.getClass().getMethod("value").invoke(annotation);
