@@ -1,10 +1,12 @@
-package com.g2forge.alexandria.annotations;
+package com.g2forge.alexandria.annotations.message;
 
 import java.time.LocalDate;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.tools.Diagnostic;
+
+import com.g2forge.alexandria.annotations.IAnnotationHandler;
 
 public class TODOMessageAnnotationHandler implements IAnnotationHandler<TODO> {
 	public static boolean isNonEmpty(final String string) {

@@ -14,7 +14,11 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 
-@SupportedAnnotationTypes({ "com.g2forge.alexandria.annotations.Hack", "com.g2forge.alexandria.annotations.TODO", "com.g2forge.alexandria.annotations.Service" })
+import com.g2forge.alexandria.annotations.message.Hack;
+import com.g2forge.alexandria.annotations.message.TODO;
+import com.g2forge.alexandria.annotations.service.Service;
+
+@SupportedAnnotationTypes({ "com.g2forge.alexandria.annotations.message.Hack", "com.g2forge.alexandria.annotations.message.TODO", "com.g2forge.alexandria.annotations.Service" })
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class AnnotationProcessor extends AbstractProcessor {
 	@SuppressWarnings("unchecked")

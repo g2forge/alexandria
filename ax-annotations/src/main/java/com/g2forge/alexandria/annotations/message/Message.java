@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.annotations;
+package com.g2forge.alexandria.annotations.message;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

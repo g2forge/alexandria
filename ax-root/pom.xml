@@ -59,6 +59,13 @@
 					<source>1.8</source>
 					<target>1.8</target>
 				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>com.g2forge.alexandria</groupId>
+						<artifactId>ax-annotations</artifactId>
+						<version>${alexandria.version}</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

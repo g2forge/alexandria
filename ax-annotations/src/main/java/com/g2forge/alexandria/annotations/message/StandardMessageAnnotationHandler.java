@@ -1,12 +1,13 @@
-package com.g2forge.alexandria.annotations;
+package com.g2forge.alexandria.annotations.message;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.lang.annotation.Annotation;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.tools.Diagnostic;
+
+import com.g2forge.alexandria.annotations.HAnnotationProcessor;
+import com.g2forge.alexandria.annotations.IAnnotationHandler;
 
 public class StandardMessageAnnotationHandler implements IAnnotationHandler<Annotation> {
 	@Override
@@ -17,11 +18,7 @@ public class StandardMessageAnnotationHandler implements IAnnotationHandler<Anno
 		try {
 			value = (String) annotation.getClass().getMethod("value").invoke(annotation);
 		} catch (Throwable throwable) {
-			final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			try (final PrintStream print = new PrintStream(baos)) {
-				throwable.printStackTrace(print);
-			}
-			processingEnvironment.getMessager().printMessage(Diagnostic.Kind.ERROR, "Could not get message value: " + baos.toString(), element);
+			processingEnvironment.getMessager().printMessage(Diagnostic.Kind.ERROR, "Could not get message value: " + HAnnotationProcessor.toString(throwable), element);
 		}
 
 		final String string = String.format(message.value(), path);

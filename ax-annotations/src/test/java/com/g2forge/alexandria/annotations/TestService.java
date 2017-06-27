@@ -13,16 +13,19 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 
+import com.g2forge.alexandria.annotations.service.Service;
+
 @Service(ITestService.class)
 public class TestService implements ITestService {
 	protected final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 
 	public static void main(String[] args) throws IOException {
-		new TestService().execute();
+		//new TestService().execute("src/test/java");
+		new TestService().execute("c:/Temp/Thingy");
 	}
 
-	public void execute() throws IOException {
-		final Iterable<JavaFileObject> files = getSourceFiles("src/test/java");
+	public void execute(String path) throws IOException {
+		final Iterable<JavaFileObject> files = getSourceFiles(path);
 
 		final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
 		final StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);

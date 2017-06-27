@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.g2forge.alexandria.annotations.TODO;
+import com.g2forge.alexandria.annotations.message.TODO;
 import com.g2forge.alexandria.java.marker.Helpers;
 
 import lombok.experimental.UtilityClass;
