@@ -32,9 +32,9 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 public class SplitTypedServiceLoader<S> implements IServiceLoader<S> {
-	protected static class InternalLoader<S> implements Iterable<S> {
-		public class ProviderIterator implements Iterator<S> {
-			protected final Iterator<S> loaded = InternalLoader.this.loaded.values().iterator();
+	protected static class InternalLoader<S> implements Iterable<Class<? extends S>> {
+		public class ProviderIterator implements Iterator<Class<? extends S>> {
+			protected final Iterator<Class<? extends S>> loaded = InternalLoader.this.loaded.values().iterator();
 
 			@Override
 			public boolean hasNext() {
@@ -43,13 +43,13 @@ public class SplitTypedServiceLoader<S> implements IServiceLoader<S> {
 			}
 
 			@Override
-			public S next() {
+			public Class<? extends S> next() {
 				if (loaded.hasNext()) return loaded.next();
 				return loader.next();
 			}
 		}
 
-		protected class ProviderLoader implements Iterator<S> {
+		protected class ProviderLoader implements Iterator<Class<? extends S>> {
 			protected Enumeration<URL> allConfigs = null;
 
 			protected Iterator<String> currentConfig = null;
@@ -93,35 +93,42 @@ public class SplitTypedServiceLoader<S> implements IServiceLoader<S> {
 			}
 
 			@Override
-			public S next() {
+			public Class<? extends S> next() {
 				if (acc == null) return nextInternal();
-				else return AccessController.doPrivileged((PrivilegedAction<S>) this::nextInternal, acc);
+				else return AccessController.doPrivileged((PrivilegedAction<Class<? extends S>>) this::nextInternal, acc);
 			}
 
-			protected S nextInternal() {
+			protected Class<? extends S> nextInternal() {
 				if (!hasNextInternal()) throw new NoSuchElementException();
 
 				final String nextProviderName = this.nextProviderName;
 				this.nextProviderName = null;
-				final Class<?> nextProvderClass;
+				final Class<?> nextProviderClass;
 				try {
-					nextProvderClass = Class.forName(nextProviderName, false, classLoader);
+					nextProviderClass = Class.forName(nextProviderName, false, classLoader);
 				} catch (ClassNotFoundException exception) {
 					throw new SmartServiceConfigurationError(key, "Provider \"" + nextProviderName + "\" not found!", exception);
 				}
 
-				if (!type.isAssignableFrom(nextProvderClass)) throw new SmartServiceConfigurationError(key, "Provider \"" + nextProviderName + "\" not a subtype of \"" + type + "\"!");
-				try {
-					final S provider = type.cast(nextProvderClass.newInstance());
-					loaded.put(nextProviderName, provider);
-					return provider;
-				} catch (Throwable throwable) {
-					throw new SmartServiceConfigurationError(key, "Provider \"" + nextProviderName + "\" could not be instantiated!", throwable);
-				}
+				if (!type.isAssignableFrom(nextProviderClass)) throw new SmartServiceConfigurationError(key, "Provider \"" + nextProviderName + "\" not a subtype of \"" + type + "\"!");
+				@SuppressWarnings("unchecked")
+				final Class<? extends S> retVal = (Class<? extends S>) nextProviderClass;
+				loaded.put(nextProviderName, retVal);
+				return retVal;
 			}
 		}
 
 		protected static final String PREFIX = "META-INF/services/";
+
+		protected static String readLine(BufferedReader reader) throws IOException {
+			String line = reader.readLine();
+			if (line != null) {
+				final int comment = line.indexOf('#');
+				if (comment >= 0) line = line.substring(0, comment);
+				line = line.trim();
+			}
+			return line;
+		}
 
 		protected final Class<?> key;
 
@@ -131,9 +138,13 @@ public class SplitTypedServiceLoader<S> implements IServiceLoader<S> {
 
 		protected final AccessControlContext acc;
 
-		protected final Map<String, S> loaded = new LinkedHashMap<>();
+		protected final Map<String, Class<? extends S>> loaded = new LinkedHashMap<>();
 
 		protected final ProviderLoader loader;
+
+		public InternalLoader(Class<?> key, Class<S> type) {
+			this(key, type, Thread.currentThread().getContextClassLoader());
+		}
 
 		public InternalLoader(Class<?> key, Class<S> type, ClassLoader classLoader) {
 			this.key = Objects.requireNonNull(key, "Key cannot be null");
@@ -144,11 +155,7 @@ public class SplitTypedServiceLoader<S> implements IServiceLoader<S> {
 			loader = new ProviderLoader();
 		}
 
-		public InternalLoader(Class<?> key, Class<S> type) {
-			this(key, type, Thread.currentThread().getContextClassLoader());
-		}
-
-		public Iterator<S> iterator() {
+		public Iterator<Class<? extends S>> iterator() {
 			return new ProviderIterator();
 		}
 
@@ -182,16 +189,6 @@ public class SplitTypedServiceLoader<S> implements IServiceLoader<S> {
 				throw new SmartServiceConfigurationError(key, "Error reading service configuration file", exception);
 			}
 		}
-
-		protected static String readLine(BufferedReader reader) throws IOException {
-			String line = reader.readLine();
-			if (line != null) {
-				final int comment = line.indexOf('#');
-				if (comment >= 0) line = line.substring(0, comment);
-				line = line.trim();
-			}
-			return line;
-		}
 	}
 
 	@Getter
@@ -200,7 +197,25 @@ public class SplitTypedServiceLoader<S> implements IServiceLoader<S> {
 	@Getter
 	protected final Class<S> type;
 
-	public Stream<? extends S> load() {
+	protected final Map<String, S> cached = new LinkedHashMap<>();
+
+	public Stream<? extends Class<? extends S>> find() {
 		return StreamSupport.stream(new InternalLoader<>(getKey(), getType()).spliterator(), false);
+	}
+
+	public Stream<? extends S> load() {
+		return find().map(s -> {
+			final String name = s.getName();
+			final S cached = this.cached.get(name);
+			if (cached != null) return cached;
+
+			try {
+				final S retVal = type.cast(s.newInstance());
+				this.cached.put(name, retVal);
+				return retVal;
+			} catch (Throwable throwable) {
+				throw new SmartServiceConfigurationError(key, "Provider \"" + name + "\" could not be instantiated!", throwable);
+			}
+		});
 	}
 }
