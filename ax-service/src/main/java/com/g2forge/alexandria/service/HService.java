@@ -9,7 +9,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.core.helpers.HRuntime;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
 import com.g2forge.alexandria.java.marker.Helpers;
@@ -57,6 +62,28 @@ public class HService {
 	}
 
 	public static <S> void writeSPIFile(Class<S> service, Class<? extends S> implementation) {
+		writeSPIFile(service, service, HCollection.asList(implementation));
+	}
+
+	public static <S> void writeSPIFile(Class<?> key, Class<S> type, Collection<? extends Class<? extends S>> implementations) {
+		final Map<SourceDirectory, List<Class<? extends S>>> grouped = implementations.stream().collect(Collectors.groupingBy(HService::getSourceDirectory));
+		for (Map.Entry<SourceDirectory, List<Class<? extends S>>> entry : grouped.entrySet()) {
+			try {
+				final Path directory = entry.getKey().getResources().resolve("META-INF/services");
+				Files.createDirectories(directory);
+				final Path file = directory.resolve(key.getName());
+				try (final BufferedWriter writer = Files.newBufferedWriter(file, StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
+					for (Class<? extends S> implementation : entry.getValue()) {
+						writer.append(String.format("%1$s%n", implementation.getName()));
+					}
+				}
+			} catch (IOException exception) {
+				throw new RuntimeIOException(exception);
+			}
+		}
+	}
+
+	protected static SourceDirectory getSourceDirectory(final Class<?> implementation) {
 		final URL url = HRuntime.whereFrom(implementation);
 
 		final URI uri;
@@ -84,16 +111,6 @@ public class HService {
 			if (sourceDirectory != null) break;
 		}
 		if (sourceDirectory == null) throw new RuntimeException("Did not recognize layout of class path!");
-
-		try {
-			final Path directory = sourceDirectory.getResources().resolve("META-INF/services");
-			Files.createDirectories(directory);
-			final Path file = directory.resolve(service.getName());
-			try (final BufferedWriter writer = Files.newBufferedWriter(file, StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
-				writer.append(String.format("%1$s%n", implementation.getName()));
-			}
-		} catch (IOException exception) {
-			throw new RuntimeIOException(exception);
-		}
+		return sourceDirectory;
 	}
 }
