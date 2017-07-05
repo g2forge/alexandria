@@ -138,15 +138,15 @@ public class BasicServiceLoader<S> implements IServiceLoader<S> {
 	protected final ProviderLoader loader;
 
 	public BasicServiceLoader(Class<?> key, Class<S> type) {
-		this(key, type, Thread.currentThread().getContextClassLoader(), null);
+		this(key, type, null, null);
 	}
 
 	public BasicServiceLoader(Class<?> key, Class<S> type, ClassLoader classLoader, ITypedFunction1<S> instantiator) {
-		this.key = Objects.requireNonNull(key, "Key cannot be null");
+		this.key = key == null ? type : key;
 		this.type = Objects.requireNonNull(type, "Type cannot be null");
 		this.instantiator = instantiator == null ? new DefaultInstantiator<>(this) : instantiator;
 
-		this.classLoader = (classLoader == null) ? ClassLoader.getSystemClassLoader() : classLoader;
+		this.classLoader = (classLoader == null) ? Thread.currentThread().getContextClassLoader() : classLoader;
 		this.acc = (System.getSecurityManager() != null) ? AccessController.getContext() : null;
 		loaded.clear();
 		loader = new ProviderLoader();
