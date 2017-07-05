@@ -2,11 +2,11 @@ package com.g2forge.alexandria.service;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.g2forge.alexandria.java.core.helpers.HCollection;
 
 public class TestFeatureServiceLoader {
 	public static interface IFancy extends IService {}
@@ -35,20 +35,19 @@ public class TestFeatureServiceLoader {
 	}
 
 	public static void main(String... args) {
-		HService.writeSPIFile(TestFeatureServiceLoader.IService.class, TestFeatureServiceLoader.Service1.class);
-		HService.writeSPIFile(TestFeatureServiceLoader.IService.class, TestFeatureServiceLoader.Service2.class);
+		HService.writeSPIFile(IService.class, Service1.class, Service2.class);
 	}
 
 	@Test
 	public void test() {
 		final IServiceLoader<IService> loader = new FeatureServiceLoader<>(IService.class);
 		// Test the specific loads
-		Assert.assertEquals(Service1.class.getSimpleName(), loader.load(Service1.class).findAny().get().getValue());
-		Assert.assertEquals(Service2.class.getName(), loader.load(Service2.class).findAny().get().getValue());
-		
+		Assert.assertEquals(Service1.class.getSimpleName(), loader.load(Service1.class).stream().findAny().get().getValue());
+		Assert.assertEquals(Service2.class.getName(), loader.load(Service2.class).stream().findAny().get().getValue());
+
 		// Test feature based shadowing
-		final List<? extends IService> services = loader.load().collect(Collectors.toList());
+		final Collection<? extends IService> services = loader.load().toCollection();
 		Assert.assertEquals(1, services.size());
-		Assert.assertTrue(services.get(0) instanceof IFancy);
+		Assert.assertTrue(HCollection.getOne(services) instanceof IFancy);
 	}
 }

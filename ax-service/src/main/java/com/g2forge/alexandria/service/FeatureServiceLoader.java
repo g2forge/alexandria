@@ -1,6 +1,7 @@
 package com.g2forge.alexandria.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.LinkedList;
@@ -10,6 +11,11 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import com.g2forge.alexandria.java.core.iface.CollectionStreamable;
+import com.g2forge.alexandria.java.core.iface.IStreamable;
+import com.g2forge.alexandria.java.function.typed.ITypedFunction1;
+import com.g2forge.alexandria.java.function.typed.TypedMapIterator;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -48,9 +54,10 @@ public class FeatureServiceLoader<S> implements IServiceLoader<S> {
 			raw.add(getType());
 
 			final Consumer<IServiceFeatureHierarchy<S>> adder = h -> h.getFeatureInterfaces().stream().filter(c -> getType().isAssignableFrom(c)).forEach(raw::add);
-			getBasic().load().filter(s -> s instanceof IServiceFeatureHierarchy).map(h -> {
+			getBasic().find().stream().filter(s -> IServiceFeatureHierarchy.class.isAssignableFrom(s)).map(h -> {
+				final S instance = instantiator.apply(h);
 				@SuppressWarnings("unchecked")
-				final IServiceFeatureHierarchy<S> cast = (IServiceFeatureHierarchy<S>) h;
+				final IServiceFeatureHierarchy<S> cast = (IServiceFeatureHierarchy<S>) instance;
 				return cast;
 			}).forEach(adder);
 
@@ -76,8 +83,8 @@ public class FeatureServiceLoader<S> implements IServiceLoader<S> {
 			this.features = new ArrayList<>(features);
 		}
 
-		public Set<Class<? extends S>> computeFeatures(S instance) {
-			return features.stream().filter(f -> f.isInstance(instance)).collect(Collectors.toSet());
+		public Set<Class<? extends S>> computeFeatures(Class<? extends S> type) {
+			return features.stream().filter(f -> f.isAssignableFrom(type)).collect(Collectors.toSet());
 		}
 	}
 
@@ -87,16 +94,60 @@ public class FeatureServiceLoader<S> implements IServiceLoader<S> {
 	@Getter(AccessLevel.PROTECTED)
 	protected final IServiceLoader<? extends IServiceFeatureHierarchy<S>> hierarchy;
 
+	@Getter(AccessLevel.PROTECTED)
+	protected final ITypedFunction1<S> instantiator;
+
 	@Getter(value = AccessLevel.PROTECTED, lazy = true)
 	private final Features features = new Features();
 
 	public FeatureServiceLoader(Class<S> type) {
-		this(type, null);
+		this(type, null, null);
 	}
 
-	public FeatureServiceLoader(Class<S> type, Class<? extends IServiceFeatureHierarchy<S>> hierarchy) {
+	public FeatureServiceLoader(Class<S> type, Class<? extends IServiceFeatureHierarchy<S>> hierarchy, ITypedFunction1<S> instantiator) {
 		this.basic = new BasicServiceLoader<>(type);
 		this.hierarchy = hierarchy == null ? null : new BasicServiceLoader<>(hierarchy);
+		this.instantiator = instantiator == null ? new DefaultInstantiator<>(this) : instantiator;
+	}
+
+	protected <_S extends S> IStreamable<? extends Class<? extends _S>> best(final IStreamable<? extends Class<? extends S>> stream, Class<_S> subtype) {
+		final Collection<? extends Class<? extends S>> list = stream.toCollection();
+		final Map<Class<? extends _S>, Set<Class<? extends S>>> map = new IdentityHashMap<>();
+		for (Class<? extends S> service : list) {
+			if ((subtype != null) && !subtype.isAssignableFrom(service)) continue;
+			@SuppressWarnings("unchecked")
+			final Class<? extends _S> cast = (Class<? extends _S>) service;
+
+			final Set<Class<? extends S>> features = getFeatures().computeFeatures(cast);
+			boolean shadowed = false;
+			final Map<Class<? extends S>, Object> remove = new IdentityHashMap<>();
+			for (Map.Entry<Class<? extends _S>, Set<Class<? extends S>>> entry : map.entrySet()) {
+				if (entry.getValue().containsAll(features)) {
+					shadowed = true;
+					break;
+				} else if (features.containsAll(entry.getValue())) remove.put(entry.getKey(), cast);
+			}
+			if (!shadowed) {
+				remove.keySet().forEach(map::remove);
+				map.put(cast, features);
+			}
+		}
+		return new CollectionStreamable<>(map.keySet());
+	}
+
+	@Override
+	public IStreamable<? extends Class<? extends S>> find() {
+		return find(null);
+	}
+
+	@Override
+	public <_S extends S> IStreamable<? extends Class<? extends _S>> find(Class<_S> subtype) {
+		return best(getBasic().find(), subtype);
+	}
+
+	@Override
+	public Class<?> getKey() {
+		return getBasic().getKey();
 	}
 
 	@Override
@@ -104,34 +155,13 @@ public class FeatureServiceLoader<S> implements IServiceLoader<S> {
 		return getBasic().getType();
 	}
 
-	public Stream<? extends S> load() {
-		return best(getBasic().load());
+	@Override
+	public IStreamable<? extends S> load() {
+		return load(null);
 	}
 
-	public <_S extends S> Stream<? extends S> load(Class<_S> subtype) {
-		return best(getBasic().load(subtype));
-	}
-
-	protected Stream<? extends S> best(final Stream<? extends S> stream) {
-		final List<S> list = stream.collect(Collectors.toList());
-		if (list.size() < 2) return list.stream();
-
-		final Map<S, Set<Class<? extends S>>> map = new IdentityHashMap<>();
-		for (S service : list) {
-			final Set<Class<? extends S>> features = getFeatures().computeFeatures(service);
-			boolean shadowed = false;
-			final Map<S, Object> remove = new IdentityHashMap<>();
-			for (Map.Entry<S, Set<Class<? extends S>>> entry : map.entrySet()) {
-				if (entry.getValue().containsAll(features)) {
-					shadowed = true;
-					break;
-				} else if (features.containsAll(entry.getValue())) remove.put(entry.getKey(), service);
-			}
-			if (!shadowed) {
-				remove.keySet().forEach(map::remove);
-				map.put(service, features);
-			}
-		}
-		return map.keySet().stream();
+	@Override
+	public <_S extends S> IStreamable<_S> load(Class<_S> subtype) {
+		return () -> new TypedMapIterator<S, _S>(find(subtype).iterator(), instantiator);
 	}
 }

@@ -96,4 +96,8 @@ public class HStream {
 	public static <T> Stream<? extends ITuple2G_<Integer, T>> toStreamIndexed(List<? extends T> list) {
 		return IntStream.range(0, list.size()).mapToObj(i -> new Tuple2G_O<>(i, list.get(i)));
 	}
+
+	public static <T> Stream<T> subtype(Stream<?> stream, Class<T> subtype) {
+		return stream.filter(s -> subtype.isInstance(s)).map(subtype::cast);
+	}
 }

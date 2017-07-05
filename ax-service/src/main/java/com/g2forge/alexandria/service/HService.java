@@ -61,8 +61,9 @@ public class HService {
 		public abstract SourceDirectory createFromTarget(Path path);
 	}
 
-	public static <S> void writeSPIFile(Class<S> service, Class<? extends S> implementation) {
-		writeSPIFile(service, service, HCollection.asList(implementation));
+	@SafeVarargs
+	public static <S> void writeSPIFile(Class<S> service, Class<? extends S>... implementations) {
+		writeSPIFile(service, service, HCollection.asList(implementations));
 	}
 
 	public static <S> void writeSPIFile(Class<?> key, Class<S> type, Collection<? extends Class<? extends S>> implementations) {

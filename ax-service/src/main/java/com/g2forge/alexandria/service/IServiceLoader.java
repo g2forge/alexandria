@@ -1,21 +1,31 @@
 package com.g2forge.alexandria.service;
 
-import java.util.stream.Stream;
+import java.util.Iterator;
+
+import com.g2forge.alexandria.java.core.helpers.HStream;
+import com.g2forge.alexandria.java.core.iface.IStreamable;
 
 public interface IServiceLoader<S> {
-	public default Stream<? extends Class<? extends S>> find() {
-		return load().map(s -> {
+	public IStreamable<? extends Class<? extends S>> find();
+
+	public default <_S extends S> IStreamable<? extends Class<? extends _S>> find(Class<_S> subtype) {
+		return () -> {
 			@SuppressWarnings("unchecked")
-			final Class<? extends S> retVal = (Class<? extends S>) s.getClass();
-			return retVal;
-		});
+			final Iterator<Class<? extends _S>> cast = (Iterator<Class<? extends _S>>) find().stream().filter(s -> subtype.isAssignableFrom(s)).iterator();
+			return cast;
+		};
 	}
+
+	public Class<?> getKey();
 
 	public Class<S> getType();
 
-	public Stream<? extends S> load();
+	public IStreamable<? extends S> load();
 
-	public default <_S extends S> Stream<? extends S> load(Class<_S> subtype) {
-		return load().filter(s -> subtype.isInstance(s)).map(subtype::cast);
+	public default <_S extends S> IStreamable<_S> load(Class<_S> subtype) {
+		return () -> {
+			final Iterator<_S> iterator = HStream.subtype(load().stream(), subtype).iterator();
+			return iterator;
+		};
 	}
 }
