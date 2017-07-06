@@ -1,6 +1,6 @@
 package com.g2forge.alexandria.java.typed;
 
-import com.g2forge.alexandria.annotations.TODO;
+import com.g2forge.alexandria.annotations.message.TODO;
 import com.g2forge.alexandria.java.core.error.NotYetImplementedError;
 
 public interface IDynamicType<T> {
