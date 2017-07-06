@@ -10,6 +10,7 @@ import java.util.Spliterators;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -28,33 +29,10 @@ public class HStream {
 		return Arrays.stream(streams).reduce(Stream::concat).get().map(t -> t);
 	}
 
-	public static <I0, I1, O> Stream<O> zip(Stream<? extends I0> stream0, Stream<? extends I1> stream1, BiFunction<? super I0, ? super I1, ? extends O> func) {
-		Objects.requireNonNull(func);
-		final Spliterator<? extends I0> spliterator0 = Objects.requireNonNull(stream0).spliterator();
-		final Spliterator<? extends I1> spliterator1 = Objects.requireNonNull(stream1).spliterator();
-
-		final Iterator<O> iteratorO = new Iterator<O>() {
-			protected final Iterator<I0> iterator0 = Spliterators.iterator(spliterator0);
-
-			protected final Iterator<I1> iterator1 = Spliterators.iterator(spliterator1);
-
-			@Override
-			public boolean hasNext() {
-				return iterator0.hasNext() && iterator1.hasNext();
-			}
-
-			@Override
-			public O next() {
-				return func.apply(iterator0.next(), iterator1.next());
-			}
-		};
-
-		// Characteristics intersection, and the result isn't sorted
-		final int characteristics = spliterator0.characteristics() & spliterator1.characteristics() & ~Spliterator.SORTED;
-		// Compute the size if we can
-		final long size = ((characteristics & Spliterator.SIZED) != 0) ? Math.min(spliterator0.getExactSizeIfKnown(), spliterator1.getExactSizeIfKnown()) : -1;
-		final Spliterator<O> split = Spliterators.spliterator(iteratorO, size, characteristics);
-		return (stream0.isParallel() || stream1.isParallel()) ? StreamSupport.stream(split, true) : StreamSupport.stream(split, false);
+	public static <T> T findOne(Stream<? extends T> stream) {
+		final List<T> list = stream.collect(Collectors.toList());
+		if (list.size() != 1) throw new IllegalArgumentException();
+		return list.get(0);
 	}
 
 	public static <I, O> O iterate(Stream<? extends I> stream, O initial, BiFunction<? super I, ? super O, ? extends O> mutate) {
@@ -99,5 +77,34 @@ public class HStream {
 
 	public static <T> Stream<T> subtype(Stream<?> stream, Class<T> subtype) {
 		return stream.filter(s -> subtype.isInstance(s)).map(subtype::cast);
+	}
+
+	public static <I0, I1, O> Stream<O> zip(Stream<? extends I0> stream0, Stream<? extends I1> stream1, BiFunction<? super I0, ? super I1, ? extends O> func) {
+		Objects.requireNonNull(func);
+		final Spliterator<? extends I0> spliterator0 = Objects.requireNonNull(stream0).spliterator();
+		final Spliterator<? extends I1> spliterator1 = Objects.requireNonNull(stream1).spliterator();
+
+		final Iterator<O> iteratorO = new Iterator<O>() {
+			protected final Iterator<I0> iterator0 = Spliterators.iterator(spliterator0);
+
+			protected final Iterator<I1> iterator1 = Spliterators.iterator(spliterator1);
+
+			@Override
+			public boolean hasNext() {
+				return iterator0.hasNext() && iterator1.hasNext();
+			}
+
+			@Override
+			public O next() {
+				return func.apply(iterator0.next(), iterator1.next());
+			}
+		};
+
+		// Characteristics intersection, and the result isn't sorted
+		final int characteristics = spliterator0.characteristics() & spliterator1.characteristics() & ~Spliterator.SORTED;
+		// Compute the size if we can
+		final long size = ((characteristics & Spliterator.SIZED) != 0) ? Math.min(spliterator0.getExactSizeIfKnown(), spliterator1.getExactSizeIfKnown()) : -1;
+		final Spliterator<O> split = Spliterators.spliterator(iteratorO, size, characteristics);
+		return (stream0.isParallel() || stream1.isParallel()) ? StreamSupport.stream(split, true) : StreamSupport.stream(split, false);
 	}
 }

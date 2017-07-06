@@ -57,9 +57,9 @@ public class HCollection {
 	}
 
 	@SafeVarargs
-	public static <T> Collection<T> concatenate(final Collection<? extends T>... collections) {
+	public static <T> List<T> concatenate(final Collection<? extends T>... collections) {
 		if (collections == null) return null;
-		final Collection<T> retVal = new ArrayList<>();
+		final List<T> retVal = new ArrayList<>();
 		for (Collection<? extends T> collection : collections) {
 			if (collection != null) retVal.addAll(collection);
 		}
