@@ -39,6 +39,7 @@ public interface ITypeRef<T> extends IDynamicType<T> {
 		return getErasedType().cast(value);
 	}
 
+	@TODO("Properly implement erasure")
 	public default Class<T> getErasedType() {
 		// TODO: Properly implement erasure here
 		@SuppressWarnings("unchecked")
@@ -52,6 +53,11 @@ public interface ITypeRef<T> extends IDynamicType<T> {
 	 * @return The dynamic (runtime) type of <code>T</code>.
 	 */
 	public Type getType();
+
+	@TODO("Implementation is neither general to all dynamic types, nor generic-safe")
+	public default boolean isAssignableFrom(IDynamicType<?> type) {
+		return getErasedType().isAssignableFrom(((ITypeRef<?>) type).getErasedType());
+	}
 
 	public default boolean isInstance(Object value) {
 		return getErasedType().isInstance(value);

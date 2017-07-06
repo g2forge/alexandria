@@ -4,7 +4,9 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import com.g2forge.alexandria.java.marker.Helpers;
 
@@ -16,6 +18,33 @@ public class HBinaryIO {
 	public static int checkMagicAndGetVersion(final InputStream input, final byte[] magic) {
 		if (!Arrays.equals(read(input, magic.length), magic)) throw new IllegalDataException("Stored data lacked the magic header, perhaps it's a different object type!");
 		return readInt(input);
+	}
+
+	public static byte[] read(final InputStream input) {
+		int total = 0;
+		final List<byte[]> buffers = new ArrayList<>();
+		while (true) {
+			final byte[] buffer = new byte[HIO.getRecommendedBufferSize()];
+			final int actual;
+			try {
+				actual = input.read(buffer);
+			} catch (final IOException exception) {
+				throw new RuntimeIOException(exception);
+			}
+			if (actual < 0) break;
+
+			total += actual;
+			if (actual != buffer.length) buffers.add(Arrays.copyOf(buffer, actual));
+			else buffers.add(buffer);
+		}
+
+		final byte[] retVal = new byte[total];
+		int offset = 0;
+		for (byte[] buffer : buffers) {
+			System.arraycopy(buffer, 0, retVal, offset, buffer.length);
+			offset += buffer.length;
+		}
+		return retVal;
 	}
 
 	public static byte[] read(final InputStream input, final int length) {
