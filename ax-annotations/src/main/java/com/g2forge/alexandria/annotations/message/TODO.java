@@ -1,13 +1,16 @@
-package com.g2forge.alexandria.annotations;
+package com.g2forge.alexandria.annotations.message;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.g2forge.alexandria.annotations.Handler;
+
 @Retention(RetentionPolicy.SOURCE)
 @Target({ ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.CONSTRUCTOR, ElementType.LOCAL_VARIABLE, ElementType.ANNOTATION_TYPE, ElementType.PACKAGE, ElementType.TYPE_PARAMETER, ElementType.TYPE_USE })
-@MessageAnnotation(value = "TODO", handler = TODOMessageAnnotationHandler.class)
+@Handler(TODOMessageAnnotationHandler.class)
+@Message(value = "TODO")
 public @interface TODO {
 	/**
 	 * A message which should be reported during compilation.

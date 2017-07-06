@@ -2,7 +2,7 @@ package com.g2forge.alexandria.java.typed;
 
 import java.lang.reflect.Type;
 
-import com.g2forge.alexandria.annotations.TODO;
+import com.g2forge.alexandria.annotations.message.TODO;
 
 /**
  * Captures the relationship between the static type <code>T</code> and the runtime type {@link #getType()}. Due to the lack of proper generic support in the Java reflection
