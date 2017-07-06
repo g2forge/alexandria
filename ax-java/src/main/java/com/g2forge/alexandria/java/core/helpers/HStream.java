@@ -75,6 +75,10 @@ public class HStream {
 		return IntStream.range(0, list.size()).mapToObj(i -> new Tuple2G_O<>(i, list.get(i)));
 	}
 
+	public static <T> Stream<T> subtype(Stream<?> stream, Class<T> subtype) {
+		return stream.filter(s -> subtype.isInstance(s)).map(subtype::cast);
+	}
+
 	public static <I0, I1, O> Stream<O> zip(Stream<? extends I0> stream0, Stream<? extends I1> stream1, BiFunction<? super I0, ? super I1, ? extends O> func) {
 		Objects.requireNonNull(func);
 		final Spliterator<? extends I0> spliterator0 = Objects.requireNonNull(stream0).spliterator();

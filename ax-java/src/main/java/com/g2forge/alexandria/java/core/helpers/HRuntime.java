@@ -12,7 +12,10 @@ public class HRuntime {
 	public static URL whereFrom(Object object) {
 		if (object == null) return null;
 		final Class<?> type = object.getClass();
-		
+		return whereFrom(type);
+	}
+
+	public static URL whereFrom(final Class<?> type) {
 		final ClassLoader loader;
 		if (type.getClassLoader() == null) {
 			// Find the bootstrap loader
@@ -24,12 +27,16 @@ public class HRuntime {
 		} else {
 			loader = type.getClassLoader();
 		}
-		
-		if (loader != null) {
-			final String name = type.getCanonicalName();
-			return loader.getResource(name.replace(".", "/") + ".class");
+
+		if (loader == null) return null;
+
+		Class<?> top = type;
+		while (top.getEnclosingClass() != null) {
+			top = top.getEnclosingClass();
 		}
-		return null;
+
+		final String name = top.getCanonicalName();
+		return loader.getResource(name.replace(".", "/") + ".class");
 	}
-	
+
 }
