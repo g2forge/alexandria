@@ -6,6 +6,7 @@ import java.lang.reflect.Type;
 import com.g2forge.alexandria.java.core.error.ReflectedCodeError;
 
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * Abstract implementation of {@link ITypeRef} used to statically capture a parameterized (generic) Java type. If you the type <code>T</code> is not parameterized, you may
@@ -16,7 +17,8 @@ import lombok.Getter;
  * @param <T>
  *            The (static) Java type to capture.
  */
-public abstract class ATypeRef<T> implements ITypeRef<T> {
+@ToString
+public abstract class ATypeRef<T> extends ATypeRefIdentity<T> {
 	@Getter
 	protected final Type type;
 
