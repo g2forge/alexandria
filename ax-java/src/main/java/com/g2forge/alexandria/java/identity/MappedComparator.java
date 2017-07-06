@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.compare;
+package com.g2forge.alexandria.java.identity;
 
 import java.util.Comparator;
 import java.util.function.Function;

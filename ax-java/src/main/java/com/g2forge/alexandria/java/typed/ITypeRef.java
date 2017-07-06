@@ -4,10 +4,6 @@ import java.lang.reflect.Type;
 
 import com.g2forge.alexandria.annotations.message.TODO;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
-
 /**
  * Captures the relationship between the static type <code>T</code> and the runtime type {@link #getType()}. Due to the lack of proper generic support in the Java reflection
  * library, this interface is currently not statically type safe. As such implementors are responsible for type safety.
@@ -32,6 +28,7 @@ public interface ITypeRef<T> extends IDynamicType<T> {
 		return getErasedType().cast(value);
 	}
 
+	@TODO("Properly implement erasure")
 	public default Class<T> getErasedType() {
 		// TODO: Properly implement erasure here
 		@SuppressWarnings("unchecked")
@@ -45,6 +42,11 @@ public interface ITypeRef<T> extends IDynamicType<T> {
 	 * @return The dynamic (runtime) type of <code>T</code>.
 	 */
 	public Type getType();
+
+	@TODO("Implementation is neither general to all dynamic types, nor generic-safe")
+	public default boolean isAssignableFrom(IDynamicType<?> type) {
+		return getErasedType().isAssignableFrom(((ITypeRef<?>) type).getErasedType());
+	}
 
 	public default boolean isInstance(Object value) {
 		return getErasedType().isInstance(value);
