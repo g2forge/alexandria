@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.ServiceConfigurationError;
 
-import com.g2forge.alexandria.java.core.iface.IStreamable;
+import com.g2forge.alexandria.collection.ICollection;
 import com.g2forge.alexandria.java.function.typed.ITypedFunction1;
 import com.g2forge.alexandria.java.function.typed.TypedMapIterator;
 
@@ -157,12 +157,12 @@ public class BasicServiceLoader<S> implements IServiceLoader<S> {
 	}
 
 	@Override
-	public IStreamable<? extends Class<? extends S>> find() {
+	public ICollection<? extends Class<? extends S>> find() {
 		return ProviderIterator::new;
 	}
 
 	@Override
-	public IStreamable<? extends S> load() {
+	public ICollection<? extends S> load() {
 		return () -> new TypedMapIterator<>(find().iterator(), instantiator);
 	}
 

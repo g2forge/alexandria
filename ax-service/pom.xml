@@ -11,7 +11,15 @@
 		<version>0.0.3-SNAPSHOT</version>
 		<relativePath>../ax-project/pom.xml</relativePath>
 	</parent>
-	
+
 	<name>${alexandria.name} Service</name>
 	<description>Common library for service (SPI) loading.</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.g2forge.alexandria</groupId>
+			<artifactId>ax-collection</artifactId>
+			<version>${alexandria.version}</version>
+		</dependency>
+	</dependencies>
 </project>

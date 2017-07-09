@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.core.iface;
+package com.g2forge.alexandria.collection;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 @FunctionalInterface
-public interface IStreamable<T> extends Iterable<T> {
+public interface ICollection<T> extends Iterable<T> {
 	public default Stream<T> stream() {
 		return StreamSupport.stream(spliterator(), false);
 	}
