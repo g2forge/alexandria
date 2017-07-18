@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 
 import com.g2forge.alexandria.collection.CollectionCollection;
 import com.g2forge.alexandria.collection.ICollection;
+import com.g2forge.alexandria.collection.IIteratorCollection;
 import com.g2forge.alexandria.java.function.typed.ITypedFunction1;
 import com.g2forge.alexandria.java.function.typed.TypedMapIterator;
 
@@ -110,8 +111,8 @@ public class FeatureServiceLoader<S> implements IServiceLoader<S> {
 		this.instantiator = instantiator == null ? new DefaultInstantiator<>(this) : instantiator;
 	}
 
-	protected <_S extends S> ICollection<? extends Class<? extends _S>> best(final ICollection<? extends Class<? extends S>> stream, Class<_S> subtype) {
-		final Collection<? extends Class<? extends S>> list = stream.toCollection();
+	protected <_S extends S> ICollection<? extends Class<? extends _S>> best(final ICollection<? extends Class<? extends S>> collection, Class<_S> subtype) {
+		final Collection<? extends Class<? extends S>> list = collection.toCollection();
 		final Map<Class<? extends _S>, Set<Class<? extends S>>> map = new IdentityHashMap<>();
 		for (Class<? extends S> service : list) {
 			if ((subtype != null) && !subtype.isAssignableFrom(service)) continue;
@@ -162,6 +163,6 @@ public class FeatureServiceLoader<S> implements IServiceLoader<S> {
 
 	@Override
 	public <_S extends S> ICollection<_S> load(Class<_S> subtype) {
-		return () -> new TypedMapIterator<S, _S>(find(subtype).iterator(), instantiator);
+		return ((IIteratorCollection<_S>) () -> new TypedMapIterator<S, _S>(find(subtype).iterator(), instantiator));
 	}
 }

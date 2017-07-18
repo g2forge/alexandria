@@ -18,6 +18,7 @@ import java.util.Objects;
 import java.util.ServiceConfigurationError;
 
 import com.g2forge.alexandria.collection.ICollection;
+import com.g2forge.alexandria.collection.IIteratorCollection;
 import com.g2forge.alexandria.java.function.typed.ITypedFunction1;
 import com.g2forge.alexandria.java.function.typed.TypedMapIterator;
 
@@ -158,12 +159,12 @@ public class BasicServiceLoader<S> implements IServiceLoader<S> {
 
 	@Override
 	public ICollection<? extends Class<? extends S>> find() {
-		return ProviderIterator::new;
+		return ((IIteratorCollection<? extends Class<? extends S>>) ProviderIterator::new);
 	}
 
 	@Override
 	public ICollection<? extends S> load() {
-		return () -> new TypedMapIterator<>(find().iterator(), instantiator);
+		return ((IIteratorCollection<? extends S>) () -> new TypedMapIterator<>(find().iterator(), instantiator));
 	}
 
 	protected Iterator<String> parse(URL url) throws ServiceConfigurationError {
