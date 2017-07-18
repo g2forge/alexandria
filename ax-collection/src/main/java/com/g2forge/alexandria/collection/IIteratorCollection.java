@@ -5,6 +5,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+/**
+ * Sub-interface of {@link ICollection} which allows functional implementation of just the {@link ICollection#iterator()} method.
+ * 
+ * @author greg
+ *
+ * @param <T>
+ */
 @FunctionalInterface
 public interface IIteratorCollection<T> extends ICollection<T> {
 	public default Stream<T> stream() {
