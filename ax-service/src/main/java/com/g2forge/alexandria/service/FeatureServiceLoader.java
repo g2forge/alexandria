@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 import com.g2forge.alexandria.collection.CollectionCollection;
 import com.g2forge.alexandria.collection.ICollection;
-import com.g2forge.alexandria.collection.IIteratorCollection;
+import com.g2forge.alexandria.collection.DIteratorCollection;
 import com.g2forge.alexandria.java.function.typed.ITypedFunction1;
 import com.g2forge.alexandria.java.function.typed.TypedMapIterator;
 
@@ -163,6 +163,6 @@ public class FeatureServiceLoader<S> implements IServiceLoader<S> {
 
 	@Override
 	public <_S extends S> ICollection<_S> load(Class<_S> subtype) {
-		return ((IIteratorCollection<_S>) () -> new TypedMapIterator<S, _S>(find(subtype).iterator(), instantiator));
+		return ((DIteratorCollection<_S>) () -> new TypedMapIterator<S, _S>(find(subtype).iterator(), instantiator));
 	}
 }

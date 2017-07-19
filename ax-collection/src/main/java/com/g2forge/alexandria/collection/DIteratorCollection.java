@@ -13,7 +13,7 @@ import java.util.stream.StreamSupport;
  * @param <T>
  */
 @FunctionalInterface
-public interface IIteratorCollection<T> extends ICollection<T> {
+public interface DIteratorCollection<T> extends ICollection<T> {
 	public default Stream<T> stream() {
 		return StreamSupport.stream(spliterator(), false);
 	}

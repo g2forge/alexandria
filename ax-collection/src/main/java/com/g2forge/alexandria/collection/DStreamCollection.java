@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * @param <T>
  */
 @FunctionalInterface
-public interface IStreamCollection<T> extends ICollection<T> {
+public interface DStreamCollection<T> extends ICollection<T> {
 	public default Iterator<T> iterator() {
 		return stream().iterator();
 	}

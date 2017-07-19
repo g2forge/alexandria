@@ -11,7 +11,7 @@ import java.util.stream.Stream;
  * @param <T>
  */
 @FunctionalInterface
-public interface ICollectionCollection<T> extends ICollection<T> {
+public interface DCollectionCollection<T> extends ICollection<T> {
 	public default Iterator<T> iterator() {
 		return toCollection().iterator();
 	}
