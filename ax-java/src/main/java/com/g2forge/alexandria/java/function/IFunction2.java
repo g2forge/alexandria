@@ -20,6 +20,14 @@ public interface IFunction2<I0, I1, O> extends BiFunction<I0, I1, O> {
 		return i0 -> apply(i0, before.get());
 	}
 
+	public default IFunction1<I1, O> compute0(IFunction1<? super I1, ? extends I0> i0) {
+		return i1 -> this.apply(i0.apply(i1), i1);
+	}
+
+	public default IFunction1<I0, O> compute1(IFunction1<? super I0, ? extends I1> i1) {
+		return i0 -> this.apply(i0, i1.apply(i0));
+	}
+
 	public default IFunction1<I1, O> curry0(I0 input0) {
 		return input1 -> apply(input0, input1);
 	}
