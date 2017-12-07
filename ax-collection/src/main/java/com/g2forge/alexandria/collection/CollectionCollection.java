@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.core.iface;
+package com.g2forge.alexandria.collection;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CollectionStreamable<T> implements IStreamable<T> {
+public class CollectionCollection<T> implements ICollection<T> {
 	protected final Collection<T> collection;
 
 	@Override

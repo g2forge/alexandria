@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -199,5 +200,13 @@ public class HCollection {
 			retVal.add(value);
 		}
 		return retVal;
+	}
+
+	public static <T> List<T> sort(Collection<? extends T> collection, Comparator<? super T> comparator) {
+		if (collection == null) return HCollection.emptyList();
+
+		final List<T> sorted = new ArrayList<>(collection);
+		Collections.sort(sorted, comparator);
+		return sorted;
 	}
 }

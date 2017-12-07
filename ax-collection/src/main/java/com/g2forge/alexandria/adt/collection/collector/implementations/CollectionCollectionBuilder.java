@@ -4,15 +4,11 @@ import java.util.Collection;
 
 import com.g2forge.alexandria.adt.collection.collector.ICollectionBuilder;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class CollectionCollectionBuilder<C extends Collection<? super T>, T> implements ICollectionBuilder<C, T> {
 	protected final C collection;
-
-	/**
-	 * @param collection
-	 */
-	public CollectionCollectionBuilder(C collection) {
-		this.collection = collection;
-	}
 
 	@Override
 	public ICollectionBuilder<C, T> add(Iterable<? extends T> values) {

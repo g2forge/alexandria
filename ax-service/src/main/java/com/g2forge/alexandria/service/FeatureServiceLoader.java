@@ -12,8 +12,9 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.g2forge.alexandria.java.core.iface.CollectionStreamable;
-import com.g2forge.alexandria.java.core.iface.IStreamable;
+import com.g2forge.alexandria.collection.CollectionCollection;
+import com.g2forge.alexandria.collection.ICollection;
+import com.g2forge.alexandria.collection.DIteratorCollection;
 import com.g2forge.alexandria.java.function.typed.ITypedFunction1;
 import com.g2forge.alexandria.java.function.typed.TypedMapIterator;
 
@@ -110,8 +111,8 @@ public class FeatureServiceLoader<S> implements IServiceLoader<S> {
 		this.instantiator = instantiator == null ? new DefaultInstantiator<>(this) : instantiator;
 	}
 
-	protected <_S extends S> IStreamable<? extends Class<? extends _S>> best(final IStreamable<? extends Class<? extends S>> stream, Class<_S> subtype) {
-		final Collection<? extends Class<? extends S>> list = stream.toCollection();
+	protected <_S extends S> ICollection<? extends Class<? extends _S>> best(final ICollection<? extends Class<? extends S>> collection, Class<_S> subtype) {
+		final Collection<? extends Class<? extends S>> list = collection.toCollection();
 		final Map<Class<? extends _S>, Set<Class<? extends S>>> map = new IdentityHashMap<>();
 		for (Class<? extends S> service : list) {
 			if ((subtype != null) && !subtype.isAssignableFrom(service)) continue;
@@ -132,16 +133,16 @@ public class FeatureServiceLoader<S> implements IServiceLoader<S> {
 				map.put(cast, features);
 			}
 		}
-		return new CollectionStreamable<>(map.keySet());
+		return new CollectionCollection<>(map.keySet());
 	}
 
 	@Override
-	public IStreamable<? extends Class<? extends S>> find() {
+	public ICollection<? extends Class<? extends S>> find() {
 		return find(null);
 	}
 
 	@Override
-	public <_S extends S> IStreamable<? extends Class<? extends _S>> find(Class<_S> subtype) {
+	public <_S extends S> ICollection<? extends Class<? extends _S>> find(Class<_S> subtype) {
 		return best(getBasic().find(), subtype);
 	}
 
@@ -156,12 +157,12 @@ public class FeatureServiceLoader<S> implements IServiceLoader<S> {
 	}
 
 	@Override
-	public IStreamable<? extends S> load() {
+	public ICollection<? extends S> load() {
 		return load(null);
 	}
 
 	@Override
-	public <_S extends S> IStreamable<_S> load(Class<_S> subtype) {
-		return () -> new TypedMapIterator<S, _S>(find(subtype).iterator(), instantiator);
+	public <_S extends S> ICollection<_S> load(Class<_S> subtype) {
+		return ((DIteratorCollection<_S>) () -> new TypedMapIterator<S, _S>(find(subtype).iterator(), instantiator));
 	}
 }
