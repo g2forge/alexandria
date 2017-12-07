@@ -1,5 +1,6 @@
 package com.g2forge.alexandria.java.associative.map;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -16,5 +17,9 @@ public class HMap {
 		final V retVal = function.apply(key);
 		map.put(key, retVal);
 		return retVal;
+	}
+
+	public static <K, V> Map<K, V> empty() {
+		return Collections.emptyMap();
 	}
 }

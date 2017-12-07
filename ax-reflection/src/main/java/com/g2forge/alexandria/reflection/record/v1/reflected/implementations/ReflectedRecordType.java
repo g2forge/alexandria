@@ -10,6 +10,7 @@ import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
 import com.g2forge.alexandria.generic.type.java.type.IJavaConcreteType;
 import com.g2forge.alexandria.java.function.cache.ConcurrentFixedSupplier;
 import com.g2forge.alexandria.reflection.object.IJavaConcreteReflection;
+import com.g2forge.alexandria.reflection.object.IJavaFieldReflection;
 import com.g2forge.alexandria.reflection.object.implementations.JavaConcreteReflection;
 import com.g2forge.alexandria.reflection.record.v1.reflected.IReflectedFieldType;
 import com.g2forge.alexandria.reflection.record.v1.reflected.IReflectedRecordType;
@@ -18,10 +19,15 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 public class ReflectedRecordType<R> implements IReflectedRecordType<R> {
+	@SuppressWarnings("unchecked" /* TODO: Should be able to use a ::new method reference on type inference gets better again */)
+	protected static <R> ReflectedFieldType<R, Object> field(IJavaFieldReflection<R, ?> field) {
+		return new ReflectedFieldType<R, Object>((IJavaFieldReflection<R, Object>) field);
+	}
+
 	@Getter(AccessLevel.PROTECTED)
 	protected final IJavaConcreteReflection<R> reflection;
 
-	protected final Supplier<Collection<IReflectedFieldType<R, ?>>> fields = new ConcurrentFixedSupplier<>(() -> Collections.unmodifiableCollection(getReflection().getFields(JavaScope.Inherited, null).map(field -> new ReflectedFieldType<>(field)).collect(Collectors.toList())));
+	protected final Supplier<Collection<IReflectedFieldType<R, ?>>> fields = new ConcurrentFixedSupplier<Collection<IReflectedFieldType<R, ?>>>(() -> Collections.unmodifiableCollection(getReflection().getFields(JavaScope.Inherited, null).map(ReflectedRecordType::field).collect(Collectors.toList())));
 
 	/**
 	 * @param type
