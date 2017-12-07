@@ -24,6 +24,10 @@ public interface IFunction1<I, O> extends Function<I, O> {
 		return i -> type.isInstance(i) ? (O) i : null;
 	}
 
+	public default <X> IFunction1<I, X> andThen(IFunction1<? super O, ? extends X> f) {
+		return i -> f.apply(apply(i));
+	}
+
 	public default Supplier<O> compose(Supplier<? extends I> before) {
 		Objects.requireNonNull(before);
 		return () -> apply(before.get());
