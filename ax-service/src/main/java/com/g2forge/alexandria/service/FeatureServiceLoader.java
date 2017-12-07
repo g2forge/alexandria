@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -24,25 +25,25 @@ import lombok.Getter;
 /**
  * Loads services based not only on their implementation of a basic service interface, but also based on the set of (not SPI visible) features they support.
  * 
- * As an example take a library for reading images from files. The SPI might have a method <code>Image load(Path path)</code> which loads some standard internal representation
- * from an on-disk file. While getting all the implementations of this SPI will help, a consumer might want to decide between which of the two it uses based on the set of
- * files they support.
+ * As an example take a library for reading images from files. The SPI might have a method <code>Image load(Path path)</code> which loads some standard internal
+ * representation from an on-disk file. While getting all the implementations of this SPI will help, a consumer might want to decide between which of the two it
+ * uses based on the set of files they support.
  * 
- * This is implemented by have "feature" interfaces (interfaces without methods, but which extend the service) for each file format, and then allowing the various services to
- * extend those feature interfaces. This loader will ensure that while multiple services may be returned, it will never return one which implements a subset of a features of
- * any other service being returned by the same method.
+ * This is implemented by have "feature" interfaces (interfaces without methods, but which extend the service) for each file format, and then allowing the
+ * various services to extend those feature interfaces. This loader will ensure that while multiple services may be returned, it will never return one which
+ * implements a subset of a features of any other service being returned by the same method.
  * 
- * In our example, a call to {@link #load()} might return two image loaders, one which handles JPEG and PNG, and another which handles BMP and JPEG. But it would not return a
- * third loader which handles just BMP, because the second loader can do that and more.
+ * In our example, a call to {@link #load()} might return two image loaders, one which handles JPEG and PNG, and another which handles BMP and JPEG. But it
+ * would not return a third loader which handles just BMP, because the second loader can do that and more.
  * 
- * A second feature interface <code>B</code>, might extend a feature interface <code>A</code> to indicate that support for <code>B</code> includes all the features of
- * <code>A</code> and more.
+ * A second feature interface <code>B</code>, might extend a feature interface <code>A</code> to indicate that support for <code>B</code> includes all the
+ * features of <code>A</code> and more.
  * 
- * In order for this loader to make proper choices about which services have the most features it must be able to determine which interfaces are feature interfaces and which
- * are not. Because the set of features may be extended by any new service implementation, this is discoverd through the use of {#link
- * {@link IServiceFeatureHierarchy#getFeatureInterfaces()}. Anyone defining a new feature interface should implement a class which implements {@link IServiceFeatureHierarchy},
- * and ensure that each new feature interface is returned from. Note that {@link IServiceFeatureHierarchy} may be implemented by a separate class (see
- * {@link #FeatureServiceLoader(Class, Class)}) or directly on the service itself.
+ * In order for this loader to make proper choices about which services have the most features it must be able to determine which interfaces are feature
+ * interfaces and which are not. Because the set of features may be extended by any new service implementation, this is discoverd through the use of {#link
+ * {@link IServiceFeatureHierarchy#getFeatureInterfaces()}. Anyone defining a new feature interface should implement a class which implements
+ * {@link IServiceFeatureHierarchy}, and ensure that each new feature interface is returned from. Note that {@link IServiceFeatureHierarchy} may be implemented
+ * by a separate class (see {@link #FeatureServiceLoader(Class, Class)}) or directly on the service itself.
  *
  * @param <S>
  */
@@ -55,7 +56,7 @@ public class FeatureServiceLoader<S> implements IServiceLoader<S> {
 			raw.add(getType());
 
 			final Consumer<IServiceFeatureHierarchy<S>> adder = h -> h.getFeatureInterfaces().stream().filter(c -> getType().isAssignableFrom(c)).forEach(raw::add);
-			getBasic().find().stream().filter(s -> IServiceFeatureHierarchy.class.isAssignableFrom(s)).map(h -> {
+			getBasic().find().stream().filter(s -> IServiceFeatureHierarchy.class.isAssignableFrom(s)).map((Function<? super Class<? extends S>, ? extends IServiceFeatureHierarchy<S>>) h -> {
 				final S instance = instantiator.apply(h);
 				@SuppressWarnings("unchecked")
 				final IServiceFeatureHierarchy<S> cast = (IServiceFeatureHierarchy<S>) instance;
