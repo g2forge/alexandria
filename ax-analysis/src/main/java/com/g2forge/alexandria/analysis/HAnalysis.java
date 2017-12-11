@@ -39,6 +39,23 @@ public class HAnalysis {
 		final StringBuilder retVal = new StringBuilder();
 		for (Method method : clazz.getMethods()) {
 			if (method.getName().equals(thunk.getImplMethodName()) && method.getSignature().equals(thunk.getImplMethodSignature())) {
+				if (method.isAbstract()) return new IJavaAccessorMethod() {
+					@Override
+					public String getName() {
+						return method.getName();
+					}
+
+					@Override
+					public java.lang.reflect.Type[] getParameterTypes() {
+						return HBCEL.getTypes(method.getArgumentTypes());
+					}
+
+					@Override
+					public java.lang.reflect.Type getReturnType() {
+						return HBCEL.getType(method.getReturnType());
+					}
+				}.getFieldName();
+
 				final Code code = method.getCode();
 				final Instruction[] instructions = new InstructionList(code.getCode()).getInstructions();
 				if (!(instructions[0] instanceof ALOAD) || (((ALOAD) instructions[0]).getIndex() != 0)) throw new Error();
@@ -90,8 +107,10 @@ public class HAnalysis {
 						retVal.append(field);
 					}
 				}
+				return retVal.toString();
 			}
 		}
-		return retVal.toString();
+		throw new RuntimeReflectionException("Could not find method \"" + thunk.getImplClass() + "." + thunk.getImplMethodName() + "\"");
+
 	}
 }
