@@ -4,5 +4,6 @@ import java.io.Closeable;
 
 @FunctionalInterface
 public interface ICloseable extends Closeable {
+	@Override
 	public void close();
 }
