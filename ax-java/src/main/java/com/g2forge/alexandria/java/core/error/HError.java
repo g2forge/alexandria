@@ -10,7 +10,6 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-
 public class HError {
 	public static <T extends RuntimeException> T addSuppressed(final T exception, Iterable<? extends Throwable> suppressed) {
 		for (Throwable throwable : suppressed) {
