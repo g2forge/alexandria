@@ -11,4 +11,14 @@ public interface IThrowFunction1<I, O, T extends Throwable> {
 	}
 
 	public O apply(I input) throws T;
+
+	public default IFunction1<I, O> wrap(IFunction1<? super Throwable, ? extends RuntimeException> wrapper) {
+		return i -> {
+			try {
+				return apply(i);
+			} catch (Throwable throwable) {
+				throw wrapper.apply(throwable);
+			}
+		};
+	}
 }

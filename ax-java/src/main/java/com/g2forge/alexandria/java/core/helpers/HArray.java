@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import com.g2forge.alexandria.java.marker.Helpers;
 
@@ -13,6 +14,24 @@ import lombok.experimental.UtilityClass;
 @Helpers
 @UtilityClass
 public class HArray {
+	@SafeVarargs
+	public static <T> T[] create(T... array) {
+		return array;
+	}
+
+	@SafeVarargs
+	public static <T> T[] concatenate(T[]... arrays) {
+		if (arrays.length == 1) return arrays[0];
+		@SuppressWarnings("unchecked")
+		final T[] retVal = (T[]) Array.newInstance(arrays.getClass().getComponentType().getComponentType(), Stream.of(arrays).mapToInt(a -> a.length).sum());
+		int base = 0;
+		for (T[] array : arrays) {
+			System.arraycopy(array, 0, retVal, base, array.length);
+			base += array.length;
+		}
+		return retVal;
+	}
+
 	@SafeVarargs
 	public static <T> boolean contains(T value, T... array) {
 		for (int i = 0; i < array.length; i++)
