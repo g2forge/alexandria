@@ -7,4 +7,14 @@ public interface IThrowSupplier<O, T extends Throwable> {
 	}
 
 	public O get() throws T;
+
+	public default ISupplier<O> wrap(IFunction1<? super Throwable, ? extends RuntimeException> wrapper) {
+		return () -> {
+			try {
+				return get();
+			} catch (Throwable throwable) {
+				throw wrapper.apply(throwable);
+			}
+		};
+	}
 }
