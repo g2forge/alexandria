@@ -1,5 +1,6 @@
 package com.g2forge.alexandria.java.core.helpers;
 
+import com.g2forge.alexandria.java.core.error.NotYetImplementedError;
 import com.g2forge.alexandria.java.marker.Helpers;
 
 import lombok.experimental.UtilityClass;
@@ -53,5 +54,31 @@ public class HString {
 			if (string.endsWith(suffix)) return string.substring(0, string.length() - suffix.length());
 		}
 		return string;
+	}
+
+	public static String unescape(String string) throws NotYetImplementedError {
+		final StringBuilder retVal = new StringBuilder(string.length());
+		for (int i = 0; i < string.length(); i++) {
+			final char current = string.charAt(i);
+			if (current == '\\') {
+				switch (string.charAt(i + 1)) {
+					case '“':
+					case '”':
+					case '\\':
+						retVal.append(string.charAt(i + 1));
+						break;
+					case 'n':
+						retVal.append('\n');
+						break;
+					case 'r':
+						retVal.append('\r');
+						break;
+					default:
+						throw new NotYetImplementedError();
+				}
+				i++;
+			} else retVal.append(current);
+		}
+		return retVal.toString();
 	}
 }
