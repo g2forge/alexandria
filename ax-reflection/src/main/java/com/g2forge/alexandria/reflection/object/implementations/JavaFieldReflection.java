@@ -40,13 +40,6 @@ public class JavaFieldReflection<T, F> extends AJavaMemberReflection<T, IJavaFie
 				}
 				return this;
 			}
-
-			@Override
-			public F swap0(F value) {
-				final F retVal = get0();
-				set0(value);
-				return retVal;
-			}
 		};
 	}
 
