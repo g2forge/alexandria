@@ -43,11 +43,4 @@ public class Tuple1GSO<T0> implements ITuple1GS<T0> {
 		this.value0 = value;
 		return this;
 	}
-
-	@Override
-	public T0 swap0(final T0 value) {
-		final T0 retVal = get0();
-		set0(value);
-		return retVal;
-	}
 }

@@ -50,11 +50,4 @@ public class Tuple2GSO<T0, T1> extends Tuple1GSO<T0> implements ITuple2GS<T0, T1
 		this.value1 = value;
 		return this;
 	}
-
-	@Override
-	public T1 swap1(final T1 value) {
-		final T1 retVal = get1();
-		set1(value);
-		return retVal;
-	}
 }
