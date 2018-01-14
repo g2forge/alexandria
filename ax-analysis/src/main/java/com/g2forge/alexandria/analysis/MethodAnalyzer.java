@@ -31,37 +31,6 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 class MethodAnalyzer implements IMethodAnalyzer {
-	protected static java.lang.reflect.Method toJavaMethod(final T thunk) {
-		final Class<?> clazz;
-		try {
-			clazz = thunk.getClass().getClassLoader().loadClass(thunk.getImplClass().replace('/', '.'));
-		} catch (ClassNotFoundException exception) {
-			throw new RuntimeException(exception);
-		}
-
-		for (java.lang.reflect.Method method : clazz.getMethods()) {
-			if (method.getName().equals(thunk.getImplMethodName())) {
-				final String signature = HReflection.toSignature(method);
-				if (signature.equals(thunk.getImplMethodSignature())) return method;
-			}
-		}
-		throw new RuntimeReflectionException("Could not find method \"" + thunk.getImplClass() + "." + thunk.getImplMethodName() + "\"");
-	}
-
-	protected static org.apache.bcel.classfile.Method toBCELMethod(final T thunk) {
-		final JavaClass clazz;
-		try {
-			clazz = Repository.lookupClass(thunk.getImplClass());
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeReflectionException(e);
-		}
-
-		for (org.apache.bcel.classfile.Method method : clazz.getMethods()) {
-			if (method.getName().equals(thunk.getImplMethodName()) && method.getSignature().equals(thunk.getImplMethodSignature())) return method;
-		}
-		throw new RuntimeReflectionException("Could not find method \"" + thunk.getImplClass() + "." + thunk.getImplMethodName() + "\"");
-	}
-
 	protected static String computePath(org.apache.bcel.classfile.Method method) throws Error {
 		if (method.isAbstract()) return new IJavaAccessorMethod() {
 			@Override
@@ -133,6 +102,39 @@ class MethodAnalyzer implements IMethodAnalyzer {
 			}
 		}
 		return retVal.toString();
+	}
+
+	protected static org.apache.bcel.classfile.Method toBCELMethod(final T thunk) {
+		final JavaClass clazz;
+		try {
+			clazz = Repository.lookupClass(thunk.getImplClass());
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeReflectionException(e);
+		}
+
+		for (org.apache.bcel.classfile.Method method : clazz.getMethods()) {
+			if (method.getName().equals(thunk.getImplMethodName()) && method.getSignature().equals(thunk.getImplMethodSignature())) return method;
+		}
+		throw new RuntimeReflectionException("Could not find method \"" + thunk.getImplClass() + "." + thunk.getImplMethodName() + "\"");
+	}
+
+	protected static java.lang.reflect.Method toJavaMethod(final T thunk) {
+		final Class<?> clazz;
+		try {
+			clazz = thunk.getClass().getClassLoader().loadClass(thunk.getImplClass().replace('/', '.'));
+		} catch (ClassNotFoundException exception) {
+			throw new RuntimeException(exception);
+		}
+
+		for (java.lang.reflect.Method[] methods : new java.lang.reflect.Method[][] { clazz.getMethods(), clazz.getDeclaredMethods() }) {
+			for (java.lang.reflect.Method method : methods) {
+				if (method.getName().equals(thunk.getImplMethodName())) {
+					final String signature = HReflection.toSignature(method);
+					if (signature.equals(thunk.getImplMethodSignature())) return method;
+				}
+			}
+		}
+		throw new RuntimeReflectionException("Could not find method \"" + thunk.getImplClass() + "." + thunk.getImplMethodName() + "\"");
 	}
 
 	@Getter(value = AccessLevel.PROTECTED)

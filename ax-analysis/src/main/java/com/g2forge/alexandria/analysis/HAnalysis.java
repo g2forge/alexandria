@@ -7,19 +7,19 @@ import lombok.experimental.UtilityClass;
 @Helpers
 @UtilityClass
 public class HAnalysis {
-	public static java.lang.reflect.Method getMethod(final SerializableFunction<?, ?> lambda) {
-		return SerializableFunction.analyze(lambda).getMethod();
+	public static java.lang.reflect.Method getMethod(final ISerializableFunction1<?, ?> lambda) {
+		return ISerializableFunction1.analyze(lambda).getMethod();
 	}
 
-	public static String getPath(final SerializableSupplier<?> lambda) {
-		return SerializableSupplier.analyze(lambda).getPath();
+	public static String getPath(final ISerializableSupplier<?> lambda) {
+		return ISerializableSupplier.analyze(lambda).getPath();
 	}
 
-	public static java.lang.reflect.Method getMethod(final SerializableSupplier<?> lambda) {
-		return SerializableSupplier.analyze(lambda).getMethod();
+	public static java.lang.reflect.Method getMethod(final ISerializableSupplier<?> lambda) {
+		return ISerializableSupplier.analyze(lambda).getMethod();
 	}
 
-	public static String getPath(final SerializableFunction<?, ?> lambda) {
-		return SerializableFunction.analyze(lambda).getPath();
+	public static String getPath(final ISerializableFunction1<?, ?> lambda) {
+		return ISerializableFunction1.analyze(lambda).getPath();
 	}
 }

@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
-import com.g2forge.alexandria.analysis.SerializableFunction;
+import com.g2forge.alexandria.analysis.ISerializableFunction1;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class FieldMatcher<T> extends BaseMatcher<T> {
 	@Data
 	protected static class Field<T, F> {
-		protected final SerializableFunction<T, F> field;
+		protected final ISerializableFunction1<T, F> field;
 
 		protected final String path;
 
@@ -34,7 +34,7 @@ public class FieldMatcher<T> extends BaseMatcher<T> {
 		protected final Collection<Field<T, ?>> fields;
 
 		@SafeVarargs
-		public FieldSet(SerializableFunction<T, ?>... fields) {
+		public FieldSet(ISerializableFunction1<T, ?>... fields) {
 			this.fields = Stream.of(fields).map(f -> new Field<>(f, f.asMethodAnalyzer().getPath())).collect(Collectors.toList());
 		}
 
@@ -71,7 +71,7 @@ public class FieldMatcher<T> extends BaseMatcher<T> {
 	protected final FieldSet<? super T> fields;
 
 	@SafeVarargs
-	public FieldMatcher(T expected, SerializableFunction<T, ?>... fields) {
+	public FieldMatcher(T expected, ISerializableFunction1<T, ?>... fields) {
 		this.expected = expected;
 		this.fields = new FieldSet<>(fields);
 	}

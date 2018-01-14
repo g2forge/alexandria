@@ -1,8 +1,7 @@
 package com.g2forge.alexandria.analysis;
 
-import java.io.Serializable;
-
-interface SerializableLambda extends Serializable {
+interface SerializableLambda extends ISerializableLambda {
+	@Override
 	public default IMethodAnalyzer asMethodAnalyzer() {
 		return new MethodAnalyzer(this);
 	}

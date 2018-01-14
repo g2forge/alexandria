@@ -20,13 +20,13 @@ public class TestAnalysis {
 
 	@Test
 	public void method() throws NoSuchMethodException, SecurityException {
-		final Method actual = SerializableFunction.analyze(TestClass1::getBar).getMethod();
+		final Method actual = ISerializableFunction1.analyze(TestClass1::getBar).getMethod();
 		Assert.assertEquals(TestClass1.class.getDeclaredMethod("getBar"), actual);
 	}
 
 	@Test
 	public void path() {
-		final String actual = SerializableFunction.analyze((TestClass0 test) -> test.getFoo().getBar()).getPath();
+		final String actual = ISerializableFunction1.analyze((TestClass0 test) -> test.getFoo().getBar()).getPath();
 		Assert.assertEquals("foo.bar", actual);
 	}
 }

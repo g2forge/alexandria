@@ -1,7 +1,7 @@
 package com.g2forge.alexandria.java.function;
 
 @FunctionalInterface
-public interface IThrowFunction1<I, O, T extends Throwable> {
+public interface IThrowFunction1<I, O, T extends Throwable> extends IFunction<O> {
 	public static <I, O, T extends Throwable> IThrowFunction1<I, O, T> create(IThrowFunction1<I, O, T> function) {
 		return function;
 	}

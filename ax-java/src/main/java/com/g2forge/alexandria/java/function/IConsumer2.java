@@ -3,7 +3,7 @@ package com.g2forge.alexandria.java.function;
 import java.util.function.BiConsumer;
 
 @FunctionalInterface
-public interface IConsumer2<I0, I1> extends BiConsumer<I0, I1> {
+public interface IConsumer2<I0, I1> extends BiConsumer<I0, I1>, IConsumer {
 	public static <I0, I1> IConsumer2<I0, I1> create(IConsumer2<I0, I1> consumer) {
 		return consumer;
 	}

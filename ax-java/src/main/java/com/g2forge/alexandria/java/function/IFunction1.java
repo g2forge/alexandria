@@ -5,7 +5,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @FunctionalInterface
-public interface IFunction1<I, O> extends Function<I, O> {
+public interface IFunction1<I, O> extends Function<I, O>, IFunction<O> {
 	@SuppressWarnings("unchecked")
 	public static <I, O> IFunction1<I, O> cast() {
 		return i -> (O) i;
