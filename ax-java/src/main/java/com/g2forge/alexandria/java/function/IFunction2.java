@@ -5,7 +5,7 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 @FunctionalInterface
-public interface IFunction2<I0, I1, O> extends BiFunction<I0, I1, O> {
+public interface IFunction2<I0, I1, O> extends BiFunction<I0, I1, O>, IFunction<O> {
 	public static <I0, I1, O> IFunction2<I0, I1, O> create(IFunction2<I0, I1, O> function) {
 		return function;
 	}

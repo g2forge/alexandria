@@ -5,7 +5,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @FunctionalInterface
-public interface IFunction3<I0, I1, I2, O> {
+public interface IFunction3<I0, I1, I2, O> extends IFunction<O> {
 	public static <I0, I1, I2, O> IFunction3<I0, I1, I2, O> create(IFunction3<I0, I1, I2, O> function) {
 		return function;
 	}

@@ -5,7 +5,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 
 @FunctionalInterface
-public interface IPredicate2<I0, I1> extends BiPredicate<I0, I1> {
+public interface IPredicate2<I0, I1> extends BiPredicate<I0, I1>, IPredicate {
 	public static <I0, I1> IPredicate2<I0, I1> create(boolean value) {
 		return (i0, i1) -> value;
 	}

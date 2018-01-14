@@ -4,11 +4,11 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 @FunctionalInterface
-public interface IPredicate3<I0, I1, I2> {
+public interface IPredicate3<I0, I1, I2> extends IPredicate {
 	public static <I0, I1, I2> IPredicate3<I0, I1, I2> create(boolean value) {
 		return (i0, i1, i2) -> value;
 	}
-	
+
 	public static <I0, I1, I2> IPredicate3<I0, I1, I2> create(IPredicate3<I0, I1, I2> predicate) {
 		return predicate;
 	}

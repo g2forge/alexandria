@@ -13,7 +13,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * @see com.g2forge.alexandria.analysis.HAnalysis which has similar code!
+ * @see com.g2forge.alexandria.analysis.IMethodAnaluzer which has similar code!
  */
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)

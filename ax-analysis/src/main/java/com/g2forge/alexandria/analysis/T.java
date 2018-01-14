@@ -24,7 +24,7 @@ import com.g2forge.alexandria.java.core.error.RuntimeReflectionException;
 import lombok.Data;
 
 @Data
-public class T implements Serializable {
+class T implements Serializable {
 	private static final long serialVersionUID = 8025925345765570181l;
 
 	protected static T create(Object lambda) {
