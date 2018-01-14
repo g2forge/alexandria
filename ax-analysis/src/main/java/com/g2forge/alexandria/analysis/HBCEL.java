@@ -7,7 +7,7 @@ import org.apache.bcel.generic.Type;
 import com.g2forge.alexandria.java.core.helpers.HArray;
 
 public class HBCEL {
-	public static java.lang.reflect.Type getType(Type type) {
+	public static java.lang.reflect.Type toJava(Type type) {
 		if (type instanceof ObjectType) {
 			try {
 				return HBCEL.class.getClass().getClassLoader().loadClass(((ObjectType) type).getClassName());
@@ -29,7 +29,7 @@ public class HBCEL {
 		throw new IllegalArgumentException();
 	}
 
-	public static java.lang.reflect.Type[] getTypes(Type... types) {
-		return HArray.map(java.lang.reflect.Type.class, HBCEL::getType, types);
+	public static java.lang.reflect.Type[] toJava(Type... types) {
+		return HArray.map(java.lang.reflect.Type.class, HBCEL::toJava, types);
 	}
 }

@@ -9,7 +9,6 @@ import java.util.stream.Stream;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
-import com.g2forge.alexandria.analysis.HAnalysis;
 import com.g2forge.alexandria.analysis.SerializableFunction;
 
 import lombok.Data;
@@ -36,7 +35,7 @@ public class FieldMatcher<T> extends BaseMatcher<T> {
 
 		@SafeVarargs
 		public FieldSet(SerializableFunction<T, ?>... fields) {
-			this.fields = Stream.of(fields).map(f -> new Field<>(f, HAnalysis.getPath(f))).collect(Collectors.toList());
+			this.fields = Stream.of(fields).map(f -> new Field<>(f, f.asMethodAnalyzer().getPath())).collect(Collectors.toList());
 		}
 
 		protected Collection<Mismatch<?>> check(T expected, T actual) {
