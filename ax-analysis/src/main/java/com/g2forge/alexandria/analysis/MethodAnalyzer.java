@@ -147,5 +147,8 @@ class MethodAnalyzer implements IMethodAnalyzer {
 	private final java.lang.reflect.Method method = toJavaMethod(getThunk());
 
 	@Getter(lazy = true)
-	private final String path = computePath(toBCELMethod(getThunk()));
+	private final String path = computePath(getBCEL());
+
+	@Getter(lazy = true)
+	private final org.apache.bcel.classfile.Method BCEL = toBCELMethod(getThunk());
 }

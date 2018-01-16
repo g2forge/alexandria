@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>ax-analysis</artifactId>
@@ -9,7 +11,7 @@
 		<version>0.0.3-SNAPSHOT</version>
 		<relativePath>../ax-root/pom.xml</relativePath>
 	</parent>
-	
+
 	<name>${alexandria.name} Analysis</name>
 	<description>Java reflection and bytecode analysis toolkit, usable for all kinds of introspection and analysis of running code.</description>
 
@@ -19,10 +21,12 @@
 			<artifactId>ax-java</artifactId>
 			<version>${alexandria.version}</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.bcel/bcel -->
 		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>bcel-findbugs</artifactId>
-			<version>6.0</version>
+			<groupId>org.apache.bcel</groupId>
+			<artifactId>bcel</artifactId>
+			<version>6.2</version>
 		</dependency>
 	</dependencies>
 </project>
