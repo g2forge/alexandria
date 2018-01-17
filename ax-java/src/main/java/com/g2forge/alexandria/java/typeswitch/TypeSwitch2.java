@@ -58,6 +58,14 @@ public class TypeSwitch2<I0, I1, O> implements IFunction2<I0, I1, O> {
 			return this;
 		}
 
+		public <T0, T1> FunctionBuilder<I0, I1, O> add(Class<T0> type0, Class<T1> type1, IConsumer2<? super T0, ? super T1> consumer, O output) {
+			add(type0, type1, (i0, i1) -> {
+				consumer.accept(i0, i1);
+				return output;
+			});
+			return this;
+		}
+
 		public IFunction2<I0, I1, O> build() {
 			return new TypeSwitch2<>(fallback, functions);
 		}

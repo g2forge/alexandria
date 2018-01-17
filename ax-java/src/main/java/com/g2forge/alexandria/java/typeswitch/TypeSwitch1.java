@@ -52,6 +52,14 @@ public class TypeSwitch1<I, O> implements IFunction1<I, O> {
 
 		protected IFunction1<? super I, ? extends O> fallback = null;
 
+		public <T> FunctionBuilder<I, O> add(Class<T> type, IConsumer1<? super T> consumer, O output) {
+			add(type, i -> {
+				consumer.accept(i);
+				return output;
+			});
+			return this;
+		}
+
 		public <T> FunctionBuilder<I, O> add(Class<T> type, IFunction1<? super T, ? extends O> function) {
 			functions.add(new TypedFunction1<T, O>(type, function));
 			return this;

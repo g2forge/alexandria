@@ -53,6 +53,14 @@ public class TypeSwitch3<I0, I1, I2, O> implements IFunction3<I0, I1, I2, O> {
 
 		protected IFunction3<? super I0, ? super I1, ? super I2, ? extends O> fallback = null;
 
+		public <T0, T1, T2> FunctionBuilder<I0, I1, I2, O> add(Class<T0> type0, Class<T1> type1, Class<T2> type2, IConsumer3<? super T0, ? super T1, ? super T2> consumer, O output) {
+			add(type0, type1, type2, (i0, i1, i2) -> {
+				consumer.accept(i0, i1, i2);
+				return output;
+			});
+			return this;
+		}
+
 		public <T0, T1, T2> FunctionBuilder<I0, I1, I2, O> add(Class<T0> type0, Class<T1> type1, Class<T2> type2, IFunction3<? super T0, ? super T1, ? super T2, ? extends O> function) {
 			functions.add(new TypedFunction3<T0, T1, T2, O>(type0, type1, type2, function));
 			return this;
