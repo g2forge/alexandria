@@ -85,7 +85,7 @@ public class TypeSwitch1<I, O> implements IFunction1<I, O> {
 	@ToString(callSuper = true)
 	@Getter
 	protected static class Node<O> extends ANode<O, Node<O>> {
-		protected final ITypedFunction1<?, O> function;
+		protected final ITypedFunction1<?, ? extends O> function;
 
 		protected <I> O apply(IFunction1<? super I, ? extends O> fallback, I input) {
 			return get(n -> n.getFunction().isApplicable(input), collection -> {
@@ -95,13 +95,13 @@ public class TypeSwitch1<I, O> implements IFunction1<I, O> {
 		}
 
 		protected boolean isAncestor(Node<O> node) {
-			final ITypedFunction1<?, O> thisFunction = getFunction();
+			final ITypedFunction1<?, ? extends O> thisFunction = getFunction();
 			if (thisFunction == null) return true;
 			return thisFunction.getInputType().isAssignableFrom(node.getFunction().getInputType());
 		}
 
 		protected boolean isDescendant(Node<O> node) {
-			final ITypedFunction1<?, O> thisFunction = getFunction();
+			final ITypedFunction1<?, ? extends O> thisFunction = getFunction();
 			if (thisFunction == null) return false;
 			return node.getFunction().getInputType().isAssignableFrom(thisFunction.getInputType());
 		}
@@ -118,7 +118,7 @@ public class TypeSwitch1<I, O> implements IFunction1<I, O> {
 	@Getter(AccessLevel.PROTECTED)
 	protected final Node<O> root;
 
-	public TypeSwitch1(IFunction1<? super I, ? extends O> fallback, Collection<? extends ITypedFunction1<?, O>> functions) {
+	public TypeSwitch1(IFunction1<? super I, ? extends O> fallback, Collection<? extends ITypedFunction1<?, ? extends O>> functions) {
 		this.fallback = fallback;
 		this.root = Node.computeRoot(functions, Node::new);
 	}
