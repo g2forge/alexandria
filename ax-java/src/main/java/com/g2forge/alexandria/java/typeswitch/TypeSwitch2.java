@@ -86,7 +86,7 @@ public class TypeSwitch2<I0, I1, O> implements IFunction2<I0, I1, O> {
 	@ToString(callSuper = true)
 	@Getter
 	protected static class Node<O> extends ANode<O, Node<O>> {
-		protected final ITypedFunction2<?, ?, O> function;
+		protected final ITypedFunction2<?, ?, ? extends O> function;
 
 		protected <I0, I1> O apply(IFunction2<? super I0, ? super I1, ? extends O> fallback, I0 input0, I1 input1) {
 			return get(n -> n.getFunction().isApplicable(input0, input1), collection -> {
@@ -96,7 +96,7 @@ public class TypeSwitch2<I0, I1, O> implements IFunction2<I0, I1, O> {
 		}
 
 		protected boolean isAncestor(Node<O> node) {
-			final ITypedFunction2<?, ?, O> thisFunction = getFunction();
+			final ITypedFunction2<?, ?, ? extends O> thisFunction = getFunction();
 			if (thisFunction == null) return true;
 			if (!thisFunction.getInput0Type().isAssignableFrom(node.getFunction().getInput0Type())) return false;
 			if (!thisFunction.getInput1Type().isAssignableFrom(node.getFunction().getInput1Type())) return false;
@@ -104,7 +104,7 @@ public class TypeSwitch2<I0, I1, O> implements IFunction2<I0, I1, O> {
 		}
 
 		protected boolean isDescendant(Node<O> node) {
-			final ITypedFunction2<?, ?, O> thisFunction = getFunction();
+			final ITypedFunction2<?, ?, ? extends O> thisFunction = getFunction();
 			if (thisFunction == null) return false;
 			if (!node.getFunction().getInput0Type().isAssignableFrom(thisFunction.getInput0Type())) return false;
 			if (!node.getFunction().getInput1Type().isAssignableFrom(thisFunction.getInput1Type())) return false;
@@ -123,7 +123,7 @@ public class TypeSwitch2<I0, I1, O> implements IFunction2<I0, I1, O> {
 	@Getter(AccessLevel.PROTECTED)
 	protected final Node<O> root;
 
-	public TypeSwitch2(IFunction2<? super I0, ? super I1, ? extends O> fallback, Collection<? extends ITypedFunction2<?, ?, O>> functions) {
+	public TypeSwitch2(IFunction2<? super I0, ? super I1, ? extends O> fallback, Collection<? extends ITypedFunction2<?, ?, ? extends O>> functions) {
 		this.fallback = fallback;
 		this.root = Node.computeRoot(functions, Node::new);
 	}

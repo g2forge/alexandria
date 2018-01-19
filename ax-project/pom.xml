@@ -16,6 +16,26 @@
 	<name>${alexandria.name} Project</name>
 	<description>Parent project for most of the code in ${alexandria.name}.  Note that while ${alexandria.organization} repositories always have a "xx-project", ${alexandria.name} also has "ax-root" due to the need to avoid circular dependencies of this base library.</description>
 
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${mavencompiler.version}</version>
+				<configuration>
+					<source>${mavencompiler.javaversion}</source>
+					<target>${mavencompiler.javaversion}</target>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>com.g2forge.alexandria</groupId>
+						<artifactId>ax-annotations</artifactId>
+						<version>${alexandria.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.g2forge.alexandria</groupId>

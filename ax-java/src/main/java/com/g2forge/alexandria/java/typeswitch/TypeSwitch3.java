@@ -86,7 +86,7 @@ public class TypeSwitch3<I0, I1, I2, O> implements IFunction3<I0, I1, I2, O> {
 	@ToString(callSuper = true)
 	@Getter
 	protected static class Node<O> extends ANode<O, Node<O>> {
-		protected final ITypedFunction3<?, ?, ?, O> function;
+		protected final ITypedFunction3<?, ?, ?, ? extends O> function;
 
 		protected <I0, I1, I2> O apply(IFunction3<? super I0, ? super I1, ? super I2, ? extends O> fallback, I0 input0, I1 input1, I2 input2) {
 			return get(n -> n.getFunction().isApplicable(input0, input1, input2), collection -> {
@@ -96,7 +96,7 @@ public class TypeSwitch3<I0, I1, I2, O> implements IFunction3<I0, I1, I2, O> {
 		}
 
 		protected boolean isAncestor(Node<O> node) {
-			final ITypedFunction3<?, ?, ?, O> thisFunction = getFunction();
+			final ITypedFunction3<?, ?, ?, ? extends O> thisFunction = getFunction();
 			if (thisFunction == null) return true;
 			if (!thisFunction.getInput0Type().isAssignableFrom(node.getFunction().getInput0Type())) return false;
 			if (!thisFunction.getInput1Type().isAssignableFrom(node.getFunction().getInput1Type())) return false;
@@ -105,7 +105,7 @@ public class TypeSwitch3<I0, I1, I2, O> implements IFunction3<I0, I1, I2, O> {
 		}
 
 		protected boolean isDescendant(Node<O> node) {
-			final ITypedFunction3<?, ?, ?, O> thisFunction = getFunction();
+			final ITypedFunction3<?, ?, ?, ? extends O> thisFunction = getFunction();
 			if (thisFunction == null) return false;
 			if (!node.getFunction().getInput0Type().isAssignableFrom(thisFunction.getInput0Type())) return false;
 			if (!node.getFunction().getInput1Type().isAssignableFrom(thisFunction.getInput1Type())) return false;
@@ -125,7 +125,7 @@ public class TypeSwitch3<I0, I1, I2, O> implements IFunction3<I0, I1, I2, O> {
 	@Getter(AccessLevel.PROTECTED)
 	protected final Node<O> root;
 
-	public TypeSwitch3(IFunction3<? super I0, ? super I1, ? super I2, ? extends O> fallback, Collection<? extends ITypedFunction3<?, ?, ?, O>> functions) {
+	public TypeSwitch3(IFunction3<? super I0, ? super I1, ? super I2, ? extends O> fallback, Collection<? extends ITypedFunction3<?, ?, ?, ? extends O>> functions) {
 		this.fallback = fallback;
 		this.root = Node.computeRoot(functions, Node::new);
 	}
