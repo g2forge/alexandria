@@ -32,4 +32,13 @@
 		<module>ax-expression</module>
 		<module>ax-service</module>
 	</modules>
+
+	<profiles>
+		<profile>
+			<id>release</id>
+			<modules>
+				<module>ax-annotations</module>
+			</modules>
+		</profile>
+	</profiles>
 </project>
