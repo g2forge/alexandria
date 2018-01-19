@@ -21,5 +21,10 @@
 			<artifactId>ax-test</artifactId>
 			<version>${alexandria.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-core</artifactId>
+			<version>${hamcrest.version}</version>
+		</dependency>
 	</dependencies>
 </project>
