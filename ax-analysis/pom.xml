@@ -15,6 +15,26 @@
 	<name>${alexandria.name} Analysis</name>
 	<description>Java reflection and bytecode analysis toolkit, usable for all kinds of introspection and analysis of running code.</description>
 
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${mavencompiler.version}</version>
+				<configuration>
+					<source>${mavencompiler.javaversion}</source>
+					<target>${mavencompiler.javaversion}</target>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>com.g2forge.alexandria</groupId>
+						<artifactId>ax-annotations</artifactId>
+						<version>${alexandria.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.g2forge.alexandria</groupId>
