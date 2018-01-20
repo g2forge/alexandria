@@ -8,9 +8,6 @@ import java.lang.annotation.Target;
 
 /**
  * Use this annotation on types which will be compared using the identity functions.
- *
- * @author greg
- *
  */
 @Retention(RUNTIME)
 @Target(TYPE)

@@ -4,44 +4,27 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
-import com.g2forge.alexandria.generic.type.java.IJavaUntype;
 import com.g2forge.alexandria.generic.type.java.HJavaType;
+import com.g2forge.alexandria.generic.type.java.IJavaUntype;
 import com.g2forge.alexandria.record.IField;
 import com.g2forge.alexandria.reflection.record.v1.typedmap.IJavaTypedFieldType;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public class JavaTypedMapFieldType<T> implements IJavaTypedFieldType<JavaTypedMapRecord, T> {
 	protected final String name;
 
 	protected final IJavaUntype type;
 
-	/**
-	 * @param fieldType
-	 */
 	public JavaTypedMapFieldType(IJavaTypedFieldType<JavaTypedMapRecord, T> fieldType) {
 		this(fieldType.getName(), fieldType.getType());
 	}
 
-	/**
-	 * @param name
-	 * @param type
-	 */
 	public JavaTypedMapFieldType(String name, Class<T> type) {
 		this(name, (Type) type);
 	}
 
-	/**
-	 * @param name
-	 * @param type
-	 */
-	public JavaTypedMapFieldType(String name, IJavaUntype type) {
-		this.name = name;
-		this.type = type;
-	}
-
-	/**
-	 * @param name
-	 * @param type
-	 */
 	public JavaTypedMapFieldType(String name, Type type) {
 		this(name, HJavaType.toType(type, EmptyTypeEnvironment.create()));
 	}
@@ -51,7 +34,6 @@ public class JavaTypedMapFieldType<T> implements IJavaTypedFieldType<JavaTypedMa
 		return new JavaTypedMapField<T>(this, input);
 	}
 
-	/* @see java.lang.Object#equals(java.lang.Object) */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) return true;
@@ -72,10 +54,8 @@ public class JavaTypedMapFieldType<T> implements IJavaTypedFieldType<JavaTypedMa
 		return type;
 	}
 
-	/* @see java.lang.Object#hashCode() */
 	@Override
 	public int hashCode() {
-		Object[] objects = { getName(), getType() };
-		return Objects.hash(objects);
+		return Objects.hash(getName(), getType());
 	}
 }

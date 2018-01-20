@@ -4,25 +4,19 @@ import com.g2forge.alexandria.java.tuple.ITuple1GS;
 import com.g2forge.alexandria.record.IField;
 import com.g2forge.alexandria.record.IFieldType;
 
+import lombok.Getter;
+
 public class ReflectedField<R, T> implements IField<R, T> {
 	protected final ReflectedFieldType<R, T> type;
-	
+
+	@Getter
 	protected final ITuple1GS<T> accessor;
-	
-	/**
-	 * @param type
-	 * @param record
-	 */
+
 	public ReflectedField(final ReflectedFieldType<R, T> type, final R record) {
 		this.type = type;
 		this.accessor = type.field.getAccessor(record);
 	}
-	
-	@Override
-	public ITuple1GS<T> getAccessor() {
-		return accessor;
-	}
-	
+
 	@Override
 	public IFieldType<R, T> getType() {
 		return type;

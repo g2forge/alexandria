@@ -11,9 +11,6 @@ public class Tuple2GSO<T0, T1> extends Tuple1GSO<T0> implements ITuple2GS<T0, T1
 		this(null, null);
 	}
 
-	/**
-	 * @param value1
-	 */
 	public Tuple2GSO(final T0 value0, final T1 value1) {
 		super(value0);
 		this.value1 = value1;

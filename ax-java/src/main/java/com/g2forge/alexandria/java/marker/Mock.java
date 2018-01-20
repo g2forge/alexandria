@@ -8,9 +8,6 @@ import java.lang.annotation.Target;
 
 /**
  * Used to indicate that a type is a mock of something.
- *
- * @author greg
- *
  */
 @Retention(RUNTIME)
 @Target(TYPE)

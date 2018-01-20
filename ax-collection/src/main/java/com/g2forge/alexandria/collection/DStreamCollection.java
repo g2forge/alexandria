@@ -6,10 +6,8 @@ import java.util.stream.Collectors;
 
 /**
  * Sub-interface of {@link ICollection} which allows functional implementation of just the {@link ICollection#stream()} method.
- * 
- * @author greg
  *
- * @param <T>
+ * @param <T> The type of the elements in this collection.
  */
 @FunctionalInterface
 public interface DStreamCollection<T> extends ICollection<T> {

@@ -7,10 +7,6 @@ import lombok.Getter;
 
 /**
  * A wrapper for an object which uses an externally specified {@link IIdentity} to determine object identity.
- * 
- * @author greg
- *
- * @param <T>
  */
 public class Identified<T> extends LiteralSupplier<T> {
 	@Getter

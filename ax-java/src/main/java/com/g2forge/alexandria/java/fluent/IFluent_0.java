@@ -4,10 +4,6 @@ import java.util.function.Supplier;
 
 /**
  * "0" indicates that the arity of this fluent holder can be 0.
- * 
- * @author gdgib
- *
- * @param <T>
  */
 public interface IFluent_0<T> extends IFluent__<T> {
 	public T or(T other);

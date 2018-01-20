@@ -12,18 +12,13 @@ public class DataDiagnostic<S> implements Diagnostic<S> {
 
 	protected final S source;
 
-	protected final long line;
+	protected final long lineNumber;
 
 	protected final long position;
 
 	protected final String code;
 
 	protected final String message;
-
-	@Override
-	public String getCode() {
-		return code;
-	}
 
 	@Override
 	public long getColumnNumber() {
@@ -33,11 +28,6 @@ public class DataDiagnostic<S> implements Diagnostic<S> {
 	@Override
 	public long getEndPosition() {
 		return getPosition();
-	}
-
-	@Override
-	public long getLineNumber() {
-		return line;
 	}
 
 	@Override

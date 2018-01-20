@@ -5,9 +5,6 @@ import com.g2forge.alexandria.java.tuple.ITuple1G_;
 public class Tuple1G_I<T0> implements ITuple1G_<T0> {
 	protected final T0 value0;
 
-	/**
-	 * @param value0
-	 */
 	public Tuple1G_I(final T0 value0) {
 		this.value0 = value0;
 	}

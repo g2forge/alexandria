@@ -8,16 +8,10 @@ import com.g2forge.alexandria.record.IFieldType;
 public class MapFieldType<T> implements IFieldType<MapRecord, T> {
 	protected final String name;
 
-	/**
-	 * @param fieldType
-	 */
 	public MapFieldType(IFieldType<MapRecord, T> fieldType) {
 		this(fieldType.getName());
 	}
 
-	/**
-	 * @param name
-	 */
 	public MapFieldType(String name) {
 		this.name = name;
 	}
@@ -27,7 +21,6 @@ public class MapFieldType<T> implements IFieldType<MapRecord, T> {
 		return new MapField<T>(this, input);
 	}
 
-	/* @see java.lang.Object#equals(java.lang.Object) */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) return true;
@@ -43,7 +36,6 @@ public class MapFieldType<T> implements IFieldType<MapRecord, T> {
 		return name;
 	}
 
-	/* @see java.lang.Object#hashCode() */
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(getName());

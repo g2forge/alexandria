@@ -7,9 +7,10 @@ public interface IResolvableType extends IType {
 	public IResolvableType eval(ITypeEnvironment environment);
 
 	/**
-	 * @return
-	 * @throws TypeNotConcreteException
-	 *             This type is not concrete, and cannot be made concrete.
+	 * Resolve this type into a concrete one.
+	 * 
+	 * @return This type as a concrete type.
+	 * @throws TypeNotConcreteException This type is not concrete, and cannot be made concrete.
 	 */
 	public IConcreteType resolve();
 }

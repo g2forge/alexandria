@@ -9,11 +9,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 /**
- * Captures the relationship between the static type <code>T</code> and the runtime type {@link #getType()}. Due to the lack of proper generic support in the Java reflection
- * library, this interface is currently not statically type safe. As such implementors are responsible for type safety.
+ * Captures the relationship between the static type <code>T</code> and the runtime type {@link #getType()}. Due to the lack of proper generic support in the
+ * Java reflection library, this interface is currently not statically type safe. As such implementors are responsible for type safety.
  *
- * @param <T>
- *            The (static) type of this type reference.
+ * @param <T> The (static) type of this type reference.
  */
 @FunctionalInterface
 public interface ITypeRef<T> extends IDynamicType<T> {
@@ -27,8 +26,8 @@ public interface ITypeRef<T> extends IDynamicType<T> {
 	/**
 	 * Construct an instance of {@link ITypeRef} for a Java {@link Class}. This is most useful for non-parameterized classes.
 	 * 
-	 * @param type
-	 *            The class to create a reference to.
+	 * @param <T> The (static) type of the resulting type reference.
+	 * @param type The class to create a reference to.
 	 * @return An instance of {@link ITypeRef} whose {@link #getType()} returns <code>type</code>.
 	 */
 	public static <T> ITypeRef<T> of(Class<T> type) {

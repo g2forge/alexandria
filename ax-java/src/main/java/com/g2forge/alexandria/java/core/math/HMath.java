@@ -1,8 +1,13 @@
 package com.g2forge.alexandria.java.core.math;
 
 import com.g2forge.alexandria.java.enums.EnumException;
+import com.g2forge.alexandria.java.marker.Helpers;
 
-public abstract class MathHelpers {
+import lombok.experimental.UtilityClass;
+
+@Helpers
+@UtilityClass
+public class HMath {
 	public static byte abs(byte value) {
 		if (value == Byte.MIN_VALUE) throw new UnrepresentablePrimitiveException("Twos complement integers are not symmetric");
 		return (value < 0) ? (byte) -value : value;
@@ -449,16 +454,16 @@ public abstract class MathHelpers {
 	}
 
 	/**
-	 * TODO: Javadoc Rotate left by the specified amount. Rotate right if the amount is negative.
+	 * Rotate the bits of <code>value</code> left by the specified amount. Rotate right if the amount is negative.
 	 * 
-	 * @param value
-	 * @param rotation
-	 * @return
+	 * @param value The value to rotate
+	 * @param rotation The number of positions to rotate by.
+	 * @return The rotated <code>value</code>
 	 */
 	public static byte rotate(byte value, int rotation) {
 		if (rotation == 0) return value;
 		if (rotation < 0) {
-			rotation = MathHelpers.abs(rotation);
+			rotation = HMath.abs(rotation);
 			rotation = rotation % Byte.SIZE;
 			return (byte) ((value >>> rotation) | (value << (Byte.SIZE - rotation)));
 		}
@@ -467,16 +472,16 @@ public abstract class MathHelpers {
 	}
 
 	/**
-	 * TODO: Javadoc Rotate left by the specified amount. Rotate right if the amount is negative.
+	 * Rotate the bits of <code>value</code> left by the specified amount. Rotate right if the amount is negative.
 	 * 
-	 * @param value
-	 * @param rotation
-	 * @return
+	 * @param value The value to rotate
+	 * @param rotation The number of positions to rotate by.
+	 * @return The rotated <code>value</code>
 	 */
 	public static int rotate(int value, int rotation) {
 		if (rotation == 0) return value;
 		if (rotation < 0) {
-			rotation = MathHelpers.abs(rotation);
+			rotation = HMath.abs(rotation);
 			rotation = rotation % Integer.SIZE;
 			return (value >>> rotation) | (value << (Integer.SIZE - rotation));
 		}
@@ -485,16 +490,16 @@ public abstract class MathHelpers {
 	}
 
 	/**
-	 * TODO: Javadoc Rotate left by the specified amount. Rotate right if the amount is negative.
+	 * Rotate the bits of <code>value</code> left by the specified amount. Rotate right if the amount is negative.
 	 * 
-	 * @param value
-	 * @param rotation
-	 * @return
+	 * @param value The value to rotate
+	 * @param rotation The number of positions to rotate by.
+	 * @return The rotated <code>value</code>
 	 */
 	public static long rotate(long value, int rotation) {
 		if (rotation == 0) return value;
 		if (rotation < 0) {
-			rotation = MathHelpers.abs(rotation);
+			rotation = HMath.abs(rotation);
 			rotation = rotation % Long.SIZE;
 			return (value >>> rotation) | (value << (Long.SIZE - rotation));
 		}
@@ -503,16 +508,16 @@ public abstract class MathHelpers {
 	}
 
 	/**
-	 * TODO: Javadoc Rotate left by the specified amount. Rotate right if the amount is negative.
+	 * Rotate the bits of <code>value</code> left by the specified amount. Rotate right if the amount is negative.
 	 * 
-	 * @param value
-	 * @param rotation
-	 * @return
+	 * @param value The value to rotate
+	 * @param rotation The number of positions to rotate by.
+	 * @return The rotated <code>value</code>
 	 */
 	public static short rotate(short value, int rotation) {
 		if (rotation == 0) return value;
 		if (rotation < 0) {
-			rotation = MathHelpers.abs(rotation);
+			rotation = HMath.abs(rotation);
 			rotation = rotation % Short.SIZE;
 			return (short) ((value >>> rotation) | (value << (Short.SIZE - rotation)));
 		}
@@ -527,8 +532,7 @@ public abstract class MathHelpers {
 	/**
 	 * Return <code>-1</code>, <code>0</code> or <code>1</code> if the input is negative, zero or positive respectively.
 	 * 
-	 * @param value
-	 *            The number to compute the signum of.
+	 * @param value The number to compute the signum of.
 	 * @return <code>-1</code>, <code>0</code> or <code>1</code> if the input is negative, zero or positive respectively.
 	 */
 	public static Sign sign(byte value) {
@@ -559,8 +563,7 @@ public abstract class MathHelpers {
 	/**
 	 * Return <code>-1</code>, <code>0</code> or <code>1</code> if the input is negative, zero or positive respectively.
 	 * 
-	 * @param value
-	 *            The number to compute the signum of.
+	 * @param value The number to compute the signum of.
 	 * @return <code>-1</code>, <code>0</code> or <code>1</code> if the input is negative, zero or positive respectively.
 	 */
 	public static Sign sign(double value) {
@@ -588,8 +591,7 @@ public abstract class MathHelpers {
 	/**
 	 * Return <code>-1</code>, <code>0</code> or <code>1</code> if the input is negative, zero or positive respectively.
 	 * 
-	 * @param value
-	 *            The number to compute the signum of.
+	 * @param value The number to compute the signum of.
 	 * @return <code>-1</code>, <code>0</code> or <code>1</code> if the input is negative, zero or positive respectively.
 	 */
 	public static Sign sign(float value) {
@@ -617,8 +619,7 @@ public abstract class MathHelpers {
 	/**
 	 * Return <code>-1</code>, <code>0</code> or <code>1</code> if the input is negative, zero or positive respectively.
 	 * 
-	 * @param value
-	 *            The number to compute the signum of.
+	 * @param value The number to compute the signum of.
 	 * @return <code>-1</code>, <code>0</code> or <code>1</code> if the input is negative, zero or positive respectively.
 	 */
 	public static Sign sign(int value) {
@@ -649,8 +650,7 @@ public abstract class MathHelpers {
 	/**
 	 * Return <code>-1</code>, <code>0</code> or <code>1</code> if the input is negative, zero or positive respectively.
 	 * 
-	 * @param value
-	 *            The number to compute the signum of.
+	 * @param value The number to compute the signum of.
 	 * @return <code>-1</code>, <code>0</code> or <code>1</code> if the input is negative, zero or positive respectively.
 	 */
 	public static Sign sign(long value) {
@@ -681,8 +681,7 @@ public abstract class MathHelpers {
 	/**
 	 * Return <code>-1</code>, <code>0</code> or <code>1</code> if the input is negative, zero or positive respectively.
 	 * 
-	 * @param value
-	 *            The number to compute the signum of.
+	 * @param value The number to compute the signum of.
 	 * @return <code>-1</code>, <code>0</code> or <code>1</code> if the input is negative, zero or positive respectively.
 	 */
 	public static Sign sign(short value) {
