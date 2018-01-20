@@ -11,9 +11,6 @@ public class Tuple1GSO<T0> implements ITuple1GS<T0> {
 		this(null);
 	}
 
-	/**
-	 * @param value0
-	 */
 	public Tuple1GSO(final T0 value0) {
 		this.value0 = value0;
 	}

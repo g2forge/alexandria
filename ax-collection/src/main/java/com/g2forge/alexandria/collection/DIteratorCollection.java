@@ -7,10 +7,8 @@ import java.util.stream.StreamSupport;
 
 /**
  * Sub-interface of {@link ICollection} which allows functional implementation of just the {@link ICollection#iterator()} method.
- * 
- * @author greg
  *
- * @param <T>
+ * @param <T> The type of the elements in this collection.
  */
 @FunctionalInterface
 public interface DIteratorCollection<T> extends ICollection<T> {

@@ -4,19 +4,13 @@ import java.util.Objects;
 
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public abstract class AJavaUntype<JT> implements IJavaUntype {
 	protected final JT javaType;
 
 	protected final ITypeEnvironment environment;
-
-	/**
-	 * @param javaType
-	 * @param environment
-	 */
-	public AJavaUntype(final JT javaType, final ITypeEnvironment environment) {
-		this.javaType = javaType;
-		this.environment = environment;
-	}
 
 	@Override
 	public boolean equals(final Object obj) {

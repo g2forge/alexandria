@@ -10,12 +10,13 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class HAnnotation {
 	/**
-	 * This is necessary because annotations on annotations don't translate through the dynamic proxy the JVM generates.
+	 * Get the annotations on an annotation itself. This is necessary because annotations on annotations don't translate through the dynamic proxy the JVM
+	 * generates.
 	 * 
-	 * @param a
-	 * @return
+	 * @param annotation The annotation to get the annotations on.
+	 * @return Any annotations on the <code>annotation</code>.
 	 */
-	public static Class<?> getAnnotationsOnAnnotation(Annotation a) {
-		return a.getClass().getInterfaces()[0];
+	public static Class<?> getAnnotationsOnAnnotation(Annotation annotation) {
+		return annotation.getClass().getInterfaces()[0];
 	}
 }

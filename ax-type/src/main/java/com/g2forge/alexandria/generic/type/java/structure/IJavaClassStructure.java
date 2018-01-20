@@ -3,8 +3,6 @@ package com.g2forge.alexandria.generic.type.java.structure;
 import java.util.stream.Stream;
 
 /**
- * @author gdgib
- *
  * @param <R>
  *            Raw types the result of {@link IJavaTypeStructure#erase()}
  * @param <T>

@@ -5,12 +5,9 @@ import com.g2forge.alexandria.java.tuple.ITuple1_S;
 
 public class CollectorSetter<T> implements ITuple1_S<T> {
 	protected final ICollector<? super T> builder;
-	
+
 	protected boolean used = false;
-	
-	/**
-	 * @param builder
-	 */
+
 	public CollectorSetter(ICollector<? super T> builder) {
 		this.builder = builder;
 	}

@@ -40,12 +40,12 @@ import lombok.Getter;
  * features of <code>A</code> and more.
  * 
  * In order for this loader to make proper choices about which services have the most features it must be able to determine which interfaces are feature
- * interfaces and which are not. Because the set of features may be extended by any new service implementation, this is discoverd through the use of {#link
+ * interfaces and which are not. Because the set of features may be extended by any new service implementation, this is discovered through the use of
  * {@link IServiceFeatureHierarchy#getFeatureInterfaces()}. Anyone defining a new feature interface should implement a class which implements
  * {@link IServiceFeatureHierarchy}, and ensure that each new feature interface is returned from. Note that {@link IServiceFeatureHierarchy} may be implemented
- * by a separate class (see {@link #FeatureServiceLoader(Class, Class)}) or directly on the service itself.
+ * by a separate class (see {@link #FeatureServiceLoader(Class, Class, ITypedFunction1)}) or directly on the service itself.
  *
- * @param <S>
+ * @param <S> The parent type of all services loadable by this loader.
  */
 public class FeatureServiceLoader<S> implements IServiceLoader<S> {
 	protected class Features {

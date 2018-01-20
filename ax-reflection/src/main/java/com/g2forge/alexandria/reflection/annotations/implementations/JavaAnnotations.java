@@ -8,15 +8,11 @@ import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.reflection.annotations.IJavaAnnotations;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public class JavaAnnotations implements IJavaAnnotations {
 	protected final AnnotatedElement annotated;
-
-	/**
-	 * @param annotated
-	 */
-	public JavaAnnotations(AnnotatedElement annotated) {
-		this.annotated = annotated;
-	}
 
 	@Override
 	public <T extends Annotation> T getAnnotation(Class<T> type) {

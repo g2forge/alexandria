@@ -11,9 +11,6 @@ import com.g2forge.alexandria.record.IRecordType;
 public class MapRecordType implements IRecordType<MapRecord> {
 	protected final Collection<MapFieldType<?>> fieldTypes;
 
-	/**
-	 * @param fieldTypes
-	 */
 	public MapRecordType(final Collection<? extends IFieldType<MapRecord, ?>> fieldTypes) {
 		this.fieldTypes = new ArrayList<>();
 		if (fieldTypes != null) for (IFieldType<MapRecord, ?> fieldType : fieldTypes) {
@@ -22,9 +19,6 @@ public class MapRecordType implements IRecordType<MapRecord> {
 		}
 	}
 
-	/**
-	 * @param fieldTypes
-	 */
 	@SafeVarargs
 	public MapRecordType(final IFieldType<MapRecord, ?>... fieldTypes) {
 		this(HCollection.asList(fieldTypes));

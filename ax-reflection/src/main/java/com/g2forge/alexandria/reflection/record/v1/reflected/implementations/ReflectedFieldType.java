@@ -6,15 +6,11 @@ import com.g2forge.alexandria.reflection.annotations.IJavaAnnotations;
 import com.g2forge.alexandria.reflection.object.IJavaFieldReflection;
 import com.g2forge.alexandria.reflection.record.v1.reflected.IReflectedFieldType;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public class ReflectedFieldType<R, T> implements IReflectedFieldType<R, T> {
 	protected final IJavaFieldReflection<R, T> field;
-
-	/**
-	 * @param field
-	 */
-	public ReflectedFieldType(final IJavaFieldReflection<R, T> field) {
-		this.field = field;
-	}
 
 	@Override
 	public IField<R, T> apply(final R input) {

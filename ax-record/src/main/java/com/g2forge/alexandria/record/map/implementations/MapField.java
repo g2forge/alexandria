@@ -4,20 +4,14 @@ import com.g2forge.alexandria.java.tuple.ITuple1GS;
 import com.g2forge.alexandria.record.IField;
 import com.g2forge.alexandria.record.IFieldType;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public class MapField<T> implements IField<MapRecord, T> {
 	protected final MapFieldType<T> type;
-	
+
 	protected final MapRecord record;
-	
-	/**
-	 * @param type
-	 * @param record
-	 */
-	public MapField(final MapFieldType<T> type, final MapRecord record) {
-		this.type = type;
-		this.record = record;
-	}
-	
+
 	@Override
 	public ITuple1GS<T> getAccessor() {
 		return new ITuple1GS<T>() {
@@ -26,13 +20,13 @@ public class MapField<T> implements IField<MapRecord, T> {
 			public T get0() {
 				return (T) record.values.get(type.getName());
 			}
-			
+
 			@Override
 			public ITuple1GS<T> set0(final T value) {
 				record.values.put(type.getName(), value);
 				return this;
 			}
-			
+
 			@SuppressWarnings("unchecked")
 			@Override
 			public T swap0(final T value) {
@@ -40,7 +34,7 @@ public class MapField<T> implements IField<MapRecord, T> {
 			}
 		};
 	}
-	
+
 	@Override
 	public IFieldType<MapRecord, T> getType() {
 		return type;

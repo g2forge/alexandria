@@ -14,10 +14,7 @@ import com.g2forge.alexandria.reflection.record.v1.typedmap.IJavaTypedRecordType
 
 public class JavaTypedMapRecordType implements IJavaTypedRecordType<JavaTypedMapRecord> {
 	protected final Collection<JavaTypedMapFieldType<?>> fieldTypes;
-	
-	/**
-	 * @param fieldTypes
-	 */
+
 	public JavaTypedMapRecordType(final Collection<? extends IJavaTypedFieldType<JavaTypedMapRecord, ?>> fieldTypes) {
 		this.fieldTypes = new ArrayList<>();
 		if (fieldTypes != null) for (IJavaTypedFieldType<JavaTypedMapRecord, ?> fieldType : fieldTypes) {
@@ -25,10 +22,7 @@ public class JavaTypedMapRecordType implements IJavaTypedRecordType<JavaTypedMap
 			else this.fieldTypes.add(new JavaTypedMapFieldType<>(fieldType));
 		}
 	}
-	
-	/**
-	 * @param fieldTypes
-	 */
+
 	@SafeVarargs
 	public JavaTypedMapRecordType(final IJavaTypedFieldType<JavaTypedMapRecord, ?>... fieldTypes) {
 		this(HCollection.asList(fieldTypes));
@@ -43,7 +37,7 @@ public class JavaTypedMapRecordType implements IJavaTypedRecordType<JavaTypedMap
 	public Collection<? extends IFieldType<JavaTypedMapRecord, ?>> getFields() {
 		return Collections.unmodifiableCollection(fieldTypes);
 	}
-	
+
 	@Override
 	public IJavaUntype getType() {
 		return new JavaClassType(JavaTypedMapRecord.class, EmptyTypeEnvironment.create());

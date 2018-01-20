@@ -19,18 +19,18 @@ public interface IExpression<V extends IVariable<V, N>, N extends IEnvironment<V
 	/**
 	 * Apply the given environment to this expression. May either be eager or lazy, at the implementors discretion.
 	 * 
-	 * @param environment
-	 * @return
+	 * @param environment The environment to apply to this expression.
+	 * @return An expression equivalent to this one, with any variables present in the environment substituted for their values.
 	 */
 	public IExpression<V, N> apply(N environment);
 
 	/**
 	 * Evaluate this expression completely to a literal value.
 	 * 
-	 * @param environment
-	 * @return
-	 * @throws ExpressionNotEvaluableException
-	 *             if this expression cannot be completely evaluated.
+	 * @param <L> The (static) type of the literal result.
+	 * @param type The type of the literal result to be expected (and required) from this evaluation.
+	 * @return A literal expression resulting from the evaluation.
+	 * @throws ExpressionNotEvaluableException if this expression cannot be completely evaluated.
 	 */
 	public default <L extends ILiteral<V, N>> L eval(Class<L> type) throws ExpressionNotEvaluableException {
 		return eval(this, type);
@@ -39,8 +39,7 @@ public interface IExpression<V extends IVariable<V, N>, N extends IEnvironment<V
 	/**
 	 * Eagerly reduce this expression.
 	 * 
-	 * @param environment
-	 * @return
+	 * @return A reduced version of this expression.
 	 */
 	public IExpression<V, N> reduce();
 }
