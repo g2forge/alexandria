@@ -62,8 +62,8 @@ public class HString {
 			final char current = string.charAt(i);
 			if (current == '\\') {
 				switch (string.charAt(i + 1)) {
-					case '“':
-					case '”':
+					case 'â€œ':
+					case 'â€':
 					case '\\':
 						retVal.append(string.charAt(i + 1));
 						break;
