@@ -1,5 +1,6 @@
 package com.g2forge.alexandria.java.core.helpers;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -41,6 +42,17 @@ public class HCollector {
 			if (list.size() != 1) throw new IllegalStateException("Result set had " + list.size() + " elements instead of 1!");
 			return list.get(0);
 		});
+	}
+
+	public static <T> Collector<T, ?, T[]> toArray(Class<T> type) {
+		return new SimpleCollector<T, List<T>, T[]>(ArrayList::new, List::add, (left, right) -> {
+			left.addAll(right);
+			return left;
+		}, list -> {
+			@SuppressWarnings("unchecked")
+			final T[] array = (T[]) Array.newInstance(type, list.size());
+			return list.toArray(array);
+		}, Collections.emptySet());
 	}
 
 	public static <K, V> Collector<Tuple2G_O<K, V>, ?, Map<K, V>> toMap() {
