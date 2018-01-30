@@ -90,7 +90,10 @@ public class TypeSwitch3<I0, I1, I2, O> implements IFunction3<I0, I1, I2, O> {
 
 		protected <I0, I1, I2> O apply(IFunction3<? super I0, ? super I1, ? super I2, ? extends O> fallback, I0 input0, I1 input1, I2 input2) {
 			return get(n -> n.getFunction().isApplicable(input0, input1, input2), collection -> {
-				if (collection.isEmpty()) return new Node<O>(new TypedFunction3<>(null, null, null, fallback));
+				if (collection.isEmpty()) {
+					if (fallback == null) throw new IllegalArgumentException();
+					return new Node<O>(new TypedFunction3<>(null, null, null, fallback));
+				}
 				return HCollection.getOne(collection);
 			}).getFunction().apply(input0, input1, input2);
 		}

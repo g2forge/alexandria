@@ -96,16 +96,6 @@ public class TestTypeSwitch1 {
 		Assert.assertEquals("a2", typeSwitch.apply(1));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void error() {
-		final TypeSwitch1.FunctionBuilder<Object, Object> builder = new TypeSwitch1.FunctionBuilder<>();
-		builder.add(A.class, t -> null);
-		builder.add(B.class, t -> null);
-		final IFunction1<Object, Object> typeSwitch = builder.build();
-
-		typeSwitch.apply(new D() {});
-	}
-
 	@Test
 	public void shadow() {
 		final TypeSwitch1.FunctionBuilder<Object, Object> builder = new TypeSwitch1.FunctionBuilder<>();
@@ -168,5 +158,30 @@ public class TestTypeSwitch1 {
 			final TestNode actual = TestNode.from(new TypeSwitch1<>(null, getTypedFunctions(order)).getRoot());
 			Assert.assertEquals(order.stream().map(Class::getSimpleName).collect(Collectors.joining()), expected, actual);
 		}
+	}
+
+	/**
+	 * Test what happens when there are 2 valid implementations.
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void error2() {
+		final TypeSwitch1.FunctionBuilder<Object, Object> builder = new TypeSwitch1.FunctionBuilder<>();
+		builder.add(A.class, t -> null);
+		builder.add(B.class, t -> null);
+		final IFunction1<Object, Object> typeSwitch = builder.build();
+
+		typeSwitch.apply(new D() {});
+	}
+
+	/**
+	 * Test what happens when there are 0 valid implementations.
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void error0() {
+		final TypeSwitch1.FunctionBuilder<Object, Object> builder = new TypeSwitch1.FunctionBuilder<>();
+		builder.add(A.class, t -> null);
+		final IFunction1<Object, Object> typeSwitch = builder.build();
+
+		typeSwitch.apply(new B() {});
 	}
 }
