@@ -3,11 +3,7 @@ package com.g2forge.alexandria.java.typeswitch;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.java.function.IFunction1;
 import com.g2forge.alexandria.java.function.IFunction2;
-import com.g2forge.alexandria.java.typeswitch.TypeSwitch2;
-import com.g2forge.alexandria.java.typeswitch.TestTypeSwitch1.A;
-import com.g2forge.alexandria.java.typeswitch.TestTypeSwitch1.B;
 
 public class TestTypeSwitch2 {
 	@Test
