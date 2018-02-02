@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>com.g2forge.alexandria</groupId>
 		<artifactId>ax-project</artifactId>
-		<version>0.0.4-SNAPSHOT</version>
+		<version>0.0.5-SNAPSHOT</version>
 		<relativePath>../ax-project/pom.xml</relativePath>
 	</parent>
 	
@@ -18,12 +18,12 @@
 		<dependency>
 			<groupId>com.g2forge.alexandria</groupId>
 			<artifactId>ax-record</artifactId>
-			<version>${alexandria.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.g2forge.alexandria</groupId>
 			<artifactId>ax-type</artifactId>
-			<version>${alexandria.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>
