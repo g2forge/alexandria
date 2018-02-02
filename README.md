@@ -24,3 +24,4 @@ Below are the endorsed, though certainly not the only, steps to build alexandria
 3. Release or drop [the staging repository](https://oss.sonatype.org/#stagingRepositories)
 4. Open a [pull request](https://github.com/g2forge/alexandria/pulls) with the results of Step #2, tagging it with the milestone you've just released.
 5. Create the new [github milestone](https://github.com/g2forge/alexandria/milestones) and close the prior one
+6. Update downstream projects (`<alexandria.version>XXX</alexandria.version>`, parent POM versions, etc)

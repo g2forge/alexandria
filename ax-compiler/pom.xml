@@ -18,7 +18,7 @@
 		<dependency>
 			<groupId>com.g2forge.alexandria</groupId>
 			<artifactId>ax-test</artifactId>
-			<version>${alexandria.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hamcrest</groupId>

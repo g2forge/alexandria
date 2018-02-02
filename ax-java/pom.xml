@@ -27,7 +27,7 @@
 					<dependency>
 						<groupId>com.g2forge.alexandria</groupId>
 						<artifactId>ax-annotations</artifactId>
-						<version>${alexandria.version}</version>
+						<version>${project.version}</version>
 					</dependency>
 				</dependencies>
 			</plugin>
@@ -38,7 +38,7 @@
 		<dependency>
 			<groupId>com.g2forge.alexandria</groupId>
 			<artifactId>ax-annotations</artifactId>
-			<version>${alexandria.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>
