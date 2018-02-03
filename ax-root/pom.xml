@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.g2forge.alexandria</groupId>
@@ -36,8 +37,8 @@
 		<alexandria.repository>alexandria</alexandria.repository>
 	</properties>
 
-	<name>${alexandria.name} Root</name>
-	<description>Parent project for the critical base code for ${alexandria.name}.  Generally one would us "ax-project" instead.</description>
+	<name>Alexandria Root</name>
+	<description>Parent project for the critical base code for Alexandria.  Generally one would us "ax-project" instead.</description>
 	<url>https://github.com/${alexandria.organization}/${alexandria.repository}/tree/${project.version}/${project.artifactId}</url>
 	<developers>
 		<developer>
@@ -57,8 +58,8 @@
 		<connection>scm:git:git://github.com/${alexandria.organization}/${alexandria.repository}.git</connection>
 		<developerConnection>scm:git:ssh://github.com:${alexandria.organization}/${alexandria.repository}.git</developerConnection>
 		<url>http://github.com/${alexandria.organization}/${alexandria.repository}/tree/${project.version}</url>
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 
 	<distributionManagement>
 		<snapshotRepository>
