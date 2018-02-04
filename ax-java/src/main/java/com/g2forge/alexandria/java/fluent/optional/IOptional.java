@@ -15,4 +15,8 @@ public interface IOptional<T> extends IFluent_D<T>, IFluent_0<T>, IFluent1_<T> {
 
 	@Override
 	public <U> IOptional<U> map(Function<? super T, ? extends U> mapper);
+
+	public IOptional<T> fallback(IOptional<? extends T> fallback);
+
+	public IOptional<T> override(IOptional<? extends T> override);
 }

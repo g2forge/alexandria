@@ -2,7 +2,7 @@ package com.g2forge.alexandria.java.fluent.optional;
 
 import com.g2forge.alexandria.java.fluent.optional.factory.IOptionalFactory;
 
-public class NullableOptional<T> extends AOptional<T> {
+public class NullableOptional<T> extends AValueOptional<T> {
 	protected static final NullableOptional<?> EMPTY = new NullableOptional<>();
 
 	public static final IOptionalFactory FACTORY = new IOptionalFactory() {
@@ -49,12 +49,12 @@ public class NullableOptional<T> extends AOptional<T> {
 	}
 
 	@Override
-	protected <_T> AOptional<_T> create() {
+	protected <_T> AValueOptional<_T> create() {
 		return NullableOptional.empty();
 	}
 
 	@Override
-	protected <_T> AOptional<_T> create(_T value) {
+	protected <_T> AValueOptional<_T> create(_T value) {
 		return NullableOptional.of(value);
 	}
 

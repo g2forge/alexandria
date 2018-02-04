@@ -4,7 +4,7 @@ import java.util.Objects;
 
 import com.g2forge.alexandria.java.fluent.optional.factory.IOptionalFactory;
 
-public class NonNullOptional<T> extends AOptional<T> {
+public class NonNullOptional<T> extends AValueOptional<T> {
 	protected static final NonNullOptional<?> EMPTY = new NonNullOptional<>();
 
 	public static final IOptionalFactory FACTORY = new IOptionalFactory() {
@@ -47,12 +47,12 @@ public class NonNullOptional<T> extends AOptional<T> {
 	}
 
 	@Override
-	protected <U> AOptional<U> create() {
+	protected <U> AValueOptional<U> create() {
 		return NonNullOptional.empty();
 	}
 
 	@Override
-	protected <U> AOptional<U> create(U value) {
+	protected <U> AValueOptional<U> create(U value) {
 		return NonNullOptional.of(value);
 	}
 
