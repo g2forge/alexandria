@@ -1,5 +1,7 @@
 package com.g2forge.alexandria.java.fluent;
 
-public interface IFluent1_<T> extends IFluentG_<T> {
+import com.g2forge.alexandria.java.function.ISupplier;
+
+public interface IFluent1_<T> extends IFluentG_<T>, ISupplier<T> {
 	public T get();
 }
