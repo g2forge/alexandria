@@ -1,5 +1,6 @@
 package com.g2forge.alexandria.java.core.helpers;
 
+import java.io.InputStream;
 import java.util.Scanner;
 
 import com.g2forge.alexandria.java.marker.Helpers;
@@ -10,7 +11,9 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class HResource {
 	public static String read(Class<?> klass, String resource) {
-		try (final Scanner scanner = new Scanner(klass.getResourceAsStream(resource), "UTF-8")) {
+		final InputStream stream = klass.getResourceAsStream(resource);
+		if (stream == null) throw new NullPointerException(String.format("Resource \"%1$s\" could not found relative to class %2$s", resource, klass.getName()));
+		try (final Scanner scanner = new Scanner(stream, "UTF-8")) {
 			return scanner.useDelimiter("\\A").next();
 		}
 	}
