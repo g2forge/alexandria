@@ -28,6 +28,14 @@ public interface IFunction1<I, O> extends Function<I, O>, IFunction<O> {
 		return i -> f.apply(apply(i));
 	}
 
+	public default O applyWithFallback(@SuppressWarnings("unchecked") I... inputs) {
+		for (I input : inputs) {
+			final O retVal = apply(input);
+			if (retVal != null) return retVal;
+		}
+		return null;
+	}
+
 	public default Supplier<O> compose(Supplier<? extends I> before) {
 		Objects.requireNonNull(before);
 		return () -> apply(before.get());
