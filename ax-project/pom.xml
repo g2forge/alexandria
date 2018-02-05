@@ -8,12 +8,12 @@
 	<parent>
 		<groupId>com.g2forge.alexandria</groupId>
 		<artifactId>ax-root</artifactId>
-		<version>0.0.5-SNAPSHOT</version>
+		<version>0.0.6-SNAPSHOT</version>
 		<relativePath>../ax-root/pom.xml</relativePath>
 	</parent>
 
-	<name>${alexandria.name} Project</name>
-	<description>Parent project for most of the code in ${alexandria.name}.  Note that while ${alexandria.organization} repositories always have a "xx-project", ${alexandria.name} also has "ax-root" due to the need to avoid circular dependencies of this base library.</description>
+	<name>Alexandria Project</name>
+	<description>Parent project for most of the code in Alexandria. Note that while g2forge repositories always have a "xx-project", Alexandria also has "ax-root" due to the need to avoid circular dependencies of this base library.</description>
 
 	<build>
 		<plugins>
@@ -28,7 +28,7 @@
 					<dependency>
 						<groupId>com.g2forge.alexandria</groupId>
 						<artifactId>ax-annotations</artifactId>
-						<version>0.0.5-SNAPSHOT</version>
+						<version>0.0.6-SNAPSHOT</version>
 					</dependency>
 				</dependencies>
 			</plugin>
@@ -39,12 +39,12 @@
 		<dependency>
 			<groupId>com.g2forge.alexandria</groupId>
 			<artifactId>ax-java</artifactId>
-			<version>0.0.5-SNAPSHOT</version>
+			<version>0.0.6-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.g2forge.alexandria</groupId>
 			<artifactId>ax-test</artifactId>
-			<version>0.0.5-SNAPSHOT</version>
+			<version>0.0.6-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

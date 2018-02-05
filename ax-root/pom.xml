@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.g2forge.alexandria</groupId>
 	<artifactId>ax-root</artifactId>
-	<version>0.0.5-SNAPSHOT</version>
+	<version>0.0.6-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<properties>
@@ -36,8 +36,8 @@
 		<alexandria.repository>alexandria</alexandria.repository>
 	</properties>
 
-	<name>${alexandria.name} Root</name>
-	<description>Parent project for the critical base code for ${alexandria.name}.  Generally one would us "ax-project" instead.</description>
+	<name>Alexandria Root</name>
+	<description>Parent project for the critical base code for Alexandria.  Generally one would us "ax-project" instead.</description>
 	<url>https://github.com/${alexandria.organization}/${alexandria.repository}/tree/${project.version}/${project.artifactId}</url>
 	<developers>
 		<developer>
@@ -57,8 +57,8 @@
 		<connection>scm:git:git://github.com/${alexandria.organization}/${alexandria.repository}.git</connection>
 		<developerConnection>scm:git:ssh://github.com:${alexandria.organization}/${alexandria.repository}.git</developerConnection>
 		<url>http://github.com/${alexandria.organization}/${alexandria.repository}/tree/${project.version}</url>
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 
 	<distributionManagement>
 		<snapshotRepository>
@@ -72,6 +72,29 @@
 	</distributionManagement>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>src/main/java</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+			<testResource>
+				<directory>src/test/java</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</testResource>
+		</testResources>
+
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>

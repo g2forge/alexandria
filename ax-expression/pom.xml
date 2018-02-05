@@ -6,12 +6,12 @@
 	<parent>
 		<groupId>com.g2forge.alexandria</groupId>
 		<artifactId>ax-project</artifactId>
-		<version>0.0.5-SNAPSHOT</version>
+		<version>0.0.6-SNAPSHOT</version>
 		<relativePath>../ax-project/pom.xml</relativePath>
 	</parent>
 
-	<name>${alexandria.name} Expression</name>
-	<description>Simple library for expressions.</description>
+	<name>Alexandria Expression</name>
+	<description>A library for expressions and their evaluation. Includes a basic implementation for math.</description>
 
 	<dependencies>
 		<dependency>

@@ -7,10 +7,10 @@
 	<parent>
 		<groupId>com.g2forge.alexandria</groupId>
 		<artifactId>ax-project</artifactId>
-		<version>0.0.5-SNAPSHOT</version>
+		<version>0.0.6-SNAPSHOT</version>
 		<relativePath>../ax-project/pom.xml</relativePath>
 	</parent>
-	
-	<name>${alexandria.name} Record</name>
+
+	<name>Alexandria Record</name>
 	<description>Common library for creating, manipulating and reflecting over record and record-like abstractions.</description>
 </project>

@@ -7,11 +7,11 @@
 	<parent>
 		<groupId>com.g2forge.alexandria</groupId>
 		<artifactId>ax-project</artifactId>
-		<version>0.0.5-SNAPSHOT</version>
+		<version>0.0.6-SNAPSHOT</version>
 		<relativePath>../ax-project/pom.xml</relativePath>
 	</parent>
-	
-	<name>${alexandria.name} Reflection</name>
+
+	<name>Alexandria Reflection</name>
 	<description>Generic type safe reflection library, which adds significant usability over the standard Java runtime.</description>
 
 	<dependencies>

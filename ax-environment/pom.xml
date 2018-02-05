@@ -7,10 +7,10 @@
 	<parent>
 		<groupId>com.g2forge.alexandria</groupId>
 		<artifactId>ax-project</artifactId>
-		<version>0.0.5-SNAPSHOT</version>
+		<version>0.0.6-SNAPSHOT</version>
 		<relativePath>../ax-project/pom.xml</relativePath>
 	</parent>
-	
-	<name>${alexandria.name} Environment</name>
+
+	<name>Alexandria Environment</name>
 	<description>Simple library for implementing and interacting with environments in a type and generic safe manner.</description>
 </project>

@@ -7,11 +7,11 @@
 	<parent>
 		<groupId>com.g2forge.alexandria</groupId>
 		<artifactId>ax-project</artifactId>
-		<version>0.0.5-SNAPSHOT</version>
+		<version>0.0.6-SNAPSHOT</version>
 		<relativePath>../ax-project/pom.xml</relativePath>
 	</parent>
 
-	<name>${alexandria.name} Service</name>
+	<name>Alexandria Service</name>
 	<description>Common library for service (SPI) loading.</description>
 
 	<dependencies>
