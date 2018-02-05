@@ -31,6 +31,7 @@ public abstract class AOptional<T> implements IOptional<T> {
 
 		@Override
 		public T get() {
+			if (!override.isEmpty()) return override.get();
 			return fallback.get();
 		}
 
