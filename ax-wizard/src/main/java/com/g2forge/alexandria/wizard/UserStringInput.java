@@ -1,16 +1,24 @@
 package com.g2forge.alexandria.wizard;
 
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
 import java.io.Console;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JRootPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -67,7 +75,7 @@ public class UserStringInput extends AInput<String> {
 			constraints.fill = GridBagConstraints.NONE;
 			constraints.gridx = 0;
 			constraints.weightx = 1;
-			panel.add(new JLabel(prompt[i]), constraints);
+			panel.add(new JLabel(prompt[i] + ": "), constraints);
 
 			constraints.gridx = 1;
 			constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -76,6 +84,28 @@ public class UserStringInput extends AInput<String> {
 			panel.add(texts[i], constraints);
 			constraints.gridy++;
 		}
+
+		texts[0].addHierarchyListener(new HierarchyListener() {
+			protected final HierarchyListener hierarchyListener = this;
+
+			@Override
+			public void hierarchyChanged(HierarchyEvent e) {
+				final JRootPane rootPane = SwingUtilities.getRootPane(texts[0]);
+				if (rootPane == null) return;
+				final JButton okButton = rootPane.getDefaultButton();
+				if (okButton == null) return;
+				okButton.addFocusListener(new FocusAdapter() {
+					@Override
+					public void focusGained(FocusEvent e) {
+						if (!e.isTemporary()) {
+							texts[0].requestFocusInWindow();
+							texts[0].removeHierarchyListener(hierarchyListener);
+							okButton.removeFocusListener(this);
+						}
+					}
+				});
+			}
+		});
 
 		if (JOptionPane.showConfirmDialog(null, panel, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
 			final String[] response = new String[prompt.length];
