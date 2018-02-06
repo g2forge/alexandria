@@ -1,6 +1,5 @@
 package com.g2forge.alexandria.wizard;
 
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
