@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.g2forge.alexandria</groupId>
 	<artifactId>ax-root</artifactId>
-	<version>0.0.6-SNAPSHOT</version>
+	<version>0.0.7-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<properties>
@@ -14,7 +14,7 @@
 		<project.resources.sourceEncoding>${encoding}</project.resources.sourceEncoding>
 		<archetype.encoding>${encoding}</archetype.encoding>
 
-		<mavencompiler.version>3.3</mavencompiler.version>
+		<mavencompiler.version>3.7.0</mavencompiler.version>
 		<mavencompiler.javaversion>1.8</mavencompiler.javaversion>
 
 		<lombok.version>1.16.18</lombok.version>
