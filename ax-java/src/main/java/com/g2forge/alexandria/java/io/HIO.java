@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.java.core.error.HError;
+import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.core.helpers.HStream;
 import com.g2forge.alexandria.java.function.IThrowFunction1;
 import com.g2forge.alexandria.java.marker.Helpers;
@@ -26,6 +27,10 @@ import lombok.experimental.UtilityClass;
 public class HIO {
 	public static int getRecommendedBufferSize() {
 		return 16384;
+	}
+
+	public static void closeAll(AutoCloseable... closeables) {
+		closeAll(HCollection.asList(closeables));
 	}
 
 	public static void closeAll(Iterable<? extends AutoCloseable> closeables) {
