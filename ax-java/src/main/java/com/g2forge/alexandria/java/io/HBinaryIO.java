@@ -20,6 +20,28 @@ public class HBinaryIO {
 		return readInt(input);
 	}
 
+	/**
+	 * Copy an input stream to an output stream.
+	 * 
+	 * @param input The input stream to read from.
+	 * @param output The output stream to write to.
+	 * @throws IOException IOException if an I/O error occurs. In particular, an <code>IOException</code> is thrown if the output stream is closed.
+	 */
+	public static void copy(final InputStream input, final OutputStream output) throws IOException {
+		final byte[] buffer = new byte[HIO.getRecommendedBufferSize()];
+		while (true) {
+			final int actual;
+			try {
+				actual = input.read(buffer);
+			} catch (final IOException exception) {
+				throw new RuntimeIOException(exception);
+			}
+			if (actual < 0) break;
+
+			output.write(buffer, 0, actual);
+		}
+	}
+
 	public static byte[] read(final InputStream input) {
 		int total = 0;
 		final List<byte[]> buffers = new ArrayList<>();
