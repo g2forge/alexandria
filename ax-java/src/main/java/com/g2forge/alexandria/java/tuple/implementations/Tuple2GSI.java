@@ -1,6 +1,7 @@
 package com.g2forge.alexandria.java.tuple.implementations;
 
 import com.g2forge.alexandria.java.tuple.ITuple2GS;
+import com.g2forge.alexandria.java.tuple.ITuple2G_;
 
 public class Tuple2GSI<T0, T1> extends Tuple1GSI<T0> implements ITuple2GS<T0, T1> {
 	protected T1 value1;
@@ -20,7 +21,7 @@ public class Tuple2GSI<T0, T1> extends Tuple1GSI<T0> implements ITuple2GS<T0, T1
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 
-		final Tuple2G_I<?, ?> that = (Tuple2G_I<?, ?>) obj;
+		final ITuple2G_<?, ?> that = (ITuple2G_<?, ?>) obj;
 		return (get0() == that.get0()) && (get1() == that.get1());
 	}
 

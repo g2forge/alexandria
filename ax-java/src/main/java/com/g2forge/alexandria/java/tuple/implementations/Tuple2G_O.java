@@ -18,7 +18,7 @@ public class Tuple2G_O<T0, T1> extends Tuple1G_O<T0> implements ITuple2G_<T0, T1
 		if (!super.equals(obj)) return false;
 		if (getClass() != obj.getClass()) return false;
 
-		final Tuple2G_O<?, ?> that = (Tuple2G_O<?, ?>) obj;
+		final ITuple2G_<?, ?> that = (ITuple2G_<?, ?>) obj;
 		return Objects.equals(get0(), that.get0()) && Objects.equals(get1(), that.get1());
 	}
 
