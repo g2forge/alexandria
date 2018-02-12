@@ -11,10 +11,14 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class HResource {
 	public static String read(Class<?> klass, String resource) {
-		final InputStream stream = klass.getResourceAsStream(resource);
+		final InputStream stream = getResourceAsStream(klass, resource);
 		if (stream == null) throw new NullPointerException(String.format("Resource \"%1$s\" could not found relative to class %2$s", resource, klass.getName()));
 		try (final Scanner scanner = new Scanner(stream, "UTF-8")) {
 			return scanner.useDelimiter("\\A").next();
 		}
+	}
+
+	public static InputStream getResourceAsStream(Class<?> klass, String resource) {
+		return klass.getResourceAsStream(resource);
 	}
 }

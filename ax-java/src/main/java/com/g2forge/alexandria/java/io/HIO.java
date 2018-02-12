@@ -9,7 +9,6 @@ import java.nio.channels.ReadableByteChannel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,21 +47,24 @@ public class HIO {
 	}
 
 	public static boolean isEqual(InputStream... streams) {
-		if (streams.length <= 1) {
-			if (streams.length > 0) try {
-				streams[0].close();
+		return isEqual(HCollection.asList(streams));
+	}
+
+	public static boolean isEqual(Collection<? extends InputStream> streams) {
+		if (streams.size() <= 1) {
+			if (streams.size() > 0) try {
+				HCollection.getOne(streams).close();
 			} catch (IOException exception) {
 				throw new RuntimeIOException(exception);
 			}
 			return true;
 		}
 
-		final List<InputStream> list = Arrays.asList(streams);
 		try {
-			final List<ReadableByteChannel> channels = list.stream().map(Channels::newChannel).collect(Collectors.toList());
+			final List<ReadableByteChannel> channels = streams.stream().map(Channels::newChannel).collect(Collectors.toList());
 			try {
 				final int bufferSize = getRecommendedBufferSize();
-				final List<ByteBuffer> buffers = list.stream().map(stream -> ByteBuffer.allocateDirect(bufferSize)).collect(Collectors.toList());
+				final List<ByteBuffer> buffers = streams.stream().map(stream -> ByteBuffer.allocateDirect(bufferSize)).collect(Collectors.toList());
 				while (true) {
 					final List<Integer> counts = HStream.zip(channels.stream(), buffers.stream(), (channel, buffer) -> {
 						try {
@@ -86,7 +88,7 @@ public class HIO {
 				closeAll(channels);
 			}
 		} finally {
-			closeAll(list);
+			closeAll(streams);
 		}
 	}
 
