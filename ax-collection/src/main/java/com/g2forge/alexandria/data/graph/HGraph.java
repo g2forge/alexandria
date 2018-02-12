@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,16 +17,22 @@ import com.g2forge.alexandria.java.function.IFunction1;
 
 public class HGraph {
 	public static <N> List<N> toposort(Collection<N> nodes, Function<N, Set<N>> accessor, boolean isOut) {
-		final Map<N, Node<N>> nodeMap = nodes.stream().map(n -> {
+		final Function<? super N, ? extends Node<N>> nodeConstructor = n -> {
 			final Node<N> retVal = new Node<>(n);
 			if (isOut) retVal.setIn(new HashSet<>());
 			else retVal.setOut(new HashSet<>());
 			return retVal;
-		}).collect(Collectors.toMap(Node::getNode, IFunction1.identity(), HCollector.mergeFail(), HashMap::new));
-		for (N n : nodes) {
+		};
+		final Map<N, Node<N>> nodeMap = nodes.stream().map(nodeConstructor).collect(Collectors.toMap(Node::getNode, IFunction1.identity(), HCollector.mergeFail(), HashMap::new));
+		final LinkedList<N> todo = new LinkedList<>(nodes);
+		while (!todo.isEmpty()) {
+			final N n = todo.remove();
 			final Node<N> node = nodeMap.get(n);
 			final Set<Edge<N>> edges = accessor.apply(n).stream().map(o -> {
-				final Node<N> other = nodeMap.get(o);
+				final Node<N> other = nodeMap.computeIfAbsent(o, key -> {
+					todo.add(key);
+					return nodeConstructor.apply(key);
+				});
 				if (other == null) throw new NullPointerException(String.format("Node \"%s\" has a broken edge to \"%s\"!", node.getNode(), o));
 				return new Edge<N>(isOut ? node : other, isOut ? other : node);
 			}).collect(Collectors.toSet());
