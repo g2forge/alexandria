@@ -65,6 +65,8 @@ public enum Platform {
 	/**
 	 * The {@link PathSpec} of the default {@link Shell} when run on this platform. Note that this may not be the same as the {@link PathSpec} of the default
 	 * {@link Shell} when run on the it's default platform.
+	 * 
+	 * @return The path specification for the default shell when run on this platform.
 	 */
 	@Getter(lazy = true)
 	private final PathSpec pathSpec = getShell().getPathSpec(this);

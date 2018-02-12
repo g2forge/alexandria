@@ -17,6 +17,8 @@ import lombok.Getter;
 public class RecordingFunction<I, O> extends TeeFunction<I, O> {
 	/**
 	 * A collection of the pairs of input and output values, for each invocation of this function.
+	 * 
+	 * @return The record of function applications.
 	 */
 	@Getter
 	protected final Collection<ITuple2G_<? extends I, ? extends O>> record;
