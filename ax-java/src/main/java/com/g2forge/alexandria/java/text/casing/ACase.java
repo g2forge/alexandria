@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.text;
+package com.g2forge.alexandria.java.text.casing;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
