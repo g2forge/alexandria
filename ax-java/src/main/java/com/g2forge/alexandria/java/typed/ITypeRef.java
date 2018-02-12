@@ -1,5 +1,6 @@
 package com.g2forge.alexandria.java.typed;
 
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 import com.g2forge.alexandria.annotations.message.TODO;
@@ -40,9 +41,15 @@ public interface ITypeRef<T> extends IDynamicType<T> {
 
 	@TODO("Properly implement erasure")
 	public default Class<T> getErasedType() {
+		final Type type = getType();
+		if (type instanceof ParameterizedType) {
+			@SuppressWarnings("unchecked")
+			final Class<T> retVal = (Class<T>) ((ParameterizedType) type).getRawType();
+			return retVal;
+		}
 		// TODO: Properly implement erasure here
 		@SuppressWarnings("unchecked")
-		final Class<T> klass = (Class<T>) getType();
+		final Class<T> klass = (Class<T>) type;
 		return klass;
 	}
 
