@@ -4,14 +4,20 @@ import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.slf4j.event.Level;
 
+import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.enums.EnumException;
 import com.g2forge.alexandria.java.marker.Helpers;
+import com.g2forge.alexandria.service.BasicServiceLoader;
 
+import lombok.Getter;
 import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
 public class HLog {
+	@Getter(lazy = true)
+	private static final ILogControl logControl = HCollection.getOne(new BasicServiceLoader<ILogControl>(ILogControl.class).load());
+
 	public static void log(Logger logger, Level level, Marker marker, String format, Throwable throwable, Object... arguments) {
 		switch (level) {
 			case ERROR:
