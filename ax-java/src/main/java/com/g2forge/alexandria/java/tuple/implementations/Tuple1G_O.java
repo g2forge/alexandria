@@ -17,7 +17,7 @@ public class Tuple1G_O<T0> implements ITuple1G_<T0> {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 
-		final Tuple1G_O<?> that = (Tuple1G_O<?>) obj;
+		final ITuple1G_<?> that = (ITuple1G_<?>) obj;
 		return Objects.equals(get0(), that.get0());
 	}
 

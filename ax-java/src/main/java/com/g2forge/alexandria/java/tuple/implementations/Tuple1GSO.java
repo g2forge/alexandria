@@ -3,6 +3,7 @@ package com.g2forge.alexandria.java.tuple.implementations;
 import java.util.Objects;
 
 import com.g2forge.alexandria.java.tuple.ITuple1GS;
+import com.g2forge.alexandria.java.tuple.ITuple1G_;
 
 public class Tuple1GSO<T0> implements ITuple1GS<T0> {
 	protected T0 value0;
@@ -21,7 +22,7 @@ public class Tuple1GSO<T0> implements ITuple1GS<T0> {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 
-		final Tuple1G_O<?> that = (Tuple1G_O<?>) obj;
+		final ITuple1G_<?> that = (ITuple1G_<?>) obj;
 		return Objects.equals(get0(), that.get0());
 	}
 
