@@ -1,5 +1,7 @@
 # Alexandria
 
+A standard library of commonly used Java code.
+
 The alexandria project is designed to provide a general-purpose library of Java code for a wide range of applications.
 Things specific to Java but which should be shared widely among projects belong in this library.
 
