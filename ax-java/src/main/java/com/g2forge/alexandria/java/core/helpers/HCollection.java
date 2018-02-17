@@ -74,8 +74,8 @@ public class HCollection {
 	}
 
 	@SafeVarargs
-	public static <T> Collection<T> intersection(final Collection<? extends T>... collections) {
-		final Collection<T> temp = new LinkedHashSet<>(collections[0]);
+	public static <T> Set<T> intersection(final Collection<? extends T>... collections) {
+		final Set<T> temp = new LinkedHashSet<>(collections[0]);
 		for (int i = 1; i < collections.length; i++) {
 			temp.retainAll(collections[i]);
 		}
