@@ -7,17 +7,28 @@ Things specific to Java but which should be shared widely among projects belong 
 
 # Developers
 
+## Eclipse & APT
+
+M2E allows Eclipse to read <aven pom files and automatically build Java projects very easily, however by default it does not (yet) support annotation processing.
+To be specific, both Maven and Eclipse support annotation processing (apt), but M2E does not requires an additional maven plugin to provide full integration of the two.
+
+To develop Alexandria or other projects which use `ax-annotations`, you you will need to install [`m2e-apt`](https://marketplace.eclipse.org/content/m2e-apt).
+Simply drag the "Install" button from your browser to your Eclipse window, and follow the directions from Eclipse.
+
+Once you have restarted Eclipse you will need to configure `m2e-apt`:
+
+![enable m2e-apt](images/m2e-apt.png)
+
 ## Building Annotations
 
 The [`ax-annotations`](ax-annotations) project provides some general purpose annotations for code documentation, along with an annotation process for reporting one them in compiler logs.
 Because of the complex dependencies inherent in build annotation processors `ax-annotations` requires some care in building if you're a developer.
-Below are the endorsed, though certainly not the only, steps to build alexandria in Eclipse.
+Below are the endorsed, though certainly not the only, steps to build alexandria for development.
 
 1. Obtain the source code either by download or `git clone`.
-2. Import [`ax-root/pom.xml`](ax-root/pom.xml) and [`ax-annotations/pom.xml`](ax-annotations/pom.xml) into Eclipse.
-3. Run a maven install (`mvn install`) using the Eclipse UI for the `ax-root` and then `ax-annotations` projects.
-4. Remove `ax-annotations` from your Eclipse workspace.
-5. Import the room [`alexandria/pom.xml`](pom.xml) into Eclipse, which will bring in all other subprojects except `ax-annotations`.
+2. `cd alexandria`
+3. `mvn install -pl ax-annotations -am -Prelease`
+4. Import [`alexandria/pom.xml`](pom.xml) into Eclipse, which should bring in all other sub-projects except `ax-annotations`.
 
 ## Release
 
