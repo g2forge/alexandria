@@ -9,7 +9,7 @@ Things specific to Java but which should be shared widely among projects belong 
 
 ## Eclipse & APT
 
-M2E allows Eclipse to read <aven pom files and automatically build Java projects very easily, however by default it does not (yet) support annotation processing.
+M2E allows Eclipse to read Maven pom files and automatically build Java projects very easily, however by default it does not (yet) support annotation processing.
 To be specific, both Maven and Eclipse support annotation processing (apt), but M2E does not requires an additional maven plugin to provide full integration of the two.
 
 To develop Alexandria or other projects which use `ax-annotations`, you you will need to install [`m2e-apt`](https://marketplace.eclipse.org/content/m2e-apt).
