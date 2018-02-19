@@ -28,6 +28,16 @@ public class HIO {
 		return 16384;
 	}
 
+	public static void close(AutoCloseable closeable) {
+		try {
+			closeable.close();
+		} catch (IOException exception) {
+			throw new RuntimeIOException(exception);
+		} catch (Throwable throwable) {
+			throw new RuntimeException(throwable);
+		}
+	}
+
 	public static void closeAll(AutoCloseable... closeables) {
 		closeAll(HCollection.asList(closeables));
 	}
