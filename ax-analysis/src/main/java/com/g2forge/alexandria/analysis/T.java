@@ -7,18 +7,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.invoke.SerializedLambda;
 
-import org.apache.bcel.Repository;
-import org.apache.bcel.classfile.Code;
-import org.apache.bcel.classfile.JavaClass;
-import org.apache.bcel.classfile.Method;
-import org.apache.bcel.generic.ALOAD;
-import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.GETFIELD;
-import org.apache.bcel.generic.Instruction;
-import org.apache.bcel.generic.InstructionList;
-import org.apache.bcel.generic.ReturnInstruction;
-import org.apache.bcel.generic.Type;
-
 import com.g2forge.alexandria.java.core.error.RuntimeReflectionException;
 
 import lombok.Data;
@@ -52,24 +40,6 @@ class T implements Serializable {
 			if (offset == find.length()) return start;
 		}
 		return -1;
-	}
-
-	protected static String getField(Type target, String name, Type ret, Type[] args) throws ClassNotFoundException {
-		final JavaClass clazz = Repository.lookupClass(target.toString());
-		for (Method method : clazz.getMethods()) {
-			if (method.getName().equals(name) && method.getSignature().equals(Type.getMethodSignature(ret, args))) {
-				final Code code = method.getCode();
-				final Instruction[] instructions = new InstructionList(code.getCode()).getInstructions();
-				if (instructions.length != 3) throw new Error("Method " + method + " does not have exactly three instruction!");
-				if (!(instructions[0] instanceof ALOAD) || (((ALOAD) instructions[0]).getIndex() != 0)) throw new Error();
-				if (!(instructions[instructions.length - 1] instanceof ReturnInstruction)) throw new Error();
-
-				final ConstantPoolGen constantPoolGen = new ConstantPoolGen(method.getConstantPool());
-				final GETFIELD get = ((GETFIELD) instructions[1]);
-				return get.getFieldName(constantPoolGen);
-			}
-		}
-		throw new Error();
 	}
 
 	protected static byte[] rewrite(byte[] data) {
