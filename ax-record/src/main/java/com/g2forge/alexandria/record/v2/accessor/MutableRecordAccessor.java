@@ -1,5 +1,6 @@
 package com.g2forge.alexandria.record.v2.accessor;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -8,6 +9,7 @@ import com.g2forge.alexandria.java.function.IFunction1;
 import com.g2forge.alexandria.record.v2.type.IFieldType;
 import com.g2forge.alexandria.record.v2.type.IRecordType;
 
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 
@@ -18,16 +20,15 @@ public class MutableRecordAccessor<Record> implements IRecordAccessor<Record> {
 	protected final Record record;
 
 	@Getter(lazy = true)
-	private final Map<String, ? extends IFieldAccessor<? super Record, ?>> fields = computeFields();
+	private final Collection<IFieldAccessor<? super Record, ?>> fields = getType().getFields().stream().map(this::createField).collect(Collectors.toList());
+
+	@Getter(lazy = true, value = AccessLevel.PROTECTED)
+	private final Map<String, ? extends IFieldAccessor<? super Record, ?>> fieldMap = getFields().stream().collect(Collectors.toMap(field -> field.getType().getName(), IFunction1.identity()));
 
 	public MutableRecordAccessor(IRecordType<Record, Record> type) {
 		this.type = type;
 		this.record = getType().getFactory().create();
 		if (!getType().isMutable()) throw new IllegalArgumentException();
-	}
-
-	protected Map<String, ? extends IFieldAccessor<? super Record, ?>> computeFields() {
-		return getType().getFields().stream().map(this::createField).collect(Collectors.toMap(fieldAccessor -> fieldAccessor.getType().getName(), IFunction1.identity()));
 	}
 
 	protected IFieldAccessor<? super Record, ?> createField(IFieldType<? super Record, ? super Record, ?> fieldType) {
@@ -45,9 +46,12 @@ public class MutableRecordAccessor<Record> implements IRecordAccessor<Record> {
 		return Objects.equals(getType(), that.getType());
 	}
 
-	@Override
 	public <Field> IFieldAccessor<? super Record, Field> getField(IFieldType<? super Record, ? super Record, Field> fieldType) {
-		return getFields().values().stream().map(accessor -> accessor.as(fieldType)).filter(Objects::nonNull).findAny().get();
+		return getField(fieldType.getName()).as(fieldType);
+	}
+
+	public IFieldAccessor<? super Record, ?> getField(String name) {
+		return getFieldMap().get(name);
 	}
 
 	@Override

@@ -50,7 +50,7 @@ public class TestRecord {
 		final IFieldAccessor<? super Map<String, String>, String> field = recordAccessor.getField(fieldType);
 		Assert.assertTrue(record.isEmpty());
 		Assert.assertEquals(key, field.getType().getName());
-		Assert.assertEquals(field, recordAccessor.getFields().get(key));
+		Assert.assertEquals(field, recordAccessor.getField(key));
 
 		Assert.assertEquals(value0, field.set0(value0).get0());
 		Assert.assertEquals(1, record.size());
@@ -97,7 +97,7 @@ public class TestRecord {
 		final IFieldAccessor<? super Map<String, String>, String> field = recordAccessor.getField(fieldType);
 		Assert.assertTrue(record.isEmpty());
 		Assert.assertEquals(key, field.getType().getName());
-		Assert.assertEquals(field, recordAccessor.getFields().get(key));
+		Assert.assertEquals(field, recordAccessor.getField(key));
 
 		Assert.assertEquals(value0, field.set0(value0).get0());
 		Assert.assertEquals(1, record.size());
@@ -121,7 +121,7 @@ public class TestRecord {
 		final IFieldAccessor<? super MutableRecord, String> field = recordAccessor.getField(fieldType);
 		Assert.assertNull(record.field);
 		Assert.assertEquals(name, field.getType().getName());
-		Assert.assertEquals(field, recordAccessor.getFields().get(name));
+		Assert.assertEquals(field, recordAccessor.getField(name));
 
 		Assert.assertEquals(value0, field.set0(value0).get0());
 		Assert.assertEquals(value0, record.getField());
