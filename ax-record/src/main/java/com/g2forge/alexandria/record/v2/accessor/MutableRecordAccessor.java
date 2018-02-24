@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.java.function.IFunction1;
+import com.g2forge.alexandria.java.identity.IIdentity;
 import com.g2forge.alexandria.record.v2.type.IFieldType;
 import com.g2forge.alexandria.record.v2.type.IRecordType;
 
@@ -19,6 +20,8 @@ public class MutableRecordAccessor<Record> implements IRecordAccessor<Record> {
 
 	protected final Record record;
 
+	protected final IIdentity<? super Record> identity;
+
 	@Getter(lazy = true)
 	private final Collection<IFieldAccessor<? super Record, ?>> fields = getType().getFields().stream().map(this::createField).collect(Collectors.toList());
 
@@ -26,8 +29,13 @@ public class MutableRecordAccessor<Record> implements IRecordAccessor<Record> {
 	private final Map<String, ? extends IFieldAccessor<? super Record, ?>> fieldMap = getFields().stream().collect(Collectors.toMap(field -> field.getType().getName(), IFunction1.identity()));
 
 	public MutableRecordAccessor(IRecordType<Record, Record> type) {
+		this(type, type.getFactory().create());
+	}
+
+	public MutableRecordAccessor(IRecordType<Record, Record> type, Record record) {
 		this.type = type;
-		this.record = getType().getFactory().create();
+		this.record = record;
+		this.identity = IIdentity.same();
 		if (!getType().isMutable()) throw new IllegalArgumentException();
 	}
 
@@ -42,7 +50,7 @@ public class MutableRecordAccessor<Record> implements IRecordAccessor<Record> {
 		if (getClass() != o.getClass()) return false;
 
 		final MutableRecordAccessor<?> that = (MutableRecordAccessor<?>) o;
-		if (getRecord() != that.getRecord()) return false;
+		if (!getIdentity().equals(getRecord(), that.getRecord())) return false;
 		return Objects.equals(getType(), that.getType());
 	}
 
@@ -56,6 +64,6 @@ public class MutableRecordAccessor<Record> implements IRecordAccessor<Record> {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(getType(), System.identityHashCode(getRecord()));
+		return Objects.hash(getType(), getIdentity().hashCode(getRecord()));
 	}
 }
