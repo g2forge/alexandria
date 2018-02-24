@@ -25,7 +25,7 @@ public class MutableRecordAccessor<Record> implements IRecordAccessor<Record> {
 	}
 
 	protected Map<String, ? extends IFieldAccessor<? super Record, ?>> computeFields() {
-		return getType().getFields().stream().map(this::createField).collect(Collectors.toMap(IFieldAccessor::getName, IFunction1.identity()));
+		return getType().getFields().stream().map(this::createField).collect(Collectors.toMap(fieldAccessor -> fieldAccessor.getType().getName(), IFunction1.identity()));
 	}
 
 	protected IFieldAccessor<? super Record, ?> createField(IFieldType<? super Record, ? super Record, ?> fieldType) {
@@ -44,13 +44,12 @@ public class MutableRecordAccessor<Record> implements IRecordAccessor<Record> {
 	}
 
 	@Override
-	public int hashCode() {
-		return Objects.hash(getType(), System.identityHashCode(getRecord()));
+	public <Field> IFieldAccessor<? super Record, Field> getField(IFieldType<? super Record, ? super Record, Field> fieldType) {
+		return getFields().values().stream().map(accessor -> accessor.as(fieldType)).filter(Objects::nonNull).findAny().get();
 	}
 
 	@Override
-	public <Field> IFieldAccessor<? super Record, Field> getField(IFieldType<? super Record, ? super Record, Field> fieldType) {
-		// TODO Auto-generated method stub
-		return null;
+	public int hashCode() {
+		return Objects.hash(getType(), System.identityHashCode(getRecord()));
 	}
 }

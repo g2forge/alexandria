@@ -1,28 +1,132 @@
 package com.g2forge.alexandria.record.map.v2;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.g2forge.alexandria.java.function.IFunction1;
 import com.g2forge.alexandria.record.v2.FieldType;
+import com.g2forge.alexandria.record.v2.IFieldAccessor;
 import com.g2forge.alexandria.record.v2.IRecordType;
 import com.g2forge.alexandria.record.v2.MutableRecordAccessor;
 import com.g2forge.alexandria.record.v2.RecordType;
 import com.g2forge.alexandria.record.v2.RecordType.RecordTypeBuilder;
 
-public class TestMapRecordAccessor {
-	@Test
-	public void test() {
-		final RecordTypeBuilder<Map<String, String>, Map<String, String>> recordTypeBuilder = RecordType.<Map<String, String>, Map<String, String>>builder();
-		recordTypeBuilder.factory(LinkedHashMap::new).builder(IFunction1.identity());
-		final FieldType<Map<String, String>, Map<String, String>, String> fooFieldType = FieldType.create("foo");
-		recordTypeBuilder.field(fooFieldType);
-		final IRecordType<Map<String, String>, Map<String, String>> recordType = recordTypeBuilder.build();
-		new MutableRecordAccessor<>(recordType).getFields().get("foo").set0("Thingy");
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-		// TODO: Make it easier to build map fields
-		// TODO: MutableXXXAccessor classes shouldn't be based on maps
+public class TestMapRecordAccessor {
+	@Data
+	@Builder
+	@AllArgsConstructor
+	public static class ImmutableRecord {
+		protected final String field;
+	}
+
+	@Data
+	@Builder
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class MutableRecord {
+		protected String field;
+	}
+
+	@Test
+	public void immutableMap() {
+		final String key = "key", value0 = "value0", value1 = "value1";
+
+		final RecordTypeBuilder<Map<String, String>, Map<String, String>> recordTypeBuilder = RecordType.<Map<String, String>, Map<String, String>>builder().factory(LinkedHashMap::new).builder(Collections::unmodifiableMap);
+		final FieldType<Map<String, String>, Map<String, String>, String> fieldType = FieldType.create(key);
+		recordTypeBuilder.field(fieldType);
+		final IRecordType<Map<String, String>, Map<String, String>> recordType = recordTypeBuilder.build();
+
+		final MutableRecordAccessor<Map<String, String>> recordAccessor = new MutableRecordAccessor<>(recordType);
+		final Map<String, String> record = recordAccessor.getRecord();
+		final IFieldAccessor<? super Map<String, String>, String> field = recordAccessor.getField(fieldType);
+		Assert.assertTrue(record.isEmpty());
+		Assert.assertEquals(key, field.getType().getName());
+		Assert.assertEquals(field, recordAccessor.getFields().get(key));
+
+		Assert.assertEquals(value0, field.set0(value0).get0());
+		Assert.assertEquals(1, record.size());
+		Assert.assertEquals(value0, record.get(key));
+
+		Assert.assertEquals(value0, record.put(key, value1));
+		Assert.assertEquals(value1, field.get0());
+	}
+
+	@Test
+	public void immutableRecord() {
+		final String name = "field", value0 = "value0", value1 = "value1";
+
+		final RecordTypeBuilder<ImmutableRecord, ImmutableRecord.ImmutableRecordBuilder> recordTypeBuilder = RecordType.<ImmutableRecord, ImmutableRecord.ImmutableRecordBuilder>builder().factory(ImmutableRecord::builder).builder(ImmutableRecord.ImmutableRecordBuilder::build);
+		final FieldType<ImmutableRecord, ImmutableRecord.ImmutableRecordBuilder, String> fieldType = FieldType.create(ImmutableRecord::getField, ImmutableRecord.ImmutableRecordBuilder::field);
+		recordTypeBuilder.field(fieldType);
+		final IRecordType<ImmutableRecord, ImmutableRecord.ImmutableRecordBuilder> recordType = recordTypeBuilder.build();
+
+		final MutableRecordAccessor<ImmutableRecord> recordAccessor = new MutableRecordAccessor<>(recordType);
+		final ImmutableRecord record = recordAccessor.getRecord();
+		final IFieldAccessor<? super ImmutableRecord, String> field = recordAccessor.getField(fieldType);
+		Assert.assertNull(record.field);
+		Assert.assertEquals(name, field.getType().getName());
+		Assert.assertEquals(field, recordAccessor.getFields().get(name));
+
+		Assert.assertEquals(value0, field.set0(value0).get0());
+		Assert.assertEquals(value0, record.getField());
+
+		record.setField(value1);
+		Assert.assertEquals(value1, field.get0());
+	}
+
+	@Test
+	public void mutableMap() {
+		final String key = "key", value0 = "value0", value1 = "value1";
+
+		final RecordTypeBuilder<Map<String, String>, Map<String, String>> recordTypeBuilder = RecordType.<Map<String, String>, Map<String, String>>builder().factory(LinkedHashMap::new).builder(IFunction1.identity());
+		final FieldType<Map<String, String>, Map<String, String>, String> fieldType = FieldType.create(key);
+		recordTypeBuilder.field(fieldType);
+		final IRecordType<Map<String, String>, Map<String, String>> recordType = recordTypeBuilder.build();
+
+		final MutableRecordAccessor<Map<String, String>> recordAccessor = new MutableRecordAccessor<>(recordType);
+		final Map<String, String> record = recordAccessor.getRecord();
+		final IFieldAccessor<? super Map<String, String>, String> field = recordAccessor.getField(fieldType);
+		Assert.assertTrue(record.isEmpty());
+		Assert.assertEquals(key, field.getType().getName());
+		Assert.assertEquals(field, recordAccessor.getFields().get(key));
+
+		Assert.assertEquals(value0, field.set0(value0).get0());
+		Assert.assertEquals(1, record.size());
+		Assert.assertEquals(value0, record.get(key));
+
+		Assert.assertEquals(value0, record.put(key, value1));
+		Assert.assertEquals(value1, field.get0());
+	}
+
+	@Test
+	public void mutableRecord() {
+		final String name = "field", value0 = "value0", value1 = "value1";
+
+		final RecordTypeBuilder<MutableRecord, MutableRecord> recordTypeBuilder = RecordType.<MutableRecord, MutableRecord>builder().factory(MutableRecord::new).builder(IFunction1.identity());
+		final FieldType<MutableRecord, MutableRecord, String> fieldType = FieldType.create(MutableRecord::getField, MutableRecord::setField);
+		recordTypeBuilder.field(fieldType);
+		final IRecordType<MutableRecord, MutableRecord> recordType = recordTypeBuilder.build();
+
+		final MutableRecordAccessor<MutableRecord> recordAccessor = new MutableRecordAccessor<>(recordType);
+		final MutableRecord record = recordAccessor.getRecord();
+		final IFieldAccessor<? super MutableRecord, String> field = recordAccessor.getField(fieldType);
+		Assert.assertNull(record.field);
+		Assert.assertEquals(name, field.getType().getName());
+		Assert.assertEquals(field, recordAccessor.getFields().get(name));
+
+		Assert.assertEquals(value0, field.set0(value0).get0());
+		Assert.assertEquals(value0, record.getField());
+
+		record.setField(value1);
+		Assert.assertEquals(value1, field.get0());
 	}
 }
