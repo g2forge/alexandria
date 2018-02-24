@@ -1,8 +1,9 @@
-package com.g2forge.alexandria.record.v2;
+package com.g2forge.alexandria.record.v2.accessor;
 
 import com.g2forge.alexandria.java.function.IConsumer2;
 import com.g2forge.alexandria.java.function.IFunction1;
 import com.g2forge.alexandria.java.tuple.ITuple1GS;
+import com.g2forge.alexandria.record.v2.type.IFieldType;
 
 import lombok.Data;
 

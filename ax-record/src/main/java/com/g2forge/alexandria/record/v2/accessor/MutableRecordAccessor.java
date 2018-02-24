@@ -1,10 +1,12 @@
-package com.g2forge.alexandria.record.v2;
+package com.g2forge.alexandria.record.v2.accessor;
 
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.java.function.IFunction1;
+import com.g2forge.alexandria.record.v2.type.IFieldType;
+import com.g2forge.alexandria.record.v2.type.IRecordType;
 
 import lombok.Data;
 import lombok.Getter;

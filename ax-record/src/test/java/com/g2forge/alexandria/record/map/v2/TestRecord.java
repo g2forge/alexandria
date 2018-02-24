@@ -8,19 +8,19 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.g2forge.alexandria.java.function.IFunction1;
-import com.g2forge.alexandria.record.v2.FieldType;
-import com.g2forge.alexandria.record.v2.IFieldAccessor;
-import com.g2forge.alexandria.record.v2.IRecordType;
-import com.g2forge.alexandria.record.v2.MutableRecordAccessor;
-import com.g2forge.alexandria.record.v2.RecordType;
-import com.g2forge.alexandria.record.v2.RecordType.RecordTypeBuilder;
+import com.g2forge.alexandria.record.v2.accessor.IFieldAccessor;
+import com.g2forge.alexandria.record.v2.accessor.MutableRecordAccessor;
+import com.g2forge.alexandria.record.v2.type.FieldType;
+import com.g2forge.alexandria.record.v2.type.IRecordType;
+import com.g2forge.alexandria.record.v2.type.RecordType;
+import com.g2forge.alexandria.record.v2.type.RecordType.RecordTypeBuilder;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-public class TestMapRecordAccessor {
+public class TestRecord {
 	@Data
 	@Builder
 	@AllArgsConstructor

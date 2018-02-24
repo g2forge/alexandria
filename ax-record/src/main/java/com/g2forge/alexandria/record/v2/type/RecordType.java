@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.record.v2;
+package com.g2forge.alexandria.record.v2.type;
 
 import java.util.Collection;
 
