@@ -32,6 +32,7 @@
 		<module>ax-expression</module>
 		<module>ax-service</module>
 		<module>ax-wizard</module>
+		<module>ax-command</module>
 	</modules>
 
 	<profiles>
