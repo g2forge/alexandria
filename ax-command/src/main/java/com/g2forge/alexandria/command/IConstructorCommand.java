@@ -1,5 +1,6 @@
 package com.g2forge.alexandria.command;
 
+import com.g2forge.alexandria.java.core.iface.ICommand;
 import com.g2forge.alexandria.java.function.IFunction1;
 
 public interface IConstructorCommand extends ICommand {
