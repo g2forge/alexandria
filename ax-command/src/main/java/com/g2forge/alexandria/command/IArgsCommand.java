@@ -1,13 +1,11 @@
 package com.g2forge.alexandria.command;
 
-import com.g2forge.alexandria.java.core.iface.ICommand;
 import com.g2forge.alexandria.java.function.ISupplier;
 
-public interface IArgsCommand extends ICommand {
+@FunctionalInterface
+public interface IArgsCommand extends IStructuredCommand {
 	public static void main(String[] args, ISupplier<? extends IArgsCommand> factory) throws Throwable {
-		final IArgsCommand command = factory.get();
-		final int exitCode = command.invoke(args);
-		System.exit(exitCode);
+		IStructuredCommand.main(args, IStandardCommand.of(factory));
 	}
 
 	public int invoke(String... args) throws Throwable;
