@@ -11,6 +11,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.java.core.error.HError;
@@ -24,6 +25,14 @@ import lombok.experimental.UtilityClass;
 @Helpers
 @UtilityClass
 public class HIO {
+	public static String readAll(final InputStream stream, boolean newline) {
+		final String retVal;
+		try (final Scanner scanner = new Scanner(stream, "UTF-8")) {
+			retVal = scanner.useDelimiter("\\A").next();
+		}
+		return newline ? retVal.replace(System.lineSeparator(), "\n") : retVal;
+	}
+
 	public static int getRecommendedBufferSize() {
 		return 16384;
 	}
