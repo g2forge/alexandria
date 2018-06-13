@@ -1,7 +1,10 @@
 package com.g2forge.alexandria.java.io;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
@@ -11,6 +14,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.java.core.error.HError;
@@ -24,6 +28,22 @@ import lombok.experimental.UtilityClass;
 @Helpers
 @UtilityClass
 public class HIO {
+	public static String readAll(final InputStream stream, boolean newline) {
+		final String retVal;
+		try (final Scanner scanner = new Scanner(stream, "UTF-8")) {
+			retVal = scanner.useDelimiter("\\A").next();
+		}
+		return newline ? retVal.replace(System.lineSeparator(), "\n") : retVal;
+	}
+
+	public static InputStream toInputStream(String string) {
+		final ByteArrayOutputStream output = new ByteArrayOutputStream();
+		try (final PrintStream print = new PrintStream(output)) {
+			print.print(string);
+		}
+		return new ByteArrayInputStream(output.toByteArray());
+	}
+
 	public static int getRecommendedBufferSize() {
 		return 16384;
 	}
