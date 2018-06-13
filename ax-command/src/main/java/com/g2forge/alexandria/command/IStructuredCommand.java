@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.g2forge.alexandria.command.exit.Exit;
+import com.g2forge.alexandria.command.exit.IExit;
 import com.g2forge.alexandria.java.core.iface.ICommand;
 
 public interface IStructuredCommand extends ICommand {
@@ -27,7 +29,7 @@ public interface IStructuredCommand extends ICommand {
 				final IStandardCommand subcommand = map.get(name);
 				if (subcommand == null) {
 					invocation.io.getStandardError().println(String.format("Unrecognized command \"%1$s\"!", name));
-					return ICommand.FAIL;
+					return FAIL;
 				} else {
 					final Invocation<InputStream, PrintStream> subinvocation = new Invocation<>(arguments.subList(1, arguments.size()), invocation.getIo(), invocation.getWorking());
 					return subcommand.invoke(subinvocation);
@@ -36,9 +38,7 @@ public interface IStructuredCommand extends ICommand {
 		}
 	}
 
-	public static void main(String[] args, IStandardCommand command) throws Throwable {
-		final Invocation<InputStream, PrintStream> invocation = Invocation.of(args);
-		final int exitCode = command.invoke(invocation);
-		System.exit(exitCode);
-	}
+	public static final IExit SUCCESS = new Exit(0);
+
+	public static final IExit FAIL = new Exit(1);
 }
