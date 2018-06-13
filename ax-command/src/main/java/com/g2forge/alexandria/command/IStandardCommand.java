@@ -9,7 +9,6 @@ import java.nio.file.Path;
 import com.g2forge.alexandria.command.stdio.StandardIO;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.function.IFunction1;
-import com.g2forge.alexandria.java.function.ISupplier;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,10 +29,6 @@ public interface IStandardCommand extends IStructuredCommand {
 
 	public static IStandardCommand of(IFunction1<? super Invocation<InputStream, PrintStream>, ? extends IConstructorCommand> factory) {
 		return invocation -> factory.apply(invocation).invoke();
-	}
-
-	public static IStandardCommand of(ISupplier<? extends IArgsCommand> supplier) {
-		return invocation -> supplier.get().invoke(invocation.getArguments().toArray(new String[0]));
 	}
 
 	public int invoke(Invocation<InputStream, PrintStream> invocation) throws Throwable;
