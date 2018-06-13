@@ -23,10 +23,13 @@ public interface IStructuredCommand extends ICommand {
 
 				final String name = arguments.get(0);
 				final IStandardCommand subcommand = map.get(name);
-				if (subcommand != null) System.err.println(String.format("Unrecognized command \"%1$s\"!", name));
-
-				final CommandInvocation subinvocation = new CommandInvocation(arguments.subList(1, arguments.size()));
-				return subcommand.invoke(subinvocation);
+				if (subcommand == null) {
+					invocation.io.getStandardError().println(String.format("Unrecognized command \"%1$s\"!", name));
+					return ICommand.FAIL;
+				} else {
+					final CommandInvocation subinvocation = new CommandInvocation(arguments.subList(1, arguments.size()), invocation.getIo(), invocation.getWorking());
+					return subcommand.invoke(subinvocation);
+				}
 			};
 		}
 	}

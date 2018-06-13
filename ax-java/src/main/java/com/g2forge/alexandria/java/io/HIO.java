@@ -1,7 +1,10 @@
 package com.g2forge.alexandria.java.io;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
@@ -31,6 +34,14 @@ public class HIO {
 			retVal = scanner.useDelimiter("\\A").next();
 		}
 		return newline ? retVal.replace(System.lineSeparator(), "\n") : retVal;
+	}
+
+	public static InputStream toInputStream(String string) {
+		final ByteArrayOutputStream output = new ByteArrayOutputStream();
+		try (final PrintStream print = new PrintStream(output)) {
+			print.print(string);
+		}
+		return new ByteArrayInputStream(output.toByteArray());
 	}
 
 	public static int getRecommendedBufferSize() {
