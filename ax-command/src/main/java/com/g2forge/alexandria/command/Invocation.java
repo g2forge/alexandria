@@ -6,6 +6,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import com.g2forge.alexandria.command.stdio.IStandardIO;
+import com.g2forge.alexandria.command.stdio.StandardIO;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 
 import lombok.AllArgsConstructor;
@@ -16,9 +18,9 @@ import lombok.Singular;
 @Data
 @Builder
 @AllArgsConstructor
-public class CommandInvocation {
-	public static final CommandInvocation of(String... args) {
-		final CommandInvocation.CommandInvocationBuilder retVal = CommandInvocation.builder();
+public class Invocation<I, O> {
+	public static final Invocation<InputStream, PrintStream> of(String... args) {
+		final Invocation.InvocationBuilder<InputStream, PrintStream> retVal = Invocation.builder();
 		retVal.arguments(HCollection.asList(args));
 		retVal.io(StandardIO.of());
 		retVal.working(Paths.get(System.getProperty("user.dir")));
@@ -28,7 +30,7 @@ public class CommandInvocation {
 	@Singular
 	protected final List<String> arguments;
 
-	protected final StandardIO<InputStream, PrintStream> io;
+	protected final IStandardIO<I, O> io;
 
 	protected final Path working;
 }

@@ -9,14 +9,15 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.g2forge.alexandria.command.IStandardCommand.TestResult;
+import com.g2forge.alexandria.command.stdio.IStandardIO;
 import com.g2forge.alexandria.java.core.iface.ICommand;
 import com.g2forge.alexandria.java.io.HIO;
 
 public class TestStandardCommand {
 	public static class Cat implements IStandardCommand {
 		@Override
-		public int invoke(CommandInvocation invocation) throws Throwable {
-			final StandardIO<InputStream, PrintStream> io = invocation.getIo();
+		public int invoke(Invocation<InputStream, PrintStream> invocation) throws Throwable {
+			final IStandardIO<InputStream, PrintStream> io = invocation.getIo();
 			final InputStream input = io.getStandardInput();
 			final PrintStream output = io.getStandardOutput();
 			try (final BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
@@ -32,7 +33,7 @@ public class TestStandardCommand {
 
 	public static class Echo implements IStandardCommand {
 		@Override
-		public int invoke(CommandInvocation invocation) throws Throwable {
+		public int invoke(Invocation<InputStream, PrintStream> invocation) throws Throwable {
 			final PrintStream output = invocation.getIo().getStandardOutput();
 			invocation.getArguments().forEach(output::print);
 			return SUCCESS;
