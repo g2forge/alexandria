@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
 
 import org.junit.Test;
 
-import com.g2forge.alexandria.java.core.helpers.HResource;
+import com.g2forge.alexandria.java.core.resource.HResource;
 
 public class TestHZip {
 	@Test
