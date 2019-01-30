@@ -19,6 +19,6 @@ public interface IRange<T extends Comparable<T>> {
 		if (isReversed() != subrange.isReversed()) throw new IllegalArgumentException();
 		if ((compare(subrange.getMin(), getMin()) < 0) || (compare(subrange.getMin(), getMax()) >= 0)) throw new IllegalArgumentException(String.format("Minimum %1$s is out of range [$2$s,%3$s)!", subrange.getMin(), getMin(), getMax()));
 		if ((compare(subrange.getMax(), getMin()) < 0) || (compare(subrange.getMax(), getMax()) > 0)) throw new IllegalArgumentException(String.format("Maximum %1$s is out of range [%2$s,%3$s]!", subrange.getMax(), getMin(), getMax()));
-		if (compare(subrange.getMin(), subrange.getMax()) >= 0) throw new IllegalArgumentException(String.format("Minimun %1$s is not less than maximum %2$s", subrange.getMin(), subrange.getMax()));
+		if (compare(subrange.getMin(), subrange.getMax()) > 0) throw new IllegalArgumentException(String.format("Minimun %1$s is not less than maximum %2$s", subrange.getMin(), subrange.getMax()));
 	}
 }
