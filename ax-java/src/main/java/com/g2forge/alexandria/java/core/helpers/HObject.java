@@ -27,13 +27,14 @@ public class HObject {
 		return true;
 	}
 
+	public static final int HASHPRIME = 31;
+
 	@SafeVarargs
 	public static <T> int hashCode(T _this, Function<? super T, ?>... accessors) {
-		final int prime = 31;
 		int result = 1;
 		for (Function<? super T, ?> accessor : accessors) {
 			final Object value = accessor.apply(_this);
-			result = prime * result + ((value == null) ? 0 : value.hashCode());
+			result = HASHPRIME * result + ((value == null) ? 0 : value.hashCode());
 		}
 		return result;
 	}
