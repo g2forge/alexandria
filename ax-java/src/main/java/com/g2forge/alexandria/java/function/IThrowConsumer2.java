@@ -8,6 +8,13 @@ public interface IThrowConsumer2<I0, I1, T extends Throwable> extends IConsumer 
 
 	public void accept(I0 input0, I1 input1) throws T;
 
+	public default <O> IThrowFunction2<I0, I1, O, T> toFunction(O retVal) {
+		return (i0, i1) -> {
+			accept(i0, i1);
+			return retVal;
+		};
+	}
+
 	public default IConsumer2<I0, I1> wrap(IFunction1<? super Throwable, ? extends RuntimeException> wrapper) {
 		return (i0, i1) -> {
 			try {

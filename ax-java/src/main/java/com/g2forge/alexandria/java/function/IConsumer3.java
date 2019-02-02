@@ -30,4 +30,11 @@ public interface IConsumer3<I0, I1, I2> extends IConsumer {
 	public default IConsumer2<I0, I1> curry2(I2 input2) {
 		return (input0, input1) -> this.accept(input0, input1, input2);
 	}
+
+	public default <O> IFunction3<I0, I1, I2, O> toFunction(O retVal) {
+		return (i0, i1, i2) -> {
+			accept(i0, i1, i2);
+			return retVal;
+		};
+	}
 }

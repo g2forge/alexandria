@@ -24,4 +24,11 @@ public interface IConsumer2<I0, I1> extends BiConsumer<I0, I1>, IConsumer {
 	public default IConsumer1<I0> curry1(I1 input1) {
 		return input0 -> this.accept(input0, input1);
 	}
+
+	public default <O> IFunction2<I0, I1, O> toFunction(O retVal) {
+		return (i0, i1) -> {
+			accept(i0, i1);
+			return retVal;
+		};
+	}
 }
