@@ -5,9 +5,13 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 @FunctionalInterface
-public interface IFunction2<I0, I1, O> extends BiFunction<I0, I1, O>, IFunction<O> {
+public interface IFunction2<I0, I1, O> extends BiFunction<I0, I1, O>, IFunction<O>, IConsumer2<I0, I1> {
 	public static <I0, I1, O> IFunction2<I0, I1, O> create(IFunction2<I0, I1, O> function) {
 		return function;
+	}
+
+	public default void accept(I0 i0, I1 i1) {
+		apply(i0, i1);
 	}
 
 	public default IFunction1<I1, O> compose0(Supplier<? extends I0> before) {
@@ -65,5 +69,12 @@ public interface IFunction2<I0, I1, O> extends BiFunction<I0, I1, O>, IFunction<
 
 	public default IConsumer2<I0, I1> toConsumer() {
 		return this::apply;
+	}
+
+	public default <_O> IFunction2<I0, I1, _O> toFunction(_O retVal) {
+		return (i0, i1) -> {
+			apply(i0, i1);
+			return retVal;
+		};
 	}
 }

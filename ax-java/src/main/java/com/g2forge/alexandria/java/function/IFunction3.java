@@ -5,9 +5,13 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @FunctionalInterface
-public interface IFunction3<I0, I1, I2, O> extends IFunction<O> {
+public interface IFunction3<I0, I1, I2, O> extends IFunction<O>, IConsumer3<I0, I1, I2> {
 	public static <I0, I1, I2, O> IFunction3<I0, I1, I2, O> create(IFunction3<I0, I1, I2, O> function) {
 		return function;
+	}
+
+	public default void accept(I0 i0, I1 i1, I2 i2) {
+		apply(i0, i1, i2);
 	}
 
 	public default <_O> IFunction3<I0, I1, I2, _O> andThen(Function<? super O, ? extends _O> after) {
@@ -80,5 +84,12 @@ public interface IFunction3<I0, I1, I2, O> extends IFunction<O> {
 
 	public default IConsumer3<I0, I1, I2> toConsumer() {
 		return this::apply;
+	}
+
+	public default <_O> IFunction3<I0, I1, I2, _O> toFunction(_O retVal) {
+		return (i0, i1, i2) -> {
+			apply(i0, i1, i2);
+			return retVal;
+		};
 	}
 }

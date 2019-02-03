@@ -5,7 +5,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @FunctionalInterface
-public interface IFunction1<I, O> extends Function<I, O>, IFunction<O> {
+public interface IFunction1<I, O> extends Function<I, O>, IFunction<O>, IConsumer1<I>, IThrowFunction1<I, O, RuntimeException> {
 	@SuppressWarnings("unchecked")
 	public static <I, O> IFunction1<I, O> cast() {
 		return i -> (O) i;
@@ -13,6 +13,10 @@ public interface IFunction1<I, O> extends Function<I, O>, IFunction<O> {
 
 	public static <I, O> IFunction1<I, O> create(IFunction1<I, O> function) {
 		return function;
+	}
+	
+	public default void accept(I i) {
+		apply(i);
 	}
 
 	public static <T> IFunction1<T, T> identity() {
@@ -41,7 +45,7 @@ public interface IFunction1<I, O> extends Function<I, O>, IFunction<O> {
 		return () -> apply(before.get());
 	}
 
-	public default Supplier<O> curry(I input) {
+	public default ISupplier<O> curry(I input) {
 		return () -> apply(input);
 	}
 
@@ -72,5 +76,12 @@ public interface IFunction1<I, O> extends Function<I, O>, IFunction<O> {
 
 	public default IConsumer1<I> toConsumer() {
 		return this::apply;
+	}
+
+	public default <_O> IFunction1<I, _O> toFunction(_O retVal) {
+		return i -> {
+			apply(i);
+			return retVal;
+		};
 	}
 }

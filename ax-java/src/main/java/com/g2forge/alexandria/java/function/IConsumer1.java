@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 @FunctionalInterface
-public interface IConsumer1<I> extends Consumer<I>, IConsumer {
+public interface IConsumer1<I> extends Consumer<I>, IConsumer, IThrowConsumer1<I, RuntimeException> {
 	public static <I> IConsumer1<I> create(IConsumer1<I> consumer) {
 		return consumer;
 	}
