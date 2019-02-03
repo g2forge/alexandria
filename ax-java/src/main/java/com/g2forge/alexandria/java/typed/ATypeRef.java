@@ -3,7 +3,7 @@ package com.g2forge.alexandria.java.typed;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import com.g2forge.alexandria.java.core.error.ReflectedCodeError;
+import com.g2forge.alexandria.java.reflect.HReflection;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -22,14 +22,6 @@ public abstract class ATypeRef<T> extends ATypeRefIdentity<T> {
 	protected final Type type;
 
 	protected ATypeRef() {
-		// Get the actual class (the anonymous class), and then get it's superclass, which should be this type
-		final Type superclass = getClass().getGenericSuperclass();
-		// Check that our expectations are being met
-		if (!(superclass instanceof ParameterizedType)) throw new ReflectedCodeError("Super class is not a parameterized type!");
-		final ParameterizedType parameterized = (ParameterizedType) superclass;
-		if (!parameterized.getRawType().equals(ATypeRef.class)) throw new ReflectedCodeError("Super class is not " + ATypeRef.class + "!");
-
-		// Get the dynamic type of <T>, which is the 0 type argument
-		type = parameterized.getActualTypeArguments()[0];
+		this.type = HReflection.getParentTypeArgument(this, ATypeRef.class, 0);
 	}
 }
