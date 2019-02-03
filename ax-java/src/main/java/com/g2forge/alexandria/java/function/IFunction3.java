@@ -68,4 +68,17 @@ public interface IFunction3<I0, I1, I2, O> extends IFunction<O> {
 	public default IConsumer3<I0, I1, I2> noReturn() {
 		return (i0, i1, i2) -> apply(i0, i1, i2);
 	}
+
+	public default IFunction3<I0, I1, I2, O> sync(Object lock) {
+		if (lock == null) return this;
+		return (i0, i1, i2) -> {
+			synchronized (lock) {
+				return apply(i0, i1, i2);
+			}
+		};
+	}
+
+	public default IConsumer3<I0, I1, I2> toConsumer() {
+		return this::apply;
+	}
 }

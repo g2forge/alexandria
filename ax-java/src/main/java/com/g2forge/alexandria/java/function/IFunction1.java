@@ -60,4 +60,17 @@ public interface IFunction1<I, O> extends Function<I, O>, IFunction<O> {
 	public default IConsumer1<I> noReturn() {
 		return i -> apply(i);
 	}
+
+	public default IFunction1<I, O> sync(Object lock) {
+		if (lock == null) return this;
+		return i -> {
+			synchronized (lock) {
+				return apply(i);
+			}
+		};
+	}
+
+	public default IConsumer1<I> toConsumer() {
+		return this::apply;
+	}
 }

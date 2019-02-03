@@ -52,6 +52,15 @@ public interface IConsumer3<I0, I1, I2> extends IConsumer {
 		};
 	}
 
+	public default IConsumer3<I0, I1, I2> sync(Object lock) {
+		if (lock == null) return this;
+		return (i0, i1, i2) -> {
+			synchronized (lock) {
+				accept(i0, i1, i2);
+			}
+		};
+	}
+
 	public default <O> IFunction3<I0, I1, I2, O> toFunction(O retVal) {
 		return (i0, i1, i2) -> {
 			accept(i0, i1, i2);

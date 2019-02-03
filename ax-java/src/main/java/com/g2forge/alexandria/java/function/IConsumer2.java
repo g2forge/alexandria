@@ -39,6 +39,15 @@ public interface IConsumer2<I0, I1> extends BiConsumer<I0, I1>, IConsumer {
 		};
 	}
 
+	public default IConsumer2<I0, I1> sync(Object lock) {
+		if (lock == null) return this;
+		return (i0, i1) -> {
+			synchronized (lock) {
+				accept(i0, i1);
+			}
+		};
+	}
+	
 	public default <O> IFunction2<I0, I1, O> toFunction(O retVal) {
 		return (i0, i1) -> {
 			accept(i0, i1);

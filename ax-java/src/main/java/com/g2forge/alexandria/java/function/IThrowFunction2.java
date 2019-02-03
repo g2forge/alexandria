@@ -8,6 +8,19 @@ public interface IThrowFunction2<I0, I1, O, T extends Throwable> extends IFuncti
 
 	public O apply(I0 input0, I1 input1) throws T;
 
+	public default IThrowFunction2<I0, I1, O, T> sync(Object lock) {
+		if (lock == null) return this;
+		return (i0, i1) -> {
+			synchronized (lock) {
+				return apply(i0, i1);
+			}
+		};
+	}
+
+	public default IThrowConsumer2<I0, I1, T> toConsumer() {
+		return this::apply;
+	}
+
 	public default IFunction2<I0, I1, O> wrap(IFunction1<? super Throwable, ? extends RuntimeException> wrapper) {
 		return (i0, i1) -> {
 			try {

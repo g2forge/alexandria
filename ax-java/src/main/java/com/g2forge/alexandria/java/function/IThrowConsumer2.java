@@ -8,6 +8,15 @@ public interface IThrowConsumer2<I0, I1, T extends Throwable> extends IConsumer 
 
 	public void accept(I0 input0, I1 input1) throws T;
 
+	public default IThrowConsumer2<I0, I1, T> sync(Object lock) {
+		if (lock == null) return this;
+		return (i0, i1) -> {
+			synchronized (lock) {
+				accept(i0, i1);
+			}
+		};
+	}
+
 	public default <O> IThrowFunction2<I0, I1, O, T> toFunction(O retVal) {
 		return (i0, i1) -> {
 			accept(i0, i1);

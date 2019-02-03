@@ -53,6 +53,15 @@ public interface IConsumer1<I> extends Consumer<I>, IConsumer {
 		return il -> accept(lift.apply(il));
 	}
 
+	public default IConsumer1<I> sync(Object lock) {
+		if (lock == null) return this;
+		return i -> {
+			synchronized (lock) {
+				accept(i);
+			}
+		};
+	}
+
 	public default <O> IFunction1<I, O> toFunction(O retVal) {
 		return i -> {
 			accept(i);
