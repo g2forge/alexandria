@@ -25,6 +25,20 @@ public interface IConsumer2<I0, I1> extends BiConsumer<I0, I1>, IConsumer {
 		return input0 -> this.accept(input0, input1);
 	}
 
+	public default <I0L> IConsumer2<I0L, I1> lift0(IFunction1<I0L, ? extends I0> lift) {
+		return (i0, i1) -> {
+			final I0 i0l = lift.apply(i0);
+			accept(i0l, i1);
+		};
+	}
+
+	public default <I1L> IConsumer2<I0, I1L> lift1(IFunction1<I1L, ? extends I1> lift) {
+		return (i0, i1) -> {
+			final I1 i1l = lift.apply(i1);
+			accept(i0, i1l);
+		};
+	}
+
 	public default <O> IFunction2<I0, I1, O> toFunction(O retVal) {
 		return (i0, i1) -> {
 			accept(i0, i1);

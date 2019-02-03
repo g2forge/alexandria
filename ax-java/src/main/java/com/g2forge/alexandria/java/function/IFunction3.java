@@ -44,6 +44,27 @@ public interface IFunction3<I0, I1, I2, O> extends IFunction<O> {
 		return (input0, input1) -> this.apply(input0, input1, input2);
 	}
 
+	public default <I0L> IFunction3<I0L, I1, I2, O> lift0(IFunction1<I0L, ? extends I0> lift) {
+		return (i0, i1, i2) -> {
+			final I0 i0l = lift.apply(i0);
+			return apply(i0l, i1, i2);
+		};
+	}
+
+	public default <I1L> IFunction3<I0, I1L, I2, O> lift1(IFunction1<I1L, ? extends I1> lift) {
+		return (i0, i1, i2) -> {
+			final I1 i1l = lift.apply(i1);
+			return apply(i0, i1l, i2);
+		};
+	}
+
+	public default <I2L> IFunction3<I0, I1, I2L, O> lift2(IFunction1<I2L, ? extends I2> lift) {
+		return (i0, i1, i2) -> {
+			final I2 i2l = lift.apply(i2);
+			return apply(i0, i1, i2l);
+		};
+	}
+
 	public default IConsumer3<I0, I1, I2> noReturn() {
 		return (i0, i1, i2) -> apply(i0, i1, i2);
 	}

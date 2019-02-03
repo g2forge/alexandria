@@ -45,6 +45,10 @@ public interface IFunction1<I, O> extends Function<I, O>, IFunction<O> {
 		return () -> apply(input);
 	}
 
+	public default <IL> IFunction1<IL, O> lift(IFunction1<IL, ? extends I> lift) {
+		return lift.andThen(this);
+	}
+
 	public default <T> IFunction1<I, T> lift(T equal, IFunction1<? super O, ? extends T> lift) {
 		return i -> {
 			final O o = apply(i);

@@ -31,6 +31,27 @@ public interface IConsumer3<I0, I1, I2> extends IConsumer {
 		return (input0, input1) -> this.accept(input0, input1, input2);
 	}
 
+	public default <I0L> IConsumer3<I0L, I1, I2> lift0(IFunction1<I0L, ? extends I0> lift) {
+		return (i0, i1, i2) -> {
+			final I0 i0l = lift.apply(i0);
+			accept(i0l, i1, i2);
+		};
+	}
+
+	public default <I1L> IConsumer3<I0, I1L, I2> lift1(IFunction1<I1L, ? extends I1> lift) {
+		return (i0, i1, i2) -> {
+			final I1 i1l = lift.apply(i1);
+			accept(i0, i1l, i2);
+		};
+	}
+
+	public default <I2L> IConsumer3<I0, I1, I2L> lift2(IFunction1<I2L, ? extends I2> lift) {
+		return (i0, i1, i2) -> {
+			final I2 i2l = lift.apply(i2);
+			accept(i0, i1, i2l);
+		};
+	}
+
 	public default <O> IFunction3<I0, I1, I2, O> toFunction(O retVal) {
 		return (i0, i1, i2) -> {
 			accept(i0, i1, i2);

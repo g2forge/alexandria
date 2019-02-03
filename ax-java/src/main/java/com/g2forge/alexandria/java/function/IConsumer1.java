@@ -8,7 +8,7 @@ public interface IConsumer1<I> extends Consumer<I>, IConsumer {
 	public static <I> IConsumer1<I> create(IConsumer1<I> consumer) {
 		return consumer;
 	}
-	
+
 	@SafeVarargs
 	public static <I> IConsumer1<I> fanOut(IConsumer1<? super I>... consumers) {
 		for (IConsumer1<? super I> consumer : consumers)
@@ -47,6 +47,10 @@ public interface IConsumer1<I> extends Consumer<I>, IConsumer {
 
 	public default Runnable curry(I input) {
 		return () -> this.accept(input);
+	}
+
+	public default <IL> IConsumer1<IL> lift(IFunction1<IL, ? extends I> lift) {
+		return il -> accept(lift.apply(il));
 	}
 
 	public default <O> IFunction1<I, O> toFunction(O retVal) {
