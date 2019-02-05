@@ -58,6 +58,11 @@ public class FieldMatcher<T> extends BaseMatcher<T> {
 
 	public static final String INDENT = "          ";
 
+	@SafeVarargs
+	public static <T> ISerializableFunction1<T, ?>[] create(ISerializableFunction1<T, ?>... fields) {
+		return fields;
+	}
+
 	public static boolean equals(Object o0, Object o1) {
 		if (o0 == o1) return true;
 		if ((o0 == null) || (o1 == null)) return false;
