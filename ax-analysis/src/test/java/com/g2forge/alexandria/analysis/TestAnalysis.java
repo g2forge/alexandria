@@ -17,6 +17,10 @@ public class TestAnalysis {
 	public static class TestClass1 {
 		protected final Object bar;
 	}
+	
+	public static interface TestClass2 {
+		public Object bar();
+	}
 
 	@Test
 	public void method() throws NoSuchMethodException, SecurityException {
@@ -28,5 +32,11 @@ public class TestAnalysis {
 	public void path() {
 		final String actual = ISerializableFunction1.analyze((TestClass0 test) -> test.getFoo().getBar()).getPath();
 		Assert.assertEquals("foo.bar", actual);
+	}
+
+	@Test
+	public void pathNoPrefix() {
+		final String actual = ISerializableFunction1.analyze((TestClass2 test) -> test.bar()).getPath();
+		Assert.assertEquals("bar", actual);
 	}
 }
