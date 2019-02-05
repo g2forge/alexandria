@@ -33,4 +33,15 @@ public interface IThrowConsumer2<I0, I1, T extends Throwable> extends IConsumer 
 			}
 		};
 	}
+
+	public default IThrowConsumer2<I0, I1, T> wrap(IRunnable pre, IRunnable post) {
+		return (i0, i1) -> {
+			pre.run();
+			try {
+				accept(i0, i1);
+			} finally {
+				post.run();
+			}
+		};
+	}
 }

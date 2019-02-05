@@ -92,4 +92,15 @@ public interface IFunction3<I0, I1, I2, O> extends IFunction<O>, IConsumer3<I0, 
 			return retVal;
 		};
 	}
+
+	public default IFunction3<I0, I1, I2, O> wrap(IRunnable pre, IRunnable post) {
+		return (i0, i1, i2) -> {
+			pre.run();
+			try {
+				return apply(i0, i1, i2);
+			} finally {
+				post.run();
+			}
+		};
+	}
 }

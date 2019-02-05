@@ -54,4 +54,15 @@ public interface IConsumer2<I0, I1> extends BiConsumer<I0, I1>, IConsumer {
 			return retVal;
 		};
 	}
+	
+	public default IConsumer2<I0, I1> wrap(IRunnable pre, IRunnable post) {
+		return (i0, i1) -> {
+			pre.run();
+			try {
+				accept(i0, i1);
+			} finally {
+				post.run();
+			}
+		};
+	}
 }

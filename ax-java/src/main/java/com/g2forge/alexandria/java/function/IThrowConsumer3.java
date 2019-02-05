@@ -23,13 +23,24 @@ public interface IThrowConsumer3<I0, I1, I2, T extends Throwable> extends IConsu
 			return retVal;
 		};
 	}
-	
+
 	public default IConsumer3<I0, I1, I2> wrap(IFunction1<? super Throwable, ? extends RuntimeException> wrapper) {
 		return (i0, i1, i2) -> {
 			try {
 				accept(i0, i1, i2);
 			} catch (Throwable throwable) {
 				throw wrapper.apply(throwable);
+			}
+		};
+	}
+
+	public default IThrowConsumer3<I0, I1, I2, T> wrap(IRunnable pre, IRunnable post) {
+		return (i0, i1, i2) -> {
+			pre.run();
+			try {
+				accept(i0, i1, i2);
+			} finally {
+				post.run();
 			}
 		};
 	}

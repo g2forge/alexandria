@@ -68,4 +68,15 @@ public interface IConsumer1<I> extends Consumer<I>, IConsumer, IThrowConsumer1<I
 			return retVal;
 		};
 	}
+
+	public default IConsumer1<I> wrap(IRunnable pre, IRunnable post) {
+		return i -> {
+			pre.run();
+			try {
+				accept(i);
+			} finally {
+				post.run();
+			}
+		};
+	}
 }

@@ -77,4 +77,15 @@ public interface IFunction2<I0, I1, O> extends BiFunction<I0, I1, O>, IFunction<
 			return retVal;
 		};
 	}
+	
+	public default IFunction2<I0, I1, O> wrap(IRunnable pre, IRunnable post) {
+		return (i0, i1) -> {
+			pre.run();
+			try {
+				return apply(i0, i1);
+			} finally {
+				post.run();
+			}
+		};
+	}
 }

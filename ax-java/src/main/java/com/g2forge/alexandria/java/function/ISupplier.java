@@ -19,4 +19,15 @@ public interface ISupplier<T> extends Supplier<T>, IRunnable {
 	public default <I> IFunction1<I, T> toFunction() {
 		return t -> get();
 	}
+
+	public default ISupplier<T> wrap(IRunnable pre, IRunnable post) {
+		return () -> {
+			pre.run();
+			try {
+				return get();
+			} finally {
+				post.run();
+			}
+		};
+	}
 }

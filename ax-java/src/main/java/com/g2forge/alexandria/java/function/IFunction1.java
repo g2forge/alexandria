@@ -15,10 +15,6 @@ public interface IFunction1<I, O> extends Function<I, O>, IFunction<O>, IConsume
 		return function;
 	}
 	
-	public default void accept(I i) {
-		apply(i);
-	}
-
 	public static <T> IFunction1<T, T> identity() {
 		return t -> t;
 	}
@@ -26,6 +22,10 @@ public interface IFunction1<I, O> extends Function<I, O>, IFunction<O>, IConsume
 	@SuppressWarnings("unchecked")
 	public static <I, O> IFunction1<I, O> isInstanceOf(Class<O> type) {
 		return i -> type.isInstance(i) ? (O) i : null;
+	}
+
+	public default void accept(I i) {
+		apply(i);
 	}
 
 	public default <X> IFunction1<I, X> andThen(IFunction1<? super O, ? extends X> f) {
@@ -82,6 +82,17 @@ public interface IFunction1<I, O> extends Function<I, O>, IFunction<O>, IConsume
 		return i -> {
 			apply(i);
 			return retVal;
+		};
+	}
+	
+	public default IFunction1<I, O> wrap(IRunnable pre, IRunnable post) {
+		return i -> {
+			pre.run();
+			try {
+				return apply(i);
+			} finally {
+				post.run();
+			}
 		};
 	}
 }

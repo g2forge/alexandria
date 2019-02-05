@@ -41,4 +41,15 @@ public interface IThrowFunction3<I0, I1, I2, O, T extends Throwable> extends IFu
 			}
 		};
 	}
+
+	public default IThrowFunction3<I0, I1, I2, O, T> wrap(IRunnable pre, IRunnable post) {
+		return (i0, i1, i2) -> {
+			pre.run();
+			try {
+				return apply(i0, i1, i2);
+			} finally {
+				post.run();
+			}
+		};
+	}
 }

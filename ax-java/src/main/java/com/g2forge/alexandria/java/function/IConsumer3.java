@@ -67,4 +67,15 @@ public interface IConsumer3<I0, I1, I2> extends IConsumer {
 			return retVal;
 		};
 	}
+
+	public default IConsumer3<I0, I1, I2> wrap(IRunnable pre, IRunnable post) {
+		return (i0, i1, i2) -> {
+			pre.run();
+			try {
+				accept(i0, i1, i2);
+			} finally {
+				post.run();
+			}
+		};
+	}
 }
