@@ -50,5 +50,5 @@ Below are the endorsed, though certainly not the only, steps to build alexandria
 Below are notes and descriptions for a subset of the modules in this library:
 
 * [FileSystem](./ax-filesystem) is a library which will aid you in writing your own Java NIO compatible file system provider.
-	* [Memory FileSystem](./ax-filesystem-memory) is an in-memory file system which we have released both as a usable library and an example you may copy (this one module is [CC0](./ax-filesystem-memory/LICENSE) unlike the rest of alexandria)
+	* [Memory FileSystem](./ax-filesystem-memory) is an in-memory file system which we have released both as a usable library and an example you may copy (this one module is [unlicense](./ax-filesystem-memory/LICENSE) unlike the rest of alexandria)
 	* [FileSystem Test](./ax-filesystem-test) which is a small library you can use to build unit tests for your file system provider.
