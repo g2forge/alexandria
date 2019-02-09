@@ -55,8 +55,8 @@ import lombok.RequiredArgsConstructor;
  * This implementation will handle things like locking and basic file attributes (e.g. file times), while the implementor must implement actual operations. This
  * class does not handle permissions, for example, as different file systems have different permissions. At this time it may or may not appropriately support
  * symbolic links, permissions, file stores and multiple root directories. It does not support watchers yet. Please feel free to open a pull request when
- * appropriate. See {@link com.g2forge.alexandria.filesystem.ATestFileSystemProvider} to test any file system provider, not just those which extend this abstract
- * class.
+ * appropriate. See {@link com.g2forge.alexandria.filesystem.ATestFileSystemProvider} to test any file system provider, not just those which extend this
+ * abstract class.
  * 
  * An implementation can override the sync methods (@{link {@link #getSyncThrowConsumer1()}, {@link #getSyncThrowFunction1()}, {@link #getSyncThrowConsumerN()}
  * and {@link #getSyncFunction1()}) to do things like call
@@ -138,10 +138,10 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 	@Override
 	public void checkAccess(Path path, AccessMode... modes) throws IOException {
 		final P checked = check(path);
-		wrap1(IThrowConsumer1.create(p -> {
+		this.<IThrowConsumer1<P, IOException>, IOException>wrap1(p -> {
 			// Delegate to the implementation
 			checkAccess(resolve(p), modes);
-		}), getSyncThrowConsumer1(), checked).accept(checked);
+		}, getSyncThrowConsumer1(), checked).accept(checked);
 	}
 
 	/**
@@ -159,7 +159,7 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 		final P checkedSource = check(source);
 		final P checkedTarget = check(target);
 
-		final IThrowFunction1<P, IThrowFunction1<? super R, ? extends IGenericBasicAttributeModifier, IOException>, IOException> functional = wrap1(IThrowFunction1.create(p -> {
+		final IThrowFunction1<? super R, ? extends IGenericBasicAttributeModifier, IOException> completion = this.<IThrowFunction1<P, IThrowFunction1<? super R, ? extends IGenericBasicAttributeModifier, IOException>, IOException>, IOException>wrap1(p -> {
 			final R refSource = resolve(p);
 
 			// Delegate to the implementation
@@ -170,14 +170,13 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 			result.getTargetAttributeModifier().access(result.getSourceAttributeModifier().getAccessTime());
 
 			return result.getCompletion();
-		}), getSyncThrowFunction1(), checkedSource);
-		final IThrowFunction1<? super R, ? extends IGenericBasicAttributeModifier, IOException> completion = functional.apply(checkedSource);
+		}, getSyncThrowFunction1(), checkedSource).apply(checkedSource);
 
-		wrap1(IThrowConsumer1.create(p -> {
+		this.<IThrowConsumer1<P, IOException>, IOException>wrap1(p -> {
 			final R refTarget = resolve(p);
 			// Delegate to the implementation using the completion callback
 			completion.apply(refTarget).modify(null);
-		}), getSyncThrowConsumer1(), checkedTarget).accept(checkedTarget);
+		}, getSyncThrowConsumer1(), checkedTarget).accept(checkedTarget);
 	}
 
 	/**
@@ -209,14 +208,13 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 	@Override
 	public void createDirectory(Path dir, FileAttribute<?>... attrs) throws IOException {
 		final P checked = check(dir);
-		final IThrowConsumer1<P, FileSystemException> functional = wrap1(IThrowConsumer1.create(p -> {
+		this.<IThrowConsumer1<P, FileSystemException>, FileSystemException>wrap1(p -> {
 			final R reference = resolve(p);
 			// Delegate to the implementation
 			final OpenResult<R> result = createDirectory(reference);
 			result.getParentAttributeModifier().modify(null);
 			setAttributes(result.getCreated(), attrs);
-		}), getSyncThrowConsumer1(), checked);
-		functional.accept(checked);
+		}, getSyncThrowConsumer1(), checked).accept(checked);
 	}
 
 	/**
@@ -233,11 +231,11 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 	@Override
 	public void delete(Path path) throws IOException {
 		final P checked = check(path);
-		wrap1(IThrowConsumer1.<P, IOException>create(p -> {
+		this.<IThrowConsumer1<P, IOException>, IOException>wrap1(p -> {
 			final R reference = resolve(p);
 			// Delegate to the implementation and update the timestamps
 			delete(reference).modify(null);
-		}), getSyncThrowConsumer1(), checked).accept(checked);
+		}, getSyncThrowConsumer1(), checked).accept(checked);
 	}
 
 	/**
@@ -263,11 +261,10 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 	public <V extends FileAttributeView> V getFileAttributeView(Path path, Class<V> type, LinkOption... options) {
 		final IFunction1<? super R, ? extends IAttributeViewAccessor<?, V>> factory = getAVARegistry().getByView(type);
 		final P checked = check(path);
-		final IFunction1<P, V> functional = wrap1(IFunction1.create(p -> {
+		return this.<IFunction1<P, V>, RuntimeException>wrap1(p -> {
 			final R reference = resolve(p);
 			return factory.apply(reference).getView();
-		}), getSyncFunction1(), checked);
-		return functional.apply(checked);
+		}, getSyncFunction1(), checked).apply(checked);
 	}
 
 	/**
@@ -324,7 +321,7 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 		if (HCollection.asSet(options).contains(StandardCopyOption.ATOMIC_MOVE)) {
 			@SuppressWarnings("unchecked")
 			final P[] checked = (P[]) Stream.of(source, target).map(this::check).collect(HCollector.toArray(Path.class));
-			final IThrowConsumer1<P[], IOException> functional = wrapN(IThrowConsumer1.create(p -> {
+			this.<IThrowConsumer1<P[], IOException>, IOException>wrapN(p -> {
 				final R refSource = resolve(p[0]);
 				// Delegate to the implementation
 				final CopyResult<R> result = move(refSource, options);
@@ -335,26 +332,24 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 
 				targetParentAttributes.modify(null);
 				sourceParentAttributes.modify(targetParentAttributes.getModifyTime());
-			}), getSyncThrowConsumerN(), checked);
-			functional.accept(checked);
+			}, getSyncThrowConsumerN(), checked).accept(checked);
 		} else {
 			final P checkedSource = check(source);
 			final P checkedTarget = check(target);
 
-			final IThrowFunction1<P, IThrowFunction1<? super R, ? extends IGenericBasicAttributeModifier, IOException>, IOException> functional = wrap1(IThrowFunction1.create(p -> {
+			final IThrowFunction1<? super R, ? extends IGenericBasicAttributeModifier, IOException> completion = this.<IThrowFunction1<P, IThrowFunction1<? super R, ? extends IGenericBasicAttributeModifier, IOException>, IOException>, IOException>wrap1(p -> {
 				final R refSource = resolve(p);
 				// Delegate to the implementation
 				final CopyResult<R> result = move(refSource, options);
 				result.getSourceAttributeModifier().modify(null);
 				return result.getCompletion();
-			}), getSyncThrowFunction1(), checkedSource);
-			final IThrowFunction1<? super R, ? extends IGenericBasicAttributeModifier, IOException> completion = functional.apply(checkedSource);
+			}, getSyncThrowFunction1(), checkedSource).apply(checkedSource);
 
-			wrap1(IThrowConsumer1.create(p -> {
+			this.<IThrowConsumer1<P, IOException>, IOException>wrap1(p -> {
 				final R refTarget = resolve(p);
 				// Delegate to the implementation through the completion method
 				completion.apply(refTarget).modify(null);
-			}), getSyncThrowConsumer1(), checkedTarget).accept(checkedTarget);
+			}, getSyncThrowConsumer1(), checkedTarget).accept(checkedTarget);
 		}
 	}
 
@@ -375,7 +370,7 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 	@Override
 	public SeekableByteChannel newByteChannel(Path path, Set<? extends OpenOption> options, FileAttribute<?>... attrs) throws IOException {
 		final P checked = check(path);
-		final IThrowFunction1<P, SeekableByteChannel, IOException> functional = wrap1(IThrowFunction1.create(p -> {
+		return this.<IThrowFunction1<P, SeekableByteChannel, IOException>, IOException>wrap1(p -> {
 			final R reference = resolve(p);
 
 			final OpenResult<R> result = openFile(reference, options);
@@ -398,19 +393,17 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 			if (write && options.contains(StandardOpenOption.APPEND)) retVal.position(retVal.size());
 
 			return retVal;
-		}), getSyncThrowFunction1(), checked);
-		return functional.apply(checked);
+		}, getSyncThrowFunction1(), checked).apply(checked);
 	}
 
 	@Override
 	public DirectoryStream<Path> newDirectoryStream(Path dir, Filter<? super Path> filter) throws IOException {
 		final P checked = check(dir);
-		final IThrowFunction1<P, DirectoryStream<Path>, IOException> functional = wrap1(IThrowFunction1.create(p -> {
+		return this.<IThrowFunction1<P, DirectoryStream<Path>, IOException>, IOException>wrap1(p -> {
 			final R reference = resolve(p);
 			// Delegate to the implementation
 			return toDirectoryStream(reference, dir);
-		}), getSyncThrowFunction1(), checked);
-		return functional.apply(checked);
+		}, getSyncThrowFunction1(), checked).apply(checked);
 	}
 
 	/**
@@ -432,18 +425,17 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 	public <A extends BasicFileAttributes> A readAttributes(Path path, Class<A> type, LinkOption... options) throws IOException {
 		final IFunction1<? super R, ? extends IAttributeViewAccessor<A, ?>> factory = getAVARegistry().getByAttributes(type);
 		final P checked = check(path);
-		final IThrowFunction1<P, A, NoSuchFileException> functional = wrap1(IThrowFunction1.create(p -> {
+		return this.<IThrowFunction1<P, A, NoSuchFileException>, NoSuchFileException>wrap1(p -> {
 			final R reference = resolve(p);
 			return factory.apply(reference).getAttributes();
-		}), getSyncThrowFunction1(), checked);
-		return functional.apply(checked);
+		}, getSyncThrowFunction1(), checked).apply(checked);
 	}
 
 	@Override
 	public Map<String, Object> readAttributes(Path path, String attributes, LinkOption... options) throws IOException {
 		final IFunction1<? super R, ? extends IAttributeViewAccessor<?, ?>> factory = getAVARegistry().getByName(attributes);
 		final P checked = check(path);
-		final IThrowFunction1<P, Map<String, Object>, NoSuchFileException> functional = wrap1(IThrowFunction1.create(p -> {
+		return this.<IThrowFunction1<P, Map<String, Object>, NoSuchFileException>, NoSuchFileException>wrap1(p -> {
 			final R reference = resolve(p);
 			final IAttributeViewAccessor<?, ?> accessor = factory.apply(reference);
 
@@ -452,8 +444,7 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 				retVal.put(name, accessor.get(name));
 			}
 			return retVal;
-		}), getSyncThrowFunction1(), checked);
-		return functional.apply(checked);
+		}, getSyncThrowFunction1(), checked).apply(checked);
 	}
 
 	/**
@@ -474,11 +465,11 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 		final IFunction1<? super R, ? extends IAttributeViewAccessor<?, ?>> factory = getAVARegistry().getByName(name.getAttributes());
 
 		final P checked = check(path);
-		wrap1(IThrowConsumer1.create(p -> {
+		this.<IThrowConsumer1<P, NoSuchFileException>, NoSuchFileException>wrap1(p -> {
 			final R reference = resolve(p);
 			final IAttributeViewAccessor<?, ?> accessor = factory.apply(reference);
 			accessor.set(name.getAttribute(), value);
-		}), getSyncThrowConsumer1(), checked).accept(checked);
+		}, getSyncThrowConsumer1(), checked).accept(checked);
 	}
 
 	/**
