@@ -11,8 +11,8 @@ public class LiteralSupplier<T> implements ISupplier<T> {
 	protected static final LiteralSupplier<Object> NULL = new LiteralSupplier<>(null);
 
 	@SuppressWarnings("unchecked")
-	public static <T> Supplier<T> getNull() {
-		return (Supplier<T>) NULL;
+	public static <T> ISupplier<T> getNull() {
+		return (ISupplier<T>) NULL;
 	}
 
 	public static <T> T unwrap(Supplier<? extends T> supplier) {
