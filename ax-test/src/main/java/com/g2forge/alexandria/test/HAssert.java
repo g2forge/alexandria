@@ -3,6 +3,7 @@ package com.g2forge.alexandria.test;
 import org.junit.Assert;
 
 import com.g2forge.alexandria.java.function.IConsumer2;
+import com.g2forge.alexandria.java.function.IThrowRunnable;
 import com.g2forge.alexandria.java.function.IConsumer1;
 import com.g2forge.alexandria.java.marker.Helpers;
 
@@ -11,14 +12,20 @@ import lombok.experimental.UtilityClass;
 @Helpers
 @UtilityClass
 public class HAssert extends Assert {
-	public static void assertException(Class<? extends Throwable> type, Runnable runnable) {
+	public static <T extends Throwable> void assertException(Class<? extends Throwable> type, String message, IThrowRunnable<T> operation) throws T {
 		try {
-			runnable.run();
+			operation.run();
 		} catch (Throwable throwable) {
-			if (!type.isInstance(throwable)) throw throwable;
-			else return;
+			if (type.isInstance(throwable)) {
+				if (message != null) assertEquals(message, throwable.getMessage());
+				return;
+			} else throw throwable;
 		}
-		fail("Did not receive expected exception of type " + type);
+		fail(String.format("Expected exception of type \"%1$s\" was not thrown!", type.getName()));
+	}
+
+	public static void assertException(Class<? extends Throwable> type, Runnable runnable) {
+		assertException(type, null, runnable::run);
 	}
 
 	public static void assertInstanceOf(Class<?> expected, Object actual) {

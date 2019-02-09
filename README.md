@@ -44,3 +44,11 @@ Below are the endorsed, though certainly not the only, steps to build alexandria
 	1. [Install the new SNAPSHOT version of annotations](#building-annotations) `cd .../ax-root && mvn install` then `cd .../ax-annotations && mvn install` 
 	2. Update downstream projects (`<alexandria.version>XXX</alexandria.version>`, parent POM versions, etc)
 	3. Update issue tracking. For Jira note that you will want to bulk-add the new fix version, and then bulk-remove the old version rather than replace since other versions may be involved.
+
+# Modules
+
+Below are notes and descriptions for a subset of the modules in this library:
+
+* [FileSystem](./ax-filesystem) is a library which will aid you in writing your own Java NIO compatible file system provider.
+	* [Memory FileSystem](./ax-filesystem-memory) is an in-memory file system which we have released both as a usable library and an example you may copy (this one module is [unlicense](./ax-filesystem-memory/LICENSE) unlike the rest of alexandria)
+	* [FileSystem Test](./ax-filesystem-test) which is a small library you can use to build unit tests for your file system provider.

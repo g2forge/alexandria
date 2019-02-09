@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 @FunctionalInterface
-public interface IConsumer1<I> extends Consumer<I>, IConsumer {
+public interface IConsumer1<I> extends Consumer<I>, IConsumer, IThrowConsumer1<I, RuntimeException> {
 	public static <I> IConsumer1<I> create(IConsumer1<I> consumer) {
 		return consumer;
 	}
@@ -47,5 +47,36 @@ public interface IConsumer1<I> extends Consumer<I>, IConsumer {
 
 	public default Runnable curry(I input) {
 		return () -> this.accept(input);
+	}
+
+	public default <IL> IConsumer1<IL> lift(IFunction1<IL, ? extends I> lift) {
+		return il -> accept(lift.apply(il));
+	}
+
+	public default IConsumer1<I> sync(Object lock) {
+		if (lock == null) return this;
+		return i -> {
+			synchronized (lock) {
+				accept(i);
+			}
+		};
+	}
+
+	public default <O> IFunction1<I, O> toFunction(O retVal) {
+		return i -> {
+			accept(i);
+			return retVal;
+		};
+	}
+
+	public default IConsumer1<I> wrap(IRunnable pre, IRunnable post) {
+		return i -> {
+			pre.run();
+			try {
+				accept(i);
+			} finally {
+				post.run();
+			}
+		};
 	}
 }

@@ -2,12 +2,15 @@ package com.g2forge.alexandria.java.io;
 
 import java.io.IOException;
 import java.nio.file.CopyOption;
+import java.nio.file.DirectoryStream;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Function;
 
 import com.g2forge.alexandria.java.concurrent.HConcurrent;
@@ -49,6 +52,22 @@ public class HFile {
 		for (int i = 0; i < repeat; i++) {
 			if (i > 0) HConcurrent.wait(HFile.class, pause);
 			System.gc();
+		}
+	}
+
+	public static List<Path> toList(DirectoryStream<Path> stream) {
+		try {
+			final List<Path> retVal = new ArrayList<>();
+			for (Path path : stream) {
+				retVal.add(path);
+			}
+			return retVal;
+		} finally {
+			try {
+				stream.close();
+			} catch (IOException e) {
+				throw new RuntimeIOException(e);
+			}
 		}
 	}
 }
