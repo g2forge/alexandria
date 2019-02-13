@@ -4,41 +4,21 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import com.g2forge.alexandria.java.close.AGuaranteeClose;
-
-import lombok.Getter;
-
-public class TempDirectory extends AGuaranteeClose {
-	@Getter
-	protected final Path path;
-
-	protected final boolean autodelete;
+public class TempDirectory extends CloseablePath {
+	protected static Path createPath(Path parent, String prefix) {
+		try {
+			if (parent != null) Files.createDirectories(parent);
+			return parent == null ? Files.createTempDirectory(prefix) : Files.createTempDirectory(parent, prefix);
+		} catch (IOException exception) {
+			throw new RuntimeIOException(exception);
+		}
+	}
 
 	public TempDirectory() {
 		this(null, null, true);
 	}
 
 	public TempDirectory(Path parent, String prefix, boolean autodelete) {
-		super(autodelete);
-		try {
-			if (parent != null) Files.createDirectories(parent);
-			final String actualPrefix = prefix == null ? getClass().getSimpleName() : prefix;
-			path = parent == null ? Files.createTempDirectory(actualPrefix) : Files.createTempDirectory(parent, actualPrefix);
-		} catch (IOException exception) {
-			throw new RuntimeIOException(exception);
-		}
-		this.autodelete = autodelete;
-	}
-
-	@Override
-	protected void closeInternal() {
-		try {
-			if (path != null && Files.exists(path)) {
-				HFile.gc();
-				HFile.delete(path);
-			}
-		} catch (IOException exception) {
-			throw new RuntimeIOException(exception);
-		}
+		super(createPath(parent, prefix == null ? TempDirectory.class.getSimpleName() : prefix), autodelete);
 	}
 }
