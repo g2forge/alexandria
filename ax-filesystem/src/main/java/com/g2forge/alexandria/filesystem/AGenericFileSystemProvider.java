@@ -23,7 +23,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.g2forge.alexandria.filesystem.attributes.FileAttributeName;
@@ -31,7 +30,8 @@ import com.g2forge.alexandria.filesystem.attributes.IGenericBasicAttributeModifi
 import com.g2forge.alexandria.filesystem.attributes.accessor.AttributeViewAccessorRegistry;
 import com.g2forge.alexandria.filesystem.attributes.accessor.IAttributeViewAccessor;
 import com.g2forge.alexandria.filesystem.path.IGenericFileSystemProviderInternal;
-import com.g2forge.alexandria.java.core.ComparableComparator;
+import com.g2forge.alexandria.filesystem.sync.ISyncFactory;
+import com.g2forge.alexandria.filesystem.sync.SyncFactory;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.core.helpers.HCollector;
 import com.g2forge.alexandria.java.function.IFunction1;
@@ -58,8 +58,7 @@ import lombok.RequiredArgsConstructor;
  * appropriate. See {@link com.g2forge.alexandria.filesystem.ATestFileSystemProvider} to test any file system provider, not just those which extend this
  * abstract class.
  * 
- * An implementation can override the sync methods (@{link {@link #getSyncThrowConsumer1()}, {@link #getSyncThrowFunction1()}, {@link #getSyncThrowConsumerN()}
- * and {@link #getSyncFunction1()}) to do things like call
+ * An implementation can override the {@link #syncFactory sync factory} to do things like call
  * {@link com.g2forge.alexandria.java.function.IFunctional#wrap(com.g2forge.alexandria.java.function.IRunnable, com.g2forge.alexandria.java.function.IRunnable)},
  * in order to receive callbacks when file operations start and end. This can be used, for example, to initiate a remote connection and push results to the
  * remote system.
@@ -70,7 +69,8 @@ import lombok.RequiredArgsConstructor;
  *            {@link #wrapN(IThrowConsumer1, IFunction2, Path...)} to ensure locking order.
  * @param <R> A reference to an entry in this file system. This is a purely internal type.
  */
-public abstract class AGenericFileSystemProvider<P extends Path, Internal extends IGenericFileSystemProviderInternal<P> & Comparable<Internal>, R> extends FileSystemProvider {
+@RequiredArgsConstructor
+public abstract class AGenericFileSystemProvider<P extends Path, Internal extends IGenericFileSystemProviderInternal<P>, R> extends FileSystemProvider {
 	/**
 	 * A temporary type for the necessary information to be returned by {@link AGenericFileSystemProvider#copy(Object, CopyOption...)} and
 	 * {@link AGenericFileSystemProvider#move(Object, CopyOption...)}.
@@ -141,7 +141,7 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 		this.<IThrowConsumer1<P, IOException>, IOException>wrap1(p -> {
 			// Delegate to the implementation
 			checkAccess(resolve(p), modes);
-		}, getSyncThrowConsumer1(), checked).accept(checked);
+		}, getSyncFactory().getSyncThrowConsumer1(), checked).accept(checked);
 	}
 
 	/**
@@ -170,13 +170,13 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 			result.getTargetAttributeModifier().access(result.getSourceAttributeModifier().getAccessTime());
 
 			return result.getCompletion();
-		}, getSyncThrowFunction1(), checkedSource).apply(checkedSource);
+		}, getSyncFactory().getSyncThrowFunction1(), checkedSource).apply(checkedSource);
 
 		this.<IThrowConsumer1<P, IOException>, IOException>wrap1(p -> {
 			final R refTarget = resolve(p);
 			// Delegate to the implementation using the completion callback
 			completion.apply(refTarget).modify(null);
-		}, getSyncThrowConsumer1(), checkedTarget).accept(checkedTarget);
+		}, getSyncFactory().getSyncThrowConsumer1(), checkedTarget).accept(checkedTarget);
 	}
 
 	/**
@@ -214,7 +214,7 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 			final OpenResult<R> result = createDirectory(reference);
 			result.getParentAttributeModifier().modify(null);
 			setAttributes(result.getCreated(), attrs);
-		}, getSyncThrowConsumer1(), checked).accept(checked);
+		}, getSyncFactory().getSyncThrowConsumer1(), checked).accept(checked);
 	}
 
 	/**
@@ -235,7 +235,7 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 			final R reference = resolve(p);
 			// Delegate to the implementation and update the timestamps
 			delete(reference).modify(null);
-		}, getSyncThrowConsumer1(), checked).accept(checked);
+		}, getSyncFactory().getSyncThrowConsumer1(), checked).accept(checked);
 	}
 
 	/**
@@ -264,7 +264,7 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 		return this.<IFunction1<P, V>, RuntimeException>wrap1(p -> {
 			final R reference = resolve(p);
 			return factory.apply(reference).getView();
-		}, getSyncFunction1(), checked).apply(checked);
+		}, getSyncFactory().getSyncFunction1(), checked).apply(checked);
 	}
 
 	/**
@@ -276,43 +276,16 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 	protected abstract Internal getInternal(final P path);
 
 	/**
-	 * Get the appropriate sync function, which will wrap an instance of {@link IFunction1} in a lock specified by the given object. It may also provider other
-	 * functionality in the wrapper such as allocating and freeing resources.
+	 * Get the ordered list of locks that should be acquired before an operation over the specified paths. The order of the locks is the order in which they
+	 * will be acquired. This method can therefor implement two-phase locking.
 	 * 
-	 * @return A function which can wrap a functional to provide synchronization.
+	 * @param paths The paths that will be accessed in the operaton.
+	 * @return The list of locks to be held. These will be converted to a nested series of synchronizations.
 	 */
-	protected <O> IFunction2<? super IFunction1<P, O>, ? super Object, ? extends IFunction1<P, O>> getSyncFunction1() {
-		return IFunction1::sync;
-	}
+	protected abstract List<Object> getLocks(@SuppressWarnings("unchecked") P... paths);
 
-	/**
-	 * Get the appropriate sync function, which will wrap an instance of {@link IThrowConsumer1} in a lock specified by the given object. It may also provider
-	 * other functionality in the wrapper such as allocating and freeing resources.
-	 * 
-	 * @return A function which can wrap a functional to provide synchronization.
-	 */
-	protected <T extends Throwable> IFunction2<? super IThrowConsumer1<P, T>, ? super Object, ? extends IThrowConsumer1<P, T>> getSyncThrowConsumer1() {
-		return IThrowConsumer1::sync;
-	}
-
-	/**
-	 * Get the appropriate sync function, which will wrap an instance of {@link IThrowConsumer1} in a lock specified by the given object. It may also provider
-	 * other functionality in the wrapper such as allocating and freeing resources.
-	 * 
-	 * @return A function which can wrap a functional to provide synchronization.
-	 */
-	protected <T extends Throwable> IFunction2<? super IThrowConsumer1<P[], T>, ? super Object, ? extends IThrowConsumer1<P[], T>> getSyncThrowConsumerN() {
-		return IThrowConsumer1::sync;
-	}
-
-	/**
-	 * Get the appropriate sync function, which will wrap an instance of {@link IThrowFunction1} in a lock specified by the given object. It may also provider
-	 * other functionality in the wrapper such as allocating and freeing resources.
-	 * 
-	 * @return A function which can wrap a functional to provide synchronization.
-	 */
-	protected <O, T extends Throwable> IFunction2<? super IThrowFunction1<P, O, T>, ? super Object, ? extends IThrowFunction1<P, O, T>> getSyncThrowFunction1() {
-		return IThrowFunction1::sync;
+	protected ISyncFactory getSyncFactory() {
+		return SyncFactory.create();
 	}
 
 	@Override
@@ -332,7 +305,7 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 
 				targetParentAttributes.modify(null);
 				sourceParentAttributes.modify(targetParentAttributes.getModifyTime());
-			}, getSyncThrowConsumerN(), checked).accept(checked);
+			}, getSyncFactory().getSyncThrowConsumerN(), checked).accept(checked);
 		} else {
 			final P checkedSource = check(source);
 			final P checkedTarget = check(target);
@@ -343,13 +316,13 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 				final CopyResult<R> result = move(refSource, options);
 				result.getSourceAttributeModifier().modify(null);
 				return result.getCompletion();
-			}, getSyncThrowFunction1(), checkedSource).apply(checkedSource);
+			}, getSyncFactory().getSyncThrowFunction1(), checkedSource).apply(checkedSource);
 
 			this.<IThrowConsumer1<P, IOException>, IOException>wrap1(p -> {
 				final R refTarget = resolve(p);
 				// Delegate to the implementation through the completion method
 				completion.apply(refTarget).modify(null);
-			}, getSyncThrowConsumer1(), checkedTarget).accept(checkedTarget);
+			}, getSyncFactory().getSyncThrowConsumer1(), checkedTarget).accept(checkedTarget);
 		}
 	}
 
@@ -393,7 +366,7 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 			if (write && options.contains(StandardOpenOption.APPEND)) retVal.position(retVal.size());
 
 			return retVal;
-		}, getSyncThrowFunction1(), checked).apply(checked);
+		}, getSyncFactory().getSyncThrowFunction1(), checked).apply(checked);
 	}
 
 	@Override
@@ -403,7 +376,7 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 			final R reference = resolve(p);
 			// Delegate to the implementation
 			return toDirectoryStream(reference, dir);
-		}, getSyncThrowFunction1(), checked).apply(checked);
+		}, getSyncFactory().getSyncThrowFunction1(), checked).apply(checked);
 	}
 
 	/**
@@ -428,7 +401,7 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 		return this.<IThrowFunction1<P, A, NoSuchFileException>, NoSuchFileException>wrap1(p -> {
 			final R reference = resolve(p);
 			return factory.apply(reference).getAttributes();
-		}, getSyncThrowFunction1(), checked).apply(checked);
+		}, getSyncFactory().getSyncThrowFunction1(), checked).apply(checked);
 	}
 
 	@Override
@@ -444,7 +417,7 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 				retVal.put(name, accessor.get(name));
 			}
 			return retVal;
-		}, getSyncThrowFunction1(), checked).apply(checked);
+		}, getSyncFactory().getSyncThrowFunction1(), checked).apply(checked);
 	}
 
 	/**
@@ -469,7 +442,7 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 			final R reference = resolve(p);
 			final IAttributeViewAccessor<?, ?> accessor = factory.apply(reference);
 			accessor.set(name.getAttribute(), value);
-		}, getSyncThrowConsumer1(), checked).accept(checked);
+		}, getSyncFactory().getSyncThrowConsumer1(), checked).accept(checked);
 	}
 
 	/**
@@ -513,7 +486,13 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 	 * @return
 	 */
 	protected <F extends IThrowConsumer1<P, T>, T extends Throwable> F wrap1(F functional, IFunction2<? super F, ? super Object, ? extends F> sync, P path) {
-		return sync.apply(functional, getInternal(path));
+		@SuppressWarnings("unchecked")
+		final List<Object> locks = getLocks(path);
+		F retVal = functional;
+		for (Object lock : locks) {
+			retVal = sync.apply(retVal, lock);
+		}
+		return retVal;
 	}
 
 	/**
@@ -528,10 +507,10 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 	 * @return
 	 */
 	protected <F extends IThrowConsumer1<P[], T>, T extends Throwable> F wrapN(F functional, IFunction2<? super F, ? super Object, ? extends F> sync, @SuppressWarnings("unchecked") P... paths) {
-		final List<Internal> internals = Stream.of(paths).map(this::getInternal).sorted(ComparableComparator.create()).distinct().collect(Collectors.toList());
+		final List<Object> locks = getLocks(paths);
 		F retVal = functional;
-		for (Internal internal : internals) {
-			retVal = sync.apply(retVal, internal);
+		for (Object lock : locks) {
+			retVal = sync.apply(retVal, lock);
 		}
 		return retVal;
 	}
