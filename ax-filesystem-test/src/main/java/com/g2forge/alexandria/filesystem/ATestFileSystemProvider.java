@@ -67,7 +67,8 @@ public abstract class ATestFileSystemProvider {
 		Assert.assertFalse(bAttributes.isOther());
 		Assert.assertFalse(bAttributes.isSymbolicLink());
 
-		Assert.assertNotEquals(aAttributes.fileKey(), bAttributes.fileKey());
+		final Object aFileKey = aAttributes.fileKey();
+		if (aFileKey != null) Assert.assertNotEquals(aFileKey, bAttributes.fileKey());
 
 		final BasicFileAttributeView view = Files.getFileAttributeView(aPath, BasicFileAttributeView.class);
 		HAssert.assertThat(view.readAttributes(), new FieldMatcher<>(aAttributes, basicFileAttributeFunctions));
@@ -160,7 +161,7 @@ public abstract class ATestFileSystemProvider {
 
 	@Test
 	public void createDirectory() throws IOException {
-		HAssert.assertTrue(HFile.toList(Files.newDirectoryStream(fs.getPath("/"))).isEmpty());
+		HAssert.assertEquals(HCollection.emptyList(), HFile.toList(Files.newDirectoryStream(fs.getPath("/"))));
 		final FileAttribute<FileTime> expected = HBasicFileAttributes.createLastModifiedTime(FileTimeMatcher.now());
 		final Path path = createPath("/a");
 
@@ -172,7 +173,7 @@ public abstract class ATestFileSystemProvider {
 
 	@Test
 	public void createDirectoryExists() throws IOException {
-		Assert.assertTrue(HFile.toList(Files.newDirectoryStream(fs.getPath("/"))).isEmpty());
+		Assert.assertEquals(HCollection.emptyList(), HFile.toList(Files.newDirectoryStream(fs.getPath("/"))));
 		Files.createDirectory(createPath("/a"));
 		HAssert.assertException(FileAlreadyExistsException.class, "\"/a\" already exists!", () -> Files.createDirectory(createPath("/a")));
 		Assert.assertEquals(HCollection.asList("a"), getChildNames(fs.getPath("/")));
@@ -288,9 +289,14 @@ public abstract class ATestFileSystemProvider {
 	public void fileOptionAppend() throws IOException {
 		final Path path = createPath("a.txt");
 		Files.newBufferedWriter(path).append("Hello, World!").append(System.lineSeparator()).close();
+
+		// Note that not all file system providers will support read and append
 		try (final SeekableByteChannel channel = Files.newByteChannel(path, StandardOpenOption.READ, StandardOpenOption.APPEND)) {
 			HAssert.assertEquals(0, channel.position());
+		} catch (IllegalArgumentException exception) {
+			Assert.assertEquals("READ + APPEND not allowed", exception.getMessage());
 		}
+
 		try (final SeekableByteChannel channel = Files.newByteChannel(path, StandardOpenOption.WRITE, StandardOpenOption.APPEND)) {
 			HAssert.assertNotEquals(0, channel.position());
 		}
