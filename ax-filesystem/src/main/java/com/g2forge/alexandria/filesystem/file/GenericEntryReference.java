@@ -12,6 +12,7 @@ import java.util.Stack;
 import com.g2forge.alexandria.filesystem.path.IGenericFileSystemInternal;
 import com.g2forge.alexandria.java.function.IFunction1;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -25,6 +26,7 @@ import lombok.Getter;
  * @param <P> The generic type of paths in the file system.
  */
 @Getter
+@AllArgsConstructor
 public class GenericEntryReference<E, F, D, P extends Path> {
 	protected final IGenericEntryAccessor<E, F, D, P> accessor;
 
