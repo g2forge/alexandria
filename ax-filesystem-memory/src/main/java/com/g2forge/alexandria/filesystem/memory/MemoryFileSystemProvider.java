@@ -18,6 +18,7 @@ import java.nio.file.ProviderMismatchException;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.spi.FileSystemProvider;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -26,7 +27,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.g2forge.alexandria.annotations.service.Service;
 import com.g2forge.alexandria.filesystem.AGenericFileSystemProvider;
@@ -187,8 +187,13 @@ public class MemoryFileSystemProvider extends AGenericFileSystemProvider<Generic
 	}
 
 	@Override
-	protected List<Object> getLocks(GenericPath... paths) {
-		return Stream.of(paths).map(this::getInternal).sorted(ComparableComparator.create()).distinct().collect(Collectors.toList());
+	protected List<Object> getLocks(Collection<? extends GenericPath> paths) {
+		return paths.stream().map(this::getInternal).sorted(ComparableComparator.create()).distinct().collect(Collectors.toList());
+	}
+
+	@Override
+	protected List<Object> getLocks(GenericPath path) {
+		return HCollection.asList(getInternal(path));
 	}
 
 	@Override

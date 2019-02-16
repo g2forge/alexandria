@@ -19,6 +19,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.FileAttributeView;
 import java.nio.file.spi.FileSystemProvider;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -277,12 +278,21 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 
 	/**
 	 * Get the ordered list of locks that should be acquired before an operation over the specified paths. The order of the locks is the order in which they
-	 * will be acquired. This method can therefor implement two-phase locking.
+	 * will be acquired. This method can therefore implement two-phase locking.
 	 * 
-	 * @param paths The paths that will be accessed in the operaton.
+	 * @param paths The paths that will be accessed in the operation.
 	 * @return The list of locks to be held. These will be converted to a nested series of synchronizations.
 	 */
-	protected abstract List<Object> getLocks(@SuppressWarnings("unchecked") P... paths);
+	protected abstract List<Object> getLocks(Collection<? extends P> paths);
+
+	/**
+	 * Get the ordered list of locks that should be acquired before an operation over the specified path.
+	 * 
+	 * @param path The path that will be accessed in the operation.
+	 * @return The list of locks to be held.
+	 * @see #getLocks(Collection)
+	 */
+	protected abstract List<Object> getLocks(P path);
 
 	protected ISyncFactory getSyncFactory() {
 		return SyncFactory.create();
@@ -486,7 +496,6 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 	 * @return
 	 */
 	protected <F extends IThrowConsumer1<P, T>, T extends Throwable> F wrap1(F functional, IFunction2<? super F, ? super Object, ? extends F> sync, P path) {
-		@SuppressWarnings("unchecked")
 		final List<Object> locks = getLocks(path);
 		F retVal = functional;
 		for (Object lock : locks) {
@@ -507,7 +516,7 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 	 * @return
 	 */
 	protected <F extends IThrowConsumer1<P[], T>, T extends Throwable> F wrapN(F functional, IFunction2<? super F, ? super Object, ? extends F> sync, @SuppressWarnings("unchecked") P... paths) {
-		final List<Object> locks = getLocks(paths);
+		final List<Object> locks = getLocks(HCollection.asList(paths));
 		F retVal = functional;
 		for (Object lock : locks) {
 			retVal = sync.apply(retVal, lock);
