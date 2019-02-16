@@ -163,7 +163,7 @@ public abstract class ATestFileSystemProvider {
 		HAssert.assertTrue(HFile.toList(Files.newDirectoryStream(fs.getPath("/"))).isEmpty());
 		final FileAttribute<FileTime> expected = HBasicFileAttributes.createLastModifiedTime(FileTimeMatcher.now());
 		final Path path = createPath("/a");
-		
+
 		HConcurrent.wait(10);
 		Files.createDirectory(path, expected);
 		HAssert.assertEquals(expected.value(), Files.getLastModifiedTime(path));
@@ -180,7 +180,7 @@ public abstract class ATestFileSystemProvider {
 
 	@Test
 	public void createDirectoryMissingAncestor() throws IOException {
-		Assert.assertTrue(HFile.toList(Files.newDirectoryStream(fs.getPath("/"))).isEmpty());
+		Assert.assertEquals(HCollection.emptyList(), HFile.toList(Files.newDirectoryStream(fs.getPath("/"))));
 		HAssert.assertException(NoSuchFileException.class, "Ancestor \"/a\" does not exist!", () -> Files.createDirectory(createPath("/a/b")));
 		Assert.assertEquals(HCollection.emptyList(), getChildNames(fs.getPath("/")));
 	}
@@ -312,7 +312,9 @@ public abstract class ATestFileSystemProvider {
 
 	@Test
 	public void fileReadOnly() throws IOException {
-		try (final SeekableByteChannel channel = Files.newByteChannel(createPath("a.txt"), StandardOpenOption.CREATE_NEW, StandardOpenOption.READ)) {
+		final Path path = createPath("a.txt");
+		Files.newByteChannel(path, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE).close();
+		try (final SeekableByteChannel channel = Files.newByteChannel(path, StandardOpenOption.READ)) {
 			HAssert.assertException(NonWritableChannelException.class, null, () -> channel.write(ByteBuffer.wrap(new byte[] { 0, 1, 2 })));
 		}
 	}
