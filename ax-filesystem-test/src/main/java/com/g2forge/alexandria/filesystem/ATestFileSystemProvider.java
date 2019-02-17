@@ -8,6 +8,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.NonReadableChannelException;
 import java.nio.channels.NonWritableChannelException;
 import java.nio.channels.SeekableByteChannel;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.AccessMode;
 import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileAlreadyExistsException;
@@ -38,6 +39,7 @@ import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.io.HFile;
 import com.g2forge.alexandria.test.FieldMatcher;
 import com.g2forge.alexandria.test.HAssert;
+import com.g2forge.alexandria.test.HMatchers;
 
 public abstract class ATestFileSystemProvider {
 	protected static final ISerializableFunction1<BasicFileAttributes, ?>[] basicFileAttributeFunctions = FieldMatcher.create(BasicFileAttributes::creationTime, BasicFileAttributes::lastModifiedTime, BasicFileAttributes::lastAccessTime, BasicFileAttributes::isDirectory, BasicFileAttributes::isRegularFile, BasicFileAttributes::isSymbolicLink, BasicFileAttributes::isOther, BasicFileAttributes::size);
@@ -202,7 +204,7 @@ public abstract class ATestFileSystemProvider {
 		final Path path = createPath("/a");
 		Files.createDirectories(createPath("/a/b"));
 		HAssert.assertTrue(Files.exists(path));
-		HAssert.assertException(DirectoryNotEmptyException.class, "\"/a\" is not empty!", () -> Files.delete(path));
+		HAssert.assertThat(() -> Files.delete(path), HMatchers.isThrowable(DirectoryNotEmptyException.class, HMatchers.anyOf(HMatchers.equalTo(String.format("\"/%1$s\" is not empty!", path.getFileName())), HMatchers.endsWith(path.getFileName().toString()))));
 		HAssert.assertTrue(Files.exists(path));
 	}
 
@@ -217,7 +219,8 @@ public abstract class ATestFileSystemProvider {
 
 	@Test
 	public void deleteNonExistant() throws IOException {
-		HAssert.assertException(NoSuchFileException.class, "\"a\" does not exist!", () -> Files.delete(createPath("a")));
+		final Path path = createPath("a");
+		HAssert.assertThat(() -> Files.delete(path), HMatchers.isThrowable(NoSuchFileException.class, HMatchers.anyOf(HMatchers.equalTo(String.format("\"/%1$s\" does not exist!", path.getFileName())), HMatchers.endsWith(path.getFileName().toString()))));
 	}
 
 	@Test
@@ -250,9 +253,9 @@ public abstract class ATestFileSystemProvider {
 	public void fileCreateExistingFail() throws IOException {
 		Files.createDirectory(createPath("/a"));
 		final Path a = createPath("a"), b = createPath("b");
-		HAssert.assertException(FileAlreadyExistsException.class, "\"a\" already exists!", () -> Files.newBufferedWriter(a, StandardOpenOption.CREATE_NEW).close());
+		HAssert.assertThat(() -> Files.newBufferedWriter(a, StandardOpenOption.CREATE_NEW).close(), HMatchers.anyOf(HMatchers.isThrowable(FileAlreadyExistsException.class, "\"a\" already exists!"), HMatchers.isThrowable(AccessDeniedException.class, HMatchers.endsWith(a.getFileName().toString()))));
 		Files.newBufferedWriter(b).append("b").close();
-		HAssert.assertException(FileAlreadyExistsException.class, "\"b\" already exists!", () -> Files.newBufferedWriter(b, StandardOpenOption.CREATE_NEW).close());
+		HAssert.assertThat(() -> Files.newBufferedWriter(b, StandardOpenOption.CREATE_NEW).close(), HMatchers.anyOf(HMatchers.isThrowable(FileAlreadyExistsException.class, "\"b\" already exists!"), HMatchers.isThrowable(FileAlreadyExistsException.class, HMatchers.endsWith(b.getFileName().toString()))));
 	}
 
 	@Test
@@ -405,7 +408,7 @@ public abstract class ATestFileSystemProvider {
 		final Path a = createPath("a"), b = createPath("b");
 		Files.createDirectory(a);
 		Files.newBufferedWriter(b).append("Hello, World!").append(System.lineSeparator()).close();
-		HAssert.assertException(FileAlreadyExistsException.class, "\"b\" already exists!", () -> Files.move(a, b));
+		HAssert.assertThat(() -> Files.move(a, b), HMatchers.isThrowable(FileAlreadyExistsException.class, HMatchers.<String>anyOf(HMatchers.equalTo(String.format("\"%1$s\" already exists!", b)) /* Helpful error messages */, HMatchers.endsWith(b.toString()) /* Machine readable */)));
 		Assert.assertTrue(Files.isRegularFile(b));
 	}
 
