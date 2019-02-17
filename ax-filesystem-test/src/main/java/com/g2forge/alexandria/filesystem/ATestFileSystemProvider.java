@@ -24,7 +24,9 @@ import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.FileTime;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.Assert;
@@ -44,11 +46,12 @@ import com.g2forge.alexandria.test.HMatchers;
 public abstract class ATestFileSystemProvider {
 	protected static final ISerializableFunction1<BasicFileAttributes, ?>[] basicFileAttributeFunctions = FieldMatcher.create(BasicFileAttributes::creationTime, BasicFileAttributes::lastModifiedTime, BasicFileAttributes::lastAccessTime, BasicFileAttributes::isDirectory, BasicFileAttributes::isRegularFile, BasicFileAttributes::isSymbolicLink, BasicFileAttributes::isOther, BasicFileAttributes::size);
 
-	protected static List<String> getChildNames(final Path path) throws IOException {
-		return HFile.toList(Files.newDirectoryStream(path)).stream().map(p -> p.getFileName().toString()).collect(Collectors.toList());
-	}
-
 	protected FileSystem fs = null;
+
+	protected void assertChildren(Collection<String> children, Path path) throws IOException {
+		final Set<String> actual = HFile.toList(Files.newDirectoryStream(path)).stream().map(p -> p.getFileName().toString()).collect(Collectors.toSet());
+		HAssert.assertEquals((children instanceof Set) ? children : new HashSet<>(children), actual);
+	}
 
 	@Test
 	public void attributes() throws IOException {
@@ -101,7 +104,7 @@ public abstract class ATestFileSystemProvider {
 		final Path a = aParent.resolve("a"), b = bParent.resolve("b");
 		Files.createDirectories(a.resolve("0"));
 		Files.createDirectories(b.resolve("1"));
-		HAssert.assertEquals(HCollection.asList("1"), getChildNames(b));
+		assertChildren(HCollection.asList("1"), b);
 
 		HConcurrent.wait(10);
 		Files.copy(a, b, StandardCopyOption.REPLACE_EXISTING);
@@ -110,8 +113,8 @@ public abstract class ATestFileSystemProvider {
 		final BasicFileAttributes aAttributes = Files.readAttributes(a, BasicFileAttributes.class), bAttributes = Files.readAttributes(b, BasicFileAttributes.class);
 		HAssert.assertThat(aAttributes, new FieldMatcher<BasicFileAttributes>(bAttributes, BasicFileAttributes::lastModifiedTime, BasicFileAttributes::isDirectory, BasicFileAttributes::isRegularFile, BasicFileAttributes::isSymbolicLink, BasicFileAttributes::isOther));
 
-		HAssert.assertEquals(HCollection.asList("0"), getChildNames(a));
-		HAssert.assertEquals(HCollection.emptyList(), getChildNames(b));
+		assertChildren(HCollection.asList("0"), a);
+		assertChildren(HCollection.emptyList(), b);
 		HAssert.assertTrue(aAttributes.creationTime().compareTo(bAttributes.creationTime()) < 0);
 		HAssert.assertTrue(aAttributes.lastAccessTime().compareTo(Files.getLastModifiedTime(aParent)) > 0);
 	}
@@ -157,35 +160,37 @@ public abstract class ATestFileSystemProvider {
 			Files.createDirectories(createPath("/a/d"));
 		}
 		try (final FileTimeTester a = FileTimeTester.read(createPath("/a")); final FileTimeTester b = FileTimeTester.untouched(createPath("/a/b")); final FileTimeTester d = FileTimeTester.untouched(createPath("/a/d"))) {
-			Assert.assertEquals(HCollection.asList("b", "d"), getChildNames(fs.getPath("/a")));
+			assertChildren(HCollection.asList("b", "d"), fs.getPath("/a"));
 		}
 	}
 
 	@Test
 	public void createDirectory() throws IOException {
-		HAssert.assertEquals(HCollection.emptyList(), HFile.toList(Files.newDirectoryStream(fs.getPath("/"))));
+		assertChildren(HCollection.emptyList(), fs.getPath("/"));
 		final FileAttribute<FileTime> expected = HBasicFileAttributes.createLastModifiedTime(FileTimeMatcher.now());
 		final Path path = createPath("/a");
 
 		HConcurrent.wait(10);
 		Files.createDirectory(path, expected);
 		HAssert.assertEquals(expected.value(), Files.getLastModifiedTime(path));
-		HAssert.assertEquals(HCollection.asList("a"), getChildNames(fs.getPath("/")));
+		assertChildren(HCollection.asList("a"), fs.getPath("/"));
 	}
 
 	@Test
 	public void createDirectoryExists() throws IOException {
-		Assert.assertEquals(HCollection.emptyList(), HFile.toList(Files.newDirectoryStream(fs.getPath("/"))));
-		Files.createDirectory(createPath("/a"));
-		HAssert.assertException(FileAlreadyExistsException.class, "\"/a\" already exists!", () -> Files.createDirectory(createPath("/a")));
-		Assert.assertEquals(HCollection.asList("a"), getChildNames(fs.getPath("/")));
+		final Path root = fs.getPath("/");
+		assertChildren(HCollection.emptyList(), root);
+		final Path a = createPath("/a");
+		Files.createDirectory(a);
+		HAssert.assertThat(() -> Files.createDirectory(a), HMatchers.isThrowable(FileAlreadyExistsException.class, HMatchers.anyOf(HMatchers.equalTo(String.format("\"/%1$s\" already exists!", a.getFileName())), HMatchers.endsWith(a.getFileName().toString()))));
+		assertChildren(HCollection.asList(a.getFileName().toString()), root);
 	}
 
 	@Test
 	public void createDirectoryMissingAncestor() throws IOException {
-		Assert.assertEquals(HCollection.emptyList(), HFile.toList(Files.newDirectoryStream(fs.getPath("/"))));
+		assertChildren(HCollection.emptyList(), fs.getPath("/"));
 		HAssert.assertException(NoSuchFileException.class, "Ancestor \"/a\" does not exist!", () -> Files.createDirectory(createPath("/a/b")));
-		Assert.assertEquals(HCollection.emptyList(), getChildNames(fs.getPath("/")));
+		assertChildren(HCollection.emptyList(), fs.getPath("/"));
 	}
 
 	protected abstract Path createPath(String absolute);
@@ -220,7 +225,7 @@ public abstract class ATestFileSystemProvider {
 	@Test
 	public void deleteNonExistant() throws IOException {
 		final Path path = createPath("a");
-		HAssert.assertThat(() -> Files.delete(path), HMatchers.isThrowable(NoSuchFileException.class, HMatchers.anyOf(HMatchers.equalTo(String.format("\"/%1$s\" does not exist!", path.getFileName())), HMatchers.endsWith(path.getFileName().toString()))));
+		HAssert.assertThat(() -> Files.delete(path), HMatchers.isThrowable(NoSuchFileException.class, HMatchers.anyOf(HMatchers.equalTo(String.format("\"%1$s\" does not exist!", path.getFileName())), HMatchers.endsWith(path.getFileName().toString()))));
 	}
 
 	@Test
