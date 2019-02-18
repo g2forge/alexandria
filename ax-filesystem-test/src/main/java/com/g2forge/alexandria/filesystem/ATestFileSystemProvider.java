@@ -270,6 +270,9 @@ public abstract class ATestFileSystemProvider {
 		final Path path = createPath("a.txt");
 		try (final FileTimeTester a = FileTimeTester.modify(path)) {
 			Files.newByteChannel(path, HCollection.asSet(StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE), HBasicFileAttributes.createCreationTime(expected)).close();
+		} catch (UnsupportedOperationException exception) {
+			/** Not all filesystems support this */
+			if ("'basic:creationTime' not supported as initial attribute".equals(exception.getMessage())) return;
 		}
 
 		final BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
