@@ -162,6 +162,9 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 
 		final IThrowFunction1<? super R, ? extends IGenericBasicAttributeModifier, IOException> completion = this.<IThrowFunction1<P, IThrowFunction1<? super R, ? extends IGenericBasicAttributeModifier, IOException>, IOException>, IOException>wrap1(p -> {
 			final R refSource = resolve(p);
+			
+			Make sure the target, if its a directory being replaced, is empty;
+			throw new DirectoryNotEmptyException();
 
 			// Delegate to the implementation
 			final CopyResult<R> result = copy(refSource, options);
@@ -171,7 +174,7 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 			result.getTargetAttributeModifier().access(result.getSourceAttributeModifier().getAccessTime());
 
 			return result.getCompletion();
-		}, getSyncFactory().getSyncThrowFunction1(), checkedSource).apply(checkedSource);
+		}, getSyncFactory().getSyncThrowFunction(), checkedSource, checkedTarget).apply(checkedSource, checkedTarget);
 
 		this.<IThrowConsumer1<P, IOException>, IOException>wrap1(p -> {
 			final R refTarget = resolve(p);
