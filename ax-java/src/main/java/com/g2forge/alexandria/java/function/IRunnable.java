@@ -6,13 +6,17 @@ public interface IRunnable extends Runnable, IThrowRunnable<RuntimeException> {
 		return runnable;
 	}
 
+	public static IRunnable nop() {
+		return () -> {};
+	}
+
 	public default IRunnable wrap(IRunnable pre, IRunnable post) {
 		return () -> {
-			pre.run();
+			if (pre != null) pre.run();
 			try {
 				run();
 			} finally {
-				post.run();
+				if (post != null) post.run();
 			}
 		};
 	}
