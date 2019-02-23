@@ -37,4 +37,12 @@ public interface ISyncFactory {
 	 * @return A function which can wrap a functional to provide synchronization.
 	 */
 	public <P, O, T extends Throwable> IFunction2<? super IThrowFunction1<P, O, T>, ? super Object, ? extends IThrowFunction1<P, O, T>> getSyncThrowFunction1();
+
+	/**
+	 * Get the appropriate sync function, which will wrap an instance of {@link IThrowFunction1} in a lock specified by the given object. It may also provider
+	 * other functionality in the wrapper such as allocating and freeing resources.
+	 * 
+	 * @return A function which can wrap a functional to provide synchronization.
+	 */
+	public <P, O, T extends Throwable> IFunction2<? super IThrowFunction1<P[], O, T>, ? super Object, ? extends IThrowFunction1<P[], O, T>> getSyncThrowFunctionN();
 }

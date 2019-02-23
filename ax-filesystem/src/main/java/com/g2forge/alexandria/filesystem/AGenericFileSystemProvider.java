@@ -154,17 +154,29 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 	 */
 	protected abstract void checkAccess(R reference, AccessMode... modes) throws IOException;
 
+	/**
+	 * Check that the reference is to something that can be replaced by a copy or move operation. A non-existent entry, a file or an empty directory all qualify
+	 * for example. A directory with children does not qualify as replaceable for example.
+	 * 
+	 * @param reference The reference to check
+	 * @throws DirectoryNotEmptyException if the reference is to a non-empty directory.
+	 */
+	protected abstract void checkReplaceable(R reference) throws IOException;
+
 	@Override
 	public void copy(Path source, Path target, CopyOption... options) throws IOException {
 		if (isSameFile(source, target)) return;
-		final P checkedSource = check(source);
-		final P checkedTarget = check(target);
 
-		final IThrowFunction1<? super R, ? extends IGenericBasicAttributeModifier, IOException> completion = this.<IThrowFunction1<P, IThrowFunction1<? super R, ? extends IGenericBasicAttributeModifier, IOException>, IOException>, IOException>wrap1(p -> {
-			final R refSource = resolve(p);
-			
-			Make sure the target, if its a directory being replaced, is empty;
-			throw new DirectoryNotEmptyException();
+		@SuppressWarnings("unchecked")
+		final P[] checked = (P[]) Stream.of(source, target).map(this::check).collect(HCollector.toArray(Path.class));
+
+		final IThrowFunction1<? super R, ? extends IGenericBasicAttributeModifier, IOException> completion = this.<IThrowFunction1<P[], IThrowFunction1<? super R, ? extends IGenericBasicAttributeModifier, IOException>, IOException>, IOException>wrapN(p -> {
+			final R refSource = resolve(p[0]);
+			final R refTarget = resolve(p[1]);
+			checkReplaceable(refTarget);
+
+			// Make sure the target, if its a directory being replaced, is empty;
+			// throw new DirectoryNotEmptyException();
 
 			// Delegate to the implementation
 			final CopyResult<R> result = copy(refSource, options);
@@ -174,13 +186,15 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 			result.getTargetAttributeModifier().access(result.getSourceAttributeModifier().getAccessTime());
 
 			return result.getCompletion();
-		}, getSyncFactory().getSyncThrowFunction(), checkedSource, checkedTarget).apply(checkedSource, checkedTarget);
+		}, getSyncFactory().getSyncThrowFunctionN(), checked).apply(checked);
 
 		this.<IThrowConsumer1<P, IOException>, IOException>wrap1(p -> {
 			final R refTarget = resolve(p);
+			// Re-check this since we lost the lock for a while
+			checkReplaceable(refTarget);
 			// Delegate to the implementation using the completion callback
 			completion.apply(refTarget).modify(null);
-		}, getSyncFactory().getSyncThrowConsumer1(), checkedTarget).accept(checkedTarget);
+		}, getSyncFactory().getSyncThrowConsumer1(), checked[1]).accept(checked[1]);
 	}
 
 	/**
@@ -304,38 +318,44 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 	@Override
 	public void move(Path source, Path target, CopyOption... options) throws IOException {
 		if (isSameFile(source, target)) return;
+
+		@SuppressWarnings("unchecked")
+		final P[] checked = (P[]) Stream.of(source, target).map(this::check).collect(HCollector.toArray(Path.class));
+
 		if (HCollection.asSet(options).contains(StandardCopyOption.ATOMIC_MOVE)) {
-			@SuppressWarnings("unchecked")
-			final P[] checked = (P[]) Stream.of(source, target).map(this::check).collect(HCollector.toArray(Path.class));
 			this.<IThrowConsumer1<P[], IOException>, IOException>wrapN(p -> {
 				final R refSource = resolve(p[0]);
+				final R refTarget = resolve(p[1]);
+				checkReplaceable(refTarget);
+
 				// Delegate to the implementation
 				final CopyResult<R> result = move(refSource, options);
 				final IGenericBasicAttributeModifier sourceParentAttributes = result.getSourceAttributeModifier();
 
-				final R refTarget = resolve(p[1]);
 				final IGenericBasicAttributeModifier targetParentAttributes = result.getCompletion().apply(refTarget);
 
 				targetParentAttributes.modify(null);
 				sourceParentAttributes.modify(targetParentAttributes.getModifyTime());
 			}, getSyncFactory().getSyncThrowConsumerN(), checked).accept(checked);
 		} else {
-			final P checkedSource = check(source);
-			final P checkedTarget = check(target);
+			final IThrowFunction1<? super R, ? extends IGenericBasicAttributeModifier, IOException> completion = this.<IThrowFunction1<P[], IThrowFunction1<? super R, ? extends IGenericBasicAttributeModifier, IOException>, IOException>, IOException>wrapN(p -> {
+				final R refSource = resolve(p[0]);
+				final R refTarget = resolve(p[1]);
+				checkReplaceable(refTarget);
 
-			final IThrowFunction1<? super R, ? extends IGenericBasicAttributeModifier, IOException> completion = this.<IThrowFunction1<P, IThrowFunction1<? super R, ? extends IGenericBasicAttributeModifier, IOException>, IOException>, IOException>wrap1(p -> {
-				final R refSource = resolve(p);
 				// Delegate to the implementation
 				final CopyResult<R> result = move(refSource, options);
 				result.getSourceAttributeModifier().modify(null);
 				return result.getCompletion();
-			}, getSyncFactory().getSyncThrowFunction1(), checkedSource).apply(checkedSource);
+			}, getSyncFactory().getSyncThrowFunctionN(), checked).apply(checked);
 
 			this.<IThrowConsumer1<P, IOException>, IOException>wrap1(p -> {
 				final R refTarget = resolve(p);
+				checkReplaceable(refTarget);
+
 				// Delegate to the implementation through the completion method
 				completion.apply(refTarget).modify(null);
-			}, getSyncFactory().getSyncThrowConsumer1(), checkedTarget).accept(checkedTarget);
+			}, getSyncFactory().getSyncThrowConsumer1(), checked[1]).accept(checked[1]);
 		}
 	}
 

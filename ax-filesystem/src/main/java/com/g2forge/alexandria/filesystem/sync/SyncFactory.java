@@ -32,4 +32,9 @@ public class SyncFactory implements ISyncFactory, ISingleton {
 	public <P, O, T extends Throwable> IFunction2<? super IThrowFunction1<P, O, T>, ? super Object, ? extends IThrowFunction1<P, O, T>> getSyncThrowFunction1() {
 		return IThrowFunction1::sync;
 	}
+
+	@Override
+	public <P, O, T extends Throwable> IFunction2<? super IThrowFunction1<P[], O, T>, ? super Object, ? extends IThrowFunction1<P[], O, T>> getSyncThrowFunctionN() {
+		return IThrowFunction1::sync;
+	}
 }

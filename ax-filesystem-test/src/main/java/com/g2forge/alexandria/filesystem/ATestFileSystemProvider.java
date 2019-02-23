@@ -104,7 +104,18 @@ public abstract class ATestFileSystemProvider {
 		final Path a = aParent.resolve("a"), b = bParent.resolve("b");
 		Files.createDirectories(a.resolve("0"));
 		Files.createDirectories(b.resolve("1"));
+
+		HAssert.assertThat(() -> Files.copy(a, b, StandardCopyOption.REPLACE_EXISTING), HMatchers.isThrowable(DirectoryNotEmptyException.class, HMatchers.<String>anyOf(HMatchers.equalTo(String.format("\"%1$s\" is not empty!", b)) /* Helpful error messages */, HMatchers.endsWith(b.toString()) /* Machine readable */)));
 		assertChildren(HCollection.asList("1"), b);
+	}
+
+	@Test
+	public void copyDirectoryWithChildren() throws IOException {
+		final Path aParent = createPath("x"), bParent = createPath("y");
+		final Path a = aParent.resolve("a"), b = bParent.resolve("b");
+		Files.createDirectories(a.resolve("0"));
+		Files.createDirectories(b);
+		assertChildren(HCollection.emptyList(), b);
 
 		HConcurrent.wait(10);
 		Files.copy(a, b, StandardCopyOption.REPLACE_EXISTING);
@@ -409,6 +420,15 @@ public abstract class ATestFileSystemProvider {
 			Assert.assertEquals(content, reader.readLine());
 		}
 		HAssert.assertThat(Files.readAttributes(b, BasicFileAttributes.class), new FieldMatcher<>(attributes, basicFileAttributeFunctions));
+	}
+
+	@Test
+	public void moveDirectoryNonEmpty() throws IOException {
+		final Path a = createPath("a"), b = createPath("b");
+		Files.createDirectory(a);
+		Files.createDirectories(b.resolve("1"));
+		HAssert.assertThat(() -> Files.move(a, b, StandardCopyOption.REPLACE_EXISTING), HMatchers.isThrowable(DirectoryNotEmptyException.class, HMatchers.<String>anyOf(HMatchers.equalTo(String.format("\"%1$s\" is not empty!", b)) /* Helpful error messages */, HMatchers.endsWith(b.toString()) /* Machine readable */)));
+		Assert.assertTrue(Files.isDirectory(a));
 	}
 
 	@Test

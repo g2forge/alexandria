@@ -110,6 +110,18 @@ public class MemoryFileSystemProvider extends AGenericFileSystemProvider<Generic
 		reference.assertExists();
 	}
 
+	@Override
+	protected void checkReplaceable(GenericEntryReference<IEntry, File, Directory, GenericPath> reference) throws IOException {
+		if (!reference.isFullyResolved()) return;
+		final IEntry entry = reference.getEntry();
+		if (entry instanceof File) return;
+		if (entry instanceof Directory) {
+			if (!((Directory) entry).getEntries().isEmpty()) throw new DirectoryNotEmptyException(String.format("\"%1$s\" is not empty!", reference.getResolved()));
+			return;
+		}
+		throw new IOException("Unrecognized entry type!");
+	}
+
 	protected CopyResult<GenericEntryReference<IEntry, File, Directory, GenericPath>> copy(GenericEntryReference<IEntry, File, Directory, GenericPath> refSource, CopyOption... options) throws IOException {
 		refSource.assertExists();
 		final Set<CopyOption> optionSet = HCollection.asSet(options);
@@ -286,5 +298,4 @@ public class MemoryFileSystemProvider extends AGenericFileSystemProvider<Generic
 			}
 		};
 	}
-
 }
