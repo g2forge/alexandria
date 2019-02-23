@@ -21,7 +21,7 @@ public class HAssert extends Assert {
 			MatcherAssert.assertThat("", throwable, matcher);
 			return;
 		}
-		fail(String.format("Expected exception was not thrown!"));
+		MatcherAssert.assertThat("", null, matcher);
 	}
 
 	public static <T extends Throwable> void assertException(Class<? extends Throwable> type, String message, IThrowRunnable<T> operation) throws T {
