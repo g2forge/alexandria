@@ -18,12 +18,15 @@ import java.nio.file.ProviderMismatchException;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.spi.FileSystemProvider;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.annotations.service.Service;
 import com.g2forge.alexandria.filesystem.AGenericFileSystemProvider;
@@ -37,9 +40,11 @@ import com.g2forge.alexandria.filesystem.memory.file.EntryAccessor;
 import com.g2forge.alexandria.filesystem.memory.file.File;
 import com.g2forge.alexandria.filesystem.memory.file.FileSeekableByteChannel;
 import com.g2forge.alexandria.filesystem.memory.file.IEntry;
+import com.g2forge.alexandria.filesystem.path.FileSystemPathURI;
 import com.g2forge.alexandria.filesystem.path.GenericFileSystem;
 import com.g2forge.alexandria.filesystem.path.GenericPath;
 import com.g2forge.alexandria.filesystem.path.IGenericFileSystemProviderInternal;
+import com.g2forge.alexandria.java.core.ComparableComparator;
 import com.g2forge.alexandria.java.core.MapIterator;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 
@@ -86,7 +91,7 @@ public class MemoryFileSystemProvider extends AGenericFileSystemProvider<Generic
 
 		@Override
 		public URI toURI(GenericPath path) throws URISyntaxException {
-			return new MemoryURI(getScheme(), getKey(), path.toAbsolutePath().toString()).toURI();
+			return new FileSystemPathURI(getScheme(), getKey(), path.toAbsolutePath().toString()).toURI();
 		}
 	}
 
@@ -103,6 +108,18 @@ public class MemoryFileSystemProvider extends AGenericFileSystemProvider<Generic
 	protected void checkAccess(GenericEntryReference<IEntry, File, Directory, GenericPath> reference, AccessMode... modes) throws IOException {
 		if (!HCollection.difference(HCollection.asSet(modes), HCollection.asSet(AccessMode.READ, AccessMode.WRITE, AccessMode.EXECUTE)).isEmpty()) throw new UnsupportedOperationException();
 		reference.assertExists();
+	}
+
+	@Override
+	protected void checkReplaceable(GenericEntryReference<IEntry, File, Directory, GenericPath> reference) throws IOException {
+		if (!reference.isFullyResolved()) return;
+		final IEntry entry = reference.getEntry();
+		if (entry instanceof File) return;
+		if (entry instanceof Directory) {
+			if (!((Directory) entry).getEntries().isEmpty()) throw new DirectoryNotEmptyException(String.format("\"%1$s\" is not empty!", reference.getResolved()));
+			return;
+		}
+		throw new IOException("Unrecognized entry type!");
 	}
 
 	protected CopyResult<GenericEntryReference<IEntry, File, Directory, GenericPath>> copy(GenericEntryReference<IEntry, File, Directory, GenericPath> refSource, CopyOption... options) throws IOException {
@@ -169,8 +186,8 @@ public class MemoryFileSystemProvider extends AGenericFileSystemProvider<Generic
 
 	@Override
 	public FileSystem getFileSystem(URI uri) {
-		final MemoryURI memoryURI = new MemoryURI(getScheme(), uri);
-		final String key = memoryURI.getKey();
+		final FileSystemPathURI memoryURI = new FileSystemPathURI(getScheme(), uri);
+		final String key = memoryURI.getFileSystem();
 		synchronized (fileSystems) {
 			return fileSystems.get(key);
 		}
@@ -182,9 +199,19 @@ public class MemoryFileSystemProvider extends AGenericFileSystemProvider<Generic
 	}
 
 	@Override
+	protected List<Object> getLocks(Collection<? extends GenericPath> paths) {
+		return paths.stream().map(this::getInternal).sorted(ComparableComparator.create()).distinct().collect(Collectors.toList());
+	}
+
+	@Override
+	protected List<Object> getLocks(GenericPath path) {
+		return HCollection.asList(getInternal(path));
+	}
+
+	@Override
 	public Path getPath(URI uri) {
-		final MemoryURI memoryURI = new MemoryURI(getScheme(), uri);
-		final String key = memoryURI.getKey();
+		final FileSystemPathURI memoryURI = new FileSystemPathURI(getScheme(), uri);
+		final String key = memoryURI.getFileSystem();
 		final GenericFileSystem fileSystem;
 		synchronized (fileSystems) {
 			fileSystem = fileSystems.get(key);
@@ -224,10 +251,10 @@ public class MemoryFileSystemProvider extends AGenericFileSystemProvider<Generic
 
 	@Override
 	public FileSystem newFileSystem(URI uri, Map<String, ?> env) throws IOException {
-		final MemoryURI memoryURI = new MemoryURI(getScheme(), uri);
+		final FileSystemPathURI memoryURI = new FileSystemPathURI(getScheme(), uri);
 		if ((memoryURI.getPath() != null) && !memoryURI.getPath().isEmpty()) throw new IllegalArgumentException("Cannot create a file system from a URI with a non-empty path!");
+		final String key = memoryURI.getFileSystem();
 		synchronized (fileSystems) {
-			final String key = memoryURI.getKey();
 			if (fileSystems.containsKey(key)) throw new FileSystemAlreadyExistsException();
 			final GenericFileSystem retVal = new GenericFileSystem(new Internal(key), env);
 			fileSystems.put(key, retVal);

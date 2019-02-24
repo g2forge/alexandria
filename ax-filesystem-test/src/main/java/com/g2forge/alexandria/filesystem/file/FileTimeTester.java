@@ -9,6 +9,7 @@ import java.nio.file.attribute.FileTime;
 import java.util.EnumSet;
 
 import com.g2forge.alexandria.filesystem.attributes.HBasicFileAttributes;
+import com.g2forge.alexandria.java.concurrent.HConcurrent;
 import com.g2forge.alexandria.java.enums.EnumException;
 import com.g2forge.alexandria.test.HAssert;
 
@@ -30,12 +31,12 @@ public class FileTimeTester implements Closeable {
 		}
 	}
 
-	public static FileTimeTester modify(Path path) {
-		return new FileTimeTester(path, HBasicFileAttributes.Attribute.LastModifiedTime, HBasicFileAttributes.Attribute.LastAccessTime);
+	public static FileTimeTester modify(Path path, boolean supportLastAccess) {
+		return supportLastAccess ? new FileTimeTester(path, HBasicFileAttributes.Attribute.LastModifiedTime, HBasicFileAttributes.Attribute.LastAccessTime) : new FileTimeTester(path, HBasicFileAttributes.Attribute.LastModifiedTime);
 	}
 
-	public static FileTimeTester read(Path path) {
-		return new FileTimeTester(path, HBasicFileAttributes.Attribute.LastAccessTime);
+	public static FileTimeTester read(Path path, boolean supportLastAccess) {
+		return supportLastAccess ? new FileTimeTester(path, HBasicFileAttributes.Attribute.LastAccessTime) : new FileTimeTester(path);
 	}
 
 	public static FileTimeTester untouched(Path path) {
@@ -52,6 +53,7 @@ public class FileTimeTester implements Closeable {
 		this.path = path;
 		this.changed = changed;
 		this.matcher = FileTimeMatcher.start();
+		delayForMismatch();
 	}
 
 	public FileTimeTester(Path path, HBasicFileAttributes.Attribute... changed) {
@@ -61,21 +63,30 @@ public class FileTimeTester implements Closeable {
 			this.changed.add(change);
 		}
 		this.matcher = FileTimeMatcher.start();
+		delayForMismatch();
 	}
 
 	@Override
 	public void close() throws IOException {
+		delayForMismatch();
 		final FileTimeMatcher changedMatcher = this.matcher.max(FileTimeMatcher.now()).build();
 		final BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
 
 		for (HBasicFileAttributes.Attribute attribute : changed) {
-			HAssert.assertThat(attribute + " time was not changed in correct range", getTime(attributes, attribute), changedMatcher);
+			HAssert.assertThat(attribute + " time on " + path + " was not changed in correct range", getTime(attributes, attribute), changedMatcher);
 		}
 
 		final FileTimeMatcher unchangedMatcher = new FileTimeMatcher(null, changedMatcher.getMin());
 		final EnumSet<HBasicFileAttributes.Attribute> unchanged = EnumSet.complementOf(changed);
 		for (HBasicFileAttributes.Attribute attribute : unchanged) {
-			HAssert.assertThat(attribute + " time was changed", getTime(attributes, attribute), unchangedMatcher);
+			HAssert.assertThat(attribute + " time on " + path + " was changed", getTime(attributes, attribute), unchangedMatcher);
 		}
+	}
+
+	/**
+	 * Delay our operation to allow for mismatches between java time and file system time.
+	 */
+	protected void delayForMismatch() {
+		HConcurrent.wait(10);
 	}
 }

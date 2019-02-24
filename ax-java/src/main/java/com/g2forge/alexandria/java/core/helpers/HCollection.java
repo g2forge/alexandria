@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -61,6 +62,16 @@ public class HCollection {
 	public static <T> List<T> concatenate(final Collection<? extends T>... collections) {
 		if (collections == null) return null;
 		final List<T> retVal = new ArrayList<>();
+		for (Collection<? extends T> collection : collections) {
+			if (collection != null) retVal.addAll(collection);
+		}
+		return retVal;
+	}
+
+	@SafeVarargs
+	public static <T> Set<T> union(final Collection<? extends T>... collections) {
+		if (collections == null) return null;
+		final Set<T> retVal = new HashSet<>();
 		for (Collection<? extends T> collection : collections) {
 			if (collection != null) retVal.addAll(collection);
 		}

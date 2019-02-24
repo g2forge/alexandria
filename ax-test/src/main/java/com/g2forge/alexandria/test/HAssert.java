@@ -1,5 +1,7 @@
 package com.g2forge.alexandria.test;
 
+import org.hamcrest.Matcher;
+import org.hamcrest.MatcherAssert;
 import org.junit.Assert;
 
 import com.g2forge.alexandria.java.function.IConsumer2;
@@ -12,6 +14,16 @@ import lombok.experimental.UtilityClass;
 @Helpers
 @UtilityClass
 public class HAssert extends Assert {
+	public static <T extends Throwable> void assertThat(IThrowRunnable<T> operation, Matcher<Throwable> matcher) {
+		try {
+			operation.run();
+		} catch (Throwable throwable) {
+			MatcherAssert.assertThat("", throwable, matcher);
+			return;
+		}
+		MatcherAssert.assertThat("", null, matcher);
+	}
+
 	public static <T extends Throwable> void assertException(Class<? extends Throwable> type, String message, IThrowRunnable<T> operation) throws T {
 		try {
 			operation.run();

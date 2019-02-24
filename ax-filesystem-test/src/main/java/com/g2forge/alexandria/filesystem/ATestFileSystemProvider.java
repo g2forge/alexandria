@@ -8,6 +8,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.NonReadableChannelException;
 import java.nio.channels.NonWritableChannelException;
 import java.nio.channels.SeekableByteChannel;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.AccessMode;
 import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileAlreadyExistsException;
@@ -23,7 +24,9 @@ import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.FileTime;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.Assert;
@@ -38,15 +41,19 @@ import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.io.HFile;
 import com.g2forge.alexandria.test.FieldMatcher;
 import com.g2forge.alexandria.test.HAssert;
+import com.g2forge.alexandria.test.HMatchers;
 
 public abstract class ATestFileSystemProvider {
 	protected static final ISerializableFunction1<BasicFileAttributes, ?>[] basicFileAttributeFunctions = FieldMatcher.create(BasicFileAttributes::creationTime, BasicFileAttributes::lastModifiedTime, BasicFileAttributes::lastAccessTime, BasicFileAttributes::isDirectory, BasicFileAttributes::isRegularFile, BasicFileAttributes::isSymbolicLink, BasicFileAttributes::isOther, BasicFileAttributes::size);
 
-	protected static List<String> getChildNames(final Path path) throws IOException {
-		return HFile.toList(Files.newDirectoryStream(path)).stream().map(p -> p.getFileName().toString()).collect(Collectors.toList());
-	}
+	protected static final ISerializableFunction1<BasicFileAttributes, ?>[] basicFileAttributeFunctionsAfterCopy = FieldMatcher.create(BasicFileAttributes::lastModifiedTime, BasicFileAttributes::isDirectory, BasicFileAttributes::isRegularFile, BasicFileAttributes::isSymbolicLink, BasicFileAttributes::isOther, BasicFileAttributes::size);
 
 	protected FileSystem fs = null;
+
+	protected void assertChildren(Collection<String> children, Path path) throws IOException {
+		final Set<String> actual = HFile.toList(Files.newDirectoryStream(path)).stream().map(p -> p.getFileName().toString()).collect(Collectors.toSet());
+		HAssert.assertEquals((children instanceof Set) ? children : new HashSet<>(children), actual);
+	}
 
 	@Test
 	public void attributes() throws IOException {
@@ -67,7 +74,8 @@ public abstract class ATestFileSystemProvider {
 		Assert.assertFalse(bAttributes.isOther());
 		Assert.assertFalse(bAttributes.isSymbolicLink());
 
-		Assert.assertNotEquals(aAttributes.fileKey(), bAttributes.fileKey());
+		final Object aFileKey = aAttributes.fileKey();
+		if (aFileKey != null) Assert.assertNotEquals(aFileKey, bAttributes.fileKey());
 
 		final BasicFileAttributeView view = Files.getFileAttributeView(aPath, BasicFileAttributeView.class);
 		HAssert.assertThat(view.readAttributes(), new FieldMatcher<>(aAttributes, basicFileAttributeFunctions));
@@ -98,19 +106,31 @@ public abstract class ATestFileSystemProvider {
 		final Path a = aParent.resolve("a"), b = bParent.resolve("b");
 		Files.createDirectories(a.resolve("0"));
 		Files.createDirectories(b.resolve("1"));
-		HAssert.assertEquals(HCollection.asList("1"), getChildNames(b));
+
+		HAssert.assertThat(() -> Files.copy(a, b, StandardCopyOption.REPLACE_EXISTING), HMatchers.isThrowable(DirectoryNotEmptyException.class, HMatchers.<String>anyOf(HMatchers.equalTo(String.format("\"%1$s\" is not empty!", b)) /* Helpful error messages */, HMatchers.endsWith(b.getFileName().toString()) /* Machine readable */)));
+		assertChildren(HCollection.asList("1"), b);
+	}
+
+	@Test
+	public void copyDirectoryWithChildren() throws IOException {
+		final Path aParent = createPath("x"), bParent = createPath("y");
+		final Path a = aParent.resolve("a"), b = bParent.resolve("b");
+		Files.createDirectories(a.resolve("0"));
+		Files.createDirectories(b);
+		assertChildren(HCollection.emptyList(), b);
 
 		HConcurrent.wait(10);
 		Files.copy(a, b, StandardCopyOption.REPLACE_EXISTING);
 		HAssert.assertTrue(Files.readAttributes(aParent, BasicFileAttributes.class).lastAccessTime().compareTo(Files.readAttributes(bParent, BasicFileAttributes.class).lastModifiedTime()) < 0);
 
 		final BasicFileAttributes aAttributes = Files.readAttributes(a, BasicFileAttributes.class), bAttributes = Files.readAttributes(b, BasicFileAttributes.class);
-		HAssert.assertThat(aAttributes, new FieldMatcher<BasicFileAttributes>(bAttributes, BasicFileAttributes::lastModifiedTime, BasicFileAttributes::isDirectory, BasicFileAttributes::isRegularFile, BasicFileAttributes::isSymbolicLink, BasicFileAttributes::isOther));
+		HAssert.assertThat(aAttributes, new FieldMatcher<BasicFileAttributes>(bAttributes, BasicFileAttributes::isDirectory, BasicFileAttributes::isRegularFile, BasicFileAttributes::isSymbolicLink, BasicFileAttributes::isOther));
+		HAssert.assertTrue(aAttributes.lastModifiedTime().compareTo(bAttributes.lastModifiedTime()) <= 0);
 
-		HAssert.assertEquals(HCollection.asList("0"), getChildNames(a));
-		HAssert.assertEquals(HCollection.emptyList(), getChildNames(b));
+		assertChildren(HCollection.asList("0"), a);
+		assertChildren(HCollection.emptyList(), b);
 		HAssert.assertTrue(aAttributes.creationTime().compareTo(bAttributes.creationTime()) < 0);
-		HAssert.assertTrue(aAttributes.lastAccessTime().compareTo(Files.getLastModifiedTime(aParent)) > 0);
+		if (supportLastAccess()) HAssert.assertTrue(aAttributes.lastAccessTime().compareTo(Files.getLastModifiedTime(aParent)) > 0);
 	}
 
 	@Test
@@ -125,7 +145,7 @@ public abstract class ATestFileSystemProvider {
 		HConcurrent.wait(10);
 		Files.copy(a, b, StandardCopyOption.COPY_ATTRIBUTES);
 		HAssert.assertTrue(Files.readAttributes(aParent, BasicFileAttributes.class).lastAccessTime().compareTo(Files.readAttributes(bParent, BasicFileAttributes.class).lastModifiedTime()) < 0);
-		HAssert.assertThat(Files.readAttributes(b, BasicFileAttributes.class), new FieldMatcher<BasicFileAttributes>(Files.readAttributes(a, BasicFileAttributes.class), basicFileAttributeFunctions));
+		HAssert.assertThat(Files.readAttributes(b, BasicFileAttributes.class), new FieldMatcher<BasicFileAttributes>(Files.readAttributes(a, BasicFileAttributes.class), basicFileAttributeFunctionsAfterCopy));
 
 		try (final BufferedReader reader = Files.newBufferedReader(b)) {
 			Assert.assertEquals(content, reader.readLine());
@@ -150,39 +170,47 @@ public abstract class ATestFileSystemProvider {
 			Files.createDirectories(createPath("/a/b/c"));
 		}
 		HConcurrent.wait(10);
-		try (final FileTimeTester a = FileTimeTester.modify(createPath("/a"))) {
+		try (final FileTimeTester a = FileTimeTester.modify(createPath("/a"), true)) {
 			Files.createDirectories(createPath("/a/d"));
 		}
-		try (final FileTimeTester a = FileTimeTester.read(createPath("/a")); final FileTimeTester b = FileTimeTester.untouched(createPath("/a/b")); final FileTimeTester d = FileTimeTester.untouched(createPath("/a/d"))) {
-			Assert.assertEquals(HCollection.asList("b", "d"), getChildNames(fs.getPath("/a")));
+		try (final FileTimeTester a = FileTimeTester.read(createPath("/a"), supportLastAccess()); final FileTimeTester b = FileTimeTester.untouched(createPath("/a/b")); final FileTimeTester d = FileTimeTester.untouched(createPath("/a/d"))) {
+			assertChildren(HCollection.asList("b", "d"), fs.getPath("/a"));
 		}
 	}
 
 	@Test
 	public void createDirectory() throws IOException {
-		HAssert.assertTrue(HFile.toList(Files.newDirectoryStream(fs.getPath("/"))).isEmpty());
+		assertChildren(HCollection.emptyList(), fs.getPath("/"));
 		final FileAttribute<FileTime> expected = HBasicFileAttributes.createLastModifiedTime(FileTimeMatcher.now());
 		final Path path = createPath("/a");
-		
+
 		HConcurrent.wait(10);
-		Files.createDirectory(path, expected);
-		HAssert.assertEquals(expected.value(), Files.getLastModifiedTime(path));
-		HAssert.assertEquals(HCollection.asList("a"), getChildNames(fs.getPath("/")));
+		try {
+			Files.createDirectory(path, expected);
+			HAssert.assertEquals(expected.value(), Files.getLastModifiedTime(path));
+		} catch (UnsupportedOperationException exception) {
+			/** Not all filesystems support this */
+			if (!"'basic:lastModifiedTime' not supported as initial attribute".equals(exception.getMessage())) throw exception;
+			Files.createDirectory(path);
+		}
+		assertChildren(HCollection.asList("a"), fs.getPath("/"));
 	}
 
 	@Test
 	public void createDirectoryExists() throws IOException {
-		Assert.assertTrue(HFile.toList(Files.newDirectoryStream(fs.getPath("/"))).isEmpty());
-		Files.createDirectory(createPath("/a"));
-		HAssert.assertException(FileAlreadyExistsException.class, "\"/a\" already exists!", () -> Files.createDirectory(createPath("/a")));
-		Assert.assertEquals(HCollection.asList("a"), getChildNames(fs.getPath("/")));
+		final Path root = fs.getPath("/");
+		assertChildren(HCollection.emptyList(), root);
+		final Path a = createPath("/a");
+		Files.createDirectory(a);
+		HAssert.assertThat(() -> Files.createDirectory(a), HMatchers.isThrowable(FileAlreadyExistsException.class, HMatchers.anyOf(HMatchers.equalTo(String.format("\"/%1$s\" already exists!", a.getFileName())), HMatchers.endsWith(a.getFileName().toString()))));
+		assertChildren(HCollection.asList(a.getFileName().toString()), root);
 	}
 
 	@Test
 	public void createDirectoryMissingAncestor() throws IOException {
-		Assert.assertTrue(HFile.toList(Files.newDirectoryStream(fs.getPath("/"))).isEmpty());
-		HAssert.assertException(NoSuchFileException.class, "Ancestor \"/a\" does not exist!", () -> Files.createDirectory(createPath("/a/b")));
-		Assert.assertEquals(HCollection.emptyList(), getChildNames(fs.getPath("/")));
+		assertChildren(HCollection.emptyList(), fs.getPath("/"));
+		HAssert.assertThat(() -> Files.createDirectory(createPath("/a/b")), HMatchers.isThrowable(NoSuchFileException.class, HMatchers.anyOf(HMatchers.equalTo(String.format("Ancestor \"/a\" does not exist!")), HMatchers.endsWith("b"))));
+		assertChildren(HCollection.emptyList(), fs.getPath("/"));
 	}
 
 	protected abstract Path createPath(String absolute);
@@ -201,7 +229,7 @@ public abstract class ATestFileSystemProvider {
 		final Path path = createPath("/a");
 		Files.createDirectories(createPath("/a/b"));
 		HAssert.assertTrue(Files.exists(path));
-		HAssert.assertException(DirectoryNotEmptyException.class, "\"/a\" is not empty!", () -> Files.delete(path));
+		HAssert.assertThat(() -> Files.delete(path), HMatchers.isThrowable(DirectoryNotEmptyException.class, HMatchers.anyOf(HMatchers.equalTo(String.format("\"/%1$s\" is not empty!", path.getFileName())), HMatchers.endsWith(path.getFileName().toString()))));
 		HAssert.assertTrue(Files.exists(path));
 	}
 
@@ -216,7 +244,8 @@ public abstract class ATestFileSystemProvider {
 
 	@Test
 	public void deleteNonExistant() throws IOException {
-		HAssert.assertException(NoSuchFileException.class, "\"a\" does not exist!", () -> Files.delete(createPath("a")));
+		final Path path = createPath("a");
+		HAssert.assertThat(() -> Files.delete(path), HMatchers.isThrowable(NoSuchFileException.class, HMatchers.anyOf(HMatchers.equalTo(String.format("\"%1$s\" does not exist!", path.getFileName())), HMatchers.endsWith(path.getFileName().toString()))));
 	}
 
 	@Test
@@ -224,11 +253,11 @@ public abstract class ATestFileSystemProvider {
 		final Path path = createPath("a.txt");
 		final String[] lines = { "abc", "def", "ghi" };
 		for (int i = 0; i < lines.length; i++) {
-			try (final FileTimeTester tester = i == 0 ? FileTimeTester.all(path) : FileTimeTester.modify(path)) {
+			try (final FileTimeTester tester = i == 0 ? FileTimeTester.all(path) : FileTimeTester.modify(path, supportLastAccess())) {
 				Files.newBufferedWriter(path, StandardOpenOption.APPEND, StandardOpenOption.CREATE).append(lines[i]).append(System.lineSeparator()).close();
 			}
 
-			try (final FileTimeTester tester = FileTimeTester.read(path)) {
+			try (final FileTimeTester tester = FileTimeTester.read(path, supportLastAccess())) {
 				try (final BufferedReader reader = Files.newBufferedReader(path)) {
 					for (int j = 0; j <= i; j++) {
 						final String line;
@@ -249,9 +278,9 @@ public abstract class ATestFileSystemProvider {
 	public void fileCreateExistingFail() throws IOException {
 		Files.createDirectory(createPath("/a"));
 		final Path a = createPath("a"), b = createPath("b");
-		HAssert.assertException(FileAlreadyExistsException.class, "\"a\" already exists!", () -> Files.newBufferedWriter(a, StandardOpenOption.CREATE_NEW).close());
+		HAssert.assertThat(() -> Files.newBufferedWriter(a, StandardOpenOption.CREATE_NEW).close(), HMatchers.anyOf(HMatchers.isThrowable(FileAlreadyExistsException.class, "\"a\" already exists!"), HMatchers.isThrowable(AccessDeniedException.class, HMatchers.endsWith(a.getFileName().toString()))));
 		Files.newBufferedWriter(b).append("b").close();
-		HAssert.assertException(FileAlreadyExistsException.class, "\"b\" already exists!", () -> Files.newBufferedWriter(b, StandardOpenOption.CREATE_NEW).close());
+		HAssert.assertThat(() -> Files.newBufferedWriter(b, StandardOpenOption.CREATE_NEW).close(), HMatchers.anyOf(HMatchers.isThrowable(FileAlreadyExistsException.class, "\"b\" already exists!"), HMatchers.isThrowable(FileAlreadyExistsException.class, HMatchers.endsWith(b.getFileName().toString()))));
 	}
 
 	@Test
@@ -259,8 +288,11 @@ public abstract class ATestFileSystemProvider {
 		final FileTime expected = FileTimeMatcher.now();
 		HConcurrent.wait(100);
 		final Path path = createPath("a.txt");
-		try (final FileTimeTester a = FileTimeTester.modify(path)) {
+		try (final FileTimeTester a = FileTimeTester.modify(path, supportLastAccess())) {
 			Files.newByteChannel(path, HCollection.asSet(StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE), HBasicFileAttributes.createCreationTime(expected)).close();
+		} catch (UnsupportedOperationException exception) {
+			/** Not all filesystems support this */
+			if ("'basic:creationTime' not supported as initial attribute".equals(exception.getMessage())) return;
 		}
 
 		final BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
@@ -277,7 +309,7 @@ public abstract class ATestFileSystemProvider {
 			Files.newBufferedWriter(path).append(content).append(System.lineSeparator()).close();
 		}
 
-		try (final FileTimeTester tester = FileTimeTester.read(path)) {
+		try (final FileTimeTester tester = FileTimeTester.read(path, supportLastAccess())) {
 			try (final BufferedReader reader = Files.newBufferedReader(path)) {
 				Assert.assertEquals(content, reader.readLine());
 			}
@@ -288,9 +320,14 @@ public abstract class ATestFileSystemProvider {
 	public void fileOptionAppend() throws IOException {
 		final Path path = createPath("a.txt");
 		Files.newBufferedWriter(path).append("Hello, World!").append(System.lineSeparator()).close();
+
+		// Note that not all file system providers will support read and append
 		try (final SeekableByteChannel channel = Files.newByteChannel(path, StandardOpenOption.READ, StandardOpenOption.APPEND)) {
 			HAssert.assertEquals(0, channel.position());
+		} catch (IllegalArgumentException exception) {
+			Assert.assertEquals("READ + APPEND not allowed", exception.getMessage());
 		}
+
 		try (final SeekableByteChannel channel = Files.newByteChannel(path, StandardOpenOption.WRITE, StandardOpenOption.APPEND)) {
 			HAssert.assertNotEquals(0, channel.position());
 		}
@@ -312,7 +349,9 @@ public abstract class ATestFileSystemProvider {
 
 	@Test
 	public void fileReadOnly() throws IOException {
-		try (final SeekableByteChannel channel = Files.newByteChannel(createPath("a.txt"), StandardOpenOption.CREATE_NEW, StandardOpenOption.READ)) {
+		final Path path = createPath("a.txt");
+		Files.newByteChannel(path, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE).close();
+		try (final SeekableByteChannel channel = Files.newByteChannel(path, StandardOpenOption.READ)) {
 			HAssert.assertException(NonWritableChannelException.class, null, () -> channel.write(ByteBuffer.wrap(new byte[] { 0, 1, 2 })));
 		}
 	}
@@ -326,7 +365,7 @@ public abstract class ATestFileSystemProvider {
 			Files.newBufferedWriter(path).append(content).append(System.lineSeparator()).close();
 		}
 
-		try (final FileTimeTester tester = FileTimeTester.read(path)) {
+		try (final FileTimeTester tester = FileTimeTester.read(path, supportLastAccess())) {
 			try (final SeekableByteChannel channel = Files.newByteChannel(path)) {
 				channel.position(7);
 				try (final BufferedReader reader = new BufferedReader(new InputStreamReader(Channels.newInputStream(channel)))) {
@@ -343,6 +382,9 @@ public abstract class ATestFileSystemProvider {
 		try (final SeekableByteChannel channel = Files.newByteChannel(path, StandardOpenOption.WRITE, StandardOpenOption.APPEND, StandardOpenOption.TRUNCATE_EXISTING)) {
 			HAssert.assertEquals(0, channel.position());
 			HAssert.assertEquals(0, channel.size());
+		} catch (IllegalArgumentException exception) {
+			// It's ALSO allowed for the file system provide to just reject this, of course...
+			HAssert.assertEquals("APPEND + TRUNCATE_EXISTING not allowed", exception.getMessage());
 		}
 	}
 
@@ -393,11 +435,20 @@ public abstract class ATestFileSystemProvider {
 	}
 
 	@Test
+	public void moveDirectoryNonEmpty() throws IOException {
+		final Path a = createPath("a"), b = createPath("b");
+		Files.createDirectory(a);
+		Files.createDirectories(b.resolve("1"));
+		HAssert.assertThat(() -> Files.move(a, b, StandardCopyOption.REPLACE_EXISTING), HMatchers.isThrowable(DirectoryNotEmptyException.class, HMatchers.<String>anyOf(HMatchers.equalTo(String.format("\"%1$s\" is not empty!", b)) /* Helpful error messages */, HMatchers.endsWith(b.toString()) /* Machine readable */)));
+		Assert.assertTrue(Files.isDirectory(a));
+	}
+
+	@Test
 	public void moveExistingFail() throws IOException {
 		final Path a = createPath("a"), b = createPath("b");
 		Files.createDirectory(a);
 		Files.newBufferedWriter(b).append("Hello, World!").append(System.lineSeparator()).close();
-		HAssert.assertException(FileAlreadyExistsException.class, "\"b\" already exists!", () -> Files.move(a, b));
+		HAssert.assertThat(() -> Files.move(a, b), HMatchers.isThrowable(FileAlreadyExistsException.class, HMatchers.<String>anyOf(HMatchers.equalTo(String.format("\"%1$s\" already exists!", b)) /* Helpful error messages */, HMatchers.endsWith(b.toString()) /* Machine readable */)));
 		Assert.assertTrue(Files.isRegularFile(b));
 	}
 
@@ -435,5 +486,9 @@ public abstract class ATestFileSystemProvider {
 		HConcurrent.wait(10);
 		Files.move(child, child);
 		HAssert.assertThat(Files.readAttributes(parent, BasicFileAttributes.class), new FieldMatcher<>(attributes, basicFileAttributeFunctions));
+	}
+
+	protected boolean supportLastAccess() {
+		return true;
 	}
 }
