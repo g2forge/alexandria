@@ -379,6 +379,9 @@ public abstract class ATestFileSystemProvider {
 		try (final SeekableByteChannel channel = Files.newByteChannel(path, StandardOpenOption.WRITE, StandardOpenOption.APPEND, StandardOpenOption.TRUNCATE_EXISTING)) {
 			HAssert.assertEquals(0, channel.position());
 			HAssert.assertEquals(0, channel.size());
+		} catch (IllegalArgumentException exception) {
+			// It's ALSO allowed for the file system provide to just reject this, of course...
+			HAssert.assertEquals("APPEND + TRUNCATE_EXISTING not allowed", exception.getMessage());
 		}
 	}
 
