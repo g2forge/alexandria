@@ -46,6 +46,8 @@ import com.g2forge.alexandria.test.HMatchers;
 public abstract class ATestFileSystemProvider {
 	protected static final ISerializableFunction1<BasicFileAttributes, ?>[] basicFileAttributeFunctions = FieldMatcher.create(BasicFileAttributes::creationTime, BasicFileAttributes::lastModifiedTime, BasicFileAttributes::lastAccessTime, BasicFileAttributes::isDirectory, BasicFileAttributes::isRegularFile, BasicFileAttributes::isSymbolicLink, BasicFileAttributes::isOther, BasicFileAttributes::size);
 
+	protected static final ISerializableFunction1<BasicFileAttributes, ?>[] basicFileAttributeFunctionsAfterCopy = FieldMatcher.create(BasicFileAttributes::lastModifiedTime, BasicFileAttributes::isDirectory, BasicFileAttributes::isRegularFile, BasicFileAttributes::isSymbolicLink, BasicFileAttributes::isOther, BasicFileAttributes::size);
+
 	protected FileSystem fs = null;
 
 	protected void assertChildren(Collection<String> children, Path path) throws IOException {
@@ -122,7 +124,8 @@ public abstract class ATestFileSystemProvider {
 		HAssert.assertTrue(Files.readAttributes(aParent, BasicFileAttributes.class).lastAccessTime().compareTo(Files.readAttributes(bParent, BasicFileAttributes.class).lastModifiedTime()) < 0);
 
 		final BasicFileAttributes aAttributes = Files.readAttributes(a, BasicFileAttributes.class), bAttributes = Files.readAttributes(b, BasicFileAttributes.class);
-		HAssert.assertThat(aAttributes, new FieldMatcher<BasicFileAttributes>(bAttributes, BasicFileAttributes::lastModifiedTime, BasicFileAttributes::isDirectory, BasicFileAttributes::isRegularFile, BasicFileAttributes::isSymbolicLink, BasicFileAttributes::isOther));
+		HAssert.assertThat(aAttributes, new FieldMatcher<BasicFileAttributes>(bAttributes, BasicFileAttributes::isDirectory, BasicFileAttributes::isRegularFile, BasicFileAttributes::isSymbolicLink, BasicFileAttributes::isOther));
+		HAssert.assertTrue(aAttributes.lastModifiedTime().compareTo(bAttributes.lastModifiedTime()) < 0);
 
 		assertChildren(HCollection.asList("0"), a);
 		assertChildren(HCollection.emptyList(), b);
@@ -142,7 +145,7 @@ public abstract class ATestFileSystemProvider {
 		HConcurrent.wait(10);
 		Files.copy(a, b, StandardCopyOption.COPY_ATTRIBUTES);
 		HAssert.assertTrue(Files.readAttributes(aParent, BasicFileAttributes.class).lastAccessTime().compareTo(Files.readAttributes(bParent, BasicFileAttributes.class).lastModifiedTime()) < 0);
-		HAssert.assertThat(Files.readAttributes(b, BasicFileAttributes.class), new FieldMatcher<BasicFileAttributes>(Files.readAttributes(a, BasicFileAttributes.class), basicFileAttributeFunctions));
+		HAssert.assertThat(Files.readAttributes(b, BasicFileAttributes.class), new FieldMatcher<BasicFileAttributes>(Files.readAttributes(a, BasicFileAttributes.class), basicFileAttributeFunctionsAfterCopy));
 
 		try (final BufferedReader reader = Files.newBufferedReader(b)) {
 			Assert.assertEquals(content, reader.readLine());
