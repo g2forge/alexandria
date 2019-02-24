@@ -105,7 +105,7 @@ public abstract class ATestFileSystemProvider {
 		Files.createDirectories(a.resolve("0"));
 		Files.createDirectories(b.resolve("1"));
 
-		HAssert.assertThat(() -> Files.copy(a, b, StandardCopyOption.REPLACE_EXISTING), HMatchers.isThrowable(DirectoryNotEmptyException.class, HMatchers.<String>anyOf(HMatchers.equalTo(String.format("\"%1$s\" is not empty!", b)) /* Helpful error messages */, HMatchers.endsWith(b.toString()) /* Machine readable */)));
+		HAssert.assertThat(() -> Files.copy(a, b, StandardCopyOption.REPLACE_EXISTING), HMatchers.isThrowable(DirectoryNotEmptyException.class, HMatchers.<String>anyOf(HMatchers.equalTo(String.format("\"%1$s\" is not empty!", b)) /* Helpful error messages */, HMatchers.endsWith(b.getFileName().toString()) /* Machine readable */)));
 		assertChildren(HCollection.asList("1"), b);
 	}
 
@@ -200,7 +200,7 @@ public abstract class ATestFileSystemProvider {
 	@Test
 	public void createDirectoryMissingAncestor() throws IOException {
 		assertChildren(HCollection.emptyList(), fs.getPath("/"));
-		HAssert.assertException(NoSuchFileException.class, "Ancestor \"/a\" does not exist!", () -> Files.createDirectory(createPath("/a/b")));
+		HAssert.assertThat(() -> Files.createDirectory(createPath("/a/b")), HMatchers.isThrowable(NoSuchFileException.class, HMatchers.anyOf(HMatchers.equalTo(String.format("Ancestor \"/a\" does not exist!")), HMatchers.endsWith("b"))));
 		assertChildren(HCollection.emptyList(), fs.getPath("/"));
 	}
 
