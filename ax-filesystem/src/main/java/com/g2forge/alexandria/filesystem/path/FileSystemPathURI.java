@@ -25,7 +25,7 @@ public class FileSystemPathURI {
 			if ((_scheme == null) || !_scheme.equalsIgnoreCase(getScheme())) throw new IllegalArgumentException("URI scheme must be '" + getScheme() + "'");
 
 			// Extract the filesystem name
-			final String raw = uri.getRawSchemeSpecificPart();
+			final String raw = uri.getSchemeSpecificPart();
 			final int separator = raw.indexOf('!');
 			this.fileSystem = (separator != -1) ? raw.substring(0, separator) : raw;
 			this.path = (separator != -1) ? raw.substring(separator + 1) : null;
@@ -35,6 +35,7 @@ public class FileSystemPathURI {
 	}
 
 	public URI toURI() throws URISyntaxException {
-		return new URI(getScheme(), getFileSystem() + "!" + getPath(), null);
+		final String ssp = (getPath() != null) ? (getFileSystem() + "!" + getPath()) : getFileSystem();
+		return new URI(getScheme(), ssp, null);
 	}
 }
