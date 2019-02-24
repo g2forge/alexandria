@@ -125,12 +125,12 @@ public abstract class ATestFileSystemProvider {
 
 		final BasicFileAttributes aAttributes = Files.readAttributes(a, BasicFileAttributes.class), bAttributes = Files.readAttributes(b, BasicFileAttributes.class);
 		HAssert.assertThat(aAttributes, new FieldMatcher<BasicFileAttributes>(bAttributes, BasicFileAttributes::isDirectory, BasicFileAttributes::isRegularFile, BasicFileAttributes::isSymbolicLink, BasicFileAttributes::isOther));
-		HAssert.assertTrue(aAttributes.lastModifiedTime().compareTo(bAttributes.lastModifiedTime()) < 0);
+		HAssert.assertTrue(aAttributes.lastModifiedTime().compareTo(bAttributes.lastModifiedTime()) <= 0);
 
 		assertChildren(HCollection.asList("0"), a);
 		assertChildren(HCollection.emptyList(), b);
 		HAssert.assertTrue(aAttributes.creationTime().compareTo(bAttributes.creationTime()) < 0);
-		HAssert.assertTrue(aAttributes.lastAccessTime().compareTo(Files.getLastModifiedTime(aParent)) > 0);
+		if (supportLastAccess()) HAssert.assertTrue(aAttributes.lastAccessTime().compareTo(Files.getLastModifiedTime(aParent)) > 0);
 	}
 
 	@Test
@@ -170,10 +170,10 @@ public abstract class ATestFileSystemProvider {
 			Files.createDirectories(createPath("/a/b/c"));
 		}
 		HConcurrent.wait(10);
-		try (final FileTimeTester a = FileTimeTester.modify(createPath("/a"))) {
+		try (final FileTimeTester a = FileTimeTester.modify(createPath("/a"), true)) {
 			Files.createDirectories(createPath("/a/d"));
 		}
-		try (final FileTimeTester a = FileTimeTester.read(createPath("/a")); final FileTimeTester b = FileTimeTester.untouched(createPath("/a/b")); final FileTimeTester d = FileTimeTester.untouched(createPath("/a/d"))) {
+		try (final FileTimeTester a = FileTimeTester.read(createPath("/a"), supportLastAccess()); final FileTimeTester b = FileTimeTester.untouched(createPath("/a/b")); final FileTimeTester d = FileTimeTester.untouched(createPath("/a/d"))) {
 			assertChildren(HCollection.asList("b", "d"), fs.getPath("/a"));
 		}
 	}
@@ -253,11 +253,11 @@ public abstract class ATestFileSystemProvider {
 		final Path path = createPath("a.txt");
 		final String[] lines = { "abc", "def", "ghi" };
 		for (int i = 0; i < lines.length; i++) {
-			try (final FileTimeTester tester = i == 0 ? FileTimeTester.all(path) : FileTimeTester.modify(path)) {
+			try (final FileTimeTester tester = i == 0 ? FileTimeTester.all(path) : FileTimeTester.modify(path, supportLastAccess())) {
 				Files.newBufferedWriter(path, StandardOpenOption.APPEND, StandardOpenOption.CREATE).append(lines[i]).append(System.lineSeparator()).close();
 			}
 
-			try (final FileTimeTester tester = FileTimeTester.read(path)) {
+			try (final FileTimeTester tester = FileTimeTester.read(path, supportLastAccess())) {
 				try (final BufferedReader reader = Files.newBufferedReader(path)) {
 					for (int j = 0; j <= i; j++) {
 						final String line;
@@ -288,7 +288,7 @@ public abstract class ATestFileSystemProvider {
 		final FileTime expected = FileTimeMatcher.now();
 		HConcurrent.wait(100);
 		final Path path = createPath("a.txt");
-		try (final FileTimeTester a = FileTimeTester.modify(path)) {
+		try (final FileTimeTester a = FileTimeTester.modify(path, supportLastAccess())) {
 			Files.newByteChannel(path, HCollection.asSet(StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE), HBasicFileAttributes.createCreationTime(expected)).close();
 		} catch (UnsupportedOperationException exception) {
 			/** Not all filesystems support this */
@@ -309,7 +309,7 @@ public abstract class ATestFileSystemProvider {
 			Files.newBufferedWriter(path).append(content).append(System.lineSeparator()).close();
 		}
 
-		try (final FileTimeTester tester = FileTimeTester.read(path)) {
+		try (final FileTimeTester tester = FileTimeTester.read(path, supportLastAccess())) {
 			try (final BufferedReader reader = Files.newBufferedReader(path)) {
 				Assert.assertEquals(content, reader.readLine());
 			}
@@ -365,7 +365,7 @@ public abstract class ATestFileSystemProvider {
 			Files.newBufferedWriter(path).append(content).append(System.lineSeparator()).close();
 		}
 
-		try (final FileTimeTester tester = FileTimeTester.read(path)) {
+		try (final FileTimeTester tester = FileTimeTester.read(path, supportLastAccess())) {
 			try (final SeekableByteChannel channel = Files.newByteChannel(path)) {
 				channel.position(7);
 				try (final BufferedReader reader = new BufferedReader(new InputStreamReader(Channels.newInputStream(channel)))) {
@@ -486,5 +486,9 @@ public abstract class ATestFileSystemProvider {
 		HConcurrent.wait(10);
 		Files.move(child, child);
 		HAssert.assertThat(Files.readAttributes(parent, BasicFileAttributes.class), new FieldMatcher<>(attributes, basicFileAttributeFunctions));
+	}
+
+	protected boolean supportLastAccess() {
+		return true;
 	}
 }
