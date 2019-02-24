@@ -182,8 +182,14 @@ public abstract class ATestFileSystemProvider {
 		final Path path = createPath("/a");
 
 		HConcurrent.wait(10);
-		Files.createDirectory(path, expected);
-		HAssert.assertEquals(expected.value(), Files.getLastModifiedTime(path));
+		try {
+			Files.createDirectory(path, expected);
+			HAssert.assertEquals(expected.value(), Files.getLastModifiedTime(path));
+		} catch (UnsupportedOperationException exception) {
+			/** Not all filesystems support this */
+			if (!"'basic:lastModifiedTime' not supported as initial attribute".equals(exception.getMessage())) throw exception;
+			Files.createDirectory(path);
+		}
 		assertChildren(HCollection.asList("a"), fs.getPath("/"));
 	}
 
