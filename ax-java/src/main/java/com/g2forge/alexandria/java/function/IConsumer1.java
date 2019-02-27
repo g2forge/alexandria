@@ -45,7 +45,7 @@ public interface IConsumer1<I> extends Consumer<I>, IConsumer, IThrowConsumer1<I
 		};
 	}
 
-	public default Runnable curry(I input) {
+	public default IRunnable curry(I input) {
 		return () -> this.accept(input);
 	}
 
