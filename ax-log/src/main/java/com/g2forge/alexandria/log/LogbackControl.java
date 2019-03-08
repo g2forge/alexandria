@@ -11,8 +11,26 @@ import ch.qos.logback.classic.Logger;
 @Service(ILogControl.class)
 public class LogbackControl implements ILogControl {
 	@Override
+	public Level getLogLevel() {
+		return translate(getRootLogger().getLevel());
+	}
+
+	protected Logger getRootLogger() {
+		return (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+	}
+
+	@Override
 	public void setLogLevel(Level level) {
-		((Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)).setLevel(translate(level));
+		getRootLogger().setLevel(translate(level));
+	}
+
+	public Level translate(ch.qos.logback.classic.Level level) {
+		if (ch.qos.logback.classic.Level.ERROR.equals(level)) return Level.ERROR;
+		if (ch.qos.logback.classic.Level.WARN.equals(level)) return Level.WARN;
+		if (ch.qos.logback.classic.Level.INFO.equals(level)) return Level.INFO;
+		if (ch.qos.logback.classic.Level.DEBUG.equals(level)) return Level.DEBUG;
+		if (ch.qos.logback.classic.Level.TRACE.equals(level)) return Level.TRACE;
+		throw new IllegalArgumentException("Unknown logback level: " + level);
 	}
 
 	public ch.qos.logback.classic.Level translate(Level level) {

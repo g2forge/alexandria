@@ -44,6 +44,14 @@ public class HCollection {
 		return Arrays.asList(elements);
 	}
 
+	public static <T> List<T> asList(int count, T element) {
+		final List<T> retVal = new ArrayList<>(count);
+		for (int i = 0; i < count; i++) {
+			retVal.add(element);
+		}
+		return retVal;
+	}
+
 	@SafeVarargs
 	public static <T> List<T> asListNonNull(T... elements) {
 		final List<T> retVal = new ArrayList<>(elements.length);
