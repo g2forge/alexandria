@@ -39,6 +39,7 @@ import com.g2forge.alexandria.filesystem.file.FileTimeTester;
 import com.g2forge.alexandria.java.concurrent.HConcurrent;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.io.HFile;
+import com.g2forge.alexandria.java.io.RuntimeIOException;
 import com.g2forge.alexandria.test.FieldMatcher;
 import com.g2forge.alexandria.test.HAssert;
 import com.g2forge.alexandria.test.HMatchers;
@@ -47,6 +48,40 @@ public abstract class ATestFileSystemProvider {
 	protected static final ISerializableFunction1<BasicFileAttributes, ?>[] basicFileAttributeFunctions = FieldMatcher.create(BasicFileAttributes::creationTime, BasicFileAttributes::lastModifiedTime, BasicFileAttributes::lastAccessTime, BasicFileAttributes::isDirectory, BasicFileAttributes::isRegularFile, BasicFileAttributes::isSymbolicLink, BasicFileAttributes::isOther, BasicFileAttributes::size);
 
 	protected static final ISerializableFunction1<BasicFileAttributes, ?>[] basicFileAttributeFunctionsAfterCopy = FieldMatcher.create(BasicFileAttributes::lastModifiedTime, BasicFileAttributes::isDirectory, BasicFileAttributes::isRegularFile, BasicFileAttributes::isSymbolicLink, BasicFileAttributes::isOther, BasicFileAttributes::size);
+
+	/**
+	 * Test if a Java standard file system for the specified <code>path</code> is expected to support last access time. Specifically this method handles the
+	 * fact that on Windows the NTFS file system makes access time optional, depending on a configuration setting. Please do not use this method to test your
+	 * own file system providers, where you should already know whether they support last access times.
+	 * 
+	 * This method is conservative in that it expects all file systems to support last access time, unless we specifically know to the contrary. This way unit
+	 * tests will fail if our assumptions are wrong, rather than passing when they should not.
+	 * 
+	 * @param path The path to test for access time support.
+	 * @return <code>true</code> if, to the best of our knowledge, the file system underlying the specified path will support last access times.
+	 */
+	public static boolean isSupportsLastAccess(final Path path) {
+		if (!path.getFileSystem().supportedFileAttributeViews().contains("dos")) return true;
+		else {
+			final ProcessBuilder builder = new ProcessBuilder();
+			builder.command("powershell", "fsutil", "behavior", "query", "disablelastaccess");
+			builder.directory(path.toFile());
+			try {
+				final Process process = builder.start();
+				try {
+					try (final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+						return reader.readLine().trim().endsWith("0");
+					}
+				} finally {
+					try {
+						process.waitFor();
+					} catch (InterruptedException e) {}
+				}
+			} catch (IOException e) {
+				throw new RuntimeIOException(e);
+			}
+		}
+	}
 
 	protected FileSystem fs = null;
 
@@ -488,6 +523,13 @@ public abstract class ATestFileSystemProvider {
 		HAssert.assertThat(Files.readAttributes(parent, BasicFileAttributes.class), new FieldMatcher<>(attributes, basicFileAttributeFunctions));
 	}
 
+	/**
+	 * Test if this file system is expected to support last access timestampes. This allows {@link ATestFileSystemProvider} to test file systems either way.
+	 * Note that the return value of this metho may vary from test to test.
+	 * 
+	 * @return <code>true</code> if the file system being used for this test is expected to support last access time.
+	 * @see #isSupportsLastAccess(Path)
+	 */
 	protected boolean supportLastAccess() {
 		return true;
 	}

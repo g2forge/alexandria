@@ -117,6 +117,10 @@ public abstract class AProxyFileSystemProvider<P extends Path> extends FileSyste
 		Files.createDirectory(resolve(dir), attrs);
 	}
 
+	protected AProxyFileSystemProvider<P>.Internal createInternal(final Path root) {
+		return new Internal(root);
+	}
+
 	@Override
 	public void delete(Path path) throws IOException {
 		Files.delete(resolve(path));
@@ -189,7 +193,7 @@ public abstract class AProxyFileSystemProvider<P extends Path> extends FileSyste
 		final Path root = parsedURI.getRoot();
 		synchronized (fileSystems) {
 			if (fileSystems.containsKey(root)) throw new FileSystemAlreadyExistsException();
-			final GenericFileSystem retVal = new GenericFileSystem(new Internal(root), env);
+			final GenericFileSystem retVal = new GenericFileSystem(createInternal(root), env);
 			fileSystems.put(root, retVal);
 			return retVal;
 		}
