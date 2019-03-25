@@ -15,9 +15,9 @@ import java.util.stream.Stream;
 
 import com.g2forge.alexandria.collection.CollectionCollection;
 import com.g2forge.alexandria.collection.ICollection;
+import com.g2forge.alexandria.java.function.type.ITypeFunction1;
+import com.g2forge.alexandria.java.function.type.TypeMapIterator;
 import com.g2forge.alexandria.collection.DIteratorCollection;
-import com.g2forge.alexandria.java.function.typed.ITypedFunction1;
-import com.g2forge.alexandria.java.function.typed.TypedMapIterator;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -43,7 +43,7 @@ import lombok.Getter;
  * interfaces and which are not. Because the set of features may be extended by any new service implementation, this is discovered through the use of
  * {@link IServiceFeatureHierarchy#getFeatureInterfaces()}. Anyone defining a new feature interface should implement a class which implements
  * {@link IServiceFeatureHierarchy}, and ensure that each new feature interface is returned from. Note that {@link IServiceFeatureHierarchy} may be implemented
- * by a separate class (see {@link #FeatureServiceLoader(Class, Class, ITypedFunction1)}) or directly on the service itself.
+ * by a separate class (see {@link #FeatureServiceLoader(Class, Class, ITypeFunction1)}) or directly on the service itself.
  *
  * @param <S> The parent type of all services loadable by this loader.
  */
@@ -97,7 +97,7 @@ public class FeatureServiceLoader<S> implements IServiceLoader<S> {
 	protected final IServiceLoader<? extends IServiceFeatureHierarchy<S>> hierarchy;
 
 	@Getter(AccessLevel.PROTECTED)
-	protected final ITypedFunction1<S> instantiator;
+	protected final ITypeFunction1<S> instantiator;
 
 	@Getter(value = AccessLevel.PROTECTED, lazy = true)
 	private final Features features = new Features();
@@ -106,7 +106,7 @@ public class FeatureServiceLoader<S> implements IServiceLoader<S> {
 		this(type, null, null);
 	}
 
-	public FeatureServiceLoader(Class<S> type, Class<? extends IServiceFeatureHierarchy<S>> hierarchy, ITypedFunction1<S> instantiator) {
+	public FeatureServiceLoader(Class<S> type, Class<? extends IServiceFeatureHierarchy<S>> hierarchy, ITypeFunction1<S> instantiator) {
 		this.basic = new BasicServiceLoader<>(type);
 		this.hierarchy = hierarchy == null ? null : new BasicServiceLoader<>(hierarchy);
 		this.instantiator = instantiator == null ? new DefaultInstantiator<>(this) : instantiator;
@@ -164,6 +164,6 @@ public class FeatureServiceLoader<S> implements IServiceLoader<S> {
 
 	@Override
 	public <_S extends S> ICollection<_S> load(Class<_S> subtype) {
-		return ((DIteratorCollection<_S>) () -> new TypedMapIterator<S, _S>(find(subtype).iterator(), instantiator));
+		return ((DIteratorCollection<_S>) () -> new TypeMapIterator<S, _S>(find(subtype).iterator(), instantiator));
 	}
 }

@@ -44,7 +44,7 @@ public class HCollection {
 		return Arrays.asList(elements);
 	}
 
-	public static <T> List<T> asList(int count, T element) {
+	public static <T> List<T> asListRepeated(int count, T element) {
 		final List<T> retVal = new ArrayList<>(count);
 		for (int i = 0; i < count; i++) {
 			retVal.add(element);
