@@ -10,7 +10,7 @@ public interface IFSMTransition<CurrentState extends IGeneric<CurrentArgument>, 
 
 	public IFSMType<Event, EventArgument> getEvent();
 
-	public IFunction2<? super CurrentArgument, ? super EventArgument, ? extends NextArgument> getFunction();
+	public IFunction2<? super CurrentArgument, ? super EventArgument, ? extends NextArgument> getArgument();
 
 	public IPredicate2<? super CurrentArgument, ? super EventArgument> getGuard();
 

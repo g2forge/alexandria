@@ -48,9 +48,11 @@ public class FSMBuilder<Event extends IGeneric<?>, State extends IGeneric<?>> {
 					if (!accept) continue;
 				}
 
-				final IFunction2<?, ?, ?> function = transition.getFunction();
+				final IFunction2<?, ?, ?> argumentFunction = transition.getArgument();
 				@SuppressWarnings({ "unchecked", "rawtypes" })
-				final FSMValue<? extends State, ?> next = new FSMValue(transition.getNext(), (function != null) ? ((IFunction2) function).apply(state.getValue(), event.getValue()) : null);
+				final Object argumentValue = (argumentFunction != null) ? ((IFunction2) argumentFunction).apply(state.getValue(), event.getValue()) : null;
+				@SuppressWarnings({ "unchecked", "rawtypes" })
+				final FSMValue<? extends State, ?> next = new FSMValue(transition.getNext(), argumentValue);
 				this.state = optimize(next);
 				return;
 			}

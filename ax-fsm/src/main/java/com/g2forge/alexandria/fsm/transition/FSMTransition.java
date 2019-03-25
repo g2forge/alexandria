@@ -29,5 +29,5 @@ public class FSMTransition<CurrentState extends IGeneric<CurrentArgument>, Curre
 
 	protected final IFSMType<NextState, NextArgument> next;
 
-	protected final IFunction2<? super CurrentArgument, ? super EventArgument, ? extends NextArgument> function;
+	protected final IFunction2<? super CurrentArgument, ? super EventArgument, ? extends NextArgument> argument;
 }
