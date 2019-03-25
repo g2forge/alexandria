@@ -10,25 +10,31 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class FSMTester<E extends IGeneric<?>, S extends IGeneric<?>> {
-	protected final IFSM<E, S> fsm;
+public class FSMTester<Event extends IGeneric<?>, State extends IGeneric<?>, Output> {
+	protected final IFSM<Event, State, Output> fsm;
 
-	public FSMTester(FSMBuilder<E, S> builder, IFSMValue<? extends S, ?> initial) {
+	public FSMTester(FSMBuilder<Event, State, Output> builder, IFSMValue<? extends State, ?> initial) {
 		this(builder.build(initial));
 		assertState(initial);
 	}
 
-	public FSMTester<E, S> assertState(IFSMValue<? extends S, ?> expected) {
+	public FSMTester<Event, State, Output> assertOutput(Output expected, IFSMValue<? extends Event, ?> event) {
+		final Output actual = getFsm().fire(event);
+		HAssert.assertEquals(expected, actual);
+		return this;
+	}
+
+	public FSMTester<Event, State, Output> assertState(IFSMValue<? extends State, ?> expected) {
 		HAssert.assertEquals(expected, getFsm().getState());
 		return this;
 	}
 
-	public FSMTester<E, S> assertStateType(IFSMType<? extends S, ?> expected) {
+	public FSMTester<Event, State, Output> assertStateType(IFSMType<? extends State, ?> expected) {
 		HAssert.assertEquals(expected, getFsm().getState().getType());
 		return this;
 	}
 
-	public FSMTester<E, S> fire(IFSMValue<? extends E, ?> event) {
+	public FSMTester<Event, State, Output> fire(IFSMValue<? extends Event, ?> event) {
 		getFsm().fire(event);
 		return this;
 	}

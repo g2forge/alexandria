@@ -1,6 +1,5 @@
 package com.g2forge.alexandria.fsm.transition.builder;
 
-import com.g2forge.alexandria.fsm.transition.FSMTransition;
 import com.g2forge.alexandria.fsm.transition.IFSMTransition;
 import com.g2forge.alexandria.fsm.value.IFSMType;
 import com.g2forge.alexandria.java.function.IConsumer2;
@@ -24,7 +23,7 @@ public class NextFSMTransitionBuilder<CurrentState extends IGeneric<CurrentArgum
 	protected final IPredicate2<? super CurrentArgument, ? super EventArgument> guard;
 
 	protected final IFSMType<NextState, NextArgument> next;
-	
+
 	protected IFunction2<? super CurrentArgument, ? super EventArgument, ? extends NextArgument> argument;
 
 	public NextFSMTransitionBuilder<CurrentState, CurrentArgument, Event, EventArgument, NextState, NextArgument> argument(final IConsumer2<? super CurrentArgument, ? super EventArgument> argument) {
@@ -37,7 +36,11 @@ public class NextFSMTransitionBuilder<CurrentState extends IGeneric<CurrentArgum
 		return this;
 	}
 
-	public IFSMTransition<CurrentState, CurrentArgument, Event, EventArgument, NextState, NextArgument> build() {
-		return new FSMTransition<>(getCurrent(), getEvent(), getGuard(), getNext(), getArgument());
+	public <Output> IFSMTransition<CurrentState, CurrentArgument, Event, EventArgument, NextState, NextArgument, Output> build() {
+		return this.<Output>output(null).build();
+	}
+
+	public <Output> OutputFSMTransitionBuilder<CurrentState, CurrentArgument, Event, EventArgument, NextState, NextArgument, Output> output(IFunction2<? super CurrentArgument, ? super EventArgument, ? extends Output> output) {
+		return new OutputFSMTransitionBuilder<>(getCurrent(), getEvent(), getGuard(), getNext(), getArgument(), output);
 	}
 }

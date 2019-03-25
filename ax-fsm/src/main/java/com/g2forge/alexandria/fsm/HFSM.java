@@ -19,8 +19,12 @@ public class HFSM {
 		return new CurrentFSMTransitionBuilder<>(current);
 	}
 
-	public static <CurrentState extends IGeneric<CurrentArgument>, CurrentArgument, Event extends IGeneric<EventArgument>, EventArgument, NextState extends IGeneric<Void>> IFSMTransition<CurrentState, CurrentArgument, Event, EventArgument, NextState, Void> transition(IFSMType<CurrentState, CurrentArgument> current, IFSMType<Event, EventArgument> event, IFSMType<NextState, Void> next) {
-		return new FSMTransition<>(current, event, null, next, (ca, ea) -> null);
+	public static <CurrentState extends IGeneric<CurrentArgument>, CurrentArgument, Event extends IGeneric<EventArgument>, EventArgument, NextState extends IGeneric<Void>, Output> IFSMTransition<CurrentState, CurrentArgument, Event, EventArgument, NextState, Void, Output> transition(IFSMType<CurrentState, CurrentArgument> current, IFSMType<Event, EventArgument> event, IFSMType<NextState, Void> next) {
+		return new FSMTransition<>(current, event, null, next, (ca, ea) -> null, null);
+	}
+	
+	public static <CurrentState extends IGeneric<CurrentArgument>, CurrentArgument, Event extends IGeneric<EventArgument>, EventArgument, NextState extends IGeneric<Void>, Output> IFSMTransition<CurrentState, CurrentArgument, Event, EventArgument, NextState, Void, Output> transition(IFSMType<CurrentState, CurrentArgument> current, IFSMType<Event, EventArgument> event, IFSMType<NextState, Void> next, Output output) {
+		return new FSMTransition<>(current, event, null, next, (ca, ea) -> null, (ca, ea) -> output);
 	}
 
 	public static <G extends IGeneric<T>, T> IFSMType<G, T> type(Class<G> type) {
