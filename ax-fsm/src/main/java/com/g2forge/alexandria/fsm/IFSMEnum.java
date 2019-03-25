@@ -1,7 +1,7 @@
 package com.g2forge.alexandria.fsm;
 
-import com.g2forge.alexandria.fsm.generic.type.IType1;
-import com.g2forge.alexandria.fsm.generic.value.IValue1;
+import com.g2forge.alexandria.fsm.value.IFSMType;
+import com.g2forge.alexandria.fsm.value.IFSMValue;
 import com.g2forge.alexandria.java.type.IGeneric;
 
 /**
@@ -13,26 +13,22 @@ import com.g2forge.alexandria.java.type.IGeneric;
  * <th>Reason</th>
  * </tr>
  * <tr>
- * <td>ITyped1</td>
+ * <td>{@link IGeneric}</td>
  * <td>Allows the enumeration type to be the root state (event) type of the FSM.</td>
  * </tr>
  * <tr>
- * <td>IBoundType1</td>
- * <td>Allows members of the enumeration to be used in specifying transitions states (events).</td>
+ * <td>{@link IFSMType}</td>
+ * <td>Allows members of the enumeration to be used in specifying transition states (events).</td>
  * </tr>
  * <tr>
- * <td>IValue</td>
+ * <td>{@link IFSMValue}</td>
  * <td>Allows members of the enumeration to be used as concrete states (events) including the refinement (argument).</td>
  * </tr>
  * </table>
- * 
- * @author gdgib
- *
- * @param <T>
  */
-public interface IFSMEnum<T extends IGeneric<Void>> extends IGeneric<Void>, IType1<T, Void>, IValue1<T, Void> {
+public interface IFSMEnum<T extends IGeneric<Void>> extends IGeneric<Void>, IFSMType<T, Void>, IFSMValue<T, Void> {
 	@Override
-	public default IType1<T, Void> getType() {
+	public default IFSMType<T, Void> getType() {
 		return this;
 	}
 

@@ -1,7 +1,7 @@
 package com.g2forge.alexandria.fsm;
 
-import com.g2forge.alexandria.fsm.generic.type.IType1;
-import com.g2forge.alexandria.fsm.generic.value.IValue1;
+import com.g2forge.alexandria.fsm.value.IFSMType;
+import com.g2forge.alexandria.fsm.value.IFSMValue;
 import com.g2forge.alexandria.java.type.IGeneric;
 import com.g2forge.alexandria.test.HAssert;
 
@@ -13,22 +13,22 @@ import lombok.Getter;
 public class FSMTester<E extends IGeneric<?>, S extends IGeneric<?>> {
 	protected final IFSM<E, S> fsm;
 
-	public FSMTester(FSMBuilder<E, S> builder, IValue1<? extends S, ?> initial) {
+	public FSMTester(FSMBuilder<E, S> builder, IFSMValue<? extends S, ?> initial) {
 		this(builder.build(initial));
 		assertState(initial);
 	}
 
-	public FSMTester<E, S> assertState(IValue1<? extends S, ?> expected) {
+	public FSMTester<E, S> assertState(IFSMValue<? extends S, ?> expected) {
 		HAssert.assertEquals(expected, getFsm().getState());
 		return this;
 	}
 
-	public FSMTester<E, S> assertStateType(IType1<? extends S, ?> expected) {
+	public FSMTester<E, S> assertStateType(IFSMType<? extends S, ?> expected) {
 		HAssert.assertEquals(expected, getFsm().getState().getType());
 		return this;
 	}
 
-	public FSMTester<E, S> fire(IValue1<? extends E, ?> event) {
+	public FSMTester<E, S> fire(IFSMValue<? extends E, ?> event) {
 		getFsm().fire(event);
 		return this;
 	}
