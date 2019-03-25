@@ -142,7 +142,7 @@ public abstract class ATestFileSystemProvider {
 		Files.createDirectories(a.resolve("0"));
 		Files.createDirectories(b.resolve("1"));
 
-		HAssert.assertThat(() -> Files.copy(a, b, StandardCopyOption.REPLACE_EXISTING), HMatchers.isThrowable(DirectoryNotEmptyException.class, HMatchers.<String>anyOf(HMatchers.equalTo(String.format("\"%1$s\" is not empty!", b)) /* Helpful error messages */, HMatchers.endsWith(b.getFileName().toString()) /* Machine readable */)));
+		HAssert.<IOException>assertThat(() -> Files.copy(a, b, StandardCopyOption.REPLACE_EXISTING), HMatchers.isThrowable(DirectoryNotEmptyException.class, HMatchers.<String>anyOf(HMatchers.equalTo(String.format("\"%1$s\" is not empty!", b)) /* Helpful error messages */, HMatchers.endsWith(b.getFileName().toString()) /* Machine readable */)));
 		assertChildren(HCollection.asList("1"), b);
 	}
 
@@ -237,14 +237,14 @@ public abstract class ATestFileSystemProvider {
 		assertChildren(HCollection.emptyList(), root);
 		final Path a = createPath("/a");
 		Files.createDirectory(a);
-		HAssert.assertThat(() -> Files.createDirectory(a), HMatchers.isThrowable(FileAlreadyExistsException.class, HMatchers.anyOf(HMatchers.equalTo(String.format("\"/%1$s\" already exists!", a.getFileName())), HMatchers.endsWith(a.getFileName().toString()))));
+		HAssert.<IOException>assertThat(() -> Files.createDirectory(a), HMatchers.isThrowable(FileAlreadyExistsException.class, HMatchers.anyOf(HMatchers.equalTo(String.format("\"/%1$s\" already exists!", a.getFileName())), HMatchers.endsWith(a.getFileName().toString()))));
 		assertChildren(HCollection.asList(a.getFileName().toString()), root);
 	}
 
 	@Test
 	public void createDirectoryMissingAncestor() throws IOException {
 		assertChildren(HCollection.emptyList(), fs.getPath("/"));
-		HAssert.assertThat(() -> Files.createDirectory(createPath("/a/b")), HMatchers.isThrowable(NoSuchFileException.class, HMatchers.anyOf(HMatchers.equalTo(String.format("Ancestor \"/a\" does not exist!")), HMatchers.endsWith("b"))));
+		HAssert.<IOException>assertThat(() -> Files.createDirectory(createPath("/a/b")), HMatchers.isThrowable(NoSuchFileException.class, HMatchers.anyOf(HMatchers.equalTo(String.format("Ancestor \"/a\" does not exist!")), HMatchers.endsWith("b"))));
 		assertChildren(HCollection.emptyList(), fs.getPath("/"));
 	}
 
@@ -264,7 +264,7 @@ public abstract class ATestFileSystemProvider {
 		final Path path = createPath("/a");
 		Files.createDirectories(createPath("/a/b"));
 		HAssert.assertTrue(Files.exists(path));
-		HAssert.assertThat(() -> Files.delete(path), HMatchers.isThrowable(DirectoryNotEmptyException.class, HMatchers.anyOf(HMatchers.equalTo(String.format("\"/%1$s\" is not empty!", path.getFileName())), HMatchers.endsWith(path.getFileName().toString()))));
+		HAssert.<IOException>assertThat(() -> Files.delete(path), HMatchers.isThrowable(DirectoryNotEmptyException.class, HMatchers.anyOf(HMatchers.equalTo(String.format("\"/%1$s\" is not empty!", path.getFileName())), HMatchers.endsWith(path.getFileName().toString()))));
 		HAssert.assertTrue(Files.exists(path));
 	}
 
@@ -280,7 +280,7 @@ public abstract class ATestFileSystemProvider {
 	@Test
 	public void deleteNonExistant() throws IOException {
 		final Path path = createPath("a");
-		HAssert.assertThat(() -> Files.delete(path), HMatchers.isThrowable(NoSuchFileException.class, HMatchers.anyOf(HMatchers.equalTo(String.format("\"%1$s\" does not exist!", path.getFileName())), HMatchers.endsWith(path.getFileName().toString()))));
+		HAssert.<IOException>assertThat(() -> Files.delete(path), HMatchers.isThrowable(NoSuchFileException.class, HMatchers.anyOf(HMatchers.equalTo(String.format("\"%1$s\" does not exist!", path.getFileName())), HMatchers.endsWith(path.getFileName().toString()))));
 	}
 
 	@Test
@@ -313,9 +313,9 @@ public abstract class ATestFileSystemProvider {
 	public void fileCreateExistingFail() throws IOException {
 		Files.createDirectory(createPath("/a"));
 		final Path a = createPath("a"), b = createPath("b");
-		HAssert.assertThat(() -> Files.newBufferedWriter(a, StandardOpenOption.CREATE_NEW).close(), HMatchers.anyOf(HMatchers.isThrowable(FileAlreadyExistsException.class, "\"a\" already exists!"), HMatchers.isThrowable(AccessDeniedException.class, HMatchers.endsWith(a.getFileName().toString()))));
+		HAssert.<IOException>assertThat(() -> Files.newBufferedWriter(a, StandardOpenOption.CREATE_NEW).close(), HMatchers.anyOf(HMatchers.isThrowable(FileAlreadyExistsException.class, "\"a\" already exists!"), HMatchers.isThrowable(AccessDeniedException.class, HMatchers.endsWith(a.getFileName().toString()))));
 		Files.newBufferedWriter(b).append("b").close();
-		HAssert.assertThat(() -> Files.newBufferedWriter(b, StandardOpenOption.CREATE_NEW).close(), HMatchers.anyOf(HMatchers.isThrowable(FileAlreadyExistsException.class, "\"b\" already exists!"), HMatchers.isThrowable(FileAlreadyExistsException.class, HMatchers.endsWith(b.getFileName().toString()))));
+		HAssert.<IOException>assertThat(() -> Files.newBufferedWriter(b, StandardOpenOption.CREATE_NEW).close(), HMatchers.anyOf(HMatchers.isThrowable(FileAlreadyExistsException.class, "\"b\" already exists!"), HMatchers.isThrowable(FileAlreadyExistsException.class, HMatchers.endsWith(b.getFileName().toString()))));
 	}
 
 	@Test
@@ -474,7 +474,7 @@ public abstract class ATestFileSystemProvider {
 		final Path a = createPath("a"), b = createPath("b");
 		Files.createDirectory(a);
 		Files.createDirectories(b.resolve("1"));
-		HAssert.assertThat(() -> Files.move(a, b, StandardCopyOption.REPLACE_EXISTING), HMatchers.isThrowable(DirectoryNotEmptyException.class, HMatchers.<String>anyOf(HMatchers.equalTo(String.format("\"%1$s\" is not empty!", b)) /* Helpful error messages */, HMatchers.endsWith(b.toString()) /* Machine readable */)));
+		HAssert.<IOException>assertThat(() -> Files.move(a, b, StandardCopyOption.REPLACE_EXISTING), HMatchers.isThrowable(DirectoryNotEmptyException.class, HMatchers.<String>anyOf(HMatchers.equalTo(String.format("\"%1$s\" is not empty!", b)) /* Helpful error messages */, HMatchers.endsWith(b.toString()) /* Machine readable */)));
 		Assert.assertTrue(Files.isDirectory(a));
 	}
 
@@ -483,7 +483,7 @@ public abstract class ATestFileSystemProvider {
 		final Path a = createPath("a"), b = createPath("b");
 		Files.createDirectory(a);
 		Files.newBufferedWriter(b).append("Hello, World!").append(System.lineSeparator()).close();
-		HAssert.assertThat(() -> Files.move(a, b), HMatchers.isThrowable(FileAlreadyExistsException.class, HMatchers.<String>anyOf(HMatchers.equalTo(String.format("\"%1$s\" already exists!", b)) /* Helpful error messages */, HMatchers.endsWith(b.toString()) /* Machine readable */)));
+		HAssert.<IOException>assertThat(() -> Files.move(a, b), HMatchers.isThrowable(FileAlreadyExistsException.class, HMatchers.<String>anyOf(HMatchers.equalTo(String.format("\"%1$s\" already exists!", b)) /* Helpful error messages */, HMatchers.endsWith(b.toString()) /* Machine readable */)));
 		Assert.assertTrue(Files.isRegularFile(b));
 	}
 
