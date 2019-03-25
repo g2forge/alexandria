@@ -1,46 +1,46 @@
 package com.g2forge.alexandria.fsm.transition;
 
-import com.g2forge.alexandria.fsm.generic.IGeneric1;
 import com.g2forge.alexandria.fsm.generic.type.ClassType1;
 import com.g2forge.alexandria.fsm.generic.type.IType1;
 import com.g2forge.alexandria.fsm.transition.builder.CurrentTransitionBuilder;
 import com.g2forge.alexandria.java.function.IConsumer2;
 import com.g2forge.alexandria.java.function.IFunction2;
 import com.g2forge.alexandria.java.function.IPredicate2;
+import com.g2forge.alexandria.java.typed.IGeneric;
 
-public interface ITransition<CS extends IGeneric1<CA>, CA, E extends IGeneric1<EA>, EA, NS extends IGeneric1<NA>, NA> {
-	public static <CS extends IGeneric1<CA>, CA> CurrentTransitionBuilder<CS, CA> of(Class<CS> current) {
+public interface ITransition<CurrentState extends IGeneric<CurrentArgument>, CurrentArgument, Event extends IGeneric<EventArgument>, EventArgument, NextState extends IGeneric<NextArgument>, NextArgument> {
+	public static <CurrentState extends IGeneric<CurrentArgument>, CurrentArgument> CurrentTransitionBuilder<CurrentState, CurrentArgument> of(Class<CurrentState> current) {
 		return of(new ClassType1<>(current));
 	}
 
-	public static <CS extends IGeneric1<CA>, CA> CurrentTransitionBuilder<CS, CA> of(IType1<CS, CA> current) {
+	public static <CurrentState extends IGeneric<CurrentArgument>, CurrentArgument> CurrentTransitionBuilder<CurrentState, CurrentArgument> of(IType1<CurrentState, CurrentArgument> current) {
 		return new CurrentTransitionBuilder<>(current);
 	}
 
-	public static <CS extends IGeneric1<CA>, CA, E extends IGeneric1<EA>, EA, NS extends IGeneric1<NA>, NA> ITransition<CS, CA, E, EA, NS, NA> of(IType1<CS, CA> current, IType1<E, EA> event, IType1<NS, NA> next, IFunction2<? super CA, ? super EA, ? extends NA> function) {
+	public static <CurrentState extends IGeneric<CurrentArgument>, CurrentArgument, Event extends IGeneric<EventArgument>, EventArgument, NextState extends IGeneric<NextArgument>, NextArgument> ITransition<CurrentState, CurrentArgument, Event, EventArgument, NextState, NextArgument> of(IType1<CurrentState, CurrentArgument> current, IType1<Event, EventArgument> event, IType1<NextState, NextArgument> next, IFunction2<? super CurrentArgument, ? super EventArgument, ? extends NextArgument> function) {
 		return new Transition<>(current, event, null, next, function);
 	}
 
-	public static <CS extends IGeneric1<CA>, CA, E extends IGeneric1<EA>, EA, NS extends IGeneric1<Void>> ITransition<CS, CA, E, EA, NS, Void> of(IType1<CS, CA> current, IType1<E, EA> event, IType1<NS, Void> next) {
+	public static <CurrentState extends IGeneric<CurrentArgument>, CurrentArgument, Event extends IGeneric<EventArgument>, EventArgument, NextState extends IGeneric<Void>> ITransition<CurrentState, CurrentArgument, Event, EventArgument, NextState, Void> of(IType1<CurrentState, CurrentArgument> current, IType1<Event, EventArgument> event, IType1<NextState, Void> next) {
 		return ITransition.of(current, event, next, (ca, ea) -> {
 			return null;
 		});
 	}
 
-	public static <CS extends IGeneric1<CA>, CA, E extends IGeneric1<EA>, EA, NS extends IGeneric1<Void>> ITransition<CS, CA, E, EA, NS, Void> of(IType1<CS, CA> current, IType1<E, EA> event, IType1<NS, Void> next, IConsumer2<? super CA, ? super EA> function) {
+	public static <CurrentState extends IGeneric<CurrentArgument>, CurrentArgument, Event extends IGeneric<EventArgument>, EventArgument, NextState extends IGeneric<Void>> ITransition<CurrentState, CurrentArgument, Event, EventArgument, NextState, Void> of(IType1<CurrentState, CurrentArgument> current, IType1<Event, EventArgument> event, IType1<NextState, Void> next, IConsumer2<? super CurrentArgument, ? super EventArgument> function) {
 		return ITransition.of(current, event, next, (ca, ea) -> {
 			function.accept(ca, ea);
 			return null;
 		});
 	}
 
-	public IType1<CS, CA> getCurrent();
+	public IType1<CurrentState, CurrentArgument> getCurrent();
 
-	public IType1<E, EA> getEvent();
+	public IType1<Event, EventArgument> getEvent();
 
-	public IFunction2<? super CA, ? super EA, ? extends NA> getFunction();
+	public IFunction2<? super CurrentArgument, ? super EventArgument, ? extends NextArgument> getFunction();
 
-	public IPredicate2<? super CA, ? super EA> getGuard();
+	public IPredicate2<? super CurrentArgument, ? super EventArgument> getGuard();
 
-	public IType1<NS, NA> getNext();
+	public IType1<NextState, NextArgument> getNext();
 }

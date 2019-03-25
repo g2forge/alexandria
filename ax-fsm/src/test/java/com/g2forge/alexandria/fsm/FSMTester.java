@@ -1,8 +1,8 @@
 package com.g2forge.alexandria.fsm;
 
-import com.g2forge.alexandria.fsm.generic.IGeneric1;
 import com.g2forge.alexandria.fsm.generic.type.IType1;
 import com.g2forge.alexandria.fsm.generic.value.IValue1;
+import com.g2forge.alexandria.java.typed.IGeneric;
 import com.g2forge.alexandria.test.HAssert;
 
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class FSMTester<E extends IGeneric1<?>, S extends IGeneric1<?>> {
+public class FSMTester<E extends IGeneric<?>, S extends IGeneric<?>> {
 	protected final IFSM<E, S> fsm;
 
 	public FSMTester(FSMBuilder<E, S> builder, IValue1<? extends S, ?> initial) {

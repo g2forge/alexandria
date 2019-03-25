@@ -1,5 +1,5 @@
 package com.g2forge.alexandria.fsm.generic.type;
 
-import com.g2forge.alexandria.fsm.generic.IGeneric1;
+import com.g2forge.alexandria.java.typed.IGeneric;
 
-public interface IType1<G extends IGeneric1<T>, T> {}
+public interface IType1<G extends IGeneric<T>, T> {}

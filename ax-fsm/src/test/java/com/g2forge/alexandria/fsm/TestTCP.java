@@ -2,16 +2,16 @@ package com.g2forge.alexandria.fsm;
 
 import org.junit.Test;
 
-import com.g2forge.alexandria.fsm.generic.IGeneric1;
 import com.g2forge.alexandria.fsm.generic.value.IValue1;
 import com.g2forge.alexandria.fsm.transition.ITransition;
+import com.g2forge.alexandria.java.typed.IGeneric;
 
 import lombok.Data;
 
 public class TestTCP {
 	public interface IClose extends IEvent<Void> {}
 
-	public interface IEvent<V> extends IGeneric1<V> {}
+	public interface IEvent<V> extends IGeneric<V> {}
 
 	public interface IReceive extends IEvent<Packet> {}
 

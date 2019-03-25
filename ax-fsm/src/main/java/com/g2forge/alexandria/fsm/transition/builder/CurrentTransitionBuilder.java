@@ -1,20 +1,20 @@
 package com.g2forge.alexandria.fsm.transition.builder;
 
-import com.g2forge.alexandria.fsm.generic.IGeneric1;
 import com.g2forge.alexandria.fsm.generic.type.ClassType1;
 import com.g2forge.alexandria.fsm.generic.type.IType1;
+import com.g2forge.alexandria.java.typed.IGeneric;
 
 import lombok.Data;
 
 @Data
-public class CurrentTransitionBuilder<CS extends IGeneric1<CA>, CA> {
-	protected final IType1<CS, CA> current;
+public class CurrentTransitionBuilder<CurrentState extends IGeneric<CurrentArgument>, CurrentArgument> {
+	protected final IType1<CurrentState, CurrentArgument> current;
 
-	public <E extends IGeneric1<EA>, EA> EventTransitionBuilder<CS, CA, E, EA> event(Class<E> event) {
-		return event(new ClassType1<E, EA>(event));
+	public <Event extends IGeneric<EventArgument>, EventArgument> EventTransitionBuilder<CurrentState, CurrentArgument, Event, EventArgument> event(Class<Event> event) {
+		return event(new ClassType1<Event, EventArgument>(event));
 	}
 
-	public <E extends IGeneric1<EA>, EA> EventTransitionBuilder<CS, CA, E, EA> event(IType1<E, EA> event) {
+	public <Event extends IGeneric<EventArgument>, EventArgument> EventTransitionBuilder<CurrentState, CurrentArgument, Event, EventArgument> event(IType1<Event, EventArgument> event) {
 		return new EventTransitionBuilder<>(getCurrent(), event);
 	}
 }

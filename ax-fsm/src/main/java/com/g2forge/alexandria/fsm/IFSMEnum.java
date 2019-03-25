@@ -1,8 +1,8 @@
 package com.g2forge.alexandria.fsm;
 
-import com.g2forge.alexandria.fsm.generic.IGeneric1;
 import com.g2forge.alexandria.fsm.generic.type.IType1;
 import com.g2forge.alexandria.fsm.generic.value.IValue1;
+import com.g2forge.alexandria.java.typed.IGeneric;
 
 /**
  * Implementing this interface allows an enumeration to be used for the states or events of an FSM. It has the following parent types for the given reasons:
@@ -30,7 +30,7 @@ import com.g2forge.alexandria.fsm.generic.value.IValue1;
  *
  * @param <T>
  */
-public interface IFSMEnum<T extends IGeneric1<Void>> extends IGeneric1<Void>, IType1<T, Void>, IValue1<T, Void> {
+public interface IFSMEnum<T extends IGeneric<Void>> extends IGeneric<Void>, IType1<T, Void>, IValue1<T, Void> {
 	@Override
 	public default IType1<T, Void> getType() {
 		return this;
