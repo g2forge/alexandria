@@ -1,11 +1,7 @@
 package com.g2forge.alexandria.fsm;
 
-import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.fsm.FSMBuilder;
-import com.g2forge.alexandria.fsm.IFSM;
-import com.g2forge.alexandria.fsm.IFSMEnum;
 import com.g2forge.alexandria.fsm.transition.ITransition;
 import com.g2forge.alexandria.fsm.value.IValue1;
 
@@ -20,24 +16,33 @@ public class TestCounter {
 		One,
 		Two;
 	}
-
-	@Test
-	public void test() {
-		final FSMBuilder<Event, State> builder = new FSMBuilder<Event, State>();
+	
+	protected static final FSMBuilder<Event, State> builder;
+	
+	static {
+		builder = new FSMBuilder<Event, State>();
 		builder.transition(ITransition.of(State.Zero, Event.Up, State.One));
 		builder.transition(ITransition.of(State.One, Event.Up, State.Two));
 		builder.transition(ITransition.of(State.Two, Event.Down, State.One));
 		builder.transition(ITransition.of(State.One, Event.Down, State.Zero));
+	}
 
-		final IFSM<Event, State> fsm = builder.build(State.Zero);
-		Assert.assertEquals(State.Zero, fsm.getState());
-		fsm.fire(Event.Up);
-		Assert.assertEquals(State.One, fsm.getState());
-		fsm.fire(IValue1.of(Event.Up));
-		Assert.assertEquals(State.Two, fsm.getState());
-		fsm.fire(Event.Down);
-		Assert.assertEquals(State.One, fsm.getState().getType());
-		fsm.fire(Event.Down);
-		Assert.assertEquals(State.Zero, fsm.getState().getType());
+	@Test
+	public void base() {
+		final FSMTester<Event, State> tester = new FSMTester<>(builder, State.Zero);
+		tester.fire(Event.Up).assertState(State.One);
+		tester.fire(IValue1.of(Event.Up)).assertState(State.Two);
+		tester.fire(Event.Down).assertStateType(State.One);
+		tester.fire(Event.Down).assertStateType(State.Zero);
+	}
+
+	@Test(expected = FSMDisallowedEventException.class)
+	public void disallowTwoUp() {
+		new FSMTester<>(builder, State.Two).fire(Event.Up);
+	}
+
+	@Test(expected = FSMDisallowedEventException.class)
+	public void disallowZeroDown() {
+		new FSMTester<>(builder, State.Zero).fire(Event.Down);
 	}
 }

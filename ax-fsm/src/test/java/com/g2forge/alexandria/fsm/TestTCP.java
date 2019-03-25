@@ -1,11 +1,7 @@
 package com.g2forge.alexandria.fsm;
 
-import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.fsm.FSMBuilder;
-import com.g2forge.alexandria.fsm.IFSM;
-import com.g2forge.alexandria.fsm.IFSMEnum;
 import com.g2forge.alexandria.fsm.generic.IGeneric1;
 import com.g2forge.alexandria.fsm.transition.ITransition;
 import com.g2forge.alexandria.fsm.value.IValue1;
@@ -48,7 +44,7 @@ public class TestTCP {
 		LastAck
 	}
 
-	protected static FSMBuilder<IEvent<?>, State> builder;
+	protected static final FSMBuilder<IEvent<?>, State> builder;
 
 	static {
 		builder = new FSMBuilder<>();
@@ -94,69 +90,50 @@ public class TestTCP {
 
 	@Test
 	public void closeActive() {
-		final IFSM<IEvent<?>, State> fsm = builder.build(State.Established);
-		fsm.fire(IValue1.of(IClose.class));
-		Assert.assertEquals(State.FinWait1, fsm.getState().getType());
-		fsm.fire(IValue1.of(IReceive.class, new Packet(false, true, false)));
-		Assert.assertEquals(State.FinWait2, fsm.getState().getType());
-		fsm.fire(IValue1.of(IReceive.class, new Packet(false, false, true)));
-		Assert.assertEquals(State.TimeWait, fsm.getState().getType());
-		fsm.fire(IValue1.of(ITimeout.class));
-		Assert.assertEquals(State.Closed, fsm.getState().getType());
+		final FSMTester<IEvent<?>, State> fsm = new FSMTester<>(builder, State.Established);
+		fsm.fire(IValue1.of(IClose.class)).assertStateType(State.FinWait1);
+		fsm.fire(IValue1.of(IReceive.class, new Packet(false, true, false))).assertStateType(State.FinWait2);
+		fsm.fire(IValue1.of(IReceive.class, new Packet(false, false, true))).assertStateType(State.TimeWait);
+		fsm.fire(IValue1.of(ITimeout.class)).assertStateType(State.Closed);
 	}
 
 	@Test
 	public void closePassive() {
-		final IFSM<IEvent<?>, State> fsm = builder.build(State.Established);
-		fsm.fire(IValue1.of(IReceive.class, new Packet(false, false, true)));
-		Assert.assertEquals(State.CloseWait, fsm.getState().getType());
-		fsm.fire(IValue1.of(IClose.class));
-		Assert.assertEquals(State.LastAck, fsm.getState().getType());
-		fsm.fire(IValue1.of(IReceive.class, new Packet(false, true, false)));
-		Assert.assertEquals(State.Closed, fsm.getState().getType());
+		final FSMTester<IEvent<?>, State> fsm = new FSMTester<>(builder, State.Established);
+		fsm.fire(IValue1.of(IReceive.class, new Packet(false, false, true))).assertStateType(State.CloseWait);
+		fsm.fire(IValue1.of(IClose.class)).assertStateType(State.LastAck);
+		fsm.fire(IValue1.of(IReceive.class, new Packet(false, true, false))).assertStateType(State.Closed);
 	}
 
 	@Test
 	public void closeSimultaneous() {
-		final IFSM<IEvent<?>, State> fsm = builder.build(State.Established);
-		fsm.fire(IValue1.of(IClose.class));
-		Assert.assertEquals(State.FinWait1, fsm.getState().getType());
-		fsm.fire(IValue1.of(IReceive.class, new Packet(false, false, true)));
-		Assert.assertEquals(State.Closing, fsm.getState().getType());
-		fsm.fire(IValue1.of(IReceive.class, new Packet(false, true, false)));
-		Assert.assertEquals(State.TimeWait, fsm.getState().getType());
-		fsm.fire(IValue1.of(ITimeout.class));
-		Assert.assertEquals(State.Closed, fsm.getState().getType());
+		final FSMTester<IEvent<?>, State> fsm = new FSMTester<>(builder, State.Established);
+		fsm.fire(IValue1.of(IClose.class)).assertStateType(State.FinWait1);
+		fsm.fire(IValue1.of(IReceive.class, new Packet(false, false, true))).assertStateType(State.Closing);
+		fsm.fire(IValue1.of(IReceive.class, new Packet(false, true, false))).assertStateType(State.TimeWait);
+		fsm.fire(IValue1.of(ITimeout.class)).assertStateType(State.Closed);
 	}
 
 	@Test
 	public void openActiveSimple() {
-		final IFSM<IEvent<?>, State> fsm = builder.build(State.Closed);
-		fsm.fire(IValue1.of(new Open("thingy", 10)));
-		Assert.assertEquals(State.SynSent, fsm.getState().getType());
-		fsm.fire(IValue1.of(IReceive.class, new Packet(true, true, false)));
-		Assert.assertEquals(State.Established, fsm.getState().getType());
+		final FSMTester<IEvent<?>, State> fsm = new FSMTester<>(builder, State.Closed);
+		fsm.fire(IValue1.of(new Open("thingy", 10))).assertStateType(State.SynSent);
+		fsm.fire(IValue1.of(IReceive.class, new Packet(true, true, false))).assertStateType(State.Established);
 	}
 
 	@Test
 	public void openActiveSplit() {
-		final IFSM<IEvent<?>, State> fsm = builder.build(State.Closed);
-		fsm.fire(IValue1.of(new Open("thingy", 10)));
-		Assert.assertEquals(State.SynSent, fsm.getState().getType());
-		fsm.fire(IValue1.of(IReceive.class, new Packet(true, false, false)));
-		Assert.assertEquals(State.SynReceived, fsm.getState().getType());
-		fsm.fire(IValue1.of(IReceive.class, new Packet(false, true, false)));
-		Assert.assertEquals(State.Established, fsm.getState().getType());
+		final FSMTester<IEvent<?>, State> fsm = new FSMTester<>(builder, State.Closed);
+		fsm.fire(IValue1.of(new Open("thingy", 10))).assertStateType(State.SynSent);
+		fsm.fire(IValue1.of(IReceive.class, new Packet(true, false, false))).assertStateType(State.SynReceived);
+		fsm.fire(IValue1.of(IReceive.class, new Packet(false, true, false))).assertStateType(State.Established);
 	}
 
 	@Test
 	public void openPassive() {
-		final IFSM<IEvent<?>, State> fsm = builder.build(State.Closed);
-		fsm.fire(IValue1.of(new Open(null, 0)));
-		Assert.assertEquals(State.Listen, fsm.getState().getType());
-		fsm.fire(IValue1.of(IReceive.class, new Packet(true, false, false)));
-		Assert.assertEquals(State.SynReceived, fsm.getState().getType());
-		fsm.fire(IValue1.of(IReceive.class, new Packet(false, true, false)));
-		Assert.assertEquals(State.Established, fsm.getState().getType());
+		final FSMTester<IEvent<?>, State> fsm = new FSMTester<>(builder, State.Closed);
+		fsm.fire(IValue1.of(new Open(null, 0))).assertStateType(State.Listen);
+		fsm.fire(IValue1.of(IReceive.class, new Packet(true, false, false))).assertStateType(State.SynReceived);
+		fsm.fire(IValue1.of(IReceive.class, new Packet(false, true, false))).assertStateType(State.Established);
 	}
 }
