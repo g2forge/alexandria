@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.typeswitch;
+package com.g2forge.alexandria.java.type.function;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.function.IFunction1;
+import com.g2forge.alexandria.java.type.function.TypeSwitch1;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

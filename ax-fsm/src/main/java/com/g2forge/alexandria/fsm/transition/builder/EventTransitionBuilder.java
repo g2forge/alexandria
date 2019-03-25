@@ -3,7 +3,7 @@ package com.g2forge.alexandria.fsm.transition.builder;
 import com.g2forge.alexandria.fsm.generic.type.ClassType1;
 import com.g2forge.alexandria.fsm.generic.type.IType1;
 import com.g2forge.alexandria.java.function.IPredicate2;
-import com.g2forge.alexandria.java.typed.IGeneric;
+import com.g2forge.alexandria.java.type.IGeneric;
 
 import lombok.Data;
 

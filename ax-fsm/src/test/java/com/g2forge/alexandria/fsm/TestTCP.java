@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import com.g2forge.alexandria.fsm.generic.value.IValue1;
 import com.g2forge.alexandria.fsm.transition.ITransition;
-import com.g2forge.alexandria.java.typed.IGeneric;
+import com.g2forge.alexandria.java.type.IGeneric;
 
 import lombok.Data;
 

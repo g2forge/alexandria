@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.typeswitch;
+package com.g2forge.alexandria.java.type.function;
 
 import java.util.ArrayList;
 import java.util.Collection;

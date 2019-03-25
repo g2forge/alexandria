@@ -6,7 +6,7 @@ import com.g2forge.alexandria.fsm.transition.builder.CurrentTransitionBuilder;
 import com.g2forge.alexandria.java.function.IConsumer2;
 import com.g2forge.alexandria.java.function.IFunction2;
 import com.g2forge.alexandria.java.function.IPredicate2;
-import com.g2forge.alexandria.java.typed.IGeneric;
+import com.g2forge.alexandria.java.type.IGeneric;
 
 public interface ITransition<CurrentState extends IGeneric<CurrentArgument>, CurrentArgument, Event extends IGeneric<EventArgument>, EventArgument, NextState extends IGeneric<NextArgument>, NextArgument> {
 	public static <CurrentState extends IGeneric<CurrentArgument>, CurrentArgument> CurrentTransitionBuilder<CurrentState, CurrentArgument> of(Class<CurrentState> current) {

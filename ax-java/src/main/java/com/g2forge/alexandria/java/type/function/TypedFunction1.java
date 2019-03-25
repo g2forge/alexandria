@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.typeswitch;
+package com.g2forge.alexandria.java.type.function;
 
 import com.g2forge.alexandria.java.function.IFunction1;
 

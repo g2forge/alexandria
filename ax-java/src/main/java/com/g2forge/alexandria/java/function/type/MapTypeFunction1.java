@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.function.typed;
+package com.g2forge.alexandria.java.function.type;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +8,7 @@ import lombok.ToString;
 
 @EqualsAndHashCode
 @ToString
-public class MapTypedFunction1<T> implements ITypedFunction1<T> {
+public class MapTypeFunction1<T> implements ITypeFunction1<T> {
 	protected final Map<Class<?>, Object> map = new HashMap<>();
 
 	@SuppressWarnings("unchecked")

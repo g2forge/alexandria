@@ -18,9 +18,9 @@ import java.util.Objects;
 import java.util.ServiceConfigurationError;
 
 import com.g2forge.alexandria.collection.ICollection;
+import com.g2forge.alexandria.java.function.type.ITypeFunction1;
+import com.g2forge.alexandria.java.function.type.TypeMapIterator;
 import com.g2forge.alexandria.collection.DIteratorCollection;
-import com.g2forge.alexandria.java.function.typed.ITypedFunction1;
-import com.g2forge.alexandria.java.function.typed.TypedMapIterator;
 
 import lombok.Getter;
 
@@ -128,7 +128,7 @@ public class BasicServiceLoader<S> implements IServiceLoader<S> {
 	@Getter
 	protected final Class<S> type;
 
-	protected final ITypedFunction1<S> instantiator;
+	protected final ITypeFunction1<S> instantiator;
 
 	protected final ClassLoader classLoader;
 
@@ -142,7 +142,7 @@ public class BasicServiceLoader<S> implements IServiceLoader<S> {
 		this(key, type, null, null);
 	}
 
-	public BasicServiceLoader(Class<?> key, Class<S> type, ClassLoader classLoader, ITypedFunction1<S> instantiator) {
+	public BasicServiceLoader(Class<?> key, Class<S> type, ClassLoader classLoader, ITypeFunction1<S> instantiator) {
 		this.key = key == null ? type : key;
 		this.type = Objects.requireNonNull(type, "Type cannot be null");
 		this.instantiator = instantiator == null ? new DefaultInstantiator<>(this) : instantiator;
@@ -164,7 +164,7 @@ public class BasicServiceLoader<S> implements IServiceLoader<S> {
 
 	@Override
 	public ICollection<? extends S> load() {
-		return ((DIteratorCollection<? extends S>) () -> new TypedMapIterator<>(find().iterator(), instantiator));
+		return ((DIteratorCollection<? extends S>) () -> new TypeMapIterator<>(find().iterator(), instantiator));
 	}
 
 	protected Iterator<String> parse(URL url) throws ServiceConfigurationError {

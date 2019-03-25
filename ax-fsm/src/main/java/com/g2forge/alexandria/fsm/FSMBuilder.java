@@ -12,7 +12,7 @@ import com.g2forge.alexandria.fsm.generic.value.Value1;
 import com.g2forge.alexandria.fsm.transition.ITransition;
 import com.g2forge.alexandria.java.function.IFunction2;
 import com.g2forge.alexandria.java.function.IPredicate2;
-import com.g2forge.alexandria.java.typed.IGeneric;
+import com.g2forge.alexandria.java.type.IGeneric;
 
 import lombok.AccessLevel;
 import lombok.Data;

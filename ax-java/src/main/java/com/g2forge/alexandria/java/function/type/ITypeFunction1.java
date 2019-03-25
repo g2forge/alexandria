@@ -1,10 +1,10 @@
-package com.g2forge.alexandria.java.function.typed;
+package com.g2forge.alexandria.java.function.type;
 
 import java.util.function.Supplier;
 
 @FunctionalInterface
-public interface ITypedFunction1<T> {
-	public static <T> ITypedFunction1<T> create(ITypedFunction1<T> function) {
+public interface ITypeFunction1<T> {
+	public static <T> ITypeFunction1<T> create(ITypeFunction1<T> function) {
 		return function;
 	}
 

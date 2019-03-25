@@ -1,9 +1,10 @@
-package com.g2forge.alexandria.java.typed;
+package com.g2forge.alexandria.java.type.ref;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 import com.g2forge.alexandria.annotations.message.TODO;
+import com.g2forge.alexandria.java.type.IDynamicType;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

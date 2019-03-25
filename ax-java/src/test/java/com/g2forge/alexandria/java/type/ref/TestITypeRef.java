@@ -1,10 +1,13 @@
-package com.g2forge.alexandria.java.typed;
+package com.g2forge.alexandria.java.type.ref;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.g2forge.alexandria.java.type.ref.ATypeRef;
+import com.g2forge.alexandria.java.type.ref.ITypeRef;
 
 public class TestITypeRef {
 	@Test

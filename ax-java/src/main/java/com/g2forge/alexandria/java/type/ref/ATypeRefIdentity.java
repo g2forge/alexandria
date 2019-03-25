@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.typed;
+package com.g2forge.alexandria.java.type.ref;
 
 public abstract class ATypeRefIdentity<T> implements ITypeRef<T> {
 	@Override

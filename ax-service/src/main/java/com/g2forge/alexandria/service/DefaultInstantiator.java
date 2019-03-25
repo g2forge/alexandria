@@ -4,11 +4,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import com.g2forge.alexandria.java.function.typed.ITypedFunction1;
+import com.g2forge.alexandria.java.function.type.ITypeFunction1;
 
 import lombok.Getter;
 
-public class DefaultInstantiator<S> implements ITypedFunction1<S> {
+public class DefaultInstantiator<S> implements ITypeFunction1<S> {
 	@Getter
 	protected final Class<?> key;
 

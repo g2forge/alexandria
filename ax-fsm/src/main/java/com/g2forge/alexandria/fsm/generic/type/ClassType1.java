@@ -1,6 +1,6 @@
 package com.g2forge.alexandria.fsm.generic.type;
 
-import com.g2forge.alexandria.java.typed.IGeneric;
+import com.g2forge.alexandria.java.type.IGeneric;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
