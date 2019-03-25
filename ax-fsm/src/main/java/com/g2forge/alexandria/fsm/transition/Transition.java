@@ -1,7 +1,7 @@
 package com.g2forge.alexandria.fsm.transition;
 
 import com.g2forge.alexandria.fsm.generic.IGeneric1;
-import com.g2forge.alexandria.fsm.type.IType1;
+import com.g2forge.alexandria.fsm.generic.type.IType1;
 import com.g2forge.alexandria.java.function.IFunction2;
 import com.g2forge.alexandria.java.function.IPredicate2;
 

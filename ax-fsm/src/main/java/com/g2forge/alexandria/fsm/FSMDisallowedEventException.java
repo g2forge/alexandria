@@ -1,6 +1,6 @@
 package com.g2forge.alexandria.fsm;
 
-import com.g2forge.alexandria.fsm.type.IType1;
+import com.g2forge.alexandria.fsm.generic.type.IType1;
 
 import lombok.Getter;
 

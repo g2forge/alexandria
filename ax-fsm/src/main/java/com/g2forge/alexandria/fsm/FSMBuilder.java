@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.g2forge.alexandria.fsm.generic.IGeneric1;
+import com.g2forge.alexandria.fsm.generic.type.IType1;
+import com.g2forge.alexandria.fsm.generic.value.IValue1;
+import com.g2forge.alexandria.fsm.generic.value.Value1;
 import com.g2forge.alexandria.fsm.transition.ITransition;
-import com.g2forge.alexandria.fsm.type.IType1;
-import com.g2forge.alexandria.fsm.value.IValue1;
-import com.g2forge.alexandria.fsm.value.Value1;
 import com.g2forge.alexandria.java.function.IFunction2;
 import com.g2forge.alexandria.java.function.IPredicate2;
 

@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.fsm.type;
+package com.g2forge.alexandria.fsm.generic.type;
 
 import com.g2forge.alexandria.fsm.generic.IGeneric1;
 

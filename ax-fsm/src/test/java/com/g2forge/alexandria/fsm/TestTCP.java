@@ -3,8 +3,8 @@ package com.g2forge.alexandria.fsm;
 import org.junit.Test;
 
 import com.g2forge.alexandria.fsm.generic.IGeneric1;
+import com.g2forge.alexandria.fsm.generic.value.IValue1;
 import com.g2forge.alexandria.fsm.transition.ITransition;
-import com.g2forge.alexandria.fsm.value.IValue1;
 
 import lombok.Data;
 

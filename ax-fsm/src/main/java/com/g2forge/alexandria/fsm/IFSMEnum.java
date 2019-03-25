@@ -1,8 +1,8 @@
 package com.g2forge.alexandria.fsm;
 
 import com.g2forge.alexandria.fsm.generic.IGeneric1;
-import com.g2forge.alexandria.fsm.type.IType1;
-import com.g2forge.alexandria.fsm.value.IValue1;
+import com.g2forge.alexandria.fsm.generic.type.IType1;
+import com.g2forge.alexandria.fsm.generic.value.IValue1;
 
 /**
  * Implementing this interface allows an enumeration to be used for the states or events of an FSM. It has the following parent types for the given reasons:

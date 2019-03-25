@@ -1,8 +1,8 @@
 package com.g2forge.alexandria.fsm;
 
 import com.g2forge.alexandria.fsm.generic.IGeneric1;
-import com.g2forge.alexandria.fsm.type.IType1;
-import com.g2forge.alexandria.fsm.value.IValue1;
+import com.g2forge.alexandria.fsm.generic.type.IType1;
+import com.g2forge.alexandria.fsm.generic.value.IValue1;
 import com.g2forge.alexandria.test.HAssert;
 
 import lombok.AllArgsConstructor;

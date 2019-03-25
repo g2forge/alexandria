@@ -1,7 +1,7 @@
-package com.g2forge.alexandria.fsm.value;
+package com.g2forge.alexandria.fsm.generic.value;
 
 import com.g2forge.alexandria.fsm.generic.IGeneric1;
-import com.g2forge.alexandria.fsm.type.IType1;
+import com.g2forge.alexandria.fsm.generic.type.IType1;
 
 public interface IValue1<G extends IGeneric1<T>, T> {
 	public static <G extends IGeneric1<Void>> IValue1<G, Void> of(Class<G> type) {
