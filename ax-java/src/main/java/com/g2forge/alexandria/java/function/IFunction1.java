@@ -14,7 +14,7 @@ public interface IFunction1<I, O> extends Function<I, O>, IFunction<O>, IConsume
 	public static <I, O> IFunction1<I, O> create(IFunction1<I, O> function) {
 		return function;
 	}
-	
+
 	public static <T> IFunction1<T, T> identity() {
 		return t -> t;
 	}
@@ -84,14 +84,14 @@ public interface IFunction1<I, O> extends Function<I, O>, IFunction<O>, IConsume
 			return retVal;
 		};
 	}
-	
+
 	public default IFunction1<I, O> wrap(IRunnable pre, IRunnable post) {
 		return i -> {
-			pre.run();
+			if (pre != null) pre.run();
 			try {
 				return apply(i);
 			} finally {
-				post.run();
+				if (post != null) post.run();
 			}
 		};
 	}
