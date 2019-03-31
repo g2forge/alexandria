@@ -32,6 +32,22 @@ public interface IPredicate2<I0, I1> extends BiPredicate<I0, I1>, IPredicate {
 		return input0 -> test(input0, input1);
 	}
 
+	public default <IX> IPredicate3<IX, I0, I1> ignore0() {
+		return (i0, i1, i2) -> test(i1, i2);
+	}
+
+	public default <IX> IPredicate3<I0, IX, I1> ignore1() {
+		return (i0, i1, i2) -> test(i0, i2);
+	}
+
+	public default <IX> IPredicate3<I0, I1, IX> ignore2() {
+		return (i0, i1, i2) -> test(i0, i1);
+	}
+
+	public default IPredicate2<I0, I1> negate() {
+		return (i0, i1) -> !test(i0, i1);
+	}
+
 	public default IConsumer2<I0, I1> noReturn() {
 		return (i0, i1) -> test(i0, i1);
 	}
