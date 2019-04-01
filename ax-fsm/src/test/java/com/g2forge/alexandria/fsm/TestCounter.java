@@ -28,10 +28,10 @@ public class TestCounter {
 	@Test
 	public void base() {
 		final FSMTester<Event, State, Integer> tester = new FSMTester<>(builder, State.Zero);
-		tester.assertOutput(0, Event.Up).assertState(State.One);
-		tester.assertOutput(1, value(Event.Up)).assertState(State.Two);
-		tester.assertOutput(null, Event.Down).assertStateType(State.One);
-		tester.assertOutput(null, Event.Down).assertStateType(State.Zero);
+		tester.assertEmission(0, Event.Up).assertState(State.One);
+		tester.assertEmission(1, value(Event.Up)).assertState(State.Two);
+		tester.assertEmission(null, Event.Down).assertStateType(State.One);
+		tester.assertEmission(null, Event.Down).assertStateType(State.Zero);
 	}
 
 	@Test(expected = FSMDisallowedEventException.class)

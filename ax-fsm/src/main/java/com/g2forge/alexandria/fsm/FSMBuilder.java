@@ -19,28 +19,28 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-public class FSMBuilder<Event extends IGeneric<?>, State extends IGeneric<?>, Output> {
+public class FSMBuilder<Event extends IGeneric<?>, State extends IGeneric<?>, Emission> {
 	@Getter(AccessLevel.PROTECTED)
-	protected static class FSM<Event extends IGeneric<?>, State extends IGeneric<?>, Output> implements IFSM<Event, State, Output> {
-		protected final Map<Key, List<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Output>>> map;
+	protected static class FSM<Event extends IGeneric<?>, State extends IGeneric<?>, Emission> implements IFSM<Event, State, Emission> {
+		protected final Map<Key, List<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Emission>>> map;
 
 		@Getter(AccessLevel.PUBLIC)
 		protected IFSMValue<? extends State, ?> state;
 
-		public FSM(Map<Key, List<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Output>>> map, IFSMValue<? extends State, ?> initial) {
+		public FSM(Map<Key, List<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Emission>>> map, IFSMValue<? extends State, ?> initial) {
 			this.map = new LinkedHashMap<>(map.size());
-			for (Map.Entry<Key, List<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Output>>> entry : map.entrySet()) {
+			for (Map.Entry<Key, List<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Emission>>> entry : map.entrySet()) {
 				this.map.put(entry.getKey(), new ArrayList<>(entry.getValue()));
 			}
 			this.state = initial;
 		}
 
 		@Override
-		public Output fire(IFSMValue<? extends Event, ?> event) {
+		public Emission fire(IFSMValue<? extends Event, ?> event) {
 			final IFSMValue<? extends State, ?> state = getState();
 
-			final List<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Output>> transitions = getMap().get(new Key(state.getType(), event.getType()));
-			if ((transitions != null) && !transitions.isEmpty()) for (IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Output> transition : transitions) {
+			final List<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Emission>> transitions = getMap().get(new Key(state.getType(), event.getType()));
+			if ((transitions != null) && !transitions.isEmpty()) for (IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Emission> transition : transitions) {
 				final IPredicate2<?, ?> guard = transition.getGuard();
 				if (guard != null) {
 					@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -55,10 +55,10 @@ public class FSMBuilder<Event extends IGeneric<?>, State extends IGeneric<?>, Ou
 				final FSMValue<? extends State, ?> next = new FSMValue(transition.getNext(), argumentValue);
 				this.state = optimize(next);
 
-				final IFunction2<?, ?, ?> outputFunction = transition.getOutput();
+				final IFunction2<?, ?, ?> emitFunction = transition.getEmit();
 				@SuppressWarnings({ "unchecked", "rawtypes" })
-				final Output outputValue = (outputFunction != null) ? (Output) ((IFunction2) outputFunction).apply(state.getValue(), event.getValue()) : null;
-				return outputValue;
+				final Emission emissionValue = (emitFunction != null) ? (Emission) ((IFunction2) emitFunction).apply(state.getValue(), event.getValue()) : null;
+				return emissionValue;
 			}
 			throw new FSMDisallowedEventException(state.getType(), event.getType());
 		}
@@ -86,7 +86,7 @@ public class FSMBuilder<Event extends IGeneric<?>, State extends IGeneric<?>, Ou
 		}
 	}
 
-	protected Map<Key, List<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Output>>> map = new LinkedHashMap<>();
+	protected Map<Key, List<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Emission>>> map = new LinkedHashMap<>();
 
 	protected boolean used = true;
 
@@ -97,9 +97,9 @@ public class FSMBuilder<Event extends IGeneric<?>, State extends IGeneric<?>, Ou
 	 * @param initial The initial state for the resulting FSM.
 	 * @return A finite state machine.
 	 */
-	public IFSM<Event, State, Output> build(IFSMValue<? extends State, ?> initial) {
+	public IFSM<Event, State, Emission> build(IFSMValue<? extends State, ?> initial) {
 		used = true;
-		return new FSM<Event, State, Output>(map, initial);
+		return new FSM<Event, State, Emission>(map, initial);
 	}
 
 	/**
@@ -108,17 +108,17 @@ public class FSMBuilder<Event extends IGeneric<?>, State extends IGeneric<?>, Ou
 	 * @param transition The transition to add to this builder.
 	 * @return <code>this</code>
 	 */
-	public FSMBuilder<Event, State, Output> transition(IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Output> transition) {
+	public FSMBuilder<Event, State, Emission> transition(IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Emission> transition) {
 		final Key key = new Key(transition);
 		if (used) {
 			// If we already constructed FSMs with the map, then create a new one.
 			map = new LinkedHashMap<>(map);
 			used = false;
 		}
-		final List<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Output>> transitions = map.computeIfAbsent(key, ignore -> new ArrayList<>());
+		final List<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Emission>> transitions = map.computeIfAbsent(key, ignore -> new ArrayList<>());
 
 		// Check for duplicates
-		final Optional<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Output>> duplicate = transitions.stream().filter(t -> (t.getGuard() == null) || (transition.getGuard() == null) || t.getGuard().equals(transition.getGuard())).findAny();
+		final Optional<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Emission>> duplicate = transitions.stream().filter(t -> (t.getGuard() == null) || (transition.getGuard() == null) || t.getGuard().equals(transition.getGuard())).findAny();
 		if (duplicate.isPresent()) throw new IllegalArgumentException(String.format("Duplicate transitions with key %s: %s and %s!", key, transition, duplicate.get()));
 
 		// Add the new transition
