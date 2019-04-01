@@ -42,7 +42,7 @@ public class TestTCP {
 		LastAck
 	}
 
-	protected static final FSMBuilder<IEvent<?>, State, ?> builder;
+	protected static final FSMBuilder<IEvent<?>, State, ?, Object> builder;
 
 	static {
 		builder = new FSMBuilder<>();
@@ -88,7 +88,7 @@ public class TestTCP {
 
 	@Test
 	public void closeActive() {
-		final FSMTester<IEvent<?>, State, ?> fsm = new FSMTester<>(builder, State.Established);
+		final FSMTester<IEvent<?>, State, ?, ?> fsm = new FSMTester<>(builder, State.Established);
 		fsm.fire(HFSM.value(IClose.class)).assertStateType(State.FinWait1);
 		fsm.fire(HFSM.value(IReceive.class, new Packet(false, true, false))).assertStateType(State.FinWait2);
 		fsm.fire(HFSM.value(IReceive.class, new Packet(false, false, true))).assertStateType(State.TimeWait);
@@ -97,7 +97,7 @@ public class TestTCP {
 
 	@Test
 	public void closePassive() {
-		final FSMTester<IEvent<?>, State, ?> fsm = new FSMTester<>(builder, State.Established);
+		final FSMTester<IEvent<?>, State, ?, ?> fsm = new FSMTester<>(builder, State.Established);
 		fsm.fire(HFSM.value(IReceive.class, new Packet(false, false, true))).assertStateType(State.CloseWait);
 		fsm.fire(HFSM.value(IClose.class)).assertStateType(State.LastAck);
 		fsm.fire(HFSM.value(IReceive.class, new Packet(false, true, false))).assertStateType(State.Closed);
@@ -105,7 +105,7 @@ public class TestTCP {
 
 	@Test
 	public void closeSimultaneous() {
-		final FSMTester<IEvent<?>, State, ?> fsm = new FSMTester<>(builder, State.Established);
+		final FSMTester<IEvent<?>, State, ?, ?> fsm = new FSMTester<>(builder, State.Established);
 		fsm.fire(HFSM.value(IClose.class)).assertStateType(State.FinWait1);
 		fsm.fire(HFSM.value(IReceive.class, new Packet(false, false, true))).assertStateType(State.Closing);
 		fsm.fire(HFSM.value(IReceive.class, new Packet(false, true, false))).assertStateType(State.TimeWait);
@@ -114,14 +114,14 @@ public class TestTCP {
 
 	@Test
 	public void openActiveSimple() {
-		final FSMTester<IEvent<?>, State, ?> fsm = new FSMTester<>(builder, State.Closed);
+		final FSMTester<IEvent<?>, State, ?, ?> fsm = new FSMTester<>(builder, State.Closed);
 		fsm.fire(HFSM.value(new Open("thingy", 10))).assertStateType(State.SynSent);
 		fsm.fire(HFSM.value(IReceive.class, new Packet(true, true, false))).assertStateType(State.Established);
 	}
 
 	@Test
 	public void openActiveSplit() {
-		final FSMTester<IEvent<?>, State, ?> fsm = new FSMTester<>(builder, State.Closed);
+		final FSMTester<IEvent<?>, State, ?, ?> fsm = new FSMTester<>(builder, State.Closed);
 		fsm.fire(HFSM.value(new Open("thingy", 10))).assertStateType(State.SynSent);
 		fsm.fire(HFSM.value(IReceive.class, new Packet(true, false, false))).assertStateType(State.SynReceived);
 		fsm.fire(HFSM.value(IReceive.class, new Packet(false, true, false))).assertStateType(State.Established);
@@ -129,7 +129,7 @@ public class TestTCP {
 
 	@Test
 	public void openPassive() {
-		final FSMTester<IEvent<?>, State, ?> fsm = new FSMTester<>(builder, State.Closed);
+		final FSMTester<IEvent<?>, State, ?, ?> fsm = new FSMTester<>(builder, State.Closed);
 		fsm.fire(HFSM.value(new Open(null, 0))).assertStateType(State.Listen);
 		fsm.fire(HFSM.value(IReceive.class, new Packet(true, false, false))).assertStateType(State.SynReceived);
 		fsm.fire(HFSM.value(IReceive.class, new Packet(false, true, false))).assertStateType(State.Established);

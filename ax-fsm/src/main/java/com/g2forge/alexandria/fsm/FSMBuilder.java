@@ -10,6 +10,7 @@ import com.g2forge.alexandria.fsm.transition.IFSMTransition;
 import com.g2forge.alexandria.fsm.value.FSMValue;
 import com.g2forge.alexandria.fsm.value.IFSMType;
 import com.g2forge.alexandria.fsm.value.IFSMValue;
+import com.g2forge.alexandria.java.function.IFunction1;
 import com.g2forge.alexandria.java.function.IFunction2;
 import com.g2forge.alexandria.java.function.IPredicate2;
 import com.g2forge.alexandria.java.type.IGeneric;
@@ -19,20 +20,27 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-public class FSMBuilder<Event extends IGeneric<?>, State extends IGeneric<?>, Emission> {
+public class FSMBuilder<Event extends IGeneric<?>, State extends IGeneric<?>, Emission, Output> {
+	public interface OutputBuilder<State extends IGeneric<StateArgument>, StateArgument> {
+		public IFSMValue<State, StateArgument> get();
+	}
+	
 	@Getter(AccessLevel.PROTECTED)
-	protected static class FSM<Event extends IGeneric<?>, State extends IGeneric<?>, Emission> implements IFSM<Event, State, Emission> {
+	protected static class FSM<Event extends IGeneric<?>, State extends IGeneric<?>, Emission, Output> implements IFSM<Event, State, Emission, Output> {
 		protected final Map<Key, List<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Emission>>> map;
 
 		@Getter(AccessLevel.PUBLIC)
 		protected IFSMValue<? extends State, ?> state;
 
-		public FSM(Map<Key, List<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Emission>>> map, IFSMValue<? extends State, ?> initial) {
+		protected final IFunction1<? super IFSMValue<? extends State, ?>, ? extends Output> outputFunction;
+
+		public FSM(Map<Key, List<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Emission>>> map, IFSMValue<? extends State, ?> initial, IFunction1<? super IFSMValue<? extends State, ?>, ? extends Output> output) {
 			this.map = new LinkedHashMap<>(map.size());
 			for (Map.Entry<Key, List<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Emission>>> entry : map.entrySet()) {
 				this.map.put(entry.getKey(), new ArrayList<>(entry.getValue()));
 			}
 			this.state = initial;
+			this.outputFunction = output;
 		}
 
 		@Override
@@ -63,6 +71,12 @@ public class FSMBuilder<Event extends IGeneric<?>, State extends IGeneric<?>, Em
 			throw new FSMDisallowedEventException(state.getType(), event.getType());
 		}
 
+		@Override
+		public Output getOutput() {
+			final IFSMValue<? extends State, ?> state = getState();
+			return getOutputFunction().apply(state);
+		}
+
 		protected IFSMValue<? extends State, ?> optimize(final IFSMValue<? extends State, ?> value) {
 			if (value.getType() instanceof IFSMValue) {
 				@SuppressWarnings("unchecked")
@@ -90,6 +104,8 @@ public class FSMBuilder<Event extends IGeneric<?>, State extends IGeneric<?>, Em
 
 	protected boolean used = true;
 
+	protected IFunction1<? super IFSMValue<? extends State, ?>, ? extends Output> output;
+
 	/**
 	 * Create an instance of this finite state machine, starting in the specified initial state. Note that further changes to this builder after a call to this
 	 * method will not affect the FSM, though they will affect FSMs constucted in the future.
@@ -97,9 +113,14 @@ public class FSMBuilder<Event extends IGeneric<?>, State extends IGeneric<?>, Em
 	 * @param initial The initial state for the resulting FSM.
 	 * @return A finite state machine.
 	 */
-	public IFSM<Event, State, Emission> build(IFSMValue<? extends State, ?> initial) {
+	public IFSM<Event, State, Emission, Output> build(IFSMValue<? extends State, ?> initial) {
 		used = true;
-		return new FSM<Event, State, Emission>(map, initial);
+		return new FSM<>(map, initial, output);
+	}
+
+	public FSMBuilder<Event, State, Emission, Output> output(IFunction1<? super IFSMValue<? extends State, ?>, ? extends Output> output) {
+		this.output = output;
+		return this;
 	}
 
 	/**
@@ -108,7 +129,7 @@ public class FSMBuilder<Event extends IGeneric<?>, State extends IGeneric<?>, Em
 	 * @param transition The transition to add to this builder.
 	 * @return <code>this</code>
 	 */
-	public FSMBuilder<Event, State, Emission> transition(IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Emission> transition) {
+	public FSMBuilder<Event, State, Emission, Output> transition(IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Emission> transition) {
 		final Key key = new Key(transition);
 		if (used) {
 			// If we already constructed FSMs with the map, then create a new one.
