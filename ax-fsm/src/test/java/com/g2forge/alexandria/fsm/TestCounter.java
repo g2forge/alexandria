@@ -1,7 +1,9 @@
 package com.g2forge.alexandria.fsm;
 
+import static com.g2forge.alexandria.fsm.HFSM.transition;
+import static com.g2forge.alexandria.fsm.HFSM.value;
+
 import org.junit.Test;
-import static com.g2forge.alexandria.fsm.HFSM.*;
 
 public class TestCounter {
 	public static enum Event implements IFSMEnum<Event> {
@@ -15,23 +17,23 @@ public class TestCounter {
 		Two;
 	}
 
-	protected static final FSMBuilder<Event, State, Integer> builder;
+	protected static final FSMBuilder<Event, State, Object, Object> builder;
 
 	static {
-		builder = new FSMBuilder<Event, State, Integer>();
-		builder.transition(transition(State.Zero, Event.Up, State.One, 0));
-		builder.transition(transition(State.One, Event.Up, State.Two, 1));
+		builder = new FSMBuilder<>();
+		builder.transition(transition(State.Zero, Event.Up, State.One));
+		builder.transition(transition(State.One, Event.Up, State.Two));
 		builder.transition(transition(State.Two, Event.Down, State.One));
 		builder.transition(transition(State.One, Event.Down, State.Zero));
 	}
 
 	@Test
 	public void base() {
-		final FSMTester<Event, State, Integer> tester = new FSMTester<>(builder, State.Zero);
-		tester.assertOutput(0, Event.Up).assertState(State.One);
-		tester.assertOutput(1, value(Event.Up)).assertState(State.Two);
-		tester.assertOutput(null, Event.Down).assertStateType(State.One);
-		tester.assertOutput(null, Event.Down).assertStateType(State.Zero);
+		final FSMTester<Event, State, Object, Object> tester = new FSMTester<>(builder, State.Zero);
+		tester.fire(Event.Up).assertState(State.One);
+		tester.fire(value(Event.Up)).assertState(State.Two);
+		tester.fire(Event.Down).assertStateType(State.One);
+		tester.fire(Event.Down).assertStateType(State.Zero);
 	}
 
 	@Test(expected = FSMDisallowedEventException.class)

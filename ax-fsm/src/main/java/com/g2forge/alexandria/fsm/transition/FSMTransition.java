@@ -20,7 +20,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class FSMTransition<CurrentState extends IGeneric<CurrentArgument>, CurrentArgument, Event extends IGeneric<EventArgument>, EventArgument, NextState extends IGeneric<NextArgument>, NextArgument, Output> implements IFSMTransition<CurrentState, CurrentArgument, Event, EventArgument, NextState, NextArgument, Output> {
+public class FSMTransition<CurrentState extends IGeneric<CurrentArgument>, CurrentArgument, Event extends IGeneric<EventArgument>, EventArgument, NextState extends IGeneric<NextArgument>, NextArgument, Emission> implements IFSMTransition<CurrentState, CurrentArgument, Event, EventArgument, NextState, NextArgument, Emission> {
 	protected final IFSMType<CurrentState, CurrentArgument> current;
 
 	protected final IFSMType<Event, EventArgument> event;
@@ -31,5 +31,5 @@ public class FSMTransition<CurrentState extends IGeneric<CurrentArgument>, Curre
 
 	protected final IFunction2<? super CurrentArgument, ? super EventArgument, ? extends NextArgument> argument;
 
-	protected final IFunction2<? super CurrentArgument, ? super EventArgument, ? extends Output> output;
+	protected final IFunction2<? super CurrentArgument, ? super EventArgument, ? extends Emission> emit;
 }

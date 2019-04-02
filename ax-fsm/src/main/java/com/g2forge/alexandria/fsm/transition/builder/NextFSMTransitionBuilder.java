@@ -36,11 +36,11 @@ public class NextFSMTransitionBuilder<CurrentState extends IGeneric<CurrentArgum
 		return this;
 	}
 
-	public <Output> IFSMTransition<CurrentState, CurrentArgument, Event, EventArgument, NextState, NextArgument, Output> build() {
-		return this.<Output>output(null).build();
+	public <Emission> IFSMTransition<CurrentState, CurrentArgument, Event, EventArgument, NextState, NextArgument, Emission> build() {
+		return this.<Emission>emission(null).build();
 	}
 
-	public <Output> OutputFSMTransitionBuilder<CurrentState, CurrentArgument, Event, EventArgument, NextState, NextArgument, Output> output(IFunction2<? super CurrentArgument, ? super EventArgument, ? extends Output> output) {
-		return new OutputFSMTransitionBuilder<>(getCurrent(), getEvent(), getGuard(), getNext(), getArgument(), output);
+	public <Emission> EmitFSMTransitionBuilder<CurrentState, CurrentArgument, Event, EventArgument, NextState, NextArgument, Emission> emission(IFunction2<? super CurrentArgument, ? super EventArgument, ? extends Emission> emission) {
+		return new EmitFSMTransitionBuilder<>(getCurrent(), getEvent(), getGuard(), getNext(), getArgument(), emission);
 	}
 }
