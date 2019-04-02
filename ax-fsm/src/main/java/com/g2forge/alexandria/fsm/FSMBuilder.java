@@ -21,30 +21,35 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 public class FSMBuilder<Event extends IGeneric<?>, State extends IGeneric<?>, Emission, Output> {
-	public interface OutputBuilder<State extends IGeneric<StateArgument>, StateArgument> {
-		public IFSMValue<State, StateArgument> get();
-	}
-	
 	@Getter(AccessLevel.PROTECTED)
 	protected static class FSM<Event extends IGeneric<?>, State extends IGeneric<?>, Emission, Output> implements IFSM<Event, State, Emission, Output> {
 		protected final Map<Key, List<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Emission>>> map;
 
-		@Getter(AccessLevel.PUBLIC)
 		protected IFSMValue<? extends State, ?> state;
 
 		protected final IFunction1<? super IFSMValue<? extends State, ?>, ? extends Output> outputFunction;
 
-		public FSM(Map<Key, List<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Emission>>> map, IFSMValue<? extends State, ?> initial, IFunction1<? super IFSMValue<? extends State, ?>, ? extends Output> output) {
+		protected final boolean threadSafe;
+
+		public FSM(Map<Key, List<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Emission>>> map, IFSMValue<? extends State, ?> initial, IFunction1<? super IFSMValue<? extends State, ?>, ? extends Output> output, boolean threadSafe) {
 			this.map = new LinkedHashMap<>(map.size());
 			for (Map.Entry<Key, List<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Emission>>> entry : map.entrySet()) {
 				this.map.put(entry.getKey(), new ArrayList<>(entry.getValue()));
 			}
 			this.state = initial;
 			this.outputFunction = output;
+			this.threadSafe = threadSafe;
 		}
 
 		@Override
 		public Emission fire(IFSMValue<? extends Event, ?> event) {
+			if (threadSafe) synchronized (this) {
+				return fireInternal(event);
+			}
+			else return fireInternal(event);
+		}
+
+		protected Emission fireInternal(IFSMValue<? extends Event, ?> event) {
 			final IFSMValue<? extends State, ?> state = getState();
 
 			final List<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Emission>> transitions = getMap().get(new Key(state.getType(), event.getType()));
@@ -77,6 +82,13 @@ public class FSMBuilder<Event extends IGeneric<?>, State extends IGeneric<?>, Em
 			return getOutputFunction().apply(state);
 		}
 
+		public IFSMValue<? extends State, ?> getState() {
+			if (threadSafe) synchronized (this) {
+				return state;
+			}
+			else return state;
+		}
+
 		protected IFSMValue<? extends State, ?> optimize(final IFSMValue<? extends State, ?> value) {
 			if (value.getType() instanceof IFSMValue) {
 				@SuppressWarnings("unchecked")
@@ -100,6 +112,10 @@ public class FSMBuilder<Event extends IGeneric<?>, State extends IGeneric<?>, Em
 		}
 	}
 
+	public interface OutputBuilder<State extends IGeneric<StateArgument>, StateArgument> {
+		public IFSMValue<State, StateArgument> get();
+	}
+
 	protected Map<Key, List<IFSMTransition<? extends State, ?, ? extends Event, ?, ? extends State, ?, ? extends Emission>>> map = new LinkedHashMap<>();
 
 	protected boolean used = true;
@@ -113,9 +129,13 @@ public class FSMBuilder<Event extends IGeneric<?>, State extends IGeneric<?>, Em
 	 * @param initial The initial state for the resulting FSM.
 	 * @return A finite state machine.
 	 */
-	public IFSM<Event, State, Emission, Output> build(IFSMValue<? extends State, ?> initial) {
+	public IFSM<Event, State, Emission, Output> build(IFSMValue<? extends State, ?> initial, boolean threadSafe) {
 		used = true;
-		return new FSM<>(map, initial, output);
+		return new FSM<>(map, initial, output, threadSafe);
+	}
+
+	public IFSM<Event, State, Emission, Output> build(IFSMValue<? extends State, ?> initial) {
+		return build(initial, false);
 	}
 
 	public FSMBuilder<Event, State, Emission, Output> output(IFunction1<? super IFSMValue<? extends State, ?>, ? extends Output> output) {
