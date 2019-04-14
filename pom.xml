@@ -38,6 +38,7 @@
 		<module>ax-filesystem-test</module>
 		<module>ax-filesystem-memory</module>
 		<module>ax-fsm</module>
+		<module>ax-fsm-test</module>
 	</modules>
 
 	<profiles>
