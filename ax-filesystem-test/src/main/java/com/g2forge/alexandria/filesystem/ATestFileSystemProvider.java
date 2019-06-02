@@ -27,6 +27,8 @@ import java.nio.file.attribute.FileTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.junit.Assert;
@@ -45,6 +47,8 @@ import com.g2forge.alexandria.test.HAssert;
 import com.g2forge.alexandria.test.HMatchers;
 
 public abstract class ATestFileSystemProvider {
+	protected static final Pattern DISABLE_LAST_ACCESS_PATTERN = Pattern.compile("DisableLastAccess = ([0-9]+).*");
+
 	protected static final ISerializableFunction1<BasicFileAttributes, ?>[] basicFileAttributeFunctions = FieldMatcher.create(BasicFileAttributes::creationTime, BasicFileAttributes::lastModifiedTime, BasicFileAttributes::lastAccessTime, BasicFileAttributes::isDirectory, BasicFileAttributes::isRegularFile, BasicFileAttributes::isSymbolicLink, BasicFileAttributes::isOther, BasicFileAttributes::size);
 
 	protected static final ISerializableFunction1<BasicFileAttributes, ?>[] basicFileAttributeFunctionsAfterCopy = FieldMatcher.create(BasicFileAttributes::lastModifiedTime, BasicFileAttributes::isDirectory, BasicFileAttributes::isRegularFile, BasicFileAttributes::isSymbolicLink, BasicFileAttributes::isOther, BasicFileAttributes::size);
@@ -70,7 +74,10 @@ public abstract class ATestFileSystemProvider {
 				final Process process = builder.start();
 				try {
 					try (final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-						return reader.readLine().trim().endsWith("0");
+						final Matcher matcher = DISABLE_LAST_ACCESS_PATTERN.matcher(reader.readLine().trim());
+						if (!matcher.matches()) return false;
+						final int value = Integer.valueOf(matcher.group(1));
+						return (value == 0);
 					}
 				} finally {
 					try {
@@ -288,7 +295,7 @@ public abstract class ATestFileSystemProvider {
 		final Path path = createPath("a.txt");
 		final String[] lines = { "abc", "def", "ghi" };
 		for (int i = 0; i < lines.length; i++) {
-			try (final FileTimeTester tester = i == 0 ? FileTimeTester.all(path) : FileTimeTester.modify(path, supportLastAccess())) {
+			try (final FileTimeTester tester = i == 0 ? FileTimeTester.all(path) : FileTimeTester.modify(path, true)) {
 				Files.newBufferedWriter(path, StandardOpenOption.APPEND, StandardOpenOption.CREATE).append(lines[i]).append(System.lineSeparator()).close();
 			}
 
@@ -525,7 +532,7 @@ public abstract class ATestFileSystemProvider {
 
 	/**
 	 * Test if this file system is expected to support last access timestampes. This allows {@link ATestFileSystemProvider} to test file systems either way.
-	 * Note that the return value of this metho may vary from test to test.
+	 * Note that the return value of this method may vary from test to test.
 	 * 
 	 * @return <code>true</code> if the file system being used for this test is expected to support last access time.
 	 * @see #isSupportsLastAccess(Path)
