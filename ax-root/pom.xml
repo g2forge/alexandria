@@ -17,8 +17,8 @@
 		<mavencompiler.version>3.7.0</mavencompiler.version>
 		<mavencompiler.javaversion>1.8</mavencompiler.javaversion>
 
-		<lombok.version>1.16.18</lombok.version>
-		<lombok-maven.version>${lombok.version}.1</lombok-maven.version>
+		<lombok.version>1.18.6</lombok.version>
+		<lombok-maven.version>${lombok.version}.0</lombok-maven.version>
 		<slf4j.version>1.7.21</slf4j.version>
 		<junit.version>4.12</junit.version>
 		<hamcrest.version>1.3</hamcrest.version>

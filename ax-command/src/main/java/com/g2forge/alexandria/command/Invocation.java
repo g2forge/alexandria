@@ -16,7 +16,7 @@ import lombok.Data;
 import lombok.Singular;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 public class Invocation<I, O> {
 	public static final Invocation<InputStream, PrintStream> of(String... args) {
