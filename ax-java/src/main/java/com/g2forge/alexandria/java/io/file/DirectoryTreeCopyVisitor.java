@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.io;
+package com.g2forge.alexandria.java.io.file;
 
 import java.io.IOException;
 import java.nio.file.CopyOption;
@@ -9,6 +9,8 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.function.Function;
+
+import com.g2forge.alexandria.java.io.RuntimeIOException;
 
 import lombok.AllArgsConstructor;
 

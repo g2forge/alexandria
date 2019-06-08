@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.io;
+package com.g2forge.alexandria.java.io.file;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +17,8 @@ import java.util.zip.ZipOutputStream;
 
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.core.marker.Helpers;
+import com.g2forge.alexandria.java.io.HIO;
+import com.g2forge.alexandria.java.io.RuntimeIOException;
 
 import lombok.Data;
 import lombok.experimental.UtilityClass;
