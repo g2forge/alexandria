@@ -7,7 +7,7 @@ import com.g2forge.alexandria.fsm.value.ClassFSMType;
 import com.g2forge.alexandria.fsm.value.FSMValue;
 import com.g2forge.alexandria.fsm.value.IFSMType;
 import com.g2forge.alexandria.fsm.value.IFSMValue;
-import com.g2forge.alexandria.java.marker.Helpers;
+import com.g2forge.alexandria.java.core.marker.Helpers;
 import com.g2forge.alexandria.java.type.IGeneric;
 
 import lombok.experimental.UtilityClass;

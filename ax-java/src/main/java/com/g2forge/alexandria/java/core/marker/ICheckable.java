@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.core.iface;
+package com.g2forge.alexandria.java.core.marker;
 
 /**
  * Represents a class which can be checked, generally for consistency or internal state errors.

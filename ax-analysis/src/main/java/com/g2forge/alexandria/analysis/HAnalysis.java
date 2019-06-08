@@ -1,6 +1,6 @@
 package com.g2forge.alexandria.analysis;
 
-import com.g2forge.alexandria.java.marker.Helpers;
+import com.g2forge.alexandria.java.core.marker.Helpers;
 
 import lombok.experimental.UtilityClass;
 

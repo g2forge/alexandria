@@ -2,7 +2,7 @@ package com.g2forge.alexandria.java.core.helpers;
 
 import java.net.URL;
 
-import com.g2forge.alexandria.java.marker.Helpers;
+import com.g2forge.alexandria.java.core.marker.Helpers;
 
 import lombok.experimental.UtilityClass;
 

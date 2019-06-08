@@ -6,8 +6,8 @@ import org.junit.Assert;
 
 import com.g2forge.alexandria.java.function.IConsumer2;
 import com.g2forge.alexandria.java.function.IThrowRunnable;
+import com.g2forge.alexandria.java.core.marker.Helpers;
 import com.g2forge.alexandria.java.function.IConsumer1;
-import com.g2forge.alexandria.java.marker.Helpers;
 
 import lombok.experimental.UtilityClass;
 

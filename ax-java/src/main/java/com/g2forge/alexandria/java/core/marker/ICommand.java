@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.core.iface;
+package com.g2forge.alexandria.java.core.marker;
 
 /**
  * A marker interface for any class with a <code>main()</code> method.

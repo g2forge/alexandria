@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.marker;
+package com.g2forge.alexandria.java.core.marker;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -7,8 +7,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Used to indicate that a type is a mock of something.
+ * Use this annotation on types which will be compared using the identity functions.
  */
 @Retention(RUNTIME)
 @Target(TYPE)
-public @interface Mock {}
+public @interface Identity {}

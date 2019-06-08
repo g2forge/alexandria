@@ -2,7 +2,7 @@ package com.g2forge.alexandria.java.core;
 
 import java.util.Comparator;
 
-import com.g2forge.alexandria.java.core.iface.ISingleton;
+import com.g2forge.alexandria.java.core.marker.ISingleton;
 
 public class ComparableComparator<T extends Comparable<? super T>> implements Comparator<T>, ISingleton {
 	protected static final ComparableComparator<?> singleton = new ComparableComparator<>();

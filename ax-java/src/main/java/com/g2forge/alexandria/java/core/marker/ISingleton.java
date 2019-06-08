@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.core.iface;
+package com.g2forge.alexandria.java.core.marker;
 
 import com.g2forge.alexandria.annotations.message.TODO;
 

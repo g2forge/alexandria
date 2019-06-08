@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.marker;
+package com.g2forge.alexandria.java.core.marker;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import com.g2forge.alexandria.java.concurrent.HConcurrent;
-import com.g2forge.alexandria.java.marker.Helpers;
+import com.g2forge.alexandria.java.core.marker.Helpers;
 
 import lombok.experimental.UtilityClass;
 

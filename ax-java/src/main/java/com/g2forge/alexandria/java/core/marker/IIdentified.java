@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.core.iface;
+package com.g2forge.alexandria.java.core.marker;
 
 /**
  * A marker interface for any class which properly implements the {@link Object#equals(Object)} and {@link Object#hashCode()} methods. Note that the proper

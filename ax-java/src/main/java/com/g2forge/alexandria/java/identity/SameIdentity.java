@@ -1,6 +1,6 @@
 package com.g2forge.alexandria.java.identity;
 
-import com.g2forge.alexandria.java.core.iface.ISingleton;
+import com.g2forge.alexandria.java.core.marker.ISingleton;
 
 /**
  * Identity based on same-ness of objects. Two objects must literally be the same object (not just have similar field values or something) in memory for this
