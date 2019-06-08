@@ -18,7 +18,7 @@ public class Slot<T> implements ISlotPF<T> {
 
 	protected final IPromise<T> promise = new IPromise<T>() {
 		@Override
-		public void invoke() {
+		public void run() {
 			latch.countDown();
 		}
 
