@@ -10,7 +10,8 @@ import com.g2forge.alexandria.java.tuple.implementations.Tuple2GSO;
 import lombok.AllArgsConstructor;
 
 /**
- * Delegate to another function, and for each invocation inform a consumer about both the input and output.
+ * Delegate to another function, and for each invocation inform a consumer about both the input and output. Before mapping a {@link java.util.stream.Stream}
+ * over this function, consider using {@link java.util.stream.Stream#peek(Consumer)}.
  * 
  * @param <I> The input type.
  * @param <O> The output type.
