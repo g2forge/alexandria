@@ -1,5 +1,8 @@
 package com.g2forge.alexandria.java.core.iface;
 
+/**
+ * A marker interface for any class with a <code>main()</code> method.
+ */
 public interface ICommand {
 	public static final int SUCCESS = 0;
 
