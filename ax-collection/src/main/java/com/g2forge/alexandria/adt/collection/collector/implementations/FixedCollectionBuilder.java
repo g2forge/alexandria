@@ -28,7 +28,7 @@ public class FixedCollectionBuilder<C, T> implements ICollectionBuilder<C, T> {
 	}
 
 	@Override
-	public C create() {
+	public C get() {
 		return collectionReturn;
 	}
 }

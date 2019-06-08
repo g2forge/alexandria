@@ -32,7 +32,7 @@ public class CollectionCollectionBuilder<C extends Collection<? super T>, T> imp
 	}
 
 	@Override
-	public C create() {
+	public C get() {
 		return collection;
 	}
 }

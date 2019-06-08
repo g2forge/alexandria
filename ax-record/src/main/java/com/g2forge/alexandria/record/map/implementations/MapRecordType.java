@@ -25,7 +25,7 @@ public class MapRecordType implements IRecordType<MapRecord> {
 	}
 
 	@Override
-	public MapRecord create() {
+	public MapRecord get() {
 		return new MapRecord();
 	}
 

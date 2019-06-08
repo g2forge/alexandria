@@ -13,7 +13,7 @@ public class TestMapRecord {
 	public void test() {
 		final MapFieldType<String> fieldType = new MapFieldType<>("field0");
 		final MapRecordType recordType = new MapRecordType(fieldType);
-		final MapRecord record = recordType.create();
+		final MapRecord record = recordType.get();
 
 		String value = "foo";
 		final ITuple1GS<String> field = fieldType.apply(record).getAccessor();
