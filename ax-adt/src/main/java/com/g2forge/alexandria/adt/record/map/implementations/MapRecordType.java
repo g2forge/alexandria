@@ -1,12 +1,12 @@
-package com.g2forge.alexandria.record.map.implementations;
+package com.g2forge.alexandria.adt.record.map.implementations;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import com.g2forge.alexandria.adt.record.IFieldType;
+import com.g2forge.alexandria.adt.record.IRecordType;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
-import com.g2forge.alexandria.record.IFieldType;
-import com.g2forge.alexandria.record.IRecordType;
 
 public class MapRecordType implements IRecordType<MapRecord> {
 	protected final Collection<MapFieldType<?>> fieldTypes;

@@ -1,12 +1,12 @@
-package com.g2forge.alexandria.record.map;
+package com.g2forge.alexandria.adt.record.map;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.g2forge.alexandria.adt.record.map.implementations.MapFieldType;
+import com.g2forge.alexandria.adt.record.map.implementations.MapRecord;
+import com.g2forge.alexandria.adt.record.map.implementations.MapRecordType;
 import com.g2forge.alexandria.java.adt.tuple.ITuple1GS;
-import com.g2forge.alexandria.record.map.implementations.MapFieldType;
-import com.g2forge.alexandria.record.map.implementations.MapRecord;
-import com.g2forge.alexandria.record.map.implementations.MapRecordType;
 
 public class TestMapRecord {
 	@Test

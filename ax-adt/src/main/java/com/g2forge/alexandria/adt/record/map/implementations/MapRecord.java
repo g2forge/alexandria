@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.record.map.implementations;
+package com.g2forge.alexandria.adt.record.map.implementations;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

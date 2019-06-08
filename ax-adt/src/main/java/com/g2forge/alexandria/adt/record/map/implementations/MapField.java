@@ -1,8 +1,8 @@
-package com.g2forge.alexandria.record.map.implementations;
+package com.g2forge.alexandria.adt.record.map.implementations;
 
+import com.g2forge.alexandria.adt.record.IField;
+import com.g2forge.alexandria.adt.record.IFieldType;
 import com.g2forge.alexandria.java.adt.tuple.ITuple1GS;
-import com.g2forge.alexandria.record.IField;
-import com.g2forge.alexandria.record.IFieldType;
 
 import lombok.AllArgsConstructor;
 

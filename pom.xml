@@ -23,7 +23,6 @@
 		<module>ax-log-api</module>
 		<module>ax-log</module>
 		<module>ax-analysis</module>
-		<module>ax-record</module>
 		<module>ax-test</module>
 		<module>ax-environment</module>
 		<module>ax-reflection</module>
