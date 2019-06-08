@@ -3,7 +3,7 @@ package com.g2forge.alexandria.filesystem.attributes;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.FileTime;
 
-import com.g2forge.alexandria.java.marker.Helpers;
+import com.g2forge.alexandria.java.core.marker.Helpers;
 
 import lombok.Getter;
 import lombok.experimental.UtilityClass;

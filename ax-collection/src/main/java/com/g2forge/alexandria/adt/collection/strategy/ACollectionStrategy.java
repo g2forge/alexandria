@@ -12,7 +12,7 @@ public abstract class ACollectionStrategy<C extends Collection<T>, T> implements
 		}
 
 		@Override
-		public C create() {
+		public C get() {
 			return ACollectionStrategy.this.create(collection);
 		}
 	}

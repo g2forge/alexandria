@@ -3,7 +3,7 @@ package com.g2forge.alexandria.filesystem.memory.file;
 import com.g2forge.alexandria.filesystem.file.IGenericEntryAccessor;
 import com.g2forge.alexandria.filesystem.path.GenericPath;
 import com.g2forge.alexandria.filesystem.path.IGenericFileSystemInternal;
-import com.g2forge.alexandria.java.core.iface.ISingleton;
+import com.g2forge.alexandria.java.core.marker.ISingleton;
 
 public class EntryAccessor implements IGenericEntryAccessor<IEntry, File, Directory, GenericPath>, ISingleton {
 	protected static final EntryAccessor INSTANCE = new EntryAccessor();

@@ -29,7 +29,7 @@ public class JavaTypedMapRecordType implements IJavaTypedRecordType<JavaTypedMap
 	}
 
 	@Override
-	public JavaTypedMapRecord create() {
+	public JavaTypedMapRecord get() {
 		return new JavaTypedMapRecord();
 	}
 

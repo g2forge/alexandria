@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.io;
+package com.g2forge.alexandria.java.io.file;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,6 +8,8 @@ import java.nio.file.Path;
 
 import com.g2forge.alexandria.java.core.resource.IResource;
 import com.g2forge.alexandria.java.core.resource.Resource;
+import com.g2forge.alexandria.java.io.HBinaryIO;
+import com.g2forge.alexandria.java.io.RuntimeIOException;
 
 import lombok.Getter;
 

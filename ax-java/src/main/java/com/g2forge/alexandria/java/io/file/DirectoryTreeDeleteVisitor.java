@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.io;
+package com.g2forge.alexandria.java.io.file;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;

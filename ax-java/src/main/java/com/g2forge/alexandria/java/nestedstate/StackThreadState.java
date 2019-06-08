@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.resource;
+package com.g2forge.alexandria.java.nestedstate;
 
 import java.util.Stack;
 import java.util.function.Function;
@@ -7,14 +7,14 @@ import java.util.function.Supplier;
 import com.g2forge.alexandria.java.close.ICloseable;
 import com.g2forge.alexandria.java.function.LiteralSupplier;
 
-public class StackThreadResource<T> implements ICloseableResource<T> {
+public class StackThreadState<T> implements INestedState<T> {
 	protected final ThreadLocal<Stack<T>> local;
 
-	public StackThreadResource() {
+	public StackThreadState() {
 		this.local = ThreadLocal.withInitial(Stack::new);
 	}
 
-	public StackThreadResource(Supplier<? extends T> initial) {
+	public StackThreadState(Supplier<? extends T> initial) {
 		this.local = ThreadLocal.withInitial(() -> {
 			final Stack<T> stack = new Stack<>();
 			stack.add(initial.get());
@@ -22,8 +22,13 @@ public class StackThreadResource<T> implements ICloseableResource<T> {
 		});
 	}
 
-	public StackThreadResource(T initial) {
+	public StackThreadState(T initial) {
 		this(new LiteralSupplier<>(initial));
+	}
+
+	protected void close(final Stack<T> expectedStack, final T expectedValue) {
+		if (expectedStack != local.get()) throw new IllegalStateException("Closed from the wrong thread!");
+		if (expectedStack.pop() != expectedValue) throw new IllegalStateException();
 	}
 
 	public int depth() {
@@ -39,17 +44,13 @@ public class StackThreadResource<T> implements ICloseableResource<T> {
 		final Stack<T> stack = local.get();
 		final T value = function.apply(stack.peek());
 		stack.push(value);
-		return () -> {
-			if (stack.pop() != value) throw new IllegalStateException();
-		};
+		return () -> close(stack, value);
 	}
 
 	@Override
 	public ICloseable open(T value) {
 		final Stack<T> stack = local.get();
 		stack.push(value);
-		return () -> {
-			if (stack.pop() != value) throw new IllegalStateException();
-		};
+		return () -> close(stack, value);
 	}
 }

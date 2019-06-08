@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.io;
+package com.g2forge.alexandria.java.io.file;
 
 import java.io.IOException;
 import java.nio.file.CopyOption;
@@ -14,7 +14,8 @@ import java.util.List;
 import java.util.function.Function;
 
 import com.g2forge.alexandria.java.concurrent.HConcurrent;
-import com.g2forge.alexandria.java.marker.Helpers;
+import com.g2forge.alexandria.java.core.marker.Helpers;
+import com.g2forge.alexandria.java.io.RuntimeIOException;
 
 import lombok.experimental.UtilityClass;
 

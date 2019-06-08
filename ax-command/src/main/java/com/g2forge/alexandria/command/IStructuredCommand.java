@@ -8,7 +8,7 @@ import java.util.Map;
 
 import com.g2forge.alexandria.command.exit.Exit;
 import com.g2forge.alexandria.command.exit.IExit;
-import com.g2forge.alexandria.java.core.iface.ICommand;
+import com.g2forge.alexandria.java.core.marker.ICommand;
 
 public interface IStructuredCommand extends ICommand {
 	public static class SubCommandBuilder {

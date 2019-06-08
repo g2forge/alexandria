@@ -67,7 +67,7 @@ public class TestReflectedRecord {
 		final IField<Record, ?> field = HCollection.getOne(recordType.getFields()).apply(constructed);
 		Assert.assertEquals(expected, field.getAccessor().get0());
 		
-		final Record created = recordType.create();
+		final Record created = recordType.get();
 		created.setField0(expected);
 		Assert.assertEquals(constructed, created);
 	}

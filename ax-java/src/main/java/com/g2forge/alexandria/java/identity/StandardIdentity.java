@@ -2,7 +2,7 @@ package com.g2forge.alexandria.java.identity;
 
 import java.util.Objects;
 
-import com.g2forge.alexandria.java.core.iface.ISingleton;
+import com.g2forge.alexandria.java.core.marker.ISingleton;
 
 /**
  * Standard implementation of {@link IIdentity} using the normal {@link Object#equals(Object)} and {@link Object#hashCode()} methods.

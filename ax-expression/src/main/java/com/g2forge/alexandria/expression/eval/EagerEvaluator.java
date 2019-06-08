@@ -9,13 +9,14 @@ import com.g2forge.alexandria.expression.ILazyExpression;
 import com.g2forge.alexandria.expression.IVariable;
 import com.g2forge.alexandria.java.close.ICloseable;
 import com.g2forge.alexandria.java.function.IFunction2;
-import com.g2forge.alexandria.java.resource.FlagResource;
+import com.g2forge.alexandria.java.nestedstate.FlagState;
+import com.g2forge.alexandria.java.nestedstate.INestedState;
 
 import lombok.Data;
 
 @Data
 public class EagerEvaluator<V extends IVariable<V, N>, N extends IEnvironment<V, N, E>, E extends IExpression<V, N>> implements IEvaluator<V, N, E> {
-	protected final FlagResource lazy = new FlagResource();
+	protected final INestedState<Boolean> lazy = new FlagState();
 
 	protected final IEvaluator<V, N, E> nested;
 

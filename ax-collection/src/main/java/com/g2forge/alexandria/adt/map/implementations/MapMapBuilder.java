@@ -17,7 +17,7 @@ public class MapMapBuilder<M extends Map<? super K, ? super V>, K, V> implements
 	}
 
 	@Override
-	public M create() {
+	public M get() {
 		return map;
 	}
 }

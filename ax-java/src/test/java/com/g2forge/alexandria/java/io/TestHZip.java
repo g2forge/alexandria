@@ -8,6 +8,9 @@ import java.util.stream.IntStream;
 
 import org.junit.Test;
 
+import com.g2forge.alexandria.java.io.file.HZip;
+import com.g2forge.alexandria.java.io.file.TempDirectory;
+
 public class TestHZip {
 	@Test
 	public void copy() throws IOException {

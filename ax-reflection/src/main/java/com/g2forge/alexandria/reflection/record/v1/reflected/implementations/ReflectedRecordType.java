@@ -35,7 +35,7 @@ public class ReflectedRecordType<R> implements IReflectedRecordType<R> {
 	}
 
 	@Override
-	public R create() {
+	public R get() {
 		return getReflection().newInstance();
 	}
 

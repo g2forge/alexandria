@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.marker;
+package com.g2forge.alexandria.java.core.marker;
 
 import static java.lang.annotation.ElementType.PACKAGE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;

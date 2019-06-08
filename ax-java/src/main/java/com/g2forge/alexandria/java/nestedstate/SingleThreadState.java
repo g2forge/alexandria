@@ -1,12 +1,12 @@
-package com.g2forge.alexandria.java.resource;
+package com.g2forge.alexandria.java.nestedstate;
 
 import com.g2forge.alexandria.java.close.ICloseable;
 
-public class SingleThreadResource<T> implements ICloseableResource<T> {
+public class SingleThreadState<T> implements ICloseableNestedState<T> {
 	protected final ThreadLocal<T> local = new ThreadLocal<>();
 
-	public void close(T value) {
-		if (local.get() != value) throw new IllegalStateException();
+	public void close(T expected) {
+		if (local.get() != expected) throw new IllegalStateException();
 		local.remove();
 	}
 

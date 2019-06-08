@@ -15,7 +15,7 @@ public class TestTypedMapRecord {
 	public void test() {
 		final IJavaTypedFieldType<JavaTypedMapRecord, String> fieldType = new JavaTypedMapFieldType<>("field0", String.class);
 		final IJavaTypedRecordType<JavaTypedMapRecord> recordType = new JavaTypedMapRecordType(fieldType);
-		final JavaTypedMapRecord record = recordType.create();
+		final JavaTypedMapRecord record = recordType.get();
 		
 		String value = "foo";
 		final ITuple1GS<String> field = fieldType.apply(record).getAccessor();

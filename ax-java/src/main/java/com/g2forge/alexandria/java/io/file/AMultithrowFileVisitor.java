@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.io;
+package com.g2forge.alexandria.java.io.file;
 
 import java.io.IOException;
 import java.nio.file.FileSystemLoopException;
@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import com.g2forge.alexandria.java.core.error.HError;
+import com.g2forge.alexandria.java.io.RuntimeIOException;
 
 import lombok.AccessLevel;
 import lombok.Getter;

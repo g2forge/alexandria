@@ -1,8 +1,8 @@
 package com.g2forge.alexandria.adt.collection.collector;
 
-import com.g2forge.alexandria.java.core.iface.IFactory;
+import com.g2forge.alexandria.java.function.ISupplier;
 
-public interface ICollectionBuilder<C, T> extends ICollector<T>, IFactory<C> {
+public interface ICollectionBuilder<C, T> extends ICollector<T>, ISupplier<C> {
 	@Override
 	public default ICollectionBuilder<C, T> add(Iterable<? extends T> values) {
 		for (T value : values) {
