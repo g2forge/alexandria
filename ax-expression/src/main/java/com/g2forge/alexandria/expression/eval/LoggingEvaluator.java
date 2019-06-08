@@ -9,13 +9,14 @@ import com.g2forge.alexandria.expression.IExpression;
 import com.g2forge.alexandria.expression.IVariable;
 import com.g2forge.alexandria.java.close.ICloseable;
 import com.g2forge.alexandria.java.function.IFunction2;
-import com.g2forge.alexandria.java.resource.FlagResource;
+import com.g2forge.alexandria.java.nestedstate.FlagState;
+import com.g2forge.alexandria.java.nestedstate.INestedState;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class LoggingEvaluator<V extends IVariable<V, N>, N extends IEnvironment<V, N, E>, E extends IExpression<V, N>> implements IEvaluator<V, N, E> {
-	protected final FlagResource debug = new FlagResource();
+	protected final INestedState<Boolean> debug = new FlagState();
 
 	protected int nesting = 0;
 
