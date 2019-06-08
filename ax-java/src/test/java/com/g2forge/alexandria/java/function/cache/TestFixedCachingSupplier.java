@@ -5,8 +5,8 @@ import java.util.function.Supplier;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.java.tuple.ITuple1GS;
-import com.g2forge.alexandria.java.tuple.implementations.Tuple1GSO;
+import com.g2forge.alexandria.java.adt.tuple.ITuple1GS;
+import com.g2forge.alexandria.java.adt.tuple.implementations.Tuple1GSO;
 
 public class TestFixedCachingSupplier {
 	@Test

@@ -17,10 +17,10 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.ServiceConfigurationError;
 
-import com.g2forge.alexandria.collection.ICollection;
+import com.g2forge.alexandria.adt.collection.DIteratorCollection;
+import com.g2forge.alexandria.adt.collection.ICollection;
 import com.g2forge.alexandria.java.function.type.ITypeFunction1;
 import com.g2forge.alexandria.java.function.type.TypeMapIterator;
-import com.g2forge.alexandria.collection.DIteratorCollection;
 
 import lombok.Getter;
 

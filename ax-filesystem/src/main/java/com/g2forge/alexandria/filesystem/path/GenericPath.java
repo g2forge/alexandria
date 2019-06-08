@@ -19,10 +19,10 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.g2forge.alexandria.adt.range.IntegerRange;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.core.helpers.HObject;
 import com.g2forge.alexandria.java.function.IPredicate1;
-import com.g2forge.alexandria.java.range.IntegerRange;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

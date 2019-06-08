@@ -28,7 +28,7 @@
 		<module>ax-environment</module>
 		<module>ax-reflection</module>
 		<module>ax-type</module>
-		<module>ax-collection</module>
+		<module>ax-adt</module>
 		<module>ax-compiler</module>
 		<module>ax-expression</module>
 		<module>ax-service</module>

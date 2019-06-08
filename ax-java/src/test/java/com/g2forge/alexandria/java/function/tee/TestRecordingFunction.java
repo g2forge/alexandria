@@ -3,8 +3,8 @@ package com.g2forge.alexandria.java.function.tee;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.g2forge.alexandria.java.adt.tuple.implementations.Tuple2GSO;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
-import com.g2forge.alexandria.java.tuple.implementations.Tuple2GSO;
 
 public class TestRecordingFunction {
 	@Test
