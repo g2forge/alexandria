@@ -4,7 +4,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 
 import com.g2forge.alexandria.annotations.service.Service;
-import com.g2forge.alexandria.java.enums.EnumException;
+import com.g2forge.alexandria.java.core.enums.EnumException;
 
 import ch.qos.logback.classic.Logger;
 

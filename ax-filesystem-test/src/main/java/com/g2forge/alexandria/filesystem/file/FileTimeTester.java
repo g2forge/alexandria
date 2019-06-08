@@ -10,7 +10,7 @@ import java.util.EnumSet;
 
 import com.g2forge.alexandria.filesystem.attributes.HBasicFileAttributes;
 import com.g2forge.alexandria.java.concurrent.HConcurrent;
-import com.g2forge.alexandria.java.enums.EnumException;
+import com.g2forge.alexandria.java.core.enums.EnumException;
 import com.g2forge.alexandria.test.HAssert;
 
 public class FileTimeTester implements Closeable {

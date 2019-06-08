@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.enums;
+package com.g2forge.alexandria.java.core.enums;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
