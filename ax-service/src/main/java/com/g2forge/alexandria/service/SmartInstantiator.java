@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.g2forge.alexandria.java.adt.tuple.ITuple2G_;
+import com.g2forge.alexandria.java.adt.tuple.implementations.Tuple2G_I;
 import com.g2forge.alexandria.java.core.error.HError;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.function.IConsumer1;
 import com.g2forge.alexandria.java.function.ISupplier;
-import com.g2forge.alexandria.java.tuple.ITuple2G_;
-import com.g2forge.alexandria.java.tuple.implementations.Tuple2G_I;
 
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;

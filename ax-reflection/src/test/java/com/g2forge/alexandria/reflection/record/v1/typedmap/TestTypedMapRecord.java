@@ -3,7 +3,7 @@ package com.g2forge.alexandria.reflection.record.v1.typedmap;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.java.tuple.ITuple1GS;
+import com.g2forge.alexandria.java.adt.tuple.ITuple1GS;
 import com.g2forge.alexandria.reflection.record.v1.typedmap.IJavaTypedFieldType;
 import com.g2forge.alexandria.reflection.record.v1.typedmap.IJavaTypedRecordType;
 import com.g2forge.alexandria.reflection.record.v1.typedmap.implementations.JavaTypedMapFieldType;

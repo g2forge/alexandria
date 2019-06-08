@@ -8,11 +8,11 @@ import java.util.function.Supplier;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.java.tuple.ITuple1GS;
-import com.g2forge.alexandria.java.tuple.ITuple1G_;
-import com.g2forge.alexandria.java.tuple.implementations.Tuple1GSO;
-import com.g2forge.alexandria.java.tuple.implementations.Tuple1G_I;
-import com.g2forge.alexandria.java.tuple.implementations.Tuple1G_O;
+import com.g2forge.alexandria.java.adt.tuple.ITuple1GS;
+import com.g2forge.alexandria.java.adt.tuple.ITuple1G_;
+import com.g2forge.alexandria.java.adt.tuple.implementations.Tuple1GSO;
+import com.g2forge.alexandria.java.adt.tuple.implementations.Tuple1G_I;
+import com.g2forge.alexandria.java.adt.tuple.implementations.Tuple1G_O;
 
 import lombok.Data;
 

@@ -15,10 +15,10 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import com.g2forge.alexandria.java.adt.tuple.ITuple2G_;
+import com.g2forge.alexandria.java.adt.tuple.implementations.Tuple2G_O;
 import com.g2forge.alexandria.java.core.marker.Helpers;
 import com.g2forge.alexandria.java.function.ISupplier;
-import com.g2forge.alexandria.java.tuple.ITuple2G_;
-import com.g2forge.alexandria.java.tuple.implementations.Tuple2G_O;
 
 import lombok.experimental.UtilityClass;
 

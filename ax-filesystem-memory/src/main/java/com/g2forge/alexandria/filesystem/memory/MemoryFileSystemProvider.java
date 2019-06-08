@@ -44,8 +44,8 @@ import com.g2forge.alexandria.filesystem.path.FileSystemPathURI;
 import com.g2forge.alexandria.filesystem.path.GenericFileSystem;
 import com.g2forge.alexandria.filesystem.path.GenericPath;
 import com.g2forge.alexandria.filesystem.path.IGenericFileSystemProviderInternal;
-import com.g2forge.alexandria.java.core.ComparableComparator;
-import com.g2forge.alexandria.java.core.MapIterator;
+import com.g2forge.alexandria.java.adt.ComparableComparator;
+import com.g2forge.alexandria.java.adt.MapIterator;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 
 import lombok.Getter;

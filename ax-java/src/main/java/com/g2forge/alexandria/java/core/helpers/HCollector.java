@@ -18,10 +18,10 @@ import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import com.g2forge.alexandria.java.adt.tuple.ITuple2G_;
+import com.g2forge.alexandria.java.adt.tuple.implementations.Tuple2G_O;
 import com.g2forge.alexandria.java.core.marker.Helpers;
 import com.g2forge.alexandria.java.function.IFunction1;
-import com.g2forge.alexandria.java.tuple.ITuple2G_;
-import com.g2forge.alexandria.java.tuple.implementations.Tuple2G_O;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;

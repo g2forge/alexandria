@@ -3,9 +3,9 @@ package com.g2forge.alexandria.java.function.tee;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import com.g2forge.alexandria.java.adt.tuple.ITuple2G_;
+import com.g2forge.alexandria.java.adt.tuple.implementations.Tuple2GSO;
 import com.g2forge.alexandria.java.function.IFunction1;
-import com.g2forge.alexandria.java.tuple.ITuple2G_;
-import com.g2forge.alexandria.java.tuple.implementations.Tuple2GSO;
 
 import lombok.AllArgsConstructor;
 

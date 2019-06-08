@@ -5,7 +5,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileAttributeView;
 import java.util.Set;
 
-import com.g2forge.alexandria.java.name.IStringNamed;
+import com.g2forge.alexandria.java.adt.name.IStringNamed;
 
 /**
  * This interface provides access to all of a related group of attributes. At the a minimum you will need to implement this for

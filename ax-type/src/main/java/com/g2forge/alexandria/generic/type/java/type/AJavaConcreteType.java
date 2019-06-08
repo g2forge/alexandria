@@ -9,6 +9,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.g2forge.alexandria.adt.associative.cache.Cache;
+import com.g2forge.alexandria.adt.associative.cache.NeverCacheEvictionPolicy;
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.TypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.member.IJavaConstructorType;
@@ -21,11 +23,9 @@ import com.g2forge.alexandria.generic.type.java.structure.JavaProtection;
 import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
 import com.g2forge.alexandria.generic.type.java.structure.JavaStructureAnalyzer;
 import com.g2forge.alexandria.generic.type.java.type.implementations.JavaClassType;
-import com.g2forge.alexandria.java.associative.cache.Cache;
-import com.g2forge.alexandria.java.associative.cache.NeverCacheEvictionPolicy;
+import com.g2forge.alexandria.java.adt.tuple.ITuple2G_;
+import com.g2forge.alexandria.java.adt.tuple.implementations.Tuple2G_O;
 import com.g2forge.alexandria.java.core.error.UnreachableCodeError;
-import com.g2forge.alexandria.java.tuple.ITuple2G_;
-import com.g2forge.alexandria.java.tuple.implementations.Tuple2G_O;
 
 public abstract class AJavaConcreteType<JT extends Type> extends AJavaType<JT>implements IJavaConcreteType {
 	protected static final JavaStructureAnalyzer<IJavaConcreteType, IJavaFieldType, IJavaMethodType> analyzer;

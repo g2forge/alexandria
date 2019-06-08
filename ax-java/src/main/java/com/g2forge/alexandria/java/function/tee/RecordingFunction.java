@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Function;
 
-import com.g2forge.alexandria.java.tuple.ITuple2G_;
+import com.g2forge.alexandria.java.adt.tuple.ITuple2G_;
 
 import lombok.Getter;
 
