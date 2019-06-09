@@ -1,8 +1,8 @@
-package com.g2forge.alexandria.record.v2.type;
+package com.g2forge.alexandria.adt.record.v2.type;
 
+import com.g2forge.alexandria.java.adt.name.IStringNamed;
 import com.g2forge.alexandria.java.function.IConsumer2;
 import com.g2forge.alexandria.java.function.IFunction1;
-import com.g2forge.alexandria.java.name.IStringNamed;
 
 /**
  * @param <Get> The record type on which get operations can be used.

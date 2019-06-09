@@ -1,7 +1,7 @@
-package com.g2forge.alexandria.record.v2.accessor2;
+package com.g2forge.alexandria.adt.record.v2.accessor2;
 
-import com.g2forge.alexandria.java.tuple.ITuple1_S;
-import com.g2forge.alexandria.record.v2.type.IFieldType;
+import com.g2forge.alexandria.adt.record.v2.type.IFieldType;
+import com.g2forge.alexandria.java.adt.tuple.ITuple1_S;
 
 public interface IFieldAccessor_S<Record, Field> extends IFieldAccessor__<Record, Field>, ITuple1_S<Field> {
 	@SuppressWarnings("unchecked" /* The java compiler cannot type check this, but since getType is bound to return IFieldType<,,Field> this must statically be correct. */)

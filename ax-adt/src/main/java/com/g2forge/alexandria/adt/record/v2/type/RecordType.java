@@ -1,11 +1,11 @@
-package com.g2forge.alexandria.record.v2.type;
+package com.g2forge.alexandria.adt.record.v2.type;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.g2forge.alexandria.java.core.iface.IFactory;
 import com.g2forge.alexandria.java.function.IFunction1;
+import com.g2forge.alexandria.java.function.ISupplier;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -26,7 +26,7 @@ public class RecordType<Record, Builder> implements IRecordType<Record, Builder>
 	@Getter(lazy = true, value = AccessLevel.PROTECTED)
 	private final Map<String, ? extends IFieldType<? super Record, ? super Builder, ?>> fieldMap = getFields().stream().collect(Collectors.toMap(IFieldType::getName, IFunction1.identity()));
 
-	protected final IFactory<? extends Builder> factory;
+	protected final ISupplier<? extends Builder> factory;
 
 	protected final IFunction1<? super Builder, ? extends Record> builder;
 

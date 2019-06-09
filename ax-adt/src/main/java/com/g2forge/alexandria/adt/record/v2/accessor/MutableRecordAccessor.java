@@ -1,14 +1,14 @@
-package com.g2forge.alexandria.record.v2.accessor;
+package com.g2forge.alexandria.adt.record.v2.accessor;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.g2forge.alexandria.adt.record.v2.type.IFieldType;
+import com.g2forge.alexandria.adt.record.v2.type.IRecordType;
+import com.g2forge.alexandria.java.adt.identity.IIdentity;
 import com.g2forge.alexandria.java.function.IFunction1;
-import com.g2forge.alexandria.java.identity.IIdentity;
-import com.g2forge.alexandria.record.v2.type.IFieldType;
-import com.g2forge.alexandria.record.v2.type.IRecordType;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -29,7 +29,7 @@ public class MutableRecordAccessor<Record> implements IRecordAccessor<Record> {
 	private final Map<String, ? extends IFieldAccessor<? super Record, ?>> fieldMap = getFields().stream().collect(Collectors.toMap(field -> field.getType().getName(), IFunction1.identity()));
 
 	public MutableRecordAccessor(IRecordType<Record, Record> type) {
-		this(type, type.getFactory().create());
+		this(type, type.getFactory().get());
 	}
 
 	public MutableRecordAccessor(IRecordType<Record, Record> type, Record record) {

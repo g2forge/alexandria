@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.record.v2.type;
+package com.g2forge.alexandria.adt.record.v2.type;
 
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.record.map.v2;
+package com.g2forge.alexandria.adt.record.map.v2;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -7,19 +7,17 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.java.function.IFunction1;
-import com.g2forge.alexandria.record.map.v2.TestImmutableRecord.ImmutableRecord.ImmutableRecordBuilder;
-import com.g2forge.alexandria.record.v2.accessor.IFieldAccessor;
-import com.g2forge.alexandria.record.v2.accessor.MutableRecordAccessor;
-import com.g2forge.alexandria.record.v2.type.FieldType;
-import com.g2forge.alexandria.record.v2.type.IRecordType;
-import com.g2forge.alexandria.record.v2.type.RecordType;
-import com.g2forge.alexandria.record.v2.type.RecordType.RecordTypeBuilder;
+import com.g2forge.alexandria.adt.record.map.v2.TestImmutableRecord.ImmutableRecord.ImmutableRecordBuilder;
+import com.g2forge.alexandria.adt.record.v2.accessor.IFieldAccessor;
+import com.g2forge.alexandria.adt.record.v2.accessor.MutableRecordAccessor;
+import com.g2forge.alexandria.adt.record.v2.type.FieldType;
+import com.g2forge.alexandria.adt.record.v2.type.IRecordType;
+import com.g2forge.alexandria.adt.record.v2.type.RecordType;
+import com.g2forge.alexandria.adt.record.v2.type.RecordType.RecordTypeBuilder;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 public class TestImmutableRecord {
 	@Data
@@ -62,7 +60,7 @@ public class TestImmutableRecord {
 		recordTypeBuilder.field(fieldType);
 		final IRecordType<ImmutableRecord, ImmutableRecord.ImmutableRecordBuilder> recordType = recordTypeBuilder.build();
 
-		final ImmutableRecordBuilder builder = recordType.getFactory().create();
+		final ImmutableRecordBuilder builder = recordType.getFactory().get();
 		recordType.getField(name).getSetter();
 
 		final MutableRecordAccessor<ImmutableRecord> recordAccessor = new MutableRecordAccessor<>(recordType);
