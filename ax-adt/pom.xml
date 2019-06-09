@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
@@ -12,9 +13,8 @@
 		<relativePath>../ax-project/pom.xml</relativePath>
 	</parent>
 
-<<<<<<< HEAD:ax-record/pom.xml
-	<name>Alexandria Record</name>
-	<description>Common library for creating, manipulating and reflecting over record and record-like abstractions.</description>
+	<name>Alexandria ADTs</name>
+	<description>Extended ADT API.</description>
 
 	<dependencies>
 		<dependency>
@@ -23,8 +23,4 @@
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
-=======
-	<name>Alexandria ADTs</name>
-	<description>Extended ADT API.</description>
->>>>>>> master:ax-adt/pom.xml
 </project>
