@@ -3,8 +3,8 @@ package com.g2forge.alexandria.reflection.object;
 import java.lang.reflect.AnnotatedElement;
 
 import com.g2forge.alexandria.generic.type.java.member.IJavaMemberType;
-import com.g2forge.alexandria.reflection.annotations.IJavaAnnotations;
-import com.g2forge.alexandria.reflection.annotations.implementations.JavaAnnotations;
+import com.g2forge.alexandria.metadata.v2.IJavaAnnotations;
+import com.g2forge.alexandria.metadata.v2.implementations.JavaAnnotations;
 import com.g2forge.alexandria.reflection.object.implementations.JavaConcreteReflection;
 
 import lombok.Data;

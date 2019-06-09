@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.generic.type.java.structure;
+package com.g2forge.alexandria.java.reflect;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

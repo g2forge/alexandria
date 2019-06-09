@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.g2forge.alexandria.reflection.annotations.IJavaAnnotated;
-import com.g2forge.alexandria.reflection.annotations.IJavaAnnotations;
-import com.g2forge.alexandria.reflection.annotations.implementations.MergedJavaAnnotations;
+import com.g2forge.alexandria.metadata.v2.IJavaAnnotated;
+import com.g2forge.alexandria.metadata.v2.IJavaAnnotations;
+import com.g2forge.alexandria.metadata.v2.implementations.MergedJavaAnnotations;
 import com.g2forge.alexandria.reflection.record.v2.IPropertyType;
 
 abstract class APropertyType<P> implements IPropertyType<P> {

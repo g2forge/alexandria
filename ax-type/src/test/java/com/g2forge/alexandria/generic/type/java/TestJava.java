@@ -8,12 +8,12 @@ import org.junit.Test;
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.member.IJavaFieldType;
-import com.g2forge.alexandria.generic.type.java.structure.JavaProtection;
-import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
 import com.g2forge.alexandria.generic.type.java.type.IJavaClassType;
 import com.g2forge.alexandria.generic.type.java.type.IJavaConcreteType;
 import com.g2forge.alexandria.generic.type.java.type.implementations.JavaClassType;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
+import com.g2forge.alexandria.java.reflect.JavaProtection;
+import com.g2forge.alexandria.java.reflect.JavaScope;
 
 public class TestJava {
 	public static class Child extends Parent<String> {}

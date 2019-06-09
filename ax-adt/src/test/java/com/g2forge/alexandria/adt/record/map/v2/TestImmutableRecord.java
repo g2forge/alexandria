@@ -27,7 +27,6 @@ import lombok.Data;
 public class TestImmutableRecord {
 	@Data
 	@Builder
-	@AllArgsConstructor
 	public static class ImmutableRecord {
 		protected final String field;
 	}

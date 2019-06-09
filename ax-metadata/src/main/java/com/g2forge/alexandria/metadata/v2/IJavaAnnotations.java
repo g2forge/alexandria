@@ -1,9 +1,9 @@
-package com.g2forge.alexandria.reflection.annotations;
+package com.g2forge.alexandria.metadata.v2;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 
-import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
+import com.g2forge.alexandria.java.reflect.JavaScope;
 
 public interface IJavaAnnotations {
 	public <T extends Annotation> T getAnnotation(Class<T> type);

@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.generic.type.java.structure;
+package com.g2forge.alexandria.java.reflect;
 
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;

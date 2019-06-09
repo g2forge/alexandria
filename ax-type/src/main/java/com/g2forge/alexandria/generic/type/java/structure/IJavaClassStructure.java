@@ -2,6 +2,9 @@ package com.g2forge.alexandria.generic.type.java.structure;
 
 import java.util.stream.Stream;
 
+import com.g2forge.alexandria.java.reflect.JavaProtection;
+import com.g2forge.alexandria.java.reflect.JavaScope;
+
 /**
  * @param <R>
  *            Raw types the result of {@link IJavaTypeStructure#erase()}

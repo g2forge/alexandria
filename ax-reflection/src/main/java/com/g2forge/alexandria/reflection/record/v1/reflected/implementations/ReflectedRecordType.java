@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
-import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
 import com.g2forge.alexandria.generic.type.java.type.IJavaConcreteType;
+import com.g2forge.alexandria.java.reflect.JavaScope;
 import com.g2forge.alexandria.reflection.object.IJavaConcreteReflection;
 import com.g2forge.alexandria.reflection.object.IJavaFieldReflection;
 import com.g2forge.alexandria.reflection.object.implementations.JavaConcreteReflection;
