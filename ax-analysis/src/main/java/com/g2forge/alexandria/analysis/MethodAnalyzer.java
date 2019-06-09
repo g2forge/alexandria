@@ -5,6 +5,7 @@ import java.util.stream.Stream;
 import org.apache.bcel.Repository;
 import org.apache.bcel.classfile.Code;
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ALOAD;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.GETFIELD;
@@ -14,8 +15,11 @@ import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.InvokeInstruction;
+import org.apache.bcel.generic.PUTFIELD;
 import org.apache.bcel.generic.ReturnInstruction;
+import org.apache.bcel.generic.Type;
 
+import com.g2forge.alexandria.java.core.error.NotYetImplementedError;
 import com.g2forge.alexandria.java.core.error.RuntimeReflectionException;
 import com.g2forge.alexandria.java.reflect.HReflection;
 import com.g2forge.alexandria.java.reflect.IJavaAccessorMethod;
@@ -31,6 +35,24 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 class MethodAnalyzer implements IMethodAnalyzer {
+	protected static String getField(Type target, String name, Type ret, Type[] args) throws ClassNotFoundException {
+		final JavaClass clazz = Repository.lookupClass(target.toString());
+		for (Method method : clazz.getMethods()) {
+			if (method.getName().equals(name) && method.getSignature().equals(Type.getMethodSignature(ret, args))) {
+				final Code code = method.getCode();
+				final Instruction[] instructions = new InstructionList(code.getCode()).getInstructions();
+				if (instructions.length != 3) throw new Error("Method " + method + " does not have exactly three instruction!");
+				if (!(instructions[0] instanceof ALOAD) || (((ALOAD) instructions[0]).getIndex() != 0)) throw new Error();
+				if (!(instructions[instructions.length - 1] instanceof ReturnInstruction)) throw new Error();
+
+				final ConstantPoolGen constantPoolGen = new ConstantPoolGen(method.getConstantPool());
+				final GETFIELD get = ((GETFIELD) instructions[1]);
+				return get.getFieldName(constantPoolGen);
+			}
+		}
+		throw new Error();
+	}
+
 	protected static String computePath(org.apache.bcel.classfile.Method method) throws Error {
 		if (method.isAbstract()) return new IJavaAccessorMethod() {
 			@Override
@@ -51,25 +73,33 @@ class MethodAnalyzer implements IMethodAnalyzer {
 
 		final Code code = method.getCode();
 		final Instruction[] instructions = new InstructionList(code.getCode()).getInstructions();
-		if (!(instructions[0] instanceof ALOAD) || (((ALOAD) instructions[0]).getIndex() != 0)) throw new Error();
-		if (!(instructions[instructions.length - 1] instanceof ReturnInstruction)) throw new Error();
+		final int limit = instructions.length - 1;
 
+		// Get/Set chains always start with an aload, and end with a return
+		if (!(instructions[0] instanceof ALOAD) || (((ALOAD) instructions[0]).getIndex() != 0)) throw new Error();
+		if (!(instructions[limit] instanceof ReturnInstruction)) throw new Error();
+
+		// Parse through all the instructions in the middle
 		final StringBuilder retVal = new StringBuilder();
 		final ConstantPoolGen constantPoolGen = new ConstantPoolGen(method.getConstantPool());
-		for (int i = 1; i < instructions.length - 1; i++) {
+		for (int i = 1; i < limit; i++) {
+			// The field we're traversing on this instruction, can be null if the instruction is not a field traversal
 			final String field;
 
 			if (instructions[i] instanceof INVOKEVIRTUAL) {
+				// Handle getters
 				final InvokeInstruction invoke = (InvokeInstruction) instructions[i];
 				try {
-					field = T.getField(invoke.getReferenceType(constantPoolGen), invoke.getMethodName(constantPoolGen), invoke.getReturnType(constantPoolGen), invoke.getArgumentTypes(constantPoolGen));
+					field = getField(invoke.getReferenceType(constantPoolGen), invoke.getMethodName(constantPoolGen), invoke.getReturnType(constantPoolGen), invoke.getArgumentTypes(constantPoolGen));
 				} catch (ClassNotFoundException e) {
 					throw new RuntimeReflectionException(e);
 				}
 			} else if (instructions[i] instanceof GETFIELD) {
+				// Handle an actual field reference
 				final GETFIELD get = ((GETFIELD) instructions[i]);
 				field = get.getFieldName(constantPoolGen);
 			} else if (instructions[i] instanceof INVOKESTATIC) {
+				// Allow for auto-boxing of primitive types along the field access path
 				final InvokeInstruction invoke = (InvokeInstruction) instructions[i];
 				if (!"valueOf".equals(invoke.getMethodName(constantPoolGen))) throw new Error();
 				final String name = invoke.getReferenceType(constantPoolGen).toString();
@@ -94,7 +124,14 @@ class MethodAnalyzer implements IMethodAnalyzer {
 					}
 				}.getFieldName();
 				if (field == null) throw new Error("Method was not an accessor");
-			} else throw new Error(String.format("Instruction %d (%s) is of type %s which not recognized!", i, instructions[i], instructions[i].getClass().getSimpleName()));
+			} else if (instructions[i] instanceof ALOAD) {
+				final int i1 = i + 1;
+				if ((i1 != limit - 1) || (((ALOAD) instructions[i]).getIndex() != 1)) throw new Error();
+				field = ((PUTFIELD) instructions[i1]).getFieldName(constantPoolGen);
+				i++;
+			} else {
+				throw new Error(String.format("Instruction %d (%s) is of type %s which not recognized!", i, instructions[i], instructions[i].getClass().getSimpleName()));
+			}
 
 			if (field != null) {
 				if (retVal.length() > 0) retVal.append('.');
