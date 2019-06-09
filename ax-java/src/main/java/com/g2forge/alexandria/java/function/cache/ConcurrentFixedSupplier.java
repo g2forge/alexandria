@@ -2,7 +2,7 @@ package com.g2forge.alexandria.java.function.cache;
 
 import java.util.function.Supplier;
 
-import com.g2forge.alexandria.java.tuple.ITuple1G_;
+import com.g2forge.alexandria.java.adt.tuple.ITuple1G_;
 
 import lombok.RequiredArgsConstructor;
 

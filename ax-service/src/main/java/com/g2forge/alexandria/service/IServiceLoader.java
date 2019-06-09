@@ -2,8 +2,8 @@ package com.g2forge.alexandria.service;
 
 import java.util.stream.Stream;
 
-import com.g2forge.alexandria.collection.ICollection;
-import com.g2forge.alexandria.collection.DStreamCollection;
+import com.g2forge.alexandria.adt.collection.DStreamCollection;
+import com.g2forge.alexandria.adt.collection.ICollection;
 import com.g2forge.alexandria.java.core.helpers.HStream;
 
 public interface IServiceLoader<S> {

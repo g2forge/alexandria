@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Consumer;
 
-import com.g2forge.alexandria.java.marker.Helpers;
+import com.g2forge.alexandria.java.core.marker.Helpers;
 
 import lombok.experimental.UtilityClass;
 

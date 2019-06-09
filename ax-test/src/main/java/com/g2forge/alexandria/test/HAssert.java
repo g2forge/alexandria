@@ -1,24 +1,43 @@
 package com.g2forge.alexandria.test;
 
+import org.hamcrest.Matcher;
+import org.hamcrest.MatcherAssert;
 import org.junit.Assert;
 
 import com.g2forge.alexandria.java.function.IConsumer2;
+import com.g2forge.alexandria.java.function.IThrowRunnable;
+import com.g2forge.alexandria.java.core.marker.Helpers;
 import com.g2forge.alexandria.java.function.IConsumer1;
-import com.g2forge.alexandria.java.marker.Helpers;
 
 import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
 public class HAssert extends Assert {
-	public static void assertException(Class<? extends Throwable> type, Runnable runnable) {
+	public static <T extends Throwable> void assertThat(IThrowRunnable<T> operation, Matcher<Throwable> matcher) {
 		try {
-			runnable.run();
+			operation.run();
 		} catch (Throwable throwable) {
-			if (!type.isInstance(throwable)) throw throwable;
-			else return;
+			MatcherAssert.assertThat("", throwable, matcher);
+			return;
 		}
-		fail("Did not receive expected exception of type " + type);
+		MatcherAssert.assertThat("", null, matcher);
+	}
+
+	public static <T extends Throwable> void assertException(Class<? extends Throwable> type, String message, IThrowRunnable<T> operation) throws T {
+		try {
+			operation.run();
+		} catch (Throwable throwable) {
+			if (type.isInstance(throwable)) {
+				if (message != null) assertEquals(message, throwable.getMessage());
+				return;
+			} else throw throwable;
+		}
+		fail(String.format("Expected exception of type \"%1$s\" was not thrown!", type.getName()));
+	}
+
+	public static void assertException(Class<? extends Throwable> type, Runnable runnable) {
+		assertException(type, null, runnable::run);
 	}
 
 	public static void assertInstanceOf(Class<?> expected, Object actual) {

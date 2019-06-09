@@ -1,5 +1,5 @@
 package com.g2forge.alexandria.generic.environment;
 
-import com.g2forge.alexandria.java.function.typed.ITypedFunction1;
+import com.g2forge.alexandria.java.function.type.ITypeFunction1;
 
-public interface ITypedMapEnvironment extends IEnvironment, ITypedFunction1<Object> {}
+public interface ITypedMapEnvironment extends IEnvironment, ITypeFunction1<Object> {}

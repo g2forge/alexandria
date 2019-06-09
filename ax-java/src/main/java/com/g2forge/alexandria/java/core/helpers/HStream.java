@@ -15,9 +15,10 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import com.g2forge.alexandria.java.marker.Helpers;
-import com.g2forge.alexandria.java.tuple.ITuple2G_;
-import com.g2forge.alexandria.java.tuple.implementations.Tuple2G_O;
+import com.g2forge.alexandria.java.adt.tuple.ITuple2G_;
+import com.g2forge.alexandria.java.adt.tuple.implementations.Tuple2G_O;
+import com.g2forge.alexandria.java.core.marker.Helpers;
+import com.g2forge.alexandria.java.function.ISupplier;
 
 import lombok.experimental.UtilityClass;
 
@@ -31,7 +32,14 @@ public class HStream {
 
 	public static <T> T findOne(Stream<? extends T> stream) {
 		final List<T> list = stream.collect(Collectors.toList());
-		if (list.size() != 1) throw new IllegalArgumentException();
+		if (list.size() != 1) throw new IllegalArgumentException(String.format("Found %1$d values, rather than the one value expected!", list.size()));
+		return list.get(0);
+	}
+
+	public static <T> T findOneOptional(Stream<? extends T> stream, ISupplier<T> ifNone) {
+		final List<T> list = stream.collect(Collectors.toList());
+		if (list.size() > 1) throw new IllegalArgumentException();
+		if (list.isEmpty()) return ifNone.get();
 		return list.get(0);
 	}
 

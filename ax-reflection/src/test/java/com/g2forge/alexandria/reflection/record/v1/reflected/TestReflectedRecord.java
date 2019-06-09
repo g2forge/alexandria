@@ -5,8 +5,8 @@ import java.util.Objects;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.g2forge.alexandria.adt.record.IField;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
-import com.g2forge.alexandria.record.IField;
 import com.g2forge.alexandria.reflection.record.v1.reflected.IReflectedRecordType;
 import com.g2forge.alexandria.reflection.record.v1.reflected.implementations.ReflectedRecordType;
 
@@ -67,7 +67,7 @@ public class TestReflectedRecord {
 		final IField<Record, ?> field = HCollection.getOne(recordType.getFields()).apply(constructed);
 		Assert.assertEquals(expected, field.getAccessor().get0());
 		
-		final Record created = recordType.create();
+		final Record created = recordType.get();
 		created.setField0(expected);
 		Assert.assertEquals(constructed, created);
 	}

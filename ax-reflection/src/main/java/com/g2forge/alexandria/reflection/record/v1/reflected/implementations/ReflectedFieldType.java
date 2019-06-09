@@ -1,7 +1,7 @@
 package com.g2forge.alexandria.reflection.record.v1.reflected.implementations;
 
+import com.g2forge.alexandria.adt.record.IField;
 import com.g2forge.alexandria.generic.type.java.IJavaUntype;
-import com.g2forge.alexandria.record.IField;
 import com.g2forge.alexandria.reflection.annotations.IJavaAnnotations;
 import com.g2forge.alexandria.reflection.object.IJavaFieldReflection;
 import com.g2forge.alexandria.reflection.record.v1.reflected.IReflectedFieldType;

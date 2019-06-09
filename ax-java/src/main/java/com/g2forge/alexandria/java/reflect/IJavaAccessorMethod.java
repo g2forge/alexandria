@@ -41,10 +41,10 @@ public interface IJavaAccessorMethod {
 			}
 		};
 
-		public static final String[] PREFIXES = HArray.map(String.class, Accessor::getPrefix, Accessor.values());
+		public static final String[] PREFIXES_ARRAY = HArray.map(String.class, Accessor::getPrefix, Accessor.values());
 
 		public static String getFieldName(String methodName) {
-			final String stripped = HString.stripPrefix(methodName, Accessor.PREFIXES);
+			final String stripped = HString.stripPrefix(methodName, Accessor.PREFIXES_ARRAY);
 			if (stripped == methodName) return null;
 			return HString.lowercase(stripped);
 		}
@@ -70,8 +70,9 @@ public interface IJavaAccessorMethod {
 
 	public default String getFieldName() {
 		final String name = getName();
-		final String stripped = HString.stripPrefix(name, Accessor.PREFIXES);
-		if (stripped == name) return null;
+		final String stripped = HString.stripPrefix(name, Accessor.PREFIXES_ARRAY);
+		// Disabled to support accessors without prefixes
+		//if (stripped == name) return null;
 		return HString.lowercase(stripped);
 	}
 

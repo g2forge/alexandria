@@ -17,7 +17,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.g2forge.alexandria</groupId>
-			<artifactId>ax-record</artifactId>
+			<artifactId>ax-adt</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

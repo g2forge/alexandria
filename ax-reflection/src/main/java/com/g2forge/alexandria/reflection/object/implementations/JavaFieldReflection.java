@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 
 import com.g2forge.alexandria.generic.type.java.member.IJavaFieldType;
 import com.g2forge.alexandria.generic.type.java.type.implementations.ReflectionException;
-import com.g2forge.alexandria.java.tuple.ITuple1GS;
+import com.g2forge.alexandria.java.adt.tuple.ITuple1GS;
 import com.g2forge.alexandria.reflection.object.AJavaMemberReflection;
 import com.g2forge.alexandria.reflection.object.IJavaFieldReflection;
 import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;

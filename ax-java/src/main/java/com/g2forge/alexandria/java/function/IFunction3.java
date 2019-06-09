@@ -5,9 +5,13 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @FunctionalInterface
-public interface IFunction3<I0, I1, I2, O> extends IFunction<O> {
+public interface IFunction3<I0, I1, I2, O> extends IFunction<O>, IConsumer3<I0, I1, I2> {
 	public static <I0, I1, I2, O> IFunction3<I0, I1, I2, O> create(IFunction3<I0, I1, I2, O> function) {
 		return function;
+	}
+
+	public default void accept(I0 i0, I1 i1, I2 i2) {
+		apply(i0, i1, i2);
 	}
 
 	public default <_O> IFunction3<I0, I1, I2, _O> andThen(Function<? super O, ? extends _O> after) {
@@ -44,7 +48,59 @@ public interface IFunction3<I0, I1, I2, O> extends IFunction<O> {
 		return (input0, input1) -> this.apply(input0, input1, input2);
 	}
 
+	public default <I0L> IFunction3<I0L, I1, I2, O> lift0(IFunction1<I0L, ? extends I0> lift) {
+		return (i0, i1, i2) -> {
+			final I0 i0l = lift.apply(i0);
+			return apply(i0l, i1, i2);
+		};
+	}
+
+	public default <I1L> IFunction3<I0, I1L, I2, O> lift1(IFunction1<I1L, ? extends I1> lift) {
+		return (i0, i1, i2) -> {
+			final I1 i1l = lift.apply(i1);
+			return apply(i0, i1l, i2);
+		};
+	}
+
+	public default <I2L> IFunction3<I0, I1, I2L, O> lift2(IFunction1<I2L, ? extends I2> lift) {
+		return (i0, i1, i2) -> {
+			final I2 i2l = lift.apply(i2);
+			return apply(i0, i1, i2l);
+		};
+	}
+
 	public default IConsumer3<I0, I1, I2> noReturn() {
 		return (i0, i1, i2) -> apply(i0, i1, i2);
+	}
+
+	public default IFunction3<I0, I1, I2, O> sync(Object lock) {
+		if (lock == null) return this;
+		return (i0, i1, i2) -> {
+			synchronized (lock) {
+				return apply(i0, i1, i2);
+			}
+		};
+	}
+
+	public default IConsumer3<I0, I1, I2> toConsumer() {
+		return this::apply;
+	}
+
+	public default <_O> IFunction3<I0, I1, I2, _O> toFunction(_O retVal) {
+		return (i0, i1, i2) -> {
+			apply(i0, i1, i2);
+			return retVal;
+		};
+	}
+
+	public default IFunction3<I0, I1, I2, O> wrap(IRunnable pre, IRunnable post) {
+		return (i0, i1, i2) -> {
+			if (pre != null) pre.run();
+			try {
+				return apply(i0, i1, i2);
+			} finally {
+				if (post != null) post.run();
+			}
+		};
 	}
 }

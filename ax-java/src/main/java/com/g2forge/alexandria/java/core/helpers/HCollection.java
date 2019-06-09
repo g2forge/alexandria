@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import com.g2forge.alexandria.java.marker.Helpers;
+import com.g2forge.alexandria.java.core.marker.Helpers;
 
 import lombok.experimental.UtilityClass;
 
@@ -43,6 +44,14 @@ public class HCollection {
 		return Arrays.asList(elements);
 	}
 
+	public static <T> List<T> asListRepeated(int count, T element) {
+		final List<T> retVal = new ArrayList<>(count);
+		for (int i = 0; i < count; i++) {
+			retVal.add(element);
+		}
+		return retVal;
+	}
+
 	@SafeVarargs
 	public static <T> List<T> asListNonNull(T... elements) {
 		final List<T> retVal = new ArrayList<>(elements.length);
@@ -61,6 +70,16 @@ public class HCollection {
 	public static <T> List<T> concatenate(final Collection<? extends T>... collections) {
 		if (collections == null) return null;
 		final List<T> retVal = new ArrayList<>();
+		for (Collection<? extends T> collection : collections) {
+			if (collection != null) retVal.addAll(collection);
+		}
+		return retVal;
+	}
+
+	@SafeVarargs
+	public static <T> Set<T> union(final Collection<? extends T>... collections) {
+		if (collections == null) return null;
+		final Set<T> retVal = new HashSet<>();
 		for (Collection<? extends T> collection : collections) {
 			if (collection != null) retVal.addAll(collection);
 		}

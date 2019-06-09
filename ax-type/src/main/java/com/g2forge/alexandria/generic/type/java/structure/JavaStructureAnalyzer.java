@@ -14,9 +14,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import com.g2forge.alexandria.java.associative.map.HMap;
+import com.g2forge.alexandria.adt.associative.map.HMap;
 import com.g2forge.alexandria.java.core.helpers.HTree;
-import com.g2forge.alexandria.java.function.HF;
 
 import lombok.RequiredArgsConstructor;
 
@@ -57,7 +56,7 @@ public class JavaStructureAnalyzer<T, F, M> {
 
 	}
 
-	public static final JavaStructureAnalyzer<Class<?>, Field, Method> REFLECTION_ANALYZER = new JavaStructureAnalyzer<Class<?>, Field, Method>(klass -> Object.class.equals(klass), Class::getSuperclass, HF.<Class<?>, Method[]>of(Class::getDeclaredMethods).andThen(Stream::of), Function.identity(), HF.<Class<?>, Field[]>of(Class::getDeclaredFields).andThen(Stream::of), Function.identity());
+	public static final JavaStructureAnalyzer<Class<?>, Field, Method> REFLECTION_ANALYZER = new JavaStructureAnalyzer<Class<?>, Field, Method>(klass -> Object.class.equals(klass), Class::getSuperclass, c -> Stream.of(c.getDeclaredMethods()), Function.identity(), c -> Stream.of(c.getDeclaredFields()), Function.identity());
 
 	protected static <T> Stream<T> filter(JavaScope scope, JavaProtection minimum, final Stream<T> members, Function<? super T, ? extends Member> function) {
 		final Stream<T> scoped = members.filter(member -> !(scope.isStatics() ^ Modifier.isStatic(function.apply(member).getModifiers())));

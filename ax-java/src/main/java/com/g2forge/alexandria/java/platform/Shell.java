@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.g2forge.alexandria.java.core.enums.EnumException;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
-import com.g2forge.alexandria.java.enums.EnumException;
 import com.g2forge.alexandria.java.function.IFunction1;
 
 import lombok.AllArgsConstructor;

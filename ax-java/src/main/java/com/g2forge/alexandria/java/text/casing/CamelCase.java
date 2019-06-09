@@ -2,7 +2,7 @@ package com.g2forge.alexandria.java.text.casing;
 
 import java.util.regex.Pattern;
 
-import com.g2forge.alexandria.java.core.iface.ISingleton;
+import com.g2forge.alexandria.java.core.marker.ISingleton;
 
 import lombok.ToString;
 

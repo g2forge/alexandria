@@ -5,7 +5,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @FunctionalInterface
-public interface IFunction1<I, O> extends Function<I, O>, IFunction<O> {
+public interface IFunction1<I, O> extends Function<I, O>, IFunction<O>, IConsumer1<I>, IThrowFunction1<I, O, RuntimeException> {
 	@SuppressWarnings("unchecked")
 	public static <I, O> IFunction1<I, O> cast() {
 		return i -> (O) i;
@@ -22,6 +22,10 @@ public interface IFunction1<I, O> extends Function<I, O>, IFunction<O> {
 	@SuppressWarnings("unchecked")
 	public static <I, O> IFunction1<I, O> isInstanceOf(Class<O> type) {
 		return i -> type.isInstance(i) ? (O) i : null;
+	}
+
+	public default void accept(I i) {
+		apply(i);
 	}
 
 	public default <X> IFunction1<I, X> andThen(IFunction1<? super O, ? extends X> f) {
@@ -41,8 +45,12 @@ public interface IFunction1<I, O> extends Function<I, O>, IFunction<O> {
 		return () -> apply(before.get());
 	}
 
-	public default Supplier<O> curry(I input) {
+	public default ISupplier<O> curry(I input) {
 		return () -> apply(input);
+	}
+
+	public default <IL> IFunction1<IL, O> lift(IFunction1<IL, ? extends I> lift) {
+		return lift.andThen(this);
 	}
 
 	public default <T> IFunction1<I, T> lift(T equal, IFunction1<? super O, ? extends T> lift) {
@@ -55,5 +63,36 @@ public interface IFunction1<I, O> extends Function<I, O>, IFunction<O> {
 
 	public default IConsumer1<I> noReturn() {
 		return i -> apply(i);
+	}
+
+	public default IFunction1<I, O> sync(Object lock) {
+		if (lock == null) return this;
+		return i -> {
+			synchronized (lock) {
+				return apply(i);
+			}
+		};
+	}
+
+	public default IConsumer1<I> toConsumer() {
+		return this::apply;
+	}
+
+	public default <_O> IFunction1<I, _O> toFunction(_O retVal) {
+		return i -> {
+			apply(i);
+			return retVal;
+		};
+	}
+
+	public default IFunction1<I, O> wrap(IRunnable pre, IRunnable post) {
+		return i -> {
+			if (pre != null) pre.run();
+			try {
+				return apply(i);
+			} finally {
+				if (post != null) post.run();
+			}
+		};
 	}
 }

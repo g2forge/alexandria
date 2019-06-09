@@ -40,6 +40,10 @@ public interface IPredicate3<I0, I1, I2> extends IPredicate {
 		return (input0, input1) -> test(input0, input1, input2);
 	}
 
+	public default IPredicate3<I0, I1, I2> negate() {
+		return (i0, i1, i2) -> !test(i0, i1, i2);
+	}
+
 	public default IConsumer3<I0, I1, I2> noReturn() {
 		return (i0, i1, i2) -> test(i0, i1, i2);
 	}

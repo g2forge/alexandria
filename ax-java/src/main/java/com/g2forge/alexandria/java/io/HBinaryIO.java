@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.g2forge.alexandria.java.marker.Helpers;
+import com.g2forge.alexandria.java.core.marker.Helpers;
+import com.g2forge.alexandria.java.function.IRunnable;
 
 import lombok.experimental.UtilityClass;
 
@@ -28,7 +29,11 @@ public class HBinaryIO {
 	 * @throws IOException IOException if an I/O error occurs. In particular, an <code>IOException</code> is thrown if the output stream is closed.
 	 */
 	public static void copy(final InputStream input, final OutputStream output) throws IOException {
-		final byte[] buffer = new byte[HIO.getRecommendedBufferSize()];
+		copy(input, output, HIO.getRecommendedBufferSize(), null);
+	}
+
+	public static void copy(final InputStream input, final OutputStream output, final int bufferSize, final IRunnable post) throws IOException {
+		final byte[] buffer = new byte[bufferSize];
 		while (true) {
 			final int actual;
 			try {
@@ -39,6 +44,7 @@ public class HBinaryIO {
 			if (actual < 0) break;
 
 			output.write(buffer, 0, actual);
+			if (post != null) post.run();
 		}
 	}
 
