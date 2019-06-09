@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.annotation;
+package com.g2forge.alexandria.metadata.v1;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;

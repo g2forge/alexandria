@@ -1,17 +1,21 @@
-package com.g2forge.alexandria.reflection.annotations.implementations;
+package com.g2forge.alexandria.metadata.v3.implementations;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.util.Collection;
 
-import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
-import com.g2forge.alexandria.reflection.annotations.IJavaAnnotations;
+import com.g2forge.alexandria.java.reflect.JavaScope;
+import com.g2forge.alexandria.metadata.v3.IJavaAnnotations;
 
-import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
-@AllArgsConstructor
-public class JavaAnnotations implements IJavaAnnotations {
+@RequiredArgsConstructor
+@EqualsAndHashCode
+@ToString
+public class ElementJavaAnnotations implements IJavaAnnotations {
 	protected final AnnotatedElement annotated;
 
 	@Override

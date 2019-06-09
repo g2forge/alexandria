@@ -6,19 +6,19 @@ import java.util.stream.Stream;
 
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.HJavaType;
-import com.g2forge.alexandria.generic.type.java.structure.JavaProtection;
-import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
 import com.g2forge.alexandria.generic.type.java.type.IJavaConcreteType;
 import com.g2forge.alexandria.generic.type.java.type.implementations.ReflectionException;
-import com.g2forge.alexandria.reflection.annotations.IJavaAnnotations;
-import com.g2forge.alexandria.reflection.annotations.implementations.JavaAnnotations;
+import com.g2forge.alexandria.java.reflect.JavaProtection;
+import com.g2forge.alexandria.java.reflect.JavaScope;
+import com.g2forge.alexandria.metadata.v2.IJavaAnnotations;
+import com.g2forge.alexandria.metadata.v2.implementations.JavaAnnotations;
 import com.g2forge.alexandria.reflection.object.AJavaTypeReflection;
+import com.g2forge.alexandria.reflection.object.HReflection;
 import com.g2forge.alexandria.reflection.object.IJavaConcreteReflection;
 import com.g2forge.alexandria.reflection.object.IJavaConstructorReflection;
 import com.g2forge.alexandria.reflection.object.IJavaFieldReflection;
 import com.g2forge.alexandria.reflection.object.IJavaMethodReflection;
 import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;
-import com.g2forge.alexandria.reflection.object.HReflection;
 
 public class JavaConcreteReflection<T> extends AJavaTypeReflection<T, IJavaConcreteType>implements IJavaConcreteReflection<T> {
 	public JavaConcreteReflection(Class<T> type, final ITypeEnvironment environment) {

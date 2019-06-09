@@ -19,13 +19,13 @@ import com.g2forge.alexandria.generic.type.java.member.IJavaMethodType;
 import com.g2forge.alexandria.generic.type.java.member.implementations.JavaConstructorType;
 import com.g2forge.alexandria.generic.type.java.member.implementations.JavaFieldType;
 import com.g2forge.alexandria.generic.type.java.member.implementations.JavaMethodType;
-import com.g2forge.alexandria.generic.type.java.structure.JavaProtection;
-import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
 import com.g2forge.alexandria.generic.type.java.structure.JavaStructureAnalyzer;
 import com.g2forge.alexandria.generic.type.java.type.implementations.JavaClassType;
 import com.g2forge.alexandria.java.adt.tuple.ITuple2G_;
 import com.g2forge.alexandria.java.adt.tuple.implementations.Tuple2G_O;
 import com.g2forge.alexandria.java.core.error.UnreachableCodeError;
+import com.g2forge.alexandria.java.reflect.JavaProtection;
+import com.g2forge.alexandria.java.reflect.JavaScope;
 
 public abstract class AJavaConcreteType<JT extends Type> extends AJavaType<JT>implements IJavaConcreteType {
 	protected static final JavaStructureAnalyzer<IJavaConcreteType, IJavaFieldType, IJavaMethodType> analyzer;

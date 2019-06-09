@@ -1,12 +1,12 @@
-package com.g2forge.alexandria.reflection.annotations.implementations;
+package com.g2forge.alexandria.metadata.v2.implementations;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
-import com.g2forge.alexandria.reflection.annotations.IJavaAnnotations;
+import com.g2forge.alexandria.java.reflect.JavaScope;
+import com.g2forge.alexandria.metadata.v2.IJavaAnnotations;
 
 public class MergedJavaAnnotations implements IJavaAnnotations {
 	protected final Collection<IJavaAnnotations> annotations;

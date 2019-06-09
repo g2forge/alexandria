@@ -7,6 +7,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.g2forge.alexandria.java.core.helpers.HCollection;
+import com.g2forge.alexandria.java.reflect.JavaProtection;
+import com.g2forge.alexandria.java.reflect.JavaScope;
 
 public class TestJavaStructureAnalyzer {
 	public static class Child extends Parent {

@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import com.g2forge.alexandria.generic.type.java.structure.JavaScope;
 import com.g2forge.alexandria.java.function.cache.FixedCachingSupplier;
+import com.g2forge.alexandria.java.reflect.JavaScope;
 import com.g2forge.alexandria.reflection.object.HReflection;
 import com.g2forge.alexandria.reflection.object.IJavaConcreteReflection;
 import com.g2forge.alexandria.reflection.object.IJavaFieldReflection;
