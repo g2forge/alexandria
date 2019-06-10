@@ -31,7 +31,7 @@ public interface IStructuredCommand extends ICommand {
 					invocation.io.getStandardError().println(String.format("Unrecognized command \"%1$s\"!", name));
 					return FAIL;
 				} else {
-					final Invocation<InputStream, PrintStream> subinvocation = new Invocation<>(arguments.subList(1, arguments.size()), invocation.getIo(), invocation.getWorking());
+					final CommandInvocation<InputStream, PrintStream> subinvocation = new CommandInvocation<>(arguments.subList(1, arguments.size()), invocation.getIo(), invocation.getWorking());
 					return subcommand.invoke(subinvocation);
 				}
 			};

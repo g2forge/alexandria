@@ -29,22 +29,22 @@ public interface IStandardCommand extends IStructuredCommand {
 	}
 
 	static void main(String[] args, IStandardCommand command) throws Throwable {
-		final Invocation<InputStream, PrintStream> invocation = Invocation.of(args);
+		final CommandInvocation<InputStream, PrintStream> invocation = CommandInvocation.of(args);
 		final IExit exit = command.invoke(invocation);
 		System.exit(exit.getCode());
 	}
 
-	public static IStandardCommand of(IFunction1<? super Invocation<InputStream, PrintStream>, ? extends IConstructorCommand> factory) {
+	public static IStandardCommand of(IFunction1<? super CommandInvocation<InputStream, PrintStream>, ? extends IConstructorCommand> factory) {
 		return invocation -> factory.apply(invocation).invoke();
 	}
 
-	public IExit invoke(Invocation<InputStream, PrintStream> invocation) throws Throwable;
+	public IExit invoke(CommandInvocation<InputStream, PrintStream> invocation) throws Throwable;
 
 	public default TestResult test(InputStream standardInput, Path working, String... arguments) throws Throwable {
 		final ByteArrayOutputStream standardOutput = new ByteArrayOutputStream();
 		final ByteArrayOutputStream standardError = new ByteArrayOutputStream();
 		final StandardIO<InputStream, PrintStream> io = new StandardIO<>(standardInput, new PrintStream(standardOutput), new PrintStream(standardError));
-		final Invocation<InputStream, PrintStream> invocation = new Invocation<>(HCollection.asList(arguments), io, working);
+		final CommandInvocation<InputStream, PrintStream> invocation = new CommandInvocation<>(HCollection.asList(arguments), io, working);
 		final IExit exit = invoke(invocation);
 		return new TestResult(exit, new ByteArrayInputStream(standardOutput.toByteArray()), new ByteArrayInputStream(standardError.toByteArray()));
 	}
