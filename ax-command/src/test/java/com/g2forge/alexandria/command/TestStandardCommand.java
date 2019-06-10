@@ -16,7 +16,7 @@ import com.g2forge.alexandria.java.io.HIO;
 public class TestStandardCommand {
 	public static class Cat implements IStandardCommand {
 		@Override
-		public IExit invoke(Invocation<InputStream, PrintStream> invocation) throws Throwable {
+		public IExit invoke(CommandInvocation<InputStream, PrintStream> invocation) throws Throwable {
 			final IStandardIO<InputStream, PrintStream> io = invocation.getIo();
 			final InputStream input = io.getStandardInput();
 			final PrintStream output = io.getStandardOutput();
@@ -33,7 +33,7 @@ public class TestStandardCommand {
 
 	public static class Echo implements IStandardCommand {
 		@Override
-		public IExit invoke(Invocation<InputStream, PrintStream> invocation) throws Throwable {
+		public IExit invoke(CommandInvocation<InputStream, PrintStream> invocation) throws Throwable {
 			final PrintStream output = invocation.getIo().getStandardOutput();
 			invocation.getArguments().forEach(output::print);
 			return SUCCESS;

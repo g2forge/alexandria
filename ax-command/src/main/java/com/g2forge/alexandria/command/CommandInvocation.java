@@ -18,9 +18,9 @@ import lombok.Singular;
 @Data
 @Builder(toBuilder = true)
 @AllArgsConstructor
-public class Invocation<I, O> {
-	public static final Invocation<InputStream, PrintStream> of(String... args) {
-		final Invocation.InvocationBuilder<InputStream, PrintStream> retVal = Invocation.builder();
+public class CommandInvocation<I, O> {
+	public static final CommandInvocation<InputStream, PrintStream> of(String... args) {
+		final CommandInvocation.CommandInvocationBuilder<InputStream, PrintStream> retVal = CommandInvocation.builder();
 		retVal.arguments(HCollection.asList(args));
 		retVal.io(StandardIO.of());
 		retVal.working(Paths.get(System.getProperty("user.dir")));

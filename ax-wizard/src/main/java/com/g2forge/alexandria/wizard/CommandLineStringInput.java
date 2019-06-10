@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.NoSuchElementException;
 
-import com.g2forge.alexandria.command.Invocation;
+import com.g2forge.alexandria.command.CommandInvocation;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -14,7 +14,7 @@ import lombok.Getter;
 @EqualsAndHashCode(callSuper = false)
 @Getter
 public class CommandLineStringInput extends AInput<String> {
-	protected final Invocation<InputStream, PrintStream> invocation;
+	protected final CommandInvocation<InputStream, PrintStream> invocation;
 
 	protected final int index;
 
