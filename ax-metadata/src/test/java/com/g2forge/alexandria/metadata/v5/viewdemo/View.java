@@ -1,14 +1,17 @@
-package com.g2forge.alexandria.metadata.v4;
+package com.g2forge.alexandria.metadata.v5.viewdemo;
 
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import com.g2forge.alexandria.metadata.v4.ViewAnnotation;
-
 @Retention(RetentionPolicy.RUNTIME)
-@Repeatable(Views.class)
+@Repeatable(View.Views.class)
 public @interface View {
+	@Retention(RetentionPolicy.RUNTIME)
+	public @interface Views {
+		public View[] value();
+	}
+	
 	public String value();
 
 	@ViewAnnotation

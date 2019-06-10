@@ -1,13 +1,13 @@
 package com.g2forge.alexandria.adt.associative;
 
-import java.util.Optional;
+import com.g2forge.alexandria.java.fluent.optional.IOptional;
 
 public interface IAssociation<K, V> {
-	public Optional<V> get(K key, boolean remove);
+	public IOptional<V> get(K key, boolean remove);
 
 	public void put(K key, V value);
 
 	public void remove(K key);
 
-	public Optional<V> set(K key, V value);
+	public IOptional<V> set(K key, V value);
 }
