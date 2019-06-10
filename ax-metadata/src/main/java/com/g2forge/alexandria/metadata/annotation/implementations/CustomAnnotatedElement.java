@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.metadata.v1;
+package com.g2forge.alexandria.metadata.annotation.implementations;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -7,7 +7,7 @@ import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class SimpleAnnotatedElement implements AnnotatedElement {
+public class CustomAnnotatedElement implements AnnotatedElement {
 	protected final Annotation[] annotations;
 
 	@SuppressWarnings("unchecked")

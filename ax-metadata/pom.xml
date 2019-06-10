@@ -14,4 +14,12 @@
 
 	<name>Alexandria Metadata</name>
 	<description>A library for accessing program metadata, abstracted from basic Java annotations.</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.g2forge.alexandria</groupId>
+			<artifactId>ax-adt</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
 </project>

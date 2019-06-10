@@ -1,11 +1,9 @@
-package com.g2forge.alexandria.metadata.v4;
+package com.g2forge.alexandria.metadata.viewdemo;
 
 import java.util.stream.Stream;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.g2forge.alexandria.metadata.v4.ViewAnnotatedElement;
 
 public class TestView {
 	public interface Parent {}

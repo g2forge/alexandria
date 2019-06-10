@@ -10,8 +10,8 @@ import com.g2forge.alexandria.generic.type.java.type.IJavaConcreteType;
 import com.g2forge.alexandria.generic.type.java.type.implementations.ReflectionException;
 import com.g2forge.alexandria.java.reflect.JavaProtection;
 import com.g2forge.alexandria.java.reflect.JavaScope;
-import com.g2forge.alexandria.metadata.v2.IJavaAnnotations;
-import com.g2forge.alexandria.metadata.v2.implementations.JavaAnnotations;
+import com.g2forge.alexandria.metadata.annotation.IJavaAnnotations;
+import com.g2forge.alexandria.metadata.annotation.implementations.ElementJavaAnnotations;
 import com.g2forge.alexandria.reflection.object.AJavaTypeReflection;
 import com.g2forge.alexandria.reflection.object.HReflection;
 import com.g2forge.alexandria.reflection.object.IJavaConcreteReflection;
@@ -20,7 +20,7 @@ import com.g2forge.alexandria.reflection.object.IJavaFieldReflection;
 import com.g2forge.alexandria.reflection.object.IJavaMethodReflection;
 import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;
 
-public class JavaConcreteReflection<T> extends AJavaTypeReflection<T, IJavaConcreteType>implements IJavaConcreteReflection<T> {
+public class JavaConcreteReflection<T> extends AJavaTypeReflection<T, IJavaConcreteType> implements IJavaConcreteReflection<T> {
 	public JavaConcreteReflection(Class<T> type, final ITypeEnvironment environment) {
 		this(HJavaType.toType(type, environment));
 	}
@@ -31,7 +31,7 @@ public class JavaConcreteReflection<T> extends AJavaTypeReflection<T, IJavaConcr
 
 	@Override
 	public IJavaAnnotations getAnnotations() {
-		return new JavaAnnotations(getInternal());
+		return new ElementJavaAnnotations(getInternal());
 	}
 
 	@Override
