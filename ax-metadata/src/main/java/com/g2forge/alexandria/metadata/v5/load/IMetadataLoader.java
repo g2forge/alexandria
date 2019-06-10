@@ -20,9 +20,9 @@ public interface IMetadataLoader {
 		return new AnnotationMetadataLoader();
 	}
 
-	public default boolean isPresent(Class<?> type, IMetadata element) {
-		return load(type, element) != null;
+	public default boolean isPresent(Class<?> type, IMetadata metadata) {
+		return load(type, metadata) != null;
 	}
 
-	public <T> T load(Class<T> type, IMetadata element);
+	public <T> T load(Class<T> type, IMetadata metadata);
 }

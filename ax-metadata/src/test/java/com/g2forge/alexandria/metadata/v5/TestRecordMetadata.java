@@ -21,7 +21,7 @@ public class TestRecordMetadata {
 	public static class RecordLoader implements IMetadataLoader {
 		@Override
 		@TODO(value = "Use static type switch", link = "G2-432")
-		public <T> T load(Class<T> type, IMetadata element) {
+		public <T> T load(Class<T> type, IMetadata metadata) {
 			if (!Record.class.equals(type)) throw new IllegalArgumentException();
 			@SuppressWarnings("unchecked")
 			final T retVal = (T) new Record("Hello");
