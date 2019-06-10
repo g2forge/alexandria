@@ -7,7 +7,7 @@ import com.g2forge.alexandria.metadata.v5.MetadataLoader;
 public interface IMetadataLoader {
 	@TODO(value = "Support for non-annotation metadata", link = "G2-469")
 	public static <T> IMetadataLoader find(Class<T> type) {
-		if (MetadataLoader.class.isAssignableFrom(type)) return new AnnotatedMetadataLoader();
+		if (MetadataLoader.class.isAssignableFrom(type)) return new AnnotationMetadataLoader();
 
 		final MetadataLoader metadata = IMetadata.of(type).getMetadata(MetadataLoader.class);
 		if (metadata != null) {
@@ -17,7 +17,7 @@ public interface IMetadataLoader {
 				throw new RuntimeException(e);
 			}
 		}
-		return new AnnotatedMetadataLoader();
+		return new AnnotationMetadataLoader();
 	}
 
 	public <T> T load(Class<T> type, IMetadata element);
