@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.metadata.v3.implementations;
+package com.g2forge.alexandria.metadata.v5.annotation.implementations;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.java.reflect.JavaScope;
-import com.g2forge.alexandria.metadata.v3.IJavaAnnotations;
+import com.g2forge.alexandria.metadata.v5.annotation.IJavaAnnotations;
 
 import lombok.Builder;
 import lombok.Data;

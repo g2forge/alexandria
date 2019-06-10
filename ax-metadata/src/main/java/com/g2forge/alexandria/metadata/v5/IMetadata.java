@@ -2,19 +2,17 @@ package com.g2forge.alexandria.metadata.v5;
 
 import java.lang.reflect.AnnotatedElement;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
-import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.metadata.v5.load.MergedMetadata;
 import com.g2forge.alexandria.metadata.v5.load.SimpleMetadata;
 
 public interface IMetadata {
 	public static IMetadata merge(Collection<? extends IMetadata> metadatas) {
-		return new MergedMetadata(metadatas.stream().map(IAnnotations.class::cast).collect(Collectors.toList()));
+		return new MergedMetadata(metadatas);
 	}
 
 	public static IMetadata merge(IMetadata... metadatas) {
-		return merge(HCollection.asList(metadatas));
+		return new MergedMetadata(metadatas);
 	}
 
 	public static IMetadata of(AnnotatedElement element) {
