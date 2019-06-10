@@ -1,26 +1,16 @@
 package com.g2forge.alexandria.metadata.v5;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
 import org.junit.Test;
 
 import com.g2forge.alexandria.annotations.message.TODO;
+import com.g2forge.alexandria.metadata.v5.TestAnnotationMetadata.Annotated;
 import com.g2forge.alexandria.metadata.v5.load.IMetadataLoader;
 import com.g2forge.alexandria.test.HAssert;
 
 import lombok.Builder;
 import lombok.Data;
 
-public class TestMetadata {
-	@Retained("Hello")
-	@NotRetained("Hello")
-	public static class Annotated {}
-
-	public @interface NotRetained {
-		public String value();
-	}
-
+public class TestRecordMetadata {
 	@Data
 	@Builder(toBuilder = true)
 	@MetadataLoader(RecordLoader.class)
@@ -39,25 +29,9 @@ public class TestMetadata {
 		}
 	}
 
-	@Retention(RetentionPolicy.RUNTIME)
-	public @interface Retained {
-		public String value();
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void notRetained() {
-		IMetadata.of(Annotated.class).getMetadata(NotRetained.class);
-	}
-
 	@Test
 	public void record() {
 		final Record record = IMetadata.of(Annotated.class).getMetadata(Record.class);
 		HAssert.assertEquals("Hello", record.getString());
-	}
-
-	@Test
-	public void retained() {
-		final Retained value = IMetadata.of(Annotated.class).getMetadata(Retained.class);
-		HAssert.assertEquals("Hello", value.value());
 	}
 }

@@ -14,4 +14,6 @@ public interface IMetadata {
 	}
 
 	public <T> T getMetadata(Class<T> type);
+
+	public boolean isMetadataPresent(Class<?> type);
 }
