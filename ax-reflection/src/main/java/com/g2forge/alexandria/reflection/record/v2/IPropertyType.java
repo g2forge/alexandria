@@ -1,6 +1,6 @@
 package com.g2forge.alexandria.reflection.record.v2;
 
-import com.g2forge.alexandria.metadata.v2.IJavaAnnotations;
+import com.g2forge.alexandria.metadata.v3.IJavaAnnotations;
 import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;
 
 public interface IPropertyType<P> {

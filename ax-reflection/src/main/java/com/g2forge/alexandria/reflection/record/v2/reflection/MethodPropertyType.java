@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.g2forge.alexandria.java.core.error.RuntimeReflectionException;
 import com.g2forge.alexandria.java.reflect.IJavaAccessorMethod;
-import com.g2forge.alexandria.metadata.v2.IJavaAnnotated;
+import com.g2forge.alexandria.metadata.v3.IJavaAnnotated;
 import com.g2forge.alexandria.reflection.object.IJavaMethodReflection;
 import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;
 

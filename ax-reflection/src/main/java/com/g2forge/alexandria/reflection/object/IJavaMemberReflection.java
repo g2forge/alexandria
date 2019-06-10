@@ -2,7 +2,7 @@ package com.g2forge.alexandria.reflection.object;
 
 import com.g2forge.alexandria.generic.type.java.member.IJavaMemberType;
 import com.g2forge.alexandria.generic.type.java.typed.IJavaTyped;
-import com.g2forge.alexandria.metadata.v2.IJavaAnnotated;
+import com.g2forge.alexandria.metadata.v3.IJavaAnnotated;
 
 public interface IJavaMemberReflection<T> extends IJavaReflection, IJavaTyped, IJavaAnnotated {
 	@Override

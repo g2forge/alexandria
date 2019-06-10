@@ -3,8 +3,8 @@ package com.g2forge.alexandria.reflection.object;
 import java.lang.reflect.AnnotatedElement;
 
 import com.g2forge.alexandria.generic.type.java.member.IJavaMemberType;
-import com.g2forge.alexandria.metadata.v2.IJavaAnnotations;
-import com.g2forge.alexandria.metadata.v2.implementations.JavaAnnotations;
+import com.g2forge.alexandria.metadata.v3.IJavaAnnotations;
+import com.g2forge.alexandria.metadata.v3.implementations.ElementJavaAnnotations;
 import com.g2forge.alexandria.reflection.object.implementations.JavaConcreteReflection;
 
 import lombok.Data;
@@ -15,7 +15,7 @@ public abstract class AJavaMemberReflection<T, MT extends IJavaMemberType> imple
 
 	@Override
 	public IJavaAnnotations getAnnotations() {
-		return new JavaAnnotations((AnnotatedElement /* Cast is safe, no idea why Java standard library doesn't allow this */ ) getType().getJavaMember());
+		return new ElementJavaAnnotations((AnnotatedElement /* Cast is safe, no idea why Java standard library doesn't allow this */ ) getType().getJavaMember());
 	}
 
 	@Override
