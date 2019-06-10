@@ -1,11 +1,11 @@
-package com.g2forge.alexandria.metadata.v5.load;
+package com.g2forge.alexandria.metadata.load;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 import com.g2forge.alexandria.java.core.marker.ISingleton;
-import com.g2forge.alexandria.metadata.v5.IMetadata;
-import com.g2forge.alexandria.metadata.v5.annotation.IJavaAnnotations;
+import com.g2forge.alexandria.metadata.IMetadata;
+import com.g2forge.alexandria.metadata.annotation.IJavaAnnotations;
 
 public class AnnotationMetadataLoader implements IMetadataLoader, ISingleton {
 	protected void check(Class<?> type) {

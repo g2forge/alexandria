@@ -1,8 +1,8 @@
-package com.g2forge.alexandria.metadata.v5.load;
+package com.g2forge.alexandria.metadata.load;
 
 import com.g2forge.alexandria.annotations.message.TODO;
-import com.g2forge.alexandria.metadata.v5.IMetadata;
-import com.g2forge.alexandria.metadata.v5.MetadataLoader;
+import com.g2forge.alexandria.metadata.IMetadata;
+import com.g2forge.alexandria.metadata.MetadataLoader;
 
 public interface IMetadataLoader {
 	@TODO(value = "Support for non-annotation metadata", link = "G2-469")

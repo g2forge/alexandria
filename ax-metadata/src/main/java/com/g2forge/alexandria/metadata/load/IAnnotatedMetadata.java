@@ -1,7 +1,7 @@
-package com.g2forge.alexandria.metadata.v5.load;
+package com.g2forge.alexandria.metadata.load;
 
-import com.g2forge.alexandria.metadata.v5.IMetadata;
-import com.g2forge.alexandria.metadata.v5.annotation.IJavaAnnotated;
+import com.g2forge.alexandria.metadata.IMetadata;
+import com.g2forge.alexandria.metadata.annotation.IJavaAnnotated;
 
 public interface IAnnotatedMetadata extends IMetadata, IJavaAnnotated {
 	@Override

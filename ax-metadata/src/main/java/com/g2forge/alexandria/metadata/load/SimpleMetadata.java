@@ -1,11 +1,11 @@
-package com.g2forge.alexandria.metadata.v5.load;
+package com.g2forge.alexandria.metadata.load;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 
 import com.g2forge.alexandria.annotations.message.TODO;
-import com.g2forge.alexandria.metadata.v5.annotation.IJavaAnnotations;
-import com.g2forge.alexandria.metadata.v5.annotation.implementations.ElementJavaAnnotations;
+import com.g2forge.alexandria.metadata.annotation.IJavaAnnotations;
+import com.g2forge.alexandria.metadata.annotation.implementations.ElementJavaAnnotations;
 
 import lombok.Builder;
 import lombok.Data;

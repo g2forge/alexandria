@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.metadata.v5.annotation;
+package com.g2forge.alexandria.metadata.annotation;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;

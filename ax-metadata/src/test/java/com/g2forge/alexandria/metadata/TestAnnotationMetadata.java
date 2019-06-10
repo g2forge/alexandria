@@ -1,10 +1,11 @@
-package com.g2forge.alexandria.metadata.v5;
+package com.g2forge.alexandria.metadata;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 import org.junit.Test;
 
+import com.g2forge.alexandria.metadata.IMetadata;
 import com.g2forge.alexandria.test.HAssert;
 
 public class TestAnnotationMetadata {

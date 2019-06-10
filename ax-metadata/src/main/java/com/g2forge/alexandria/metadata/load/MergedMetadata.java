@@ -1,12 +1,12 @@
-package com.g2forge.alexandria.metadata.v5.load;
+package com.g2forge.alexandria.metadata.load;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import com.g2forge.alexandria.metadata.v5.IMetadata;
-import com.g2forge.alexandria.metadata.v5.annotation.IJavaAnnotations;
-import com.g2forge.alexandria.metadata.v5.annotation.implementations.MergedJavaAnnotations;
+import com.g2forge.alexandria.metadata.IMetadata;
+import com.g2forge.alexandria.metadata.annotation.IJavaAnnotations;
+import com.g2forge.alexandria.metadata.annotation.implementations.MergedJavaAnnotations;
 
 import lombok.Builder;
 import lombok.Data;

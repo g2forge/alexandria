@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.metadata.v5.viewdemo;
+package com.g2forge.alexandria.metadata.viewdemo;
 
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;

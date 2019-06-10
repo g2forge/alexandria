@@ -1,10 +1,10 @@
-package com.g2forge.alexandria.metadata.v5;
+package com.g2forge.alexandria.metadata;
 
 import java.lang.reflect.AnnotatedElement;
 import java.util.Collection;
 
-import com.g2forge.alexandria.metadata.v5.load.MergedMetadata;
-import com.g2forge.alexandria.metadata.v5.load.SimpleMetadata;
+import com.g2forge.alexandria.metadata.load.MergedMetadata;
+import com.g2forge.alexandria.metadata.load.SimpleMetadata;
 
 public interface IMetadata {
 	public static IMetadata merge(Collection<? extends IMetadata> metadatas) {
