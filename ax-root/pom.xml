@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.g2forge.alexandria</groupId>
@@ -14,8 +16,10 @@
 		<project.resources.sourceEncoding>${encoding}</project.resources.sourceEncoding>
 		<archetype.encoding>${encoding}</archetype.encoding>
 
-		<mavencompiler.version>3.7.0</mavencompiler.version>
+		<mavencompiler.version>3.8.1</mavencompiler.version>
 		<mavencompiler.javaversion>1.8</mavencompiler.javaversion>
+		<mavenjar.version>3.1.2</mavenjar.version>
+		<mavensurefire.version>3.0.0-M3</mavensurefire.version>
 
 		<lombok.version>1.18.6</lombok.version>
 		<lombok-maven.version>${lombok.version}.0</lombok-maven.version>
@@ -103,6 +107,18 @@
 				<configuration>
 					<source>${mavencompiler.javaversion}</source>
 					<target>${mavencompiler.javaversion}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${mavensurefire.version}</version>
+				<configuration>
+					<parallel>classes</parallel>
+					<threadCount>8</threadCount>
+					<systemPropertyVariables>
+						<com.g2forge.alexandria.wizard.propertiesfile>${project.basedir}/test.properties</com.g2forge.alexandria.wizard.propertiesfile>
+					</systemPropertyVariables>
 				</configuration>
 			</plugin>
 			<plugin>
