@@ -6,7 +6,6 @@ import com.g2forge.alexandria.annotations.message.TODO;
 import com.g2forge.alexandria.metadata.IMetadata;
 import com.g2forge.alexandria.metadata.MetadataLoader;
 import com.g2forge.alexandria.metadata.TestAnnotationMetadata.Annotated;
-import com.g2forge.alexandria.metadata.load.IMetadataLoader;
 import com.g2forge.alexandria.test.HAssert;
 
 import lombok.Builder;
