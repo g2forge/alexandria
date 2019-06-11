@@ -52,6 +52,10 @@ public interface IJavaAccessorMethod {
 		public String getPrefix() {
 			return name().toLowerCase();
 		}
+		
+		public boolean isMatchingName(String name) {
+			return name.startsWith(getPrefix());
+		}
 
 		public abstract boolean isMatchingParameterTypes(Type[] types);
 
@@ -63,7 +67,7 @@ public interface IJavaAccessorMethod {
 		final Type[] parameterTypes = getParameterTypes();
 		final Type returnType = getReturnType();
 		for (Accessor type : Accessor.values()) {
-			if (name.startsWith(type.getPrefix()) && type.isMatchingReturnType(returnType) && type.isMatchingParameterTypes(parameterTypes)) return type;
+			if (type.isMatchingName(name) && type.isMatchingReturnType(returnType) && type.isMatchingParameterTypes(parameterTypes)) return type;
 		}
 		return null;
 	}
