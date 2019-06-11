@@ -1,10 +1,13 @@
 package com.g2forge.alexandria.java.core.error;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Consumer;
 
+import com.g2forge.alexandria.java.concurrent.RuntimeInterruptedException;
 import com.g2forge.alexandria.java.core.marker.Helpers;
+import com.g2forge.alexandria.java.io.RuntimeIOException;
 
 import lombok.experimental.UtilityClass;
 
@@ -45,5 +48,13 @@ public class HError {
 
 	public static RuntimeException multithrow(String message, Throwable... throwables) {
 		return addSuppressed(new RuntimeException(message), throwables);
+	}
+
+	public static void throwQuietly(Throwable throwable) {
+		if (throwable instanceof Error) throw (Error) throwable;
+		if (throwable instanceof RuntimeException) throw (RuntimeException) throwable;
+		if (throwable instanceof IOException) throw (RuntimeIOException) throwable;
+		if (throwable instanceof InterruptedException) throw (RuntimeInterruptedException) throwable;
+		throw new RuntimeWrappingException(throwable);
 	}
 }
