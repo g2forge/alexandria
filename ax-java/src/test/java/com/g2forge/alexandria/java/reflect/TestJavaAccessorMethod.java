@@ -16,7 +16,7 @@ public class TestJavaAccessorMethod {
 	@Test
 	public void flag() throws NoSuchMethodException, SecurityException {
 		final JavaAccessorMethod method = new JavaAccessorMethod(TestData.class.getDeclaredMethod("isFlag"));
-		Assert.assertEquals(IJavaAccessorMethod.Accessor.GET, method.getAccessorType());
+		Assert.assertEquals(IJavaAccessorMethod.Accessor.IS, method.getAccessorType());
 	}
 
 	@Test
