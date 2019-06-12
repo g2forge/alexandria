@@ -15,19 +15,7 @@ import lombok.Getter;
 @Getter
 public enum Shell {
 	BASH(null, null, TXTSpec.UNIX, new String[] { "-c" }, PlatformCategory.Posix),
-	CMD("CMD.EXE", new ExeSpec[] { ExeSpec.BAT }, TXTSpec.DOS, new String[] { "/C" }, PlatformCategory.Microsoft) {
-		@Override
-		public IFunction1<? super List<? extends String>, ? extends List<? extends String>> getCommandNesting() {
-			return arguments -> {
-				final String[] shellArguments = getArguments();
-				final List<String> retVal = new ArrayList<>(arguments.size() + 1 + shellArguments.length);
-				retVal.add(((getName() == null) ? name() : getName()).toLowerCase());
-				retVal.addAll(HCollection.asList(shellArguments));
-				retVal.addAll(arguments);
-				return retVal;
-			};
-		}
-	},
+	CMD("CMD.EXE", new ExeSpec[] { ExeSpec.BAT }, TXTSpec.DOS, new String[] { "/C" }, PlatformCategory.Microsoft),
 	TCSH(null, null, TXTSpec.UNIX, new String[] { "-c" }, PlatformCategory.Posix);
 
 	protected final String name;
