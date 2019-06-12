@@ -22,7 +22,6 @@ public class PropertyStringInput extends AInput<String> {
 
 	protected static Properties computeProperties() {
 		final String path = System.getProperty(PropertyStringInput.class.getPackage().getName() + ".propertiesfile");
-		System.out.println("Path: " + path);
 		if (path == null) return System.getProperties();
 
 		try (InputStream input = Files.newInputStream(Paths.get(path))) {
