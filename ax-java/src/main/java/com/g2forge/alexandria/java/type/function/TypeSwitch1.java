@@ -90,10 +90,14 @@ public class TypeSwitch1<I, O> implements IFunction1<I, O> {
 		protected <I> O apply(IFunction1<? super I, ? extends O> fallback, I input) {
 			return get(n -> n.getFunction().isApplicable(input), collection -> {
 				if (collection.isEmpty()) {
-					if (fallback == null) throw new IllegalArgumentException();
+					if (fallback == null) throw new IllegalArgumentException(String.format("There was no fallback, and no case was found for: %1$s", input));
 					return new Node<O>(new TypedFunction1<>(null, fallback));
 				}
-				return HCollection.getOne(collection);
+				try {
+					return HCollection.getOne(collection);
+				} catch (IllegalArgumentException exception) {
+					throw new IllegalArgumentException(String.format("Multiple cases were found for: %1$s", input), exception);
+				}
 			}).getFunction().apply(input);
 		}
 
