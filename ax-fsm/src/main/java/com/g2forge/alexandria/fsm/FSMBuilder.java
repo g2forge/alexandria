@@ -127,6 +127,7 @@ public class FSMBuilder<Event extends IGeneric<?>, State extends IGeneric<?>, Em
 	 * method will not affect the FSM, though they will affect FSMs constucted in the future.
 	 * 
 	 * @param initial The initial state for the resulting FSM.
+	 * @param threadSafe Should we decrease FSM performance to add thread safety?
 	 * @return A finite state machine.
 	 */
 	public IFSM<Event, State, Emission, Output> build(IFSMValue<? extends State, ?> initial, boolean threadSafe) {
