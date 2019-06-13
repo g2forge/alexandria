@@ -12,12 +12,12 @@ import com.g2forge.alexandria.java.type.IGeneric;
  */
 public interface IFSM<Event extends IGeneric<?>, State extends IGeneric<?>, Emission, Output> {
 	/**
-	 * TODO
+	 * Fire an event, which may change the state of this FSM.
 	 * 
-	 * @param event
+	 * @param event The event to fire
 	 * @return A mealy-style output, or &quot;emission&quot; from this event firing. If you wish to implement a moore machine, you should use
 	 *         {@link #getOutput()}.
-	 * @throws FSMDisallowedEventException
+	 * @throws FSMDisallowedEventException If the event is disallowed in the {@link #getState() current state}.
 	 */
 	public Emission fire(IFSMValue<? extends Event, ?> event) throws FSMDisallowedEventException;
 
