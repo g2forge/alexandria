@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.g2forge.alexandria.adt.record.map.v2.TestImmutableRecord.ImmutableRecord.ImmutableRecordBuilder;
 import com.g2forge.alexandria.adt.record.v2.accessor.IFieldAccessor;
 import com.g2forge.alexandria.adt.record.v2.accessor.MutableRecordAccessor;
 import com.g2forge.alexandria.adt.record.v2.type.FieldType;
@@ -17,20 +16,10 @@ import com.g2forge.alexandria.adt.record.v2.type.RecordType;
 import com.g2forge.alexandria.adt.record.v2.type.RecordType.RecordTypeBuilder;
 import com.g2forge.alexandria.annotations.message.TODO;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-
 @Ignore
 @TODO("Reimplement on accessor2, remove ignores, suppressed warnings and un-comment code")
 @SuppressWarnings({ "unused", "null" })
 public class TestImmutableRecord {
-	@Data
-	@Builder
-	public static class ImmutableRecord {
-		protected final String field;
-	}
-
 	@Test
 	public void immutableMap() {
 		final String key = "key", value0 = "value0", value1 = "value1";
@@ -64,7 +53,7 @@ public class TestImmutableRecord {
 		recordTypeBuilder.field(fieldType);
 		final IRecordType<ImmutableRecord, ImmutableRecord.ImmutableRecordBuilder> recordType = recordTypeBuilder.build();
 
-		final ImmutableRecordBuilder builder = recordType.getFactory().get();
+		final ImmutableRecord.ImmutableRecordBuilder builder = recordType.getFactory().get();
 		recordType.getField(name).getSetter();
 
 		final MutableRecordAccessor<ImmutableRecord> recordAccessor = new MutableRecordAccessor<ImmutableRecord>(null /*recordType*/);
