@@ -15,6 +15,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import com.g2forge.alexandria.java.close.ICloseable;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.core.marker.Helpers;
 import com.g2forge.alexandria.java.io.HIO;
@@ -96,7 +97,7 @@ public class HZip {
 				throw new RuntimeIOException(e);
 			}
 		}).collect(Collectors.toList());
-		try {
+		try (final ICloseable closeFiles = () -> HIO.closeAll(files)) {
 			for (Enumeration<? extends ZipEntry> enuemration = files.get(0).entries(); enuemration.hasMoreElements();) {
 				final String name = enuemration.nextElement().getName();
 
@@ -110,16 +111,13 @@ public class HZip {
 						}
 					} else return null;
 				}).collect(Collectors.toList());
-				// If any of the zipfiles don't have the entry, fail
-				if (streams.contains(null)) {
-					HIO.closeAll(streams);
-					return false;
+				try (final ICloseable closeStreams = () -> HIO.closeAll(streams)) {
+					// If any of the zipfiles don't have the entry, fail
+					if (streams.contains(null)) return false;
+					// Make sure all the entries have the same data
+					if (!HIO.isEqual(streams)) return false;
 				}
-				// Make sure all the entries have the same data
-				if (!HIO.isEqual(streams)) return false;
 			}
-		} finally {
-			HIO.closeAll(files);
 		}
 		return true;
 	}
