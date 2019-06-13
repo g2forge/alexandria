@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import com.g2forge.alexandria.java.close.ICloseable;
 import com.g2forge.alexandria.java.core.error.HError;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.core.helpers.HStream;
@@ -51,10 +52,8 @@ public class HIO {
 	public static void close(AutoCloseable closeable) {
 		try {
 			closeable.close();
-		} catch (IOException exception) {
-			throw new RuntimeIOException(exception);
 		} catch (Throwable throwable) {
-			throw new RuntimeException(throwable);
+			HError.throwQuietly(throwable);
 		}
 	}
 
@@ -90,9 +89,9 @@ public class HIO {
 			return true;
 		}
 
-		try {
+		try (final ICloseable closeStreams = () -> closeAll(streams)) {
 			final List<ReadableByteChannel> channels = streams.stream().map(Channels::newChannel).collect(Collectors.toList());
-			try {
+			try (final ICloseable closeChannels = () -> closeAll(channels)) {
 				final int bufferSize = getRecommendedBufferSize();
 				final List<ByteBuffer> buffers = streams.stream().map(stream -> ByteBuffer.allocateDirect(bufferSize)).collect(Collectors.toList());
 				while (true) {
@@ -114,11 +113,7 @@ public class HIO {
 					}
 					buffers.forEach(Buffer::clear);
 				}
-			} finally {
-				closeAll(channels);
 			}
-		} finally {
-			closeAll(streams);
 		}
 	}
 
