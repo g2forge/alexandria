@@ -56,10 +56,10 @@ import lombok.RequiredArgsConstructor;
  * This implementation will handle things like locking and basic file attributes (e.g. file times), while the implementor must implement actual operations. This
  * class does not handle permissions, for example, as different file systems have different permissions. At this time it may or may not appropriately support
  * symbolic links, permissions, file stores and multiple root directories. It does not support watchers yet. Please feel free to open a pull request when
- * appropriate. See {@link com.g2forge.alexandria.filesystem.ATestFileSystemProvider} to test any file system provider, not just those which extend this
+ * appropriate. See <code>com.g2forge.alexandria.filesystem.ATestFileSystemProvider</code> to test any file system provider, not just those which extend this
  * abstract class.
  * 
- * An implementation can override the {@link #syncFactory sync factory} to do things like call
+ * An implementation can override the {@link #getSyncFactory() sync factory} to do things like call
  * {@link com.g2forge.alexandria.java.function.IFunctional#wrap(com.g2forge.alexandria.java.function.IRunnable, com.g2forge.alexandria.java.function.IRunnable)},
  * in order to receive callbacks when file operations start and end. This can be used, for example, to initiate a remote connection and push results to the
  * remote system.
@@ -87,17 +87,23 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 	protected static class CopyResult<R> {
 		/**
 		 * A modifier for the source of the copy or the parent directory of the target of the move.
+		 * 
+		 * @return Source attribute modifier
 		 */
 		protected final IGenericBasicAttributeModifier sourceAttributeModifier;
 
 		/**
 		 * A modifier for the target of the copy or the parent directory of the target of the move.
+		 * 
+		 * @return Target attribute modifier
 		 */
 		protected final IGenericBasicAttributeModifier targetAttributeModifier;
 
 		/**
 		 * A function to be called to complete the copy. The input will be a reference to parent of the copy target. The output will be used to modify the
 		 * attributes of the parent of the copy target.
+		 * 
+		 * @return Function to be called on completion.
 		 */
 		protected final IThrowFunction1<? super R, ? extends IGenericBasicAttributeModifier, IOException> completion;
 	}
@@ -114,16 +120,22 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 	public static class OpenResult<R> {
 		/**
 		 * A modifier for the parent of the entry being opened.
+		 * 
+		 * @return Parent attribute modifier
 		 */
 		protected final IGenericBasicAttributeModifier parentAttributeModifier;
 
 		/**
 		 * A modifier for the attributes of the file or directory. Must be <code>null</code> if the entry already existed.
+		 * 
+		 * @return Entry attribute modifier
 		 */
 		protected final IGenericBasicAttributeModifier entryAttributeModifier;
 
 		/**
 		 * A reference to the file. Must be <code>null</code> if the file already existed.
+		 * 
+		 * @return The file that was created.
 		 */
 		protected final R created;
 	}
@@ -208,7 +220,7 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 	 * @param refSource A reference to the entry to be copied.
 	 * @param options Copy options.
 	 * @return An instance of {@link CopyResult} which includes the completion for the target half of the copy.
-	 * @throws IOException
+	 * @throws IOException if an I/O error occurs
 	 */
 	protected abstract CopyResult<R> copy(R refSource, CopyOption... options) throws IOException;
 
@@ -219,7 +231,7 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 	 * @param write Should the resulting channel support write operations?
 	 * @param reference A reference to a regular file.
 	 * @return A channel which can be used to read and/or write the specified file.
-	 * @throws IOException
+	 * @throws IOException if an I/O error occurs
 	 */
 	protected abstract SeekableByteChannel createChannel(final boolean read, final boolean write, final R reference) throws IOException;
 
@@ -240,7 +252,7 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 	 * {@link OpenResult#created} field must never be <code>null</code> in the return value.
 	 * 
 	 * @param reference A reference to the directory to create.
-	 * @return
+	 * @return An {@link OpenResult}
 	 * @throws FileAlreadyExistsException If the reference is to a pre-existing entry.
 	 * @throws NoSuchFileException If the parent directory does not exist.
 	 */
@@ -261,8 +273,8 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 	 * 
 	 * @param reference A reference to the file to delete
 	 * @return A basic attribute modifier for the parent directory of the file to delete
-	 * @throws NoSuchFileException
-	 * @throws DirectoryNotEmptyException
+	 * @throws NoSuchFileException if the file does not exist
+	 * @throws DirectoryNotEmptyException if the file exists and is a non-empty directory
 	 */
 	protected abstract IGenericBasicAttributeModifier delete(final R reference) throws NoSuchFileException, DirectoryNotEmptyException;
 
@@ -369,7 +381,7 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 	 * @param refSource A reference to the entry to be copied.
 	 * @param options Copy (well... move) options.
 	 * @return An instance of {@link CopyResult} which includes the completion for the target half of the copy.
-	 * @throws IOException
+	 * @throws IOException if an I/O error occurs
 	 */
 	protected abstract CopyResult<R> move(R refSource, CopyOption... options) throws IOException;
 
@@ -503,8 +515,8 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 	 * 
 	 * @param reference A reference to the directory itself, which can be used to look up the name of the children.
 	 * @param dir The original path specified by the user. Return values should be resolved against this path.
-	 * @return
-	 * @throws IOException
+	 * @return A directory stream.
+	 * @throws IOException if an I/O error occurs
 	 */
 	protected abstract DirectoryStream<Path> toDirectoryStream(final R reference, Path dir) throws IOException;
 
@@ -516,7 +528,9 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 	 * @param sync The appropriate sync method (such as {@link IFunction1#sync(Object)}), which can be overridden and extended as described in the javadocs for
 	 *            {@link AGenericFileSystemProvider}.
 	 * @param path The path to consider for locking purposes.
-	 * @return
+	 * @return Wrapped functional.
+	 * @param <F> The type of the functional
+	 * @param <T> The type it can throw
 	 */
 	protected <F extends IThrowConsumer1<P, T>, T extends Throwable> F wrap1(F functional, IFunction2<? super F, ? super Object, ? extends F> sync, P path) {
 		final List<Object> locks = getLocks(path);
@@ -536,7 +550,9 @@ public abstract class AGenericFileSystemProvider<P extends Path, Internal extend
 	 *            {@link AGenericFileSystemProvider}.
 	 * @param paths The paths to consider for locking purposes. This method will use the natural sort order of <code>Internal</code> to ensure that locks are
 	 *            acquired and released in a consistent order.
-	 * @return
+	 * @return Wrapped functional.
+	 * @param <F> The type of the functional
+	 * @param <T> The type it can throw
 	 */
 	protected <F extends IThrowConsumer1<P[], T>, T extends Throwable> F wrapN(F functional, IFunction2<? super F, ? super Object, ? extends F> sync, @SuppressWarnings("unchecked") P... paths) {
 		final List<Object> locks = getLocks(HCollection.asList(paths));

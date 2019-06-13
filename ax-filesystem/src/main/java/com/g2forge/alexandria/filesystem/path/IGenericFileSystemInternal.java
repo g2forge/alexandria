@@ -57,7 +57,7 @@ public interface IGenericFileSystemInternal<P> {
 	 * @param modifiers the modifiers, if any, that modify how the path is registered
 	 *
 	 * @return a key representing the registration of the path with the given watch service
-	 * @throws IOException
+	 * @throws IOException if an I/O exception occurs
 	 */
 	public WatchKey register(P path, WatchService watcher, WatchEvent.Kind<?>[] events, WatchEvent.Modifier... modifiers) throws IOException;
 }
