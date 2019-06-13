@@ -3,6 +3,7 @@ package com.g2forge.alexandria.wizard;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.NoSuchElementException;
 import java.util.Properties;
@@ -21,16 +22,18 @@ public class PropertyStringInput extends AInput<String> {
 	private static final Properties properties = computeProperties();
 
 	protected static Properties computeProperties() {
-		final String path = System.getProperty(PropertyStringInput.class.getPackage().getName() + ".propertiesfile");
-		if (path == null) return System.getProperties();
-
-		try (InputStream input = Files.newInputStream(Paths.get(path))) {
-			final Properties prop = new Properties();
-			prop.load(input);
-			return prop;
-		} catch (IOException e) {
-			throw new RuntimeIOException(e);
+		final String string = System.getProperty(PropertyStringInput.class.getPackage().getName() + ".propertiesfile");
+		if (string != null) {
+			final Path path = Paths.get(string);
+			if (Files.isRegularFile(path)) try (InputStream input = Files.newInputStream(path)) {
+				final Properties prop = new Properties();
+				prop.load(input);
+				return prop;
+			} catch (IOException e) {
+				throw new RuntimeIOException(e);
+			}
 		}
+		return System.getProperties();
 	}
 
 	@Getter
