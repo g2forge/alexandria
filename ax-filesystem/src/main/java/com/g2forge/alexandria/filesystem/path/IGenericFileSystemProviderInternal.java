@@ -21,7 +21,7 @@ public interface IGenericFileSystemProviderInternal<P> extends ICloseable {
 	 * 
 	 * @param path The path to convert to a URI.
 	 * @return A URI representing the specified path.
-	 * @throws URISyntaxException
+	 * @throws URISyntaxException If the URI cannot be created.
 	 */
 	public URI toURI(P path) throws URISyntaxException;
 

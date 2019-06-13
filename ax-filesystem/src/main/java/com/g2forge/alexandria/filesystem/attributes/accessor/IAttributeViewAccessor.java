@@ -14,9 +14,9 @@ import com.g2forge.alexandria.java.adt.name.IStringNamed;
  * and register them with the {@link AttributeViewAccessorRegistry} returned by
  * {@link com.g2forge.alexandria.filesystem.AGenericFileSystemProvider#getAVARegistry()}.
  * 
- * An instance of this interface should be bound to a specific {@link AGenericFileSystemProvider entry}, however no access to this entry may be attempted until
- * one of the modifier methods is called. This is necessary as {@link AttributeViewAccessorRegistry} will create instance of this interface bound to a
- * <code>null</code> reference in order to query the type parameters and {@link #getName()}.
+ * An instance of this interface should be bound to a specific {@link com.g2forge.alexandria.filesystem.AGenericFileSystemProvider entry}, however no access to
+ * this entry may be attempted until one of the modifier methods is called. This is necessary as {@link AttributeViewAccessorRegistry} will create instance of
+ * this interface bound to a <code>null</code> reference in order to query the type parameters and {@link #getName()}.
  * 
  * @param <A> The type of the attributes. Must match <code>V</code>.
  * @param <V> The type of the attributes view. Must match <code>A</code>.
@@ -52,7 +52,7 @@ public interface IAttributeViewAccessor<A extends BasicFileAttributes, V extends
 	 * {@link com.g2forge.alexandria.filesystem.attributes.FileAttributeName#getAttribute()} and can be used as the arguments to {@link #get(String)} and
 	 * {@link #set(String, Object)}.
 	 * 
-	 * @return
+	 * @return The names of the attributes supported by this attribute group
 	 */
 	public Set<String> getNames();
 

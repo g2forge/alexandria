@@ -51,10 +51,13 @@ public class AttributeViewAccessorRegistry<R> {
 	}
 
 	/**
+	 * Register an {@link IAttributeViewAccessor} factory.
 	 * 
 	 * @param factory Must support invocation with <code>null</code> reference. The resulting {@link IAttributeViewAccessor} need only support
 	 *            {@link IAttributeViewAccessor#getName()} and have concrete type arguments for both type parameters.
-	 * @return
+	 * @return <code>this</code>
+	 * @param <A> The type of the attributes
+	 * @param <V> The type of the attribute view
 	 */
 	public <A extends BasicFileAttributes, V extends FileAttributeView> AttributeViewAccessorRegistry<R> register(IFunction1<? super R, ? extends IAttributeViewAccessor<A, V>> factory) {
 		final IAttributeViewAccessor<A, V> created = factory.apply(null);

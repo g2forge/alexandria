@@ -34,21 +34,29 @@ public class GenericEntryReference<E, F, D, P extends Path> {
 
 	/**
 	 * The parent of {@link #entry}. This is helpful when the caller wishes to delete the entry after resolving it.
+	 * 
+	 * @return The parent of {@link #entry}
 	 */
 	protected final D parent;
 
 	/**
 	 * The entry furthest from the <code>base</code> which could be resolved.
+	 * 
+	 * @return The furthest resolved entry.
 	 */
 	protected final E entry;
 
 	/**
 	 * The path to {@link GenericEntryReference#entry}.
+	 * 
+	 * @return The path to {@link GenericEntryReference#entry}.
 	 */
 	protected final P resolved;
 
 	/**
 	 * Any unresolved components of the <code>path</code> beyond {@link #entry} or <code>null</code> if the path was fully resolved.
+	 * 
+	 * @return Remaining components.
 	 */
 	protected final P remaining;
 
