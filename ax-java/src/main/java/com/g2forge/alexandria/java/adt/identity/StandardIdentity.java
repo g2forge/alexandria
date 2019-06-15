@@ -11,9 +11,9 @@ import com.g2forge.alexandria.java.core.marker.ISingleton;
  * @see IIdentity#standard()
  */
 public class StandardIdentity implements IIdentity<Object>, ISingleton {
-	protected static final SameIdentity SINGLETON = new SameIdentity();
+	protected static final StandardIdentity SINGLETON = new StandardIdentity();
 
-	public static SameIdentity create() {
+	public static StandardIdentity create() {
 		return SINGLETON;
 	}
 
