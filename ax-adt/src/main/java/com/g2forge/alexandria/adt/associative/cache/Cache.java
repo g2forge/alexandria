@@ -6,39 +6,45 @@ import java.util.function.Function;
 
 import com.g2forge.alexandria.adt.associative.IAssociation;
 import com.g2forge.alexandria.adt.associative.MapAssociation;
+import com.g2forge.alexandria.java.adt.identity.IIdentity;
+import com.g2forge.alexandria.java.adt.identity.Identified;
 import com.g2forge.alexandria.java.fluent.optional.IOptional;
 
 import lombok.Data;
 
 @Data
 public class Cache<K, V> implements Function<K, V> {
+	protected final IIdentity<? super K> identity;
+
 	protected final Function<? super K, ? extends V> function;
 
 	protected final ICacheEvictionPolicy<K> policy;
 
-	protected final IAssociation<K, V> cache;
+	protected final IAssociation<Object, V> cache;
 
 	public Cache(Function<? super K, ? extends V> function, ICacheEvictionPolicy<K> policy) {
-		this(function, policy, false);
+		this(null, function, policy, false);
 	}
 
-	public Cache(Function<? super K, ? extends V> function, ICacheEvictionPolicy<K> policy, boolean weak) {
+	public Cache(IIdentity<? super K> identity, Function<? super K, ? extends V> function, ICacheEvictionPolicy<K> policy, boolean weak) {
+		this.identity = identity == null ? IIdentity.standard() : identity;
 		this.function = function;
 		this.policy = policy;
-		this.cache = new MapAssociation<>(weak ? new WeakHashMap<>() : new HashMap<>());
+		this.cache = new MapAssociation<Object, V>(weak ? new WeakHashMap<>() : new HashMap<>());
 	}
 
 	@Override
 	public V apply(K key) {
-		final IOptional<V> optional = cache.get(key, false);
+		final Identified<? super K> identified = getIdentity().of(key);
+		final IOptional<V> optional = cache.get(identified, false);
 		if (!optional.isEmpty()) {
-			policy.access(false, key).forEach(cache::remove);
+			policy.access(false, getIdentity(), key).stream().map(getIdentity()::of).forEach(cache::remove);
 			return optional.get();
 		}
 
 		final V retVal = function.apply(key);
-		policy.access(true, key).forEach(cache::remove);
-		cache.put(key, retVal);
+		policy.access(true, getIdentity(), key).stream().map(getIdentity()::of).forEach(cache::remove);
+		cache.put(identified, retVal);
 		return retVal;
 	}
 }
