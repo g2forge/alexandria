@@ -51,6 +51,7 @@ public class GenericFileSystem extends FileSystem {
 
 	protected final IGenericFileSystemProviderInternal<GenericPath> provider;
 
+	@Getter
 	protected final Map<String, ?> env;
 
 	protected final Object lock = null;
