@@ -15,7 +15,7 @@ public class TestHZip {
 	@Test
 	public void copy() throws IOException {
 		try (final TempDirectory temp = new TempDirectory()) {
-			final List<Path> paths = IntStream.range(0, 3).mapToObj(i -> temp.getPath().resolve(i + ".zip")).collect(Collectors.toList());
+			final List<Path> paths = IntStream.range(0, 3).mapToObj(i -> temp.get().resolve(i + ".zip")).collect(Collectors.toList());
 			for (Path path : paths) {
 				temp.getResource().resource(getClass(), "zipequals.zip", path);
 			}
