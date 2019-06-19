@@ -18,7 +18,7 @@ import com.g2forge.alexandria.annotations.message.Hack;
 import com.g2forge.alexandria.annotations.message.TODO;
 import com.g2forge.alexandria.annotations.service.Service;
 
-@SupportedAnnotationTypes({ "com.g2forge.alexandria.annotations.message.Hack", "com.g2forge.alexandria.annotations.message.TODO", "com.g2forge.alexandria.annotations.service.Service" })
+@SupportedAnnotationTypes({ "com.g2forge.alexandria.annotations.message.Hack", "com.g2forge.alexandria.annotations.message.TODO", "com.g2forge.alexandria.annotations.message.TODOs", "com.g2forge.alexandria.annotations.service.Service" })
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class AnnotationProcessor extends AbstractProcessor {
 	@SuppressWarnings("unchecked")
@@ -38,8 +38,8 @@ public class AnnotationProcessor extends AbstractProcessor {
 				final String path = enclosing.stream().map(e -> e instanceof PackageElement ? ((PackageElement) e).getQualifiedName() : e.getSimpleName()).collect(Collectors.joining("."));
 
 				for (Class<? extends Annotation> annotationType : ANNOTATIONS) {
-					final Annotation actualAnnotation = element.getAnnotation(annotationType);
-					if (actualAnnotation == null) continue;
+					final Annotation[] actualAnnotations = element.getAnnotationsByType(annotationType);
+					if ((actualAnnotations == null) || (actualAnnotations.length < 1)) continue;
 					final Handler handlerAnnotation = annotationType.getAnnotation(Handler.class);
 
 					final Class<? extends IAnnotationHandler<?>> handlerType = handlerAnnotation.value();
@@ -52,7 +52,9 @@ public class AnnotationProcessor extends AbstractProcessor {
 						throw new Error(e);
 					}
 
-					handler.handle(processingEnv, element, path, annotationType, actualAnnotation);
+					for (Annotation actualAnnotation : actualAnnotations) {
+						handler.handle(processingEnv, element, path, annotationType, actualAnnotation);
+					}
 				}
 			}
 		}

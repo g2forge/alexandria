@@ -3,6 +3,8 @@ package com.g2forge.alexandria.annotations;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -17,12 +19,16 @@ import com.g2forge.alexandria.annotations.service.Service;
 
 @Service(ITestService.class)
 public class TestService implements ITestService {
-	protected final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-
 	public static void main(String[] args) throws IOException {
-		//new TestService().execute("src/test/java");
-		new TestService().execute("c:/Temp/Thingy");
+		final Path temp = Files.createTempDirectory(null);
+		try {
+			new TestService().execute(temp.toString());
+		} finally {
+			Files.delete(temp);
+		}
 	}
+
+	protected final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 
 	public void execute(String path) throws IOException {
 		final Iterable<JavaFileObject> files = getSourceFiles(path);
