@@ -5,13 +5,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import com.g2forge.alexandria.java.close.AGuaranteeClose;
+import com.g2forge.alexandria.java.close.ICloseableSupplier;
 import com.g2forge.alexandria.java.function.ISupplier;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
 
-import lombok.Getter;
-
-public class CloseablePath extends AGuaranteeClose {
-	@Getter
+public class CloseablePath extends AGuaranteeClose implements ICloseableSupplier<Path> {
 	protected final Path path;
 
 	protected final boolean autodelete;
@@ -36,5 +34,10 @@ public class CloseablePath extends AGuaranteeClose {
 		} catch (IOException exception) {
 			throw new RuntimeIOException(exception);
 		}
+	}
+
+	@Override
+	public Path get() {
+		return path;
 	}
 }

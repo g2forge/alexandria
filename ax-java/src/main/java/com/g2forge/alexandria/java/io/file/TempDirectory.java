@@ -36,7 +36,7 @@ public class TempDirectory extends CloseablePath {
 		}
 
 		public Path resource(IResource resource, String local) {
-			final Path retVal = getPath().resolve(local);
+			final Path retVal = get().resolve(local);
 			resource(resource, retVal);
 			return retVal;
 		}
