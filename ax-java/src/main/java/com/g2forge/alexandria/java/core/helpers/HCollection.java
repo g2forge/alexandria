@@ -186,10 +186,19 @@ public class HCollection {
 		return -1;
 	}
 
-	public static <T> T getOne(final Iterable<? extends T> collection) {
-		final Iterator<? extends T> iterator = collection.iterator();
+	/**
+	 * Get the single item from an <code>iterable</code>. Throw an exception if there are either fewer or more than one items.
+	 * 
+	 * @param <T> The type of the items
+	 * @param iterable The iterable to get the single item from
+	 * @return The single item in the iterable
+	 * @throws IllegalArgumentException if there are 0, 2 or more items in <code>iterable</code>
+	 */
+	public static <T> T getOne(final Iterable<? extends T> iterable) {
+		final Iterator<? extends T> iterator = iterable.iterator();
+		if (!iterator.hasNext()) throw new IllegalArgumentException("Input iterable was empty!");
 		final T retVal = iterator.next();
-		if (iterator.hasNext()) throw new IllegalArgumentException("Input collection had more than one element!");
+		if (iterator.hasNext()) throw new IllegalArgumentException("Input iterable had more than one element!");
 		return retVal;
 	}
 
