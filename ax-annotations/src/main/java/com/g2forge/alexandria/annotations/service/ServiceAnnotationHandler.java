@@ -1,7 +1,6 @@
 package com.g2forge.alexandria.annotations.service;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -51,21 +50,11 @@ public class ServiceAnnotationHandler implements IAnnotationHandler<Service> {
 	}
 
 	protected void readImplementations(final Collection<String> retVal, final Filer filer, final String fileName, final StandardLocation location) throws IOException {
-		final FileObject inputResource;
-		try {
-			inputResource = filer.getResource(location, "", fileName);
-		} catch (FileNotFoundException | IllegalArgumentException exception) {
-			return;
-		}
-
-		try {
-			try (final BufferedReader inputReader = new BufferedReader(inputResource.openReader(true))) {
-				for (String line = inputReader.readLine(); line != null; line = inputReader.readLine()) {
-					retVal.add(line);
-				}
+		final FileObject inputResource = filer.getResource(location, "", fileName);
+		try (final BufferedReader inputReader = new BufferedReader(inputResource.openReader(true))) {
+			for (String line = inputReader.readLine(); line != null; line = inputReader.readLine()) {
+				retVal.add(line);
 			}
-		} catch (IOException exception) {
-			return;
 		}
 	}
 
