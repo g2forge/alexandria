@@ -1,7 +1,6 @@
 package com.g2forge.alexandria.annotations.service;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -10,6 +9,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
@@ -49,34 +49,12 @@ public class ServiceAnnotationHandler implements IAnnotationHandler<Service> {
 		}
 	}
 
-	@Override
-	public void handle(ProcessingEnvironment processingEnvironment, Element element, String path, Class<? extends Service> annotationType, Service annotation) {
-		final Name className = ((TypeElement) element).getQualifiedName();
-
-		final List<? extends TypeMirror> typeMirrors = HAnnotationProcessor.getTypeMirrorAnnotationValue(element, Service.class, "value");
-		for (TypeMirror service : typeMirrors) {
-			final TypeElement serviceElement = HAnnotationProcessor.toTypeElement(processingEnvironment, service);
-			final Name serviceName = processingEnvironment.getElementUtils().getBinaryName(serviceElement);
-			addImplementation(processingEnvironment, element, className, serviceName);
-		}
-	}
-
 	protected void readImplementations(final Collection<String> retVal, final Filer filer, final String fileName, final StandardLocation location) throws IOException {
-		final FileObject inputResource;
-		try {
-			inputResource = filer.getResource(location, "", fileName);
-		} catch (FileNotFoundException | IllegalArgumentException exception) {
-			return;
-		}
-
-		try {
-			try (final BufferedReader inputReader = new BufferedReader(inputResource.openReader(true))) {
-				for (String line = inputReader.readLine(); line != null; line = inputReader.readLine()) {
-					retVal.add(line);
-				}
+		final FileObject inputResource = filer.getResource(location, "", fileName);
+		try (final BufferedReader inputReader = new BufferedReader(inputResource.openReader(true))) {
+			for (String line = inputReader.readLine(); line != null; line = inputReader.readLine()) {
+				retVal.add(line);
 			}
-		} catch (IOException exception) {
-			return;
 		}
 	}
 
@@ -84,6 +62,18 @@ public class ServiceAnnotationHandler implements IAnnotationHandler<Service> {
 		final FileObject outputResource = filer.createResource(location, "", fileName, element);
 		try (final PrintStream outputStream = new PrintStream(outputResource.openOutputStream())) {
 			list.forEach(outputStream::println);
+		}
+	}
+
+	@Override
+	public void handle(ProcessingEnvironment processingEnvironment, Element element, Supplier<String> path, Class<? extends Service> annotationType, Service... annotations) {
+		final Name className = ((TypeElement) element).getQualifiedName();
+
+		final List<? extends TypeMirror> typeMirrors = HAnnotationProcessor.getTypeMirrorAnnotationValue(element, Service.class, "value");
+		for (TypeMirror service : typeMirrors) {
+			final TypeElement serviceElement = HAnnotationProcessor.toTypeElement(processingEnvironment, service);
+			final Name serviceName = processingEnvironment.getElementUtils().getBinaryName(serviceElement);
+			addImplementation(processingEnvironment, element, className, serviceName);
 		}
 	}
 }
