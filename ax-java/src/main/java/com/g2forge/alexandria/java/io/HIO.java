@@ -29,6 +29,13 @@ import lombok.experimental.UtilityClass;
 @Helpers
 @UtilityClass
 public class HIO {
+	/**
+	 * Read the contents of a input stream into a string. This method will close the stream when it is done.
+	 * 
+	 * @param stream The input stream to read.
+	 * @param newline <code>true</code> will translate newlines from system format to <code>\n</code>
+	 * @return The contents of the input stream.
+	 */
 	public static String readAll(final InputStream stream, boolean newline) {
 		final String retVal;
 		try (final Scanner scanner = new Scanner(stream, "UTF-8")) {

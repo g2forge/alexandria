@@ -2,6 +2,7 @@ package com.g2forge.alexandria.java.io.file;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -13,11 +14,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import com.g2forge.alexandria.java.close.ICloseable;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.core.marker.Helpers;
+import com.g2forge.alexandria.java.io.HBinaryIO;
 import com.g2forge.alexandria.java.io.HIO;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
 
@@ -37,7 +40,7 @@ public class HZip {
 	public static void zip(Path target, Function<? super Entry, ? extends String> function, Iterable<? extends Path> sources) {
 		if (function == null) function = entry -> entry.getRoot().relativize(entry.getAbsolute()).toString();
 
-		final byte[] buffer = new byte[8192];
+		final byte[] buffer = new byte[HIO.getRecommendedBufferSize()];
 		try (final ZipOutputStream out = new ZipOutputStream(Files.newOutputStream(target))) {
 			final Collection<Entry> entries = new ArrayList<>();
 			for (Path source : sources) {
@@ -120,5 +123,28 @@ public class HZip {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Unzip an zip file to the specified destination.
+	 * 
+	 * @param zipfile The zipfile to unzip.
+	 * @param destination The destination directory, which will hold the contents of the zip file. Existing contents will be overwritten.
+	 */
+	public void unzip(Path zipfile, Path destination) {
+		final Path absoluteDestination = destination.toAbsolutePath().normalize();
+		try (ZipInputStream zipInputStream = new ZipInputStream(Files.newInputStream(zipfile))) {
+			for (ZipEntry zipEntry = zipInputStream.getNextEntry(); zipEntry != null; zipEntry = zipInputStream.getNextEntry()) {
+				final Path child = destination.resolve(zipEntry.getName()).normalize();
+				if (!child.toAbsolutePath().startsWith(absoluteDestination)) throw new RuntimeIOException(String.format("Entry \"%1$s\" would be outside of the destination directory!", child));
+				if (zipEntry.isDirectory()) Files.createDirectories(child);
+				else try (final OutputStream out = Files.newOutputStream(child)) {
+					HBinaryIO.copy(zipInputStream, out);
+				}
+			}
+			zipInputStream.closeEntry();
+		} catch (IOException exception) {
+			throw new RuntimeIOException(exception);
+		}
 	}
 }
