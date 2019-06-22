@@ -1,11 +1,13 @@
 package com.g2forge.alexandria.java.io;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.g2forge.alexandria.java.io.file.HZip;
@@ -20,6 +22,18 @@ public class TestHZip {
 				temp.getResource().resource(getClass(), "zipequals.zip", path);
 			}
 			HZip.isEqual(paths);
+		}
+	}
+
+	@Test
+	public void unzip() throws IOException {
+		try (final TempDirectory temp = new TempDirectory()) {
+			final Path zipfile = temp.get().resolve("temp.zip");
+			temp.getResource().resource(getClass(), "zipequals.zip", zipfile);
+			final Path contents = temp.get().resolve("contents");
+			Files.createDirectories(contents);
+			HZip.unzip(zipfile, contents);
+			Assert.assertEquals("Hello, World!", HIO.readAll(Files.newInputStream(contents.resolve("File.txt")), true));
 		}
 	}
 }
