@@ -1,7 +1,10 @@
 package com.g2forge.alexandria.annotations;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
@@ -21,21 +24,17 @@ import com.g2forge.alexandria.annotations.message.Hack;
 import com.g2forge.alexandria.annotations.message.TODO;
 import com.g2forge.alexandria.annotations.service.Service;
 
-import lombok.RequiredArgsConstructor;
-
 @SupportedAnnotationTypes({ "com.g2forge.alexandria.annotations.message.Hack", "com.g2forge.alexandria.annotations.message.TODO", "com.g2forge.alexandria.annotations.message.TODOs", "com.g2forge.alexandria.annotations.service.Service" })
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class AnnotationProcessor extends AbstractProcessor {
-	@SuppressWarnings("unchecked")
-	protected static final Class<? extends Annotation>[] ANNOTATIONS = new Class[] { Hack.class, TODO.class, Service.class };
-
-	protected static final Map<Class<? extends Annotation>, IAnnotationHandler<Annotation>> CACHE = new HashMap<>();
-
-	@RequiredArgsConstructor
 	protected static class PathSupplier implements Supplier<String> {
 		protected final Element element;
 
 		protected String value = null;
+
+		public PathSupplier(Element element) {
+			this.element = element;
+		}
 
 		@Override
 		public String get() {
@@ -59,12 +58,18 @@ public class AnnotationProcessor extends AbstractProcessor {
 		}
 	}
 
-	@Override
-	public boolean process(Set<? extends TypeElement> typeElements, RoundEnvironment roundEnvironment) {
-		if (!roundEnvironment.processingOver()) {
-			// Get the elements we might be interested in
-			final Set<? extends Element> elements = typeElements.stream().flatMap(annotation -> roundEnvironment.getElementsAnnotatedWith(annotation).stream()).collect(Collectors.toSet());
+	@SuppressWarnings("unchecked")
+	protected static final Class<? extends Annotation>[] ANNOTATIONS = new Class[] { Hack.class, TODO.class, Service.class };
 
+	protected final Map<Class<? extends Annotation>, IAnnotationHandler<Annotation>> handlers = new HashMap<>();
+
+	@Override
+	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnvironment) {
+		try {
+			// Get the elements we might be interested in
+			final Set<? extends Element> elements = annotations.stream().flatMap(annotation -> roundEnvironment.getElementsAnnotatedWith(annotation).stream()).collect(Collectors.toSet());
+
+			final Map<IAnnotationHandler<Annotation>, Collection<ElementAnnotations<Annotation>>> elementAnnotations = new IdentityHashMap<>();
 			for (Element element : elements) {
 				final Supplier<String> path = new PathSupplier(element);
 
@@ -74,7 +79,7 @@ public class AnnotationProcessor extends AbstractProcessor {
 					if ((actualAnnotations == null) || (actualAnnotations.length < 1)) continue;
 
 					// Get the handler, and cache it
-					final IAnnotationHandler<Annotation> handler = CACHE.computeIfAbsent(annotationType, at -> {
+					final IAnnotationHandler<Annotation> handler = handlers.computeIfAbsent(annotationType, at -> {
 						final Handler handlerAnnotation = at.getAnnotation(Handler.class);
 
 						final Class<? extends IAnnotationHandler<?>> handlerType = handlerAnnotation.value();
@@ -87,10 +92,17 @@ public class AnnotationProcessor extends AbstractProcessor {
 						}
 					});
 
-					// Handle the annotations
-					handler.handle(processingEnv, element, path, annotationType, actualAnnotations);
+					// Save the annotations so that we only call the handler once
+					elementAnnotations.computeIfAbsent(handler, h -> new ArrayList<>()).add(new ElementAnnotations<>(element, path, annotationType, actualAnnotations));
 				}
 			}
+
+			for (Map.Entry<IAnnotationHandler<Annotation>, Collection<ElementAnnotations<Annotation>>> entry : elementAnnotations.entrySet()) {
+				// Handle the annotations
+				entry.getKey().handle(processingEnv, entry.getValue());
+			}
+		} finally {
+			if (roundEnvironment.processingOver()) handlers.values().forEach(handler -> handler.close(processingEnv));
 		}
 		return true;
 	}
