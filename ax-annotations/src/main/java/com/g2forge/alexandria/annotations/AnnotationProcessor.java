@@ -22,9 +22,11 @@ import javax.lang.model.element.TypeElement;
 
 import com.g2forge.alexandria.annotations.message.Hack;
 import com.g2forge.alexandria.annotations.message.TODO;
+import com.g2forge.alexandria.annotations.note.Note;
+import com.g2forge.alexandria.annotations.note.RuntimeNote;
 import com.g2forge.alexandria.annotations.service.Service;
 
-@SupportedAnnotationTypes({ "com.g2forge.alexandria.annotations.message.Hack", "com.g2forge.alexandria.annotations.message.TODO", "com.g2forge.alexandria.annotations.message.TODOs", "com.g2forge.alexandria.annotations.service.Service" })
+@SupportedAnnotationTypes({ "com.g2forge.alexandria.annotations.message.Hack", "com.g2forge.alexandria.annotations.message.TODO", "com.g2forge.alexandria.annotations.message.TODOs", "com.g2forge.alexandria.annotations.service.Service", "com.g2forge.alexandria.annotations.note.Note", "com.g2forge.alexandria.annotations.note.Notes", "com.g2forge.alexandria.annotations.note.RuntimeNote", "com.g2forge.alexandria.annotations.note.RuntimeNotes" })
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class AnnotationProcessor extends AbstractProcessor {
 	protected static class PathSupplier implements Supplier<String> {
@@ -59,7 +61,7 @@ public class AnnotationProcessor extends AbstractProcessor {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected static final Class<? extends Annotation>[] ANNOTATIONS = new Class[] { Hack.class, TODO.class, Service.class };
+	protected static final Class<? extends Annotation>[] ANNOTATIONS = new Class[] { Hack.class, TODO.class, Service.class, Note.class, RuntimeNote.class };
 
 	protected final Map<Class<? extends Annotation>, IAnnotationHandler<Annotation>> handlers = new HashMap<>();
 
@@ -81,7 +83,8 @@ public class AnnotationProcessor extends AbstractProcessor {
 					// Get the handler, and cache it
 					final IAnnotationHandler<Annotation> handler = handlers.computeIfAbsent(annotationType, at -> {
 						final Handler handlerAnnotation = at.getAnnotation(Handler.class);
-
+						if (handlerAnnotation == null) throw new Error(String.format("Annotation type \"%1$s\" was not annotated with a handler!", at.getName()));
+						
 						final Class<? extends IAnnotationHandler<?>> handlerType = handlerAnnotation.value();
 						try {
 							@SuppressWarnings({ "unchecked", "rawtypes" })
