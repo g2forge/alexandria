@@ -3,12 +3,12 @@ package com.g2forge.alexandria.annotations.note;
 import javax.tools.Diagnostic;
 
 public enum NoteType {
-	Note(null, Diagnostic.Kind.NOTE),
-	TODO(null, Diagnostic.Kind.NOTE),
+	Note(null, Diagnostic.Kind.WARNING),
+	TODO(null, Diagnostic.Kind.WARNING),
 	Hack(null, Diagnostic.Kind.WARNING),
-	RFC("Request for comment", Diagnostic.Kind.NOTE),
-	RFP("Request for proposal", Diagnostic.Kind.NOTE),
-	RFD("Request for documentation", Diagnostic.Kind.NOTE),
+	RFC("Request for comment", Diagnostic.Kind.WARNING),
+	RFP("Request for proposal", Diagnostic.Kind.WARNING),
+	RFD("Request for documentation", Diagnostic.Kind.WARNING),
 	Error(null, Diagnostic.Kind.ERROR);
 
 	protected final String message;
