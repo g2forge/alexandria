@@ -46,7 +46,6 @@ abstract class ANoteAnnotationHandler<T extends Annotation> implements IAnnotati
 
 			final TypeMirror noRefMirror = processingEnvironment.getElementUtils().getTypeElement(Note.NoRef.class.getCanonicalName()).asType();
 			if (processingEnvironment.getTypeUtils().isSameType(mirror, noRefMirror)) return null;
-			//processingEnvironment.getMessager().printMessage(Diagnostic.Kind.NOTE, String.format("%1$s %2$s", mirror, noRefMirror));
 
 			final TypeElement element = HAnnotationProcessor.toTypeElement(processingEnvironment, mirror);
 			return new IType() {

@@ -84,7 +84,7 @@ public class AnnotationProcessor extends AbstractProcessor {
 					final IAnnotationHandler<Annotation> handler = handlers.computeIfAbsent(annotationType, at -> {
 						final Handler handlerAnnotation = at.getAnnotation(Handler.class);
 						if (handlerAnnotation == null) throw new Error(String.format("Annotation type \"%1$s\" was not annotated with a handler!", at.getName()));
-						
+
 						final Class<? extends IAnnotationHandler<?>> handlerType = handlerAnnotation.value();
 						try {
 							@SuppressWarnings({ "unchecked", "rawtypes" })
