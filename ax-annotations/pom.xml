@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>ax-annotations</artifactId>
@@ -21,7 +23,12 @@
 				<configuration>
 					<source>${mavencompiler.javaversion}</source>
 					<target>${mavencompiler.javaversion}</target>
-					<compilerArgument>-proc:none</compilerArgument>
+					<compilerArgs>
+						<arg>-processor</arg>
+						<arg>lombok.launch.AnnotationProcessorHider$AnnotationProcessor,lombok.launch.AnnotationProcessorHider$ClaimingProcessor</arg>
+						<arg>-Acom.g2forge.alexandria.annotations.note.Note.issueFormat=https://jira.g2forge.com/browse/%1$s</arg>
+					</compilerArgs>
+					<showWarnings>true</showWarnings>
 				</configuration>
 			</plugin>
 		</plugins>

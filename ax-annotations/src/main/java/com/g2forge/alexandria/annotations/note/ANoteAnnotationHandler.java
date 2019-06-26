@@ -18,13 +18,16 @@ import com.g2forge.alexandria.annotations.HAnnotationProcessor;
 import com.g2forge.alexandria.annotations.IAnnotationHandler;
 import com.g2forge.alexandria.annotations.note.NoteRecord.IType;
 
+import lombok.Builder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+
 abstract class ANoteAnnotationHandler<T extends Annotation> implements IAnnotationHandler<T> {
+	@Data
+	@Builder(toBuilder = true)
+	@RequiredArgsConstructor
 	protected static class ClassType implements IType {
 		protected final Class<?> ref;
-
-		public ClassType(Class<?> ref) {
-			this.ref = ref;
-		}
 
 		@Override
 		public String getQualifiedName() {
@@ -69,12 +72,14 @@ abstract class ANoteAnnotationHandler<T extends Annotation> implements IAnnotati
 	}
 
 	protected void internal(ProcessingEnvironment processingEnvironment, Collection<ElementAnnotations<NoteRecord>> elementAnnotations) {
+		final String issueFormat = HAnnotationProcessor.getOption(processingEnvironment, Note.class, Note.IssueFormat.KEY, Note.IssueFormat.DEFAULT);
+
 		final Messager messager = processingEnvironment.getMessager();
 
 		for (ElementAnnotations<NoteRecord> elementAnnotation : elementAnnotations) {
 			final Supplier<String> path = elementAnnotation.getPath();
 			for (NoteRecord annotation : elementAnnotation.getAnnotations()) {
-				final String message = annotation.toString(path);
+				final String message = annotation.toString(issueFormat, path);
 				messager.printMessage(annotation.getType().kind, message, elementAnnotation.getElement());
 			}
 		}

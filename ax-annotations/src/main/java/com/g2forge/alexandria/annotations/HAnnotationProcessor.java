@@ -33,6 +33,10 @@ public class HAnnotationProcessor {
 		throw new IllegalArgumentException("Could not find annotation value with name \"" + name + "\"!");
 	}
 
+	public static String getOption(ProcessingEnvironment processingEnvironment, Class<?> type, String key, String defaultValue) {
+		return processingEnvironment.getOptions().getOrDefault(type.getName() + '.' + key, defaultValue);
+	}
+
 	public static List<? extends TypeMirror> getTypeMirrorAnnotationValue(Element element, Class<? extends Annotation> annotation, String name) {
 		final AnnotationMirror mirror = getAnnotationMirror(element, annotation);
 		final AnnotationValue value = getAnnotationValue(mirror, name);

@@ -10,10 +10,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
@@ -26,17 +26,15 @@ import com.g2forge.alexandria.annotations.note.Note;
 import com.g2forge.alexandria.annotations.note.RuntimeNote;
 import com.g2forge.alexandria.annotations.service.Service;
 
-@SupportedAnnotationTypes({ "com.g2forge.alexandria.annotations.message.Hack", "com.g2forge.alexandria.annotations.message.TODO", "com.g2forge.alexandria.annotations.message.TODOs", "com.g2forge.alexandria.annotations.service.Service", "com.g2forge.alexandria.annotations.note.Note", "com.g2forge.alexandria.annotations.note.Notes", "com.g2forge.alexandria.annotations.note.RuntimeNote", "com.g2forge.alexandria.annotations.note.RuntimeNotes" })
+import lombok.RequiredArgsConstructor;
+
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class AnnotationProcessor extends AbstractProcessor {
+	@RequiredArgsConstructor
 	protected static class PathSupplier implements Supplier<String> {
 		protected final Element element;
 
 		protected String value = null;
-
-		public PathSupplier(Element element) {
-			this.element = element;
-		}
 
 		@Override
 		public String get() {
@@ -64,6 +62,16 @@ public class AnnotationProcessor extends AbstractProcessor {
 	protected static final Class<? extends Annotation>[] ANNOTATIONS = new Class[] { Hack.class, TODO.class, Service.class, Note.class, RuntimeNote.class };
 
 	protected final Map<Class<? extends Annotation>, IAnnotationHandler<Annotation>> handlers = new HashMap<>();
+
+	@Override
+	public Set<String> getSupportedAnnotationTypes() {
+		return Stream.of(ANNOTATIONS).map(type -> type.getName()).collect(Collectors.toSet());
+	}
+
+	@Override
+	public Set<String> getSupportedOptions() {
+		return Stream.of(ANNOTATIONS).flatMap(type -> Stream.of(type.getAnnotation(Handler.class).options()).map(option -> type.getName() + '.' + option)).collect(Collectors.toSet());
+	}
 
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnvironment) {

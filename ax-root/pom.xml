@@ -105,6 +105,10 @@
 				<configuration>
 					<source>${mavencompiler.javaversion}</source>
 					<target>${mavencompiler.javaversion}</target>
+					<compilerArgs>
+						<arg>-Acom.g2forge.alexandria.annotations.note.Note.issueFormat=https://jira.g2forge.com/browse/%1$s</arg>
+					</compilerArgs>
+					<showWarnings>true</showWarnings>
 				</configuration>
 			</plugin>
 			<plugin>
