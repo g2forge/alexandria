@@ -6,4 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Handler {
 	public Class<? extends IAnnotationHandler<?>> value();
+
+	public String[] options() default {};
 }

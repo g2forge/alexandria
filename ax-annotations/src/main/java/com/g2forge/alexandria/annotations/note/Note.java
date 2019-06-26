@@ -11,8 +11,14 @@ import com.g2forge.alexandria.annotations.Handler;
 @Retention(RetentionPolicy.SOURCE)
 @Target({ ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.CONSTRUCTOR, ElementType.LOCAL_VARIABLE, ElementType.ANNOTATION_TYPE, ElementType.PACKAGE, ElementType.TYPE_PARAMETER, ElementType.TYPE_USE })
 @Repeatable(Notes.class)
-@Handler(SourceNoteAnnotationHandler.class)
+@Handler(value = SourceNoteAnnotationHandler.class, options = Note.IssueFormat.KEY)
 public @interface Note {
+	public class IssueFormat {
+		public static final String KEY = "issueFormat";
+
+		public static final String DEFAULT = "%1$s";
+	}
+	
 	/**
 	 * A marker interface which can be used with {@link Note#ref()} to indicate that there's no reference.
 	 */

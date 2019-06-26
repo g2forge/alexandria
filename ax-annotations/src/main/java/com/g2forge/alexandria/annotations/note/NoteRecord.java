@@ -2,6 +2,14 @@ package com.g2forge.alexandria.annotations.note;
 
 import java.util.function.Supplier;
 
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Data
+@Builder(toBuilder = true)
+@RequiredArgsConstructor
 class NoteRecord {
 	protected interface IType {
 		public String getQualifiedName();
@@ -9,6 +17,7 @@ class NoteRecord {
 		public String getSimpleName();
 	}
 
+	@Getter
 	protected class ToString {
 		protected final Supplier<? extends CharSequence> supplier;
 
@@ -20,14 +29,6 @@ class NoteRecord {
 
 		public ToString(Supplier<? extends CharSequence> supplier) {
 			this.supplier = supplier == null ? () -> "" : supplier;
-		}
-
-		public Supplier<? extends CharSequence> getSupplier() {
-			return supplier;
-		}
-
-		public boolean isUsed() {
-			return used;
 		}
 
 		@Override
@@ -49,30 +50,7 @@ class NoteRecord {
 
 	protected final IType ref;
 
-	public NoteRecord(NoteType type, String value, String issue, IType ref) {
-		this.type = type;
-		this.value = value;
-		this.issue = issue;
-		this.ref = ref;
-	}
-
-	public String getIssue() {
-		return issue;
-	}
-
-	public IType getRef() {
-		return ref;
-	}
-
-	public NoteType getType() {
-		return type;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public String toString(Supplier<? extends CharSequence> path) {
+	public String toString(String issueFormat, Supplier<? extends CharSequence> path) {
 		final StringBuilder builder = new StringBuilder();
 
 		final String value = getValue(), issue = getIssue();
@@ -110,7 +88,7 @@ class NoteRecord {
 		if (hasIssue || hasRefBefore) {
 			if (builder.length() > 0) builder.append(' ');
 			builder.append('(');
-			if (hasIssue) builder.append(issue);
+			if (hasIssue) builder.append(String.format(issueFormat, issue));
 			if (hasIssue && hasRefBefore) builder.append(", ");
 			if (hasRefBefore) {
 				builder.append("see ");
