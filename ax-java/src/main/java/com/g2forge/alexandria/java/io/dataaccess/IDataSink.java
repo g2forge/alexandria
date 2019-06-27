@@ -8,12 +8,13 @@ import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
 
-import com.g2forge.alexandria.annotations.message.TODO;
+import com.g2forge.alexandria.annotations.note.Note;
+import com.g2forge.alexandria.annotations.note.NoteType;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
 import com.g2forge.alexandria.java.type.ref.ITypeRef;
 
 public interface IDataSink extends IDataAccess {
-	@TODO(value = "Use static type switch", link = "G2-432")
+	@Note(type = NoteType.TODO, value = "Use static type switch", issue = "G2-432")
 	public default <T extends OutputStream> T getStream(ITypeRef<T> type) {
 		if ((type != null) && !OutputStream.class.equals(type.getErasedType())) throw new IllegalArgumentException();
 		@SuppressWarnings("unchecked")
@@ -21,7 +22,7 @@ public interface IDataSink extends IDataAccess {
 		return retVal;
 	}
 
-	@TODO(value = "Use static type switch", link = "G2-432")
+	@Note(type = NoteType.TODO, value = "Use static type switch", issue = "G2-432")
 	public default <T extends Writer> T getWriter(ITypeRef<T> type) {
 		if ((type != null) && !Writer.class.equals(type.getErasedType())) throw new IllegalArgumentException();
 		@SuppressWarnings("unchecked")

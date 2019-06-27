@@ -2,9 +2,8 @@ package com.g2forge.alexandria.metadata;
 
 import org.junit.Test;
 
-import com.g2forge.alexandria.annotations.message.TODO;
-import com.g2forge.alexandria.metadata.IMetadata;
-import com.g2forge.alexandria.metadata.MetadataLoader;
+import com.g2forge.alexandria.annotations.note.Note;
+import com.g2forge.alexandria.annotations.note.NoteType;
 import com.g2forge.alexandria.metadata.TestAnnotationMetadata.Annotated;
 import com.g2forge.alexandria.test.HAssert;
 
@@ -21,7 +20,7 @@ public class TestRecordMetadata {
 
 	public static class RecordLoader implements IMetadataLoader {
 		@Override
-		@TODO(value = "Use static type switch", link = "G2-432")
+		@Note(type = NoteType.TODO, value = "Use static type switch", issue = "G2-432")
 		public <T> T load(Class<T> type, IMetadata metadata) {
 			if (!Record.class.equals(type)) throw new IllegalArgumentException();
 			@SuppressWarnings("unchecked")

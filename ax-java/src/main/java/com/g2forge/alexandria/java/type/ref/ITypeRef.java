@@ -3,7 +3,8 @@ package com.g2forge.alexandria.java.type.ref;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import com.g2forge.alexandria.annotations.message.TODO;
+import com.g2forge.alexandria.annotations.note.Note;
+import com.g2forge.alexandria.annotations.note.NoteType;
 import com.g2forge.alexandria.java.type.IDynamicType;
 
 import lombok.Getter;
@@ -40,7 +41,7 @@ public interface ITypeRef<T> extends IDynamicType<T> {
 		return getErasedType().cast(value);
 	}
 
-	@TODO("Properly implement erasure")
+	@Note(type = NoteType.TODO, value = "Properly implement erasure")
 	public default Class<T> getErasedType() {
 		final Type type = getType();
 		if (type instanceof ParameterizedType) {
@@ -61,7 +62,7 @@ public interface ITypeRef<T> extends IDynamicType<T> {
 	 */
 	public Type getType();
 
-	@TODO("Implementation is neither general to all dynamic types, nor generic-safe")
+	@Note(type = NoteType.TODO, value = "Implementation is neither general to all dynamic types, nor generic-safe")
 	public default boolean isAssignableFrom(IDynamicType<?> type) {
 		return getErasedType().isAssignableFrom(((ITypeRef<?>) type).getErasedType());
 	}

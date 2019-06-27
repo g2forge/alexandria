@@ -3,7 +3,8 @@ package com.g2forge.alexandria.metadata.load;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 
-import com.g2forge.alexandria.annotations.message.TODO;
+import com.g2forge.alexandria.annotations.note.Note;
+import com.g2forge.alexandria.annotations.note.NoteType;
 import com.g2forge.alexandria.metadata.annotation.IJavaAnnotations;
 import com.g2forge.alexandria.metadata.annotation.implementations.ElementJavaAnnotations;
 
@@ -25,7 +26,7 @@ public class SimpleMetadata implements IAnnotatedMetadata {
 	@EqualsAndHashCode.Exclude
 	private final IJavaAnnotations annotations = new ElementJavaAnnotations(getElement());
 
-	@TODO(value = "Implement support for loading instance specific metadata", link = "G2-469")
+	@Note(type = NoteType.TODO, value = "Implement support for loading instance specific metadata", issue = "G2-469")
 	public SimpleMetadata(AnnotatedElement element) {
 		this(element, null);
 	}
