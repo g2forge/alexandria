@@ -14,10 +14,11 @@ import com.g2forge.alexandria.adt.record.v2.type.FieldType;
 import com.g2forge.alexandria.adt.record.v2.type.IRecordType;
 import com.g2forge.alexandria.adt.record.v2.type.RecordType;
 import com.g2forge.alexandria.adt.record.v2.type.RecordType.RecordTypeBuilder;
-import com.g2forge.alexandria.annotations.message.TODO;
+import com.g2forge.alexandria.annotations.note.Note;
+import com.g2forge.alexandria.annotations.note.NoteType;
 
 @Ignore
-@TODO("Reimplement on accessor2, remove ignores, suppressed warnings and un-comment code")
+@Note(type = NoteType.TODO, value = "Reimplement on accessor2, remove ignores, suppressed warnings and un-comment code")
 @SuppressWarnings({ "unused", "null" })
 public class TestImmutableRecord {
 	@Test

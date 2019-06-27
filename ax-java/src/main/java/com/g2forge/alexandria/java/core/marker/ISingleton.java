@@ -1,6 +1,7 @@
 package com.g2forge.alexandria.java.core.marker;
 
-import com.g2forge.alexandria.annotations.message.TODO;
+import com.g2forge.alexandria.annotations.note.Note;
+import com.g2forge.alexandria.annotations.note.NoteType;
 
 /**
  * A marker interface for classes which implement the singleton pattern. Please take care when creating singletons, as there are serious challenges in
@@ -11,5 +12,5 @@ import com.g2forge.alexandria.annotations.message.TODO;
  * that it contains no state. Singletons may be useful in cases where you will have multiple implementations of a stateless interface, as in the strategy
  * pattern.
  */
-@TODO("Link to strategy pattern")
+@Note(type = NoteType.TODO, value = "Link to strategy pattern")
 public interface ISingleton {}

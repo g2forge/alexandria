@@ -9,7 +9,8 @@ import java.nio.file.Path;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.annotations.message.TODO;
+import com.g2forge.alexandria.annotations.note.Note;
+import com.g2forge.alexandria.annotations.note.NoteType;
 import com.g2forge.alexandria.java.type.ref.ITypeRef;
 
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class TestDataSource {
 
 		protected boolean used = false;
 
-		@TODO(value = "Use static type switch", link = "G2-432")
+		@Note(type = NoteType.TODO, value = "Use static type switch", issue = "G2-432")
 		@Override
 		public <T extends Channel> T getChannel(ITypeRef<T> type) {
 			if ((type != null) && !ReadableByteChannel.class.equals(type.getErasedType())) throw new IllegalArgumentException();

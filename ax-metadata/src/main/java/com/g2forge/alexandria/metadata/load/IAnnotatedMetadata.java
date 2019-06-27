@@ -1,13 +1,14 @@
 package com.g2forge.alexandria.metadata.load;
 
-import com.g2forge.alexandria.annotations.message.TODO;
+import com.g2forge.alexandria.annotations.note.Note;
+import com.g2forge.alexandria.annotations.note.NoteType;
 import com.g2forge.alexandria.metadata.IMetadata;
 import com.g2forge.alexandria.metadata.IMetadataLoader;
 import com.g2forge.alexandria.metadata.MetadataLoader;
 import com.g2forge.alexandria.metadata.annotation.IJavaAnnotated;
 
 public interface IAnnotatedMetadata extends IMetadata, IJavaAnnotated {
-	@TODO(value = "Support for non-annotation metadata", link = "G2-469")
+	@Note(type = NoteType.TODO, value = "Support for non-annotation metadata", issue = "G2-469")
 	public static <T> IMetadataLoader find(Class<T> type) {
 		if (MetadataLoader.class.isAssignableFrom(type)) return new AnnotationMetadataLoader();
 

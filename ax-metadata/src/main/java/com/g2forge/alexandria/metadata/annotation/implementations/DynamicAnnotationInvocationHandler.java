@@ -9,7 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import com.g2forge.alexandria.annotations.message.TODO;
+import com.g2forge.alexandria.annotations.note.Note;
+import com.g2forge.alexandria.annotations.note.NoteType;
 import com.g2forge.alexandria.java.core.error.RuntimeReflectionException;
 
 import lombok.AccessLevel;
@@ -88,7 +89,7 @@ public class DynamicAnnotationInvocationHandler implements InvocationHandler {
 		return hashCode;
 	}
 
-	@TODO("Support actual values")
+	@Note(type = NoteType.TODO, value = "Support actual values")
 	protected Object getValue(Method method) {
 		final Map<String, ?> values = getValues();
 		final String key = method.getName();

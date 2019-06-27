@@ -4,7 +4,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.g2forge.alexandria.annotations.message.TODO;
+import com.g2forge.alexandria.annotations.note.Note;
+import com.g2forge.alexandria.annotations.note.NoteType;
 import com.g2forge.alexandria.java.core.marker.Helpers;
 
 import lombok.experimental.UtilityClass;
@@ -35,7 +36,7 @@ public class HConcurrent {
 	}
 
 	@Deprecated
-	@TODO(value = "This method makes it really easy to introduce deadlock, need to figure out whether to keep it around.", user = "gdgib")
+	@Note(type = NoteType.TODO, value = "This method makes it really easy to introduce deadlock, need to figure out whether to keep it around.")
 	public static <I, O> O sync(final Function<I, O> function, final I input, final Object... locks) {
 		if ((locks == null) || (locks.length < 1)) return function.apply(input);
 		else return internal(function, input, locks, 0);
