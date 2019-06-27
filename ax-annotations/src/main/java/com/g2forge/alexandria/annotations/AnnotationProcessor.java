@@ -20,8 +20,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 
-import com.g2forge.alexandria.annotations.message.Hack;
-import com.g2forge.alexandria.annotations.message.TODO;
 import com.g2forge.alexandria.annotations.note.Note;
 import com.g2forge.alexandria.annotations.note.RuntimeNote;
 import com.g2forge.alexandria.annotations.service.Service;
@@ -59,7 +57,7 @@ public class AnnotationProcessor extends AbstractProcessor {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected static final Class<? extends Annotation>[] ANNOTATIONS = new Class[] { Hack.class, TODO.class, Service.class, Note.class, RuntimeNote.class };
+	protected static final Class<? extends Annotation>[] ANNOTATIONS = new Class[] { Service.class, Note.class, RuntimeNote.class };
 
 	protected final Map<Class<? extends Annotation>, IAnnotationHandler<Annotation>> handlers = new HashMap<>();
 
