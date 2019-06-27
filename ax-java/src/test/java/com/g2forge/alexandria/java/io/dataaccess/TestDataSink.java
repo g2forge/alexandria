@@ -9,7 +9,6 @@ import java.nio.file.Path;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.annotations.message.TODO;
 import com.g2forge.alexandria.annotations.note.Note;
 import com.g2forge.alexandria.annotations.note.NoteType;
 import com.g2forge.alexandria.java.type.ref.ITypeRef;
