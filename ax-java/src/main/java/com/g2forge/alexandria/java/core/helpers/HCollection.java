@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -27,6 +28,14 @@ import lombok.experimental.UtilityClass;
 @Helpers
 @UtilityClass
 public class HCollection {
+	public static <T> Map<T, Integer> asIndexMap(List<T> list) {
+		final Map<T, Integer> retVal = new HashMap<>();
+		for (int i = 0; i < list.size(); i++) {
+			retVal.put(list.get(i), i);
+		}
+		return Collections.unmodifiableMap(retVal);
+	}
+
 	public static <K, C extends Collection<V>, V> void add(Map<K, C> map, Supplier<? extends C> constructor, K key, V value) {
 		final C collection;
 		if (!map.containsKey(key)) map.put(key, collection = constructor.get());
