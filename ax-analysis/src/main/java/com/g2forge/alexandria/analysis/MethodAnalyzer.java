@@ -19,7 +19,6 @@ import org.apache.bcel.generic.PUTFIELD;
 import org.apache.bcel.generic.ReturnInstruction;
 import org.apache.bcel.generic.Type;
 
-import com.g2forge.alexandria.java.core.error.NotYetImplementedError;
 import com.g2forge.alexandria.java.core.error.RuntimeReflectionException;
 import com.g2forge.alexandria.java.reflect.HReflection;
 import com.g2forge.alexandria.java.reflect.IJavaAccessorMethod;
@@ -35,24 +34,6 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 class MethodAnalyzer implements IMethodAnalyzer {
-	protected static String getField(Type target, String name, Type ret, Type[] args) throws ClassNotFoundException {
-		final JavaClass clazz = Repository.lookupClass(target.toString());
-		for (Method method : clazz.getMethods()) {
-			if (method.getName().equals(name) && method.getSignature().equals(Type.getMethodSignature(ret, args))) {
-				final Code code = method.getCode();
-				final Instruction[] instructions = new InstructionList(code.getCode()).getInstructions();
-				if (instructions.length != 3) throw new Error("Method " + method + " does not have exactly three instruction!");
-				if (!(instructions[0] instanceof ALOAD) || (((ALOAD) instructions[0]).getIndex() != 0)) throw new Error();
-				if (!(instructions[instructions.length - 1] instanceof ReturnInstruction)) throw new Error();
-
-				final ConstantPoolGen constantPoolGen = new ConstantPoolGen(method.getConstantPool());
-				final GETFIELD get = ((GETFIELD) instructions[1]);
-				return get.getFieldName(constantPoolGen);
-			}
-		}
-		throw new Error();
-	}
-
 	protected static String computePath(org.apache.bcel.classfile.Method method) throws Error {
 		if (method.isAbstract()) return new IJavaAccessorMethod() {
 			@Override
@@ -139,6 +120,24 @@ class MethodAnalyzer implements IMethodAnalyzer {
 			}
 		}
 		return retVal.toString();
+	}
+
+	protected static String getField(Type target, String name, Type ret, Type[] args) throws ClassNotFoundException {
+		final JavaClass clazz = Repository.lookupClass(target.toString());
+		for (Method method : clazz.getMethods()) {
+			if (method.getName().equals(name) && method.getSignature().equals(Type.getMethodSignature(ret, args))) {
+				final Code code = method.getCode();
+				final Instruction[] instructions = new InstructionList(code.getCode()).getInstructions();
+				if (instructions.length != 3) throw new Error("Method " + method + " does not have exactly three instruction!");
+				if (!(instructions[0] instanceof ALOAD) || (((ALOAD) instructions[0]).getIndex() != 0)) throw new Error();
+				if (!(instructions[instructions.length - 1] instanceof ReturnInstruction)) throw new Error();
+
+				final ConstantPoolGen constantPoolGen = new ConstantPoolGen(method.getConstantPool());
+				final GETFIELD get = ((GETFIELD) instructions[1]);
+				return get.getFieldName(constantPoolGen);
+			}
+		}
+		throw new Error();
 	}
 
 	protected static org.apache.bcel.classfile.Method toBCELMethod(final T thunk) {
