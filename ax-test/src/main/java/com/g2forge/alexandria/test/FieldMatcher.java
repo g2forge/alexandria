@@ -10,6 +10,7 @@ import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
 import com.g2forge.alexandria.analysis.ISerializableFunction1;
+import com.g2forge.alexandria.java.function.ISupplier;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +21,12 @@ public class FieldMatcher<T> extends BaseMatcher<T> {
 	protected static class Field<T, F> {
 		protected final ISerializableFunction1<T, F> field;
 
-		protected final String path;
+		protected final ISupplier<String> path;
 
 		protected void check(final T expected, final T actual, final Collection<Mismatch<?>> retVal) {
 			final F expectedField = field.apply(expected);
 			final F actualField = field.apply(actual);
-			if (!FieldMatcher.equals(expectedField, actualField)) retVal.add(new Mismatch<>(path, expectedField, actualField));
+			if (!FieldMatcher.equals(expectedField, actualField)) retVal.add(new Mismatch<>(getPath().get(), expectedField, actualField));
 		}
 	}
 
@@ -35,7 +36,7 @@ public class FieldMatcher<T> extends BaseMatcher<T> {
 
 		@SafeVarargs
 		public FieldSet(ISerializableFunction1<T, ?>... fields) {
-			this.fields = Stream.of(fields).map(f -> new Field<>(f, f.asMethodAnalyzer().getPath())).collect(Collectors.toList());
+			this.fields = Stream.of(fields).map(f -> new Field<>(f, () -> f.asMethodAnalyzer().getPath())).collect(Collectors.toList());
 		}
 
 		protected Collection<Mismatch<?>> check(T expected, T actual) {

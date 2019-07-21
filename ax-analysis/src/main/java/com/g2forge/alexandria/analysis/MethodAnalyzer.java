@@ -57,8 +57,8 @@ class MethodAnalyzer implements IMethodAnalyzer {
 		final int limit = instructions.length - 1;
 
 		// Get/Set chains always start with an aload, and end with a return
-		if (!(instructions[0] instanceof ALOAD) || (((ALOAD) instructions[0]).getIndex() != 0)) throw new Error();
-		if (!(instructions[limit] instanceof ReturnInstruction)) throw new Error();
+		if (!(instructions[0] instanceof ALOAD) || (((ALOAD) instructions[0]).getIndex() != 0)) throw new Error("Cannot parse method to path, first instruction is not a load of this");
+		if (!(instructions[limit] instanceof ReturnInstruction)) throw new Error("Cannot parse method to path, because last instruction is not a return");
 
 		// Parse through all the instructions in the middle
 		final StringBuilder retVal = new StringBuilder();
