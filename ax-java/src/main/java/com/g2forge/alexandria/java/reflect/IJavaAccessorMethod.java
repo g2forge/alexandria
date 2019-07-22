@@ -52,7 +52,7 @@ public interface IJavaAccessorMethod {
 		public String getPrefix() {
 			return name().toLowerCase();
 		}
-		
+
 		public boolean isMatchingName(String name) {
 			return name.startsWith(getPrefix());
 		}
@@ -76,7 +76,8 @@ public interface IJavaAccessorMethod {
 		final String name = getName();
 		final String stripped = HString.stripPrefix(name, Accessor.PREFIXES_ARRAY);
 		// Disabled to support accessors without prefixes
-		//if (stripped == name) return null;
+		// if (stripped == name) return null;
+		if (stripped.isEmpty()) return "<unnammed>";
 		return HString.lowercase(stripped);
 	}
 
