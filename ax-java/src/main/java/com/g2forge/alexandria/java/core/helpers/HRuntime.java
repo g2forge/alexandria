@@ -24,10 +24,7 @@ public class HRuntime {
 				current = current.getParent();
 			}
 			loader = current;
-		} else {
-			loader = type.getClassLoader();
-		}
-
+		} else loader = type.getClassLoader();
 		if (loader == null) return null;
 
 		Class<?> top = type;
@@ -38,5 +35,4 @@ public class HRuntime {
 		final String name = top.getCanonicalName();
 		return loader.getResource(name.replace(".", "/") + ".class");
 	}
-
 }
