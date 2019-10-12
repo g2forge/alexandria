@@ -9,11 +9,12 @@ import com.g2forge.alexandria.adt.associative.MapAssociation;
 import com.g2forge.alexandria.java.adt.identity.IIdentity;
 import com.g2forge.alexandria.java.adt.identity.Identified;
 import com.g2forge.alexandria.java.fluent.optional.IOptional;
+import com.g2forge.alexandria.java.function.IFunction1;
 
 import lombok.Data;
 
 @Data
-public class Cache<K, V> implements Function<K, V> {
+public class Cache<K, V> implements IFunction1<K, V> {
 	protected final IIdentity<? super K> identity;
 
 	protected final Function<? super K, ? extends V> function;
