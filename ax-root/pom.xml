@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.g2forge.alexandria</groupId>
 	<artifactId>ax-root</artifactId>
-	<version>0.0.10-SNAPSHOT</version>
+	<version>0.0.11-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<properties>
