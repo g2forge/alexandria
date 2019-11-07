@@ -10,9 +10,9 @@ import lombok.Getter;
  */
 public class Identified<T> extends LiteralSupplier<T> {
 	@Getter
-	protected final IIdentity<T> identity;
+	protected final IIdentity<? super T> identity;
 
-	public Identified(T value, IIdentity<T> identity) {
+	public Identified(T value, IIdentity<? super T> identity) {
 		super(value);
 		this.identity = identity;
 	}
@@ -24,7 +24,8 @@ public class Identified<T> extends LiteralSupplier<T> {
 		if (!(that instanceof Identified)) return false;
 
 		final Identified<?> cast = (Identified<?>) that;
-		return getIdentity().equals(cast.getIdentity()) && getIdentity().equals(get(), cast.get());
+		final IIdentity<? super T> identity = getIdentity();
+		return identity.equals(cast.getIdentity()) && identity.equals(get(), cast.get());
 	}
 
 	@Override
