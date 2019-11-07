@@ -1,5 +1,6 @@
 package com.g2forge.alexandria.analysis;
 
+import java.io.ObjectStreamClass;
 import java.lang.reflect.Method;
 
 import org.junit.Assert;
@@ -17,7 +18,7 @@ public class TestAnalysis {
 	public static class TestClass1 {
 		protected final Object bar;
 	}
-	
+
 	public static interface TestClass2 {
 		public Object bar();
 	}
@@ -26,6 +27,12 @@ public class TestAnalysis {
 	public void method() throws NoSuchMethodException, SecurityException {
 		final Method actual = ISerializableFunction1.analyze(TestClass1::getBar).getMethod();
 		Assert.assertEquals(TestClass1.class.getDeclaredMethod("getBar"), actual);
+	}
+
+	@Test
+	public void nonSerializable() {
+		ObjectStreamClass.lookup(TestClass1.class);
+		Assert.assertEquals("bar", ISerializableSupplier.create(new TestClass1(null)::getBar).asMethodAnalyzer().getPath());
 	}
 
 	@Test
