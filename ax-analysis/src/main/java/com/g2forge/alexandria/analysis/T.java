@@ -2,8 +2,10 @@ package com.g2forge.alexandria.analysis;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.invoke.SerializedLambda;
 
@@ -13,12 +15,25 @@ import lombok.Data;
 
 @Data
 class T implements Serializable {
+	protected static class ThunkOutputStream extends ObjectOutputStream {
+		protected ThunkOutputStream(OutputStream out) throws IOException {
+			super(out);
+			enableReplaceObject(true);
+		}
+
+		@Override
+		protected Object replaceObject(Object obj) throws IOException {
+			if (!(obj instanceof Serializable)) return null;
+			return obj;
+		}
+	}
+
 	private static final long serialVersionUID = 8025925345765570181l;
 
 	protected static T create(Object lambda) {
 		try {
 			final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			try (final ObjectOutputStream out = new ObjectOutputStream(baos)) {
+			try (final ObjectOutputStream out = new ThunkOutputStream(baos)) {
 				out.writeObject(lambda);
 			}
 			final byte[] rewrite = rewrite(baos.toByteArray());
