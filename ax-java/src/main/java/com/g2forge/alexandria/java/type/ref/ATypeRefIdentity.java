@@ -16,4 +16,9 @@ public abstract class ATypeRefIdentity<T> implements ITypeRef<T> {
 	public int hashCode() {
 		return getType().hashCode();
 	}
+
+	@Override
+	public String toString() {
+		return getClass().getName() + "(" + getType() + ")";
+	}
 }
