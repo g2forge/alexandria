@@ -67,6 +67,7 @@ public interface ITypeRef<T> extends IDynamicType<T> {
 		return getErasedType().isAssignableFrom(((ITypeRef<?>) type).getErasedType());
 	}
 
+	@Note(type = NoteType.TODO, value = "Take generics into account when determining instanceOf, right now it's only checked erased type")
 	public default boolean isInstance(Object value) {
 		return getErasedType().isInstance(value);
 	}
