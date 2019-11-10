@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
@@ -14,7 +15,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.java.close.ICloseable;
@@ -37,11 +37,19 @@ public class HIO {
 	 * @return The contents of the input stream.
 	 */
 	public static String readAll(final InputStream stream, boolean newline) {
-		final String retVal;
-		try (final Scanner scanner = new Scanner(stream, "UTF-8")) {
-			retVal = scanner.useDelimiter("\\A").next();
+		final StringBuilder retVal = new StringBuilder();
+
+		final char[] buffer = new char[getRecommendedBufferSize()];
+		try (final InputStreamReader reader = new InputStreamReader(stream, "UTF-8")) {
+			while (true) {
+				final int read = reader.read(buffer);
+				if (read > 0) retVal.append(buffer, 0, read);
+				if (read < buffer.length) break;
+			}
+		} catch (IOException exception) {
+			throw new RuntimeIOException(String.format("Failed to read stream %1$s to string", stream), exception);
 		}
-		return newline ? retVal.replace(System.lineSeparator(), "\n") : retVal;
+		return newline ? retVal.toString().replace(System.lineSeparator(), "\n") : retVal.toString();
 	}
 
 	public static InputStream toInputStream(String string) {
