@@ -8,7 +8,7 @@ import lombok.experimental.UtilityClass;
 
 @Helpers
 @UtilityClass
-public class HRandomEmail {
+public class HTestData {
 	public static String randomEmail(final int length) {
 		return RandomStringUtils.randomAlphanumeric(length) + "@example.com";
 	}
