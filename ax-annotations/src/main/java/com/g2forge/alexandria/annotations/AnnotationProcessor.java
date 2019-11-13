@@ -1,12 +1,14 @@
 package com.g2forge.alexandria.annotations;
 
 import java.lang.annotation.Annotation;
+import java.lang.annotation.Repeatable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -63,7 +65,7 @@ public class AnnotationProcessor extends AbstractProcessor {
 
 	@Override
 	public Set<String> getSupportedAnnotationTypes() {
-		return Stream.of(ANNOTATIONS).map(type -> type.getName()).collect(Collectors.toSet());
+		return Stream.of(ANNOTATIONS).flatMap(type -> Stream.of(type, type.isAnnotationPresent(Repeatable.class) ? type.getAnnotation(Repeatable.class).value() : null)).filter(Objects::nonNull).map(type -> type.getName()).collect(Collectors.toSet());
 	}
 
 	@Override
