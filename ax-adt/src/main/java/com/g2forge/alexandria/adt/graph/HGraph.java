@@ -2,8 +2,8 @@ package com.g2forge.alexandria.adt.graph;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -19,11 +19,11 @@ public class HGraph {
 	public static <N> List<N> toposort(Collection<N> nodes, Function<N, Set<N>> accessor, boolean isOut) {
 		final Function<? super N, ? extends Node<N>> nodeConstructor = n -> {
 			final Node<N> retVal = new Node<>(n);
-			if (isOut) retVal.setIn(new HashSet<>());
-			else retVal.setOut(new HashSet<>());
+			if (isOut) retVal.setIn(new LinkedHashSet<>());
+			else retVal.setOut(new LinkedHashSet<>());
 			return retVal;
 		};
-		final Map<N, Node<N>> nodeMap = nodes.stream().map(nodeConstructor).collect(Collectors.toMap(Node::getNode, IFunction1.identity(), HCollector.mergeFail(), HashMap::new));
+		final Map<N, Node<N>> nodeMap = nodes.stream().map(nodeConstructor).collect(Collectors.toMap(Node::getNode, IFunction1.identity(), HCollector.mergeFail(), LinkedHashMap::new));
 		final LinkedList<N> todo = new LinkedList<>(nodes);
 		while (!todo.isEmpty()) {
 			final N n = todo.remove();
@@ -35,14 +35,14 @@ public class HGraph {
 				});
 				if (other == null) throw new NullPointerException(String.format("Node \"%s\" has a broken edge to \"%s\"!", node.getNode(), o));
 				return new Edge<N>(isOut ? node : other, isOut ? other : node);
-			}).collect(Collectors.toSet());
+			}).collect(Collectors.toCollection(LinkedHashSet::new));
 			if (isOut) node.setOut(edges);
 			else node.setIn(edges);
 			edges.stream().forEach(e -> (isOut ? e.getTo().getIn() : e.getFrom().getOut()).add(e));
 		}
 
 		final List<Node<N>> retVal = new ArrayList<>();
-		final Set<Node<N>> noIncoming = new HashSet<>(nodeMap.values().stream().filter(node -> node.getIn().isEmpty()).collect(Collectors.toSet()));
+		final Set<Node<N>> noIncoming = nodeMap.values().stream().filter(node -> node.getIn().isEmpty()).collect(Collectors.toCollection(LinkedHashSet::new));
 
 		// While there are more nodes with no incoming edges
 		while (!noIncoming.isEmpty()) {
@@ -58,7 +58,7 @@ public class HGraph {
 				// If we just make the to node have no more incoming edges...
 				if (in.isEmpty()) noIncoming.add(e.getTo());
 			});
-			node.setOut(new HashSet<>());
+			node.setOut(new LinkedHashSet<>());
 		}
 
 		// Check to see if there's a cycle
