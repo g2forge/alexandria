@@ -12,5 +12,6 @@ import com.g2forge.alexandria.annotations.note.NoteType;
  * that it contains no state. Singletons may be useful in cases where you will have multiple implementations of a stateless interface, as in the strategy
  * pattern.
  */
+@Marker
 @Note(type = NoteType.TODO, value = "Link to strategy pattern")
 public interface ISingleton {}
