@@ -12,6 +12,10 @@ public interface IPredicate1<T> extends Predicate<T>, IPredicate {
 		return predicate;
 	}
 
+	public static <T> IPredicate1<T> isEqual(T value) {
+		return new IsEqualPredicate1<>(value);
+	}
+
 	public default <IX> IPredicate2<IX, T> ignore0() {
 		return (i0, i1) -> test(i1);
 	}
