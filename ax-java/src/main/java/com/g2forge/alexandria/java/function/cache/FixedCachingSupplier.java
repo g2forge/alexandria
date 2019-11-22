@@ -2,7 +2,9 @@ package com.g2forge.alexandria.java.function.cache;
 
 import java.util.function.Supplier;
 
-public class FixedCachingSupplier<T> implements Supplier<T> {
+import com.g2forge.alexandria.java.function.ISupplier;
+
+public class FixedCachingSupplier<T> implements ISupplier<T> {
 	/** The supplier to cache. Set to <code>null</code> after use to indicate that we already have the result. */
 	protected Supplier<? extends T> supplier;
 
