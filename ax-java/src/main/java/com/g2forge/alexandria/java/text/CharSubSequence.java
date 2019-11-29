@@ -35,4 +35,12 @@ public class CharSubSequence implements CharSequence {
 	public CharSequence subSequence(int start, int end) {
 		return new CharSubSequence(sequence, offset + start, end - start);
 	}
+
+	@Override
+	public String toString() {
+		final char[] chars = new char[length()];
+		for (int i = 0; i < chars.length; i++)
+			chars[i] = charAt(i);
+		return new String(chars);
+	}
 }
