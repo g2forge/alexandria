@@ -21,6 +21,7 @@ public interface IRange<T extends Comparable<T>> {
 				current = range;
 			} else current = constructor.apply(current.getMin(), range.getMax());
 		}
+		retVal.add(current);
 		return retVal;
 	}
 
