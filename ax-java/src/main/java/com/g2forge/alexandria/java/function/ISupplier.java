@@ -9,6 +9,7 @@ public interface ISupplier<T> extends Supplier<T>, IRunnable {
 	}
 
 	public static <T> ISupplier<T> create(T value) {
+		if (value == null) return LiteralSupplier.getNull();
 		return new LiteralSupplier<>(value);
 	}
 
