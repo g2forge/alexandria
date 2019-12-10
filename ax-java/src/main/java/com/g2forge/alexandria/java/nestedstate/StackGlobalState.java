@@ -8,6 +8,12 @@ import com.g2forge.alexandria.java.close.ICloseable;
 public class StackGlobalState<T> implements ICloseableNestedState<T> {
 	protected final Stack<T> stack = new Stack<>();
 
+	public StackGlobalState() {}
+
+	public StackGlobalState(T initial) {
+		stack.push(initial);
+	}
+
 	public void close(final T expected) {
 		if (stack.pop() != expected) throw new IllegalStateException();
 	}
