@@ -23,12 +23,13 @@ public class CharSubSequence implements CharSequence {
 
 	@Override
 	public char charAt(int index) {
+		if (index < 0 || index > length) throw new IndexOutOfBoundsException();
 		return sequence.charAt(offset + index);
 	}
 
 	@Override
 	public int length() {
-		return sequence.length() - offset;
+		return length;
 	}
 
 	@Override
