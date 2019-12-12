@@ -14,6 +14,11 @@ public interface IPredicate2<I0, I1> extends BiPredicate<I0, I1>, IPredicate {
 		return predicate;
 	}
 
+	public default IPredicate2<I0, I1> and(BiPredicate<? super I0, ? super I1> other) {
+		Objects.requireNonNull(other);
+		return (I0 i0, I1 i1) -> test(i0, i1) && other.test(i0, i1);
+	}
+
 	public default IPredicate1<I1> compose0(Supplier<? extends I0> before) {
 		Objects.requireNonNull(before);
 		return i1 -> test(before.get(), i1);
@@ -50,5 +55,10 @@ public interface IPredicate2<I0, I1> extends BiPredicate<I0, I1>, IPredicate {
 
 	public default IConsumer2<I0, I1> noReturn() {
 		return (i0, i1) -> test(i0, i1);
+	}
+
+	public default IPredicate2<I0, I1> or(BiPredicate<? super I0, ? super I1> other) {
+		Objects.requireNonNull(other);
+		return (I0 i0, I1 i1) -> test(i0, i1) || other.test(i0, i1);
 	}
 }
