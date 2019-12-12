@@ -29,6 +29,7 @@ public class TypeSwitch3<I0, I1, I2, O> implements IFunction3<I0, I1, I2, O> {
 		}
 
 		public IConsumer3<I0, I1, I2> build() {
+			if (functions.isEmpty()) return IConsumer3.ignore();
 			final TypeSwitch3<I0, I1, I2, Void> ts = new TypeSwitch3<>(fallback == null ? null : (i0, i1, i2) -> {
 				fallback.accept(i0, i1, i2);
 				return null;
@@ -67,6 +68,7 @@ public class TypeSwitch3<I0, I1, I2, O> implements IFunction3<I0, I1, I2, O> {
 		}
 
 		public IFunction3<I0, I1, I2, O> build() {
+			if (functions.isEmpty()) return (i0, i1, i2) -> fallback.apply(i0, i1, i2);
 			return new TypeSwitch3<>(fallback, functions);
 		}
 

@@ -20,6 +20,10 @@ public interface IConsumer1<I> extends Consumer<I>, IConsumer, IThrowConsumer1<I
 		};
 	}
 
+	public static <I> IConsumer1<I> ignore() {
+		return i -> {};
+	}
+
 	public static <I> IConsumer1<I> once(IConsumer1<I> consumer) {
 		Objects.requireNonNull(consumer);
 		return new IConsumer1<I>() {
