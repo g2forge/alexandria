@@ -13,6 +13,11 @@ public interface IPredicate3<I0, I1, I2> extends IPredicate {
 		return predicate;
 	}
 
+	public default IPredicate3<I0, I1, I2> and(IPredicate3<? super I0, ? super I1, ? super I2> other) {
+		Objects.requireNonNull(other);
+		return (I0 i0, I1 i1, I2 i2) -> test(i0, i1, i2) && other.test(i0, i1, i2);
+	}
+
 	public default IPredicate2<I1, I2> compose0(Supplier<? extends I0> before) {
 		Objects.requireNonNull(before);
 		return (i1, i2) -> test(before.get(), i1, i2);
@@ -46,6 +51,11 @@ public interface IPredicate3<I0, I1, I2> extends IPredicate {
 
 	public default IConsumer3<I0, I1, I2> noReturn() {
 		return (i0, i1, i2) -> test(i0, i1, i2);
+	}
+
+	public default IPredicate3<I0, I1, I2> or(IPredicate3<? super I0, ? super I1, ? super I2> other) {
+		Objects.requireNonNull(other);
+		return (I0 i0, I1 i1, I2 i2) -> test(i0, i1, i2) || other.test(i0, i1, i2);
 	}
 
 	public boolean test(I0 i0, I1 i1, I2 i2);
