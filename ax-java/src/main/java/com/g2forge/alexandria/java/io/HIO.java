@@ -1,5 +1,6 @@
 package com.g2forge.alexandria.java.io;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -50,6 +51,19 @@ public class HIO {
 			throw new RuntimeIOException(String.format("Failed to read stream %1$s to string", stream), exception);
 		}
 		return newline ? retVal.toString().replace(System.lineSeparator(), "\n") : retVal.toString();
+	}
+
+	public List<String> readAll(InputStream stream) {
+		final List<String> retVal = new ArrayList<>();
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				retVal.add(line);
+			}
+		} catch (IOException exception) {
+			throw new RuntimeIOException(String.format("Failed to read stream %1$s to list of strings", stream), exception);
+		}
+		return retVal;
 	}
 
 	public static InputStream toInputStream(String string) {
