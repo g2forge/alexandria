@@ -7,7 +7,6 @@ import java.util.Collection;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.function.IConsumer1;
 import com.g2forge.alexandria.java.function.IConsumer2;
-import com.g2forge.alexandria.java.function.IConsumer3;
 import com.g2forge.alexandria.java.function.IFunction2;
 
 import lombok.AccessLevel;
