@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>com.g2forge.alexandria</groupId>
 		<artifactId>ax-root</artifactId>
-		<version>0.0.11</version>
+		<version>0.0.12-SNAPSHOT</version>
 		<relativePath>../ax-root/pom.xml</relativePath>
 	</parent>
 
@@ -32,12 +32,12 @@
 		<dependency>
 			<groupId>com.g2forge.alexandria</groupId>
 			<artifactId>ax-java</artifactId>
-			<version>0.0.11</version>
+			<version>0.0.12-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.g2forge.alexandria</groupId>
 			<artifactId>ax-test</artifactId>
-			<version>0.0.11</version>
+			<version>0.0.12-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
