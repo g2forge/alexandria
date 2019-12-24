@@ -1,7 +1,10 @@
-package com.g2forge.alexandria.java.reflect;
+package com.g2forge.alexandria.java.reflect.accessor;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.g2forge.alexandria.java.reflect.accessor.JavaAccessorMethod;
+import com.g2forge.alexandria.java.reflect.accessor.JavaAccessorType;
 
 import lombok.Data;
 
@@ -16,12 +19,12 @@ public class TestJavaAccessorMethod {
 	@Test
 	public void flag() throws NoSuchMethodException, SecurityException {
 		final JavaAccessorMethod method = new JavaAccessorMethod(TestData.class.getDeclaredMethod("isFlag"));
-		Assert.assertEquals(IJavaAccessorMethod.Accessor.IS, method.getAccessorType());
+		Assert.assertEquals(JavaAccessorType.IS, method.getAccessorType());
 	}
 
 	@Test
 	public void string() throws NoSuchMethodException, SecurityException {
 		final JavaAccessorMethod method = new JavaAccessorMethod(TestData.class.getDeclaredMethod("getString"));
-		Assert.assertEquals(IJavaAccessorMethod.Accessor.GET, method.getAccessorType());
+		Assert.assertEquals(JavaAccessorType.GET, method.getAccessorType());
 	}
 }
