@@ -8,6 +8,10 @@ public interface IConsumer2<I0, I1> extends BiConsumer<I0, I1>, IConsumer {
 	public static <I0, I1> IConsumer2<I0, I1> create(IConsumer2<I0, I1> consumer) {
 		return consumer;
 	}
+	
+	public static <I0, I1> IConsumer2<I0, I1> ignore() {
+		return (i0, i1) -> {};
+	}
 
 	public default IConsumer2<I0, I1> andThen(BiConsumer<? super I0, ? super I1> after) {
 		Objects.requireNonNull(after);

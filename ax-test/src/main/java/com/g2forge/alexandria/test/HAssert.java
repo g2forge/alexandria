@@ -1,13 +1,17 @@
 package com.g2forge.alexandria.test;
 
+import java.util.Objects;
+
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.junit.Assert;
+import org.junit.ComparisonFailure;
 
-import com.g2forge.alexandria.java.function.IConsumer2;
-import com.g2forge.alexandria.java.function.IThrowRunnable;
 import com.g2forge.alexandria.java.core.marker.Helpers;
 import com.g2forge.alexandria.java.function.IConsumer1;
+import com.g2forge.alexandria.java.function.IConsumer2;
+import com.g2forge.alexandria.java.function.IFunction1;
+import com.g2forge.alexandria.java.function.IThrowRunnable;
 
 import lombok.experimental.UtilityClass;
 
@@ -56,5 +60,15 @@ public class HAssert extends Assert {
 
 	public static <T> IConsumer1<? super T> testInstanceOf(Class<?> expected) {
 		return IConsumer2.create(HAssert::assertInstanceOf).curry0(expected);
+	}
+
+	public static <T> void assertEquals(String message, IFunction1<? super T, ? extends String> toString, T expected, T actual) {
+		if (Objects.equals(expected, actual)) return;
+		throw new ComparisonFailure(message, toString.apply(expected), toString.apply(actual));
+	}
+
+	protected static void assertEquals(String message, Object expected, Object actual, final String expectedString, final String actualString) {
+		if (Objects.equals(expected, actual)) return;
+		throw new ComparisonFailure(message, expectedString, actualString);
 	}
 }

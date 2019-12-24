@@ -1,19 +1,16 @@
 package com.g2forge.alexandria.adt.range;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.Builder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
-@EqualsAndHashCode
-@ToString
+@Data
+@Builder(toBuilder = true)
+@RequiredArgsConstructor
 public class IntegerRange implements IRange<Integer> {
 	protected final int min;
 
 	protected final int max;
-
-	public IntegerRange(int min, int max) {
-		this.min = min;
-		this.max = max;
-	}
 
 	@Override
 	public Integer getMax() {

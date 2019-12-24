@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -43,7 +44,7 @@ public class ServiceAnnotationHandler implements IAnnotationHandler<Service> {
 			for (String line = inputReader.readLine(); line != null; line = inputReader.readLine()) {
 				retVal.add(line);
 			}
-		} catch (FileNotFoundException exception) {
+		} catch (FileNotFoundException | NoSuchFileException exception) {
 			// processingEnvironment.getMessager().printMessage(Diagnostic.Kind.WARNING, HAnnotationProcessor.toString(exception));
 			return;
 		} catch (IOException exception) {
@@ -90,7 +91,6 @@ public class ServiceAnnotationHandler implements IAnnotationHandler<Service> {
 	@Override
 	public void handle(ProcessingEnvironment processingEnvironment, Collection<ElementAnnotations<Service>> elementAnnotations) {
 		for (ElementAnnotations<Service> elementAnnotation : elementAnnotations) {
-
 			final List<? extends TypeMirror> typeMirrors = HAnnotationProcessor.getTypeMirrorAnnotationValue(elementAnnotation.getElement(), Service.class, "value");
 			for (TypeMirror service : typeMirrors) {
 				final TypeElement serviceElement = HAnnotationProcessor.toTypeElement(processingEnvironment, service);

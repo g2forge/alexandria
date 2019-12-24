@@ -20,7 +20,7 @@ public interface IResource {
 
 	public default String read(boolean newline) {
 		final InputStream stream = getResourceAsStream();
-		if (stream == null) throw new NullPointerException(String.format("Resource \"%1$s\" could not found relative to class %2$s", getResource(), getKlass().getName()));
+		if (stream == null) throw new NullPointerException(String.format("Resource \"%1$s\" could not be found relative to class %2$s (if the file exists, check your maven resource configuration)", getResource(), getKlass().getName()));
 		return HIO.readAll(stream, newline);
 	}
 }

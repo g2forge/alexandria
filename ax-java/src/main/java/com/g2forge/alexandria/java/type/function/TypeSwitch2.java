@@ -29,6 +29,7 @@ public class TypeSwitch2<I0, I1, O> implements IFunction2<I0, I1, O> {
 		}
 
 		public IConsumer2<I0, I1> build() {
+			if (functions.isEmpty()) return IConsumer2.ignore();
 			final TypeSwitch2<I0, I1, Void> ts = new TypeSwitch2<>(fallback == null ? null : (i0, i1) -> {
 				fallback.accept(i0, i1);
 				return null;
@@ -53,11 +54,6 @@ public class TypeSwitch2<I0, I1, O> implements IFunction2<I0, I1, O> {
 
 		protected IFunction2<? super I0, ? super I1, ? extends O> fallback = null;
 
-		public <T0, T1> FunctionBuilder<I0, I1, O> add(Class<T0> type0, Class<T1> type1, IFunction2<? super T0, ? super T1, ? extends O> function) {
-			functions.add(new TypedFunction2<T0, T1, O>(type0, type1, function));
-			return this;
-		}
-
 		public <T0, T1> FunctionBuilder<I0, I1, O> add(Class<T0> type0, Class<T1> type1, IConsumer2<? super T0, ? super T1> consumer, O output) {
 			add(type0, type1, (i0, i1) -> {
 				consumer.accept(i0, i1);
@@ -66,7 +62,13 @@ public class TypeSwitch2<I0, I1, O> implements IFunction2<I0, I1, O> {
 			return this;
 		}
 
+		public <T0, T1> FunctionBuilder<I0, I1, O> add(Class<T0> type0, Class<T1> type1, IFunction2<? super T0, ? super T1, ? extends O> function) {
+			functions.add(new TypedFunction2<T0, T1, O>(type0, type1, function));
+			return this;
+		}
+
 		public IFunction2<I0, I1, O> build() {
+			if (functions.isEmpty()) return (i0, i1) -> fallback.apply(i0, i1);
 			return new TypeSwitch2<>(fallback, functions);
 		}
 

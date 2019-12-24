@@ -11,6 +11,11 @@ public interface IFunction1<I, O> extends Function<I, O>, IFunction<O>, IConsume
 		return i -> (O) i;
 	}
 
+	public static <I, O> IFunction1<I, O> create(O constant) {
+		if (constant == null) return LiteralFunction1.getNull();
+		return new LiteralFunction1<>(constant);
+	}
+
 	public static <I, O> IFunction1<I, O> create(IFunction1<I, O> function) {
 		return function;
 	}

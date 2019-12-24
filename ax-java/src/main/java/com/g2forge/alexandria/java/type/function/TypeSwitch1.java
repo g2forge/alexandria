@@ -28,6 +28,7 @@ public class TypeSwitch1<I, O> implements IFunction1<I, O> {
 		}
 
 		public IConsumer1<I> build() {
+			if (functions.isEmpty()) return IConsumer1.ignore();
 			final TypeSwitch1<I, Void> ts = new TypeSwitch1<>(fallback == null ? null : i -> {
 				fallback.accept(i);
 				return null;
@@ -66,6 +67,7 @@ public class TypeSwitch1<I, O> implements IFunction1<I, O> {
 		}
 
 		public IFunction1<I, O> build() {
+			if (functions.isEmpty()) return i -> fallback.apply(i);
 			return new TypeSwitch1<>(fallback, functions);
 		}
 

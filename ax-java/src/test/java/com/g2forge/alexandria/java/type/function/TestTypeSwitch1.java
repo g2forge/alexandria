@@ -9,9 +9,10 @@ import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.g2forge.alexandria.annotations.note.Note;
+import com.g2forge.alexandria.annotations.note.NoteType;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.function.IFunction1;
-import com.g2forge.alexandria.java.type.function.TypeSwitch1;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -120,6 +121,18 @@ public class TestTypeSwitch1 {
 		final IFunction1<Object, Object> typeSwitch = builder.build();
 
 		typeSwitch.apply(new D() {});
+	}
+
+	/**
+	 * Test what happens when we specify two identical functions
+	 */
+	@Test
+	@Note(type = NoteType.TODO, value = "This should throw an error!")
+	public void errorDuplicate() {
+		final TypeSwitch1.FunctionBuilder<Object, Object> builder = new TypeSwitch1.FunctionBuilder<>();
+		builder.add(A.class, t -> null);
+		builder.add(A.class, t -> null);
+		builder.build();
 	}
 
 	@Test
