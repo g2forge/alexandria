@@ -1,22 +1,24 @@
-package com.g2forge.alexandria.metadata.annotation.implementations;
+package com.g2forge.alexandria.java.reflect.annotations;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.java.reflect.JavaScope;
-import com.g2forge.alexandria.metadata.annotation.IJavaAnnotations;
 
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.Singular;
 
 @Data
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
 public class MergedJavaAnnotations implements IJavaAnnotations {
-	protected final Collection<IJavaAnnotations> annotations;
+	@Singular("annotations")
+	protected final List<IJavaAnnotations> annotations;
 
 	public MergedJavaAnnotations(IJavaAnnotations... annotations) {
 		this(Arrays.asList(annotations));

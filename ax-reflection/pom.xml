@@ -22,11 +22,6 @@
 		</dependency>
 		<dependency>
 			<groupId>com.g2forge.alexandria</groupId>
-			<artifactId>ax-metadata</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.g2forge.alexandria</groupId>
 			<artifactId>ax-type</artifactId>
 			<version>${project.version}</version>
 		</dependency>

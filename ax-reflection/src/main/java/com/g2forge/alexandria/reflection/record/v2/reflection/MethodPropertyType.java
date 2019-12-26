@@ -3,8 +3,8 @@ package com.g2forge.alexandria.reflection.record.v2.reflection;
 import java.lang.reflect.InvocationTargetException;
 
 import com.g2forge.alexandria.java.core.error.RuntimeReflectionException;
-import com.g2forge.alexandria.java.reflect.IJavaAccessorMethod;
-import com.g2forge.alexandria.metadata.annotation.IJavaAnnotated;
+import com.g2forge.alexandria.java.reflect.accessor.JavaAccessorType;
+import com.g2forge.alexandria.java.reflect.annotations.IJavaAnnotated;
 import com.g2forge.alexandria.reflection.object.IJavaMethodReflection;
 import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;
 
@@ -31,7 +31,7 @@ class MethodPropertyType<P> extends APropertyType<P> {
 
 	@Override
 	public String getName() {
-		return IJavaAccessorMethod.Accessor.getFieldName(getMethod().getType().getName());
+		return JavaAccessorType.getFieldName(getMethod().getType().getName());
 	}
 
 	@Override

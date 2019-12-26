@@ -21,8 +21,8 @@ import org.apache.bcel.generic.Type;
 
 import com.g2forge.alexandria.java.core.error.RuntimeReflectionException;
 import com.g2forge.alexandria.java.reflect.HReflection;
-import com.g2forge.alexandria.java.reflect.IJavaAccessorMethod;
 import com.g2forge.alexandria.java.reflect.JavaPrimitive;
+import com.g2forge.alexandria.java.reflect.accessor.IJavaAccessorMethod;
 
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;

@@ -1,6 +1,6 @@
 package com.g2forge.alexandria.reflection.record.v2.reflection;
 
-import com.g2forge.alexandria.metadata.annotation.IJavaAnnotated;
+import com.g2forge.alexandria.java.reflect.annotations.IJavaAnnotated;
 import com.g2forge.alexandria.reflection.object.IJavaFieldReflection;
 import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;
 

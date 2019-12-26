@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.reflect;
+package com.g2forge.alexandria.java.reflect.accessor;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;

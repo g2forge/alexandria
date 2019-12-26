@@ -37,7 +37,6 @@
 		<module>ax-filesystem-memory</module>
 		<module>ax-fsm</module>
 		<module>ax-fsm-test</module>
-		<module>ax-metadata</module>
 	</modules>
 
 	<profiles>
