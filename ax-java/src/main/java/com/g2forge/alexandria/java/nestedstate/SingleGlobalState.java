@@ -20,7 +20,7 @@ public class SingleGlobalState<T> implements ICloseableNestedState<T> {
 
 	@Override
 	public ICloseable open(T value) {
-		if (valid || (value != null)) throw new IllegalStateException();
+		if (valid || (this.value != null)) throw new IllegalStateException();
 		this.value = value;
 		this.valid = true;
 		return () -> close(value);
