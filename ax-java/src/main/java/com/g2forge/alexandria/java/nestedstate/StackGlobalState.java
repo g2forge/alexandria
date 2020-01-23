@@ -15,7 +15,8 @@ public class StackGlobalState<T> implements ICloseableNestedState<T> {
 	}
 
 	public void close(final T expected) {
-		if (stack.pop() != expected) throw new IllegalStateException();
+		if (stack.peek() != expected) throw new IllegalStateException();
+		stack.pop();
 	}
 
 	public int depth() {
