@@ -22,20 +22,20 @@ public abstract class ATestNestedState {
 		Assert.fail(String.format("Expected exception of type \"%1$s\" was not thrown!", type.getName()));
 	}
 
-	public abstract <T> INestedState<T> create();
+	protected abstract <T> void assertEmpty(INestedState<T> state);
+
+	protected abstract <T> INestedState<T> create();
 
 	@Test
 	public void test() {
 		final INestedState<Integer> state = create();
 		final ICloseableNestedState<Integer> closeable = state instanceof ICloseableNestedState ? (ICloseableNestedState<Integer>) state : null;
 
-		Assert.assertNull(state.get());
-		if (closeable != null) assertException(IllegalStateException.class, null, () -> closeable.close(null));
+		assertEmpty(state);
 		try (final ICloseable context = state.open(1)) {
 			Assert.assertEquals(Integer.valueOf(1), state.get());
 			if (closeable != null) assertException(IllegalStateException.class, null, () -> closeable.close(2));
 		}
-		Assert.assertNull(state.get());
-		if (closeable != null) assertException(IllegalStateException.class, null, () -> closeable.close(null));
+		assertEmpty(state);
 	}
 }
