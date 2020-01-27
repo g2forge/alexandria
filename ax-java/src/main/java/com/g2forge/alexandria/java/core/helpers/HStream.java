@@ -32,7 +32,11 @@ public class HStream {
 
 	public static <T> T findOne(Stream<? extends T> stream) {
 		final List<T> list = stream.collect(Collectors.toList());
-		if (list.size() != 1) throw new IllegalArgumentException(String.format("Found %1$d values, rather than the one value expected!", list.size()));
+		if (list.size() != 1) {
+			if (list.isEmpty()) throw new IllegalArgumentException(String.format("Empty stream!", list.size()));
+			final int upper = Math.min(5, list.size());
+			throw new IllegalArgumentException(String.format("Expected 1 value, found %1$d values! The first %2$d are: %3$s", list.size(), upper, list.subList(0, upper)));
+		}
 		return list.get(0);
 	}
 
