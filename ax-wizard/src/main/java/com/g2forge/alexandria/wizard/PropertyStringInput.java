@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.NoSuchElementException;
 import java.util.Properties;
 
 import com.g2forge.alexandria.java.io.RuntimeIOException;
@@ -44,7 +43,7 @@ public class PropertyStringInput extends AInput<String> {
 
 	@Override
 	public String get() {
-		if (isEmpty()) { throw new NoSuchElementException(String.format("The property \"%1$s\" was not set!", getProperty())); }
+		if (isEmpty()) { throw new InputUnspecifiedException(String.format("The property \"%1$s\" was not set!", getProperty())); }
 		return getValue();
 	}
 
