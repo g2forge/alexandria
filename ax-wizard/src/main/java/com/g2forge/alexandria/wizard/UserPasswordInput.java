@@ -19,7 +19,11 @@ public class UserPasswordInput extends AInput<String> {
 	private final String value = computeValue();
 
 	protected String computeValue() {
-		if (console == null) return UserStringInput.prompt(getPrompt(), null, new String[] { getPrompt() }, new boolean[] { false })[0];
+		if (console == null) {
+			final String[] retVal = UserStringInput.prompt(getPrompt(), null, new String[] { getPrompt() }, new boolean[] { false });
+			if (retVal == null) throw new InputUnspecifiedException();
+			return retVal[0];
+		}
 		return new String(console.readPassword("%s: ", getPrompt()));
 	}
 

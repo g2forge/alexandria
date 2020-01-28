@@ -2,7 +2,6 @@ package com.g2forge.alexandria.wizard;
 
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.NoSuchElementException;
 
 import com.g2forge.alexandria.command.CommandInvocation;
 
@@ -20,7 +19,7 @@ public class CommandLineStringInput extends AInput<String> {
 
 	@Override
 	public String get() {
-		if (isEmpty()) { throw new NoSuchElementException("There were too few command line arguments!"); }
+		if (isEmpty()) { throw new InputUnspecifiedException("There were too few command line arguments!"); }
 		return getInvocation().getArguments().get(getIndex());
 	}
 

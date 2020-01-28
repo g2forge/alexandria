@@ -29,31 +29,6 @@ import lombok.Getter;
 public class UserStringInput extends AInput<String> {
 	protected static final Console console = System.console();
 
-	@Getter
-	protected final String prompt;
-
-	@Getter
-	protected final boolean emptyToNull;
-
-	@Getter(lazy = true, value = AccessLevel.PROTECTED)
-	private final String value = computeValue();
-
-	protected String computeValue() {
-		final String input = (console != null) ? console.readLine("%s: ", getPrompt()) : UserStringInput.prompt(getPrompt(), null, new String[] { getPrompt() }, new boolean[] { true })[0];
-		if ((input.trim().length() <= 0) && isEmptyToNull()) return null;
-		return input;
-	}
-
-	@Override
-	public String get() {
-		return getValue();
-	}
-
-	@Override
-	public boolean isEmpty() {
-		return false;
-	}
-
 	public static String[] prompt(String title, String label, String[] prompt, boolean[] echo) {
 		final Container panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
@@ -115,5 +90,36 @@ public class UserStringInput extends AInput<String> {
 		} else {
 			return null;
 		}
+	}
+
+	@Getter
+	protected final String prompt;
+
+	@Getter
+	protected final boolean emptyToNull;
+
+	@Getter(lazy = true, value = AccessLevel.PROTECTED)
+	private final String value = computeValue();
+
+	protected String computeValue() {
+		final String input;
+		if (console != null) input = console.readLine("%s: ", getPrompt());
+		else {
+			final String[] retVal = UserStringInput.prompt(getPrompt(), null, new String[] { getPrompt() }, new boolean[] { true });
+			if (retVal == null) throw new InputUnspecifiedException();
+			input = retVal[0];
+		}
+		if ((input.trim().length() <= 0) && isEmptyToNull()) return null;
+		return input;
+	}
+
+	@Override
+	public String get() {
+		return getValue();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return false;
 	}
 }
