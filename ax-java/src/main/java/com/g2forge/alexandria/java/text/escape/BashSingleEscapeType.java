@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.text.quote;
+package com.g2forge.alexandria.java.text.escape;
 
 import com.g2forge.alexandria.java.core.marker.ISingleton;
 
@@ -10,12 +10,12 @@ public class BashSingleEscapeType implements IEscapeType, ISingleton {
 	}
 
 	@Override
-	public String escape(final String escapes, final String argument) {
-		return argument.replaceAll(escapes, "'\"$0\"'");
+	public String escape(final String escapesRegex, final String string) {
+		return string.replaceAll(escapesRegex, "'\"$0\"'");
 	}
 
 	@Override
-	public String unescape(final String escapes, final String argument) {
-		return argument.replaceAll("'\"(" + escapes + ")\"'", "$1");
+	public String unescape(final String escapesRegex, final String string) {
+		return string.replaceAll("'\"(" + escapesRegex + ")\"'", "$1");
 	}
 }
