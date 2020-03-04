@@ -42,7 +42,7 @@ public class HReflection {
 			if (Double.class.equals(clazz) || Double.TYPE.equals(clazz)) return "D";
 			throw new IllegalArgumentException();
 		}
-		if (clazz.isArray()) return clazz.getName();
+		if (clazz.isArray()) return clazz.getName().replace('.', '/');
 		return "L" + clazz.getName().replace('.', '/') + ";";
 	}
 
