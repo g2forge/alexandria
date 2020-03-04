@@ -6,21 +6,21 @@ import org.junit.Test;
 public class TestQuote {
 	@Test
 	public void alreadyQuoted() {
-		Assert.assertEquals("'Hello, World!'", ShellQuoteType.BashDoubleExpand.quote(QuoteControl.IfNotAlready, "'Hello, World!'", ShellQuoteType.BashDoubleExpand, ShellQuoteType.BashSingle));
+		Assert.assertEquals("'Hello, World!'", BashQuoteType.BashDoubleExpand.quote(QuoteControl.IfNotAlready, "'Hello, World!'", BashQuoteType.BashDoubleExpand, BashQuoteType.BashSingle));
 	}
 
 	@Test
 	public void escape() {
-		Assert.assertEquals("\"\\\"\"", ShellQuoteType.BashDoubleExpand.quote(QuoteControl.IfNeeded, "\""));
+		Assert.assertEquals("\"\\\"\"", BashQuoteType.BashDoubleExpand.quote(QuoteControl.IfNeeded, "\""));
 	}
 
 	@Test
 	public void needed() {
-		Assert.assertEquals("\"Hello, World!\"", ShellQuoteType.BashDoubleExpand.quote(QuoteControl.IfNeeded, "Hello, World!"));
+		Assert.assertEquals("\"Hello, World!\"", BashQuoteType.BashDoubleExpand.quote(QuoteControl.IfNeeded, "Hello, World!"));
 	}
 
 	@Test
 	public void nonNeeded() {
-		Assert.assertEquals("Hello", ShellQuoteType.BashDoubleExpand.quote(QuoteControl.IfNeeded, "Hello"));
+		Assert.assertEquals("Hello", BashQuoteType.BashDoubleExpand.quote(QuoteControl.IfNeeded, "Hello"));
 	}
 }

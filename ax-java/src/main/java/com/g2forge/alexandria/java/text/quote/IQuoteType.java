@@ -3,7 +3,16 @@ package com.g2forge.alexandria.java.text.quote;
 import com.g2forge.alexandria.java.text.escape.IEscapeType;
 
 public interface IQuoteType {
-	public String escape(final String string);
+	public default String escape(final String string) {
+		return getEscapeType().escape(getEscapesRegex(), string);
+	}
+
+	/**
+	 * Get the regex pattern for character sequences which need to be escaped. Escaping will be done with {@link #escape(String)}.
+	 * 
+	 * @return A regex pattern for sequences to escape.
+	 */
+	public String getEscapesRegex();
 
 	public IEscapeType getEscapeType();
 
@@ -25,7 +34,7 @@ public interface IQuoteType {
 		return string.startsWith(getPrefix()) && string.endsWith(getPostfix());
 	}
 
-	public boolean isQuoteNeeded(final String string);
+	public boolean isQuoteNeeded(final CharSequence string);
 
 	public default String quote(final QuoteControl option, final String string, IQuoteType... otherQuoteTypes) {
 		if (QuoteControl.Never.equals(option)) return string;
@@ -46,7 +55,9 @@ public interface IQuoteType {
 		return string;
 	}
 
-	public String unescape(final String string);
+	public default String unescape(final String string) {
+		return getEscapeType().unescape(getEscapesRegex(), string);
+	}
 
 	public default String unquote(final String string) {
 		if (isQuoted(string)) { return unescape(string.substring(getPrefix().length(), string.length() - getPostfix().length())); }
