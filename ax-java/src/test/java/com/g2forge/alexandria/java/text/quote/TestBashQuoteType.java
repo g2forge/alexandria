@@ -3,7 +3,7 @@ package com.g2forge.alexandria.java.text.quote;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestQuote {
+public class TestBashQuoteType {
 	@Test
 	public void alreadyQuoted() {
 		Assert.assertEquals("'Hello, World!'", BashQuoteType.BashDoubleExpand.quote(QuoteControl.IfNotAlready, "'Hello, World!'", BashQuoteType.BashDoubleExpand, BashQuoteType.BashSingle));
