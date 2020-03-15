@@ -6,9 +6,20 @@ import java.util.function.Supplier;
 
 @FunctionalInterface
 public interface IFunction1<I, O> extends Function<I, O>, IFunction<O>, IConsumer1<I>, IThrowFunction1<I, O, RuntimeException> {
+	public static class Identity<T> implements IFunction1<T, T> {
+		@Override
+		public T apply(T t) {
+			return t;
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	public static <I, O> IFunction1<I, O> cast() {
 		return i -> (O) i;
+	}
+
+	public static <I, O> IFunction1<I, O> create(IFunction1<I, O> function) {
+		return function;
 	}
 
 	public static <I, O> IFunction1<I, O> create(O constant) {
@@ -16,12 +27,8 @@ public interface IFunction1<I, O> extends Function<I, O>, IFunction<O>, IConsume
 		return new LiteralFunction1<>(constant);
 	}
 
-	public static <I, O> IFunction1<I, O> create(IFunction1<I, O> function) {
-		return function;
-	}
-
 	public static <T> IFunction1<T, T> identity() {
-		return t -> t;
+		return new Identity<>();
 	}
 
 	@SuppressWarnings("unchecked")
