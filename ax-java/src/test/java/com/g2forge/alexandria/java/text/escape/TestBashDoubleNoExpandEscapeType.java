@@ -2,8 +2,8 @@ package com.g2forge.alexandria.java.text.escape;
 
 import org.junit.Test;
 
-import com.g2forge.alexandria.java.text.escape.v2.BashEscapeType;
-import com.g2forge.alexandria.java.text.escape.v2.IEscaper;
+import com.g2forge.alexandria.java.text.escape.BashEscapeType;
+import com.g2forge.alexandria.java.text.escape.IEscaper;
 
 import lombok.AccessLevel;
 import lombok.Getter;

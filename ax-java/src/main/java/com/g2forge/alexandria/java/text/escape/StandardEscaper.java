@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.text.escape.v2;
+package com.g2forge.alexandria.java.text.escape;
 
 import com.g2forge.alexandria.java.function.IFunction1;
 import com.g2forge.alexandria.java.text.TextUpdate;
@@ -63,6 +63,14 @@ public class StandardEscaper implements IEscaper {
 		}
 		if (startCopy >= 0) builder.accept(new TextUpdate<>(startCopy, string.length() - startCopy, IFunction1.identity()));
 		return builder.build();
+	}
+
+	@Override
+	public String getCharactersRequiringEscape() {
+		final String unescaped = getUnescaped();
+		final int required = getRequired();
+		if (required < 0) return unescaped;
+		return unescaped.substring(0, required);
 	}
 
 	@Override

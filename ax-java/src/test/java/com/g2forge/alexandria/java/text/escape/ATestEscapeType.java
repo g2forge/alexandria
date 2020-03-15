@@ -2,7 +2,7 @@ package com.g2forge.alexandria.java.text.escape;
 
 import org.junit.Assert;
 
-import com.g2forge.alexandria.java.text.escape.v2.IEscaper;
+import com.g2forge.alexandria.java.text.escape.IEscaper;
 
 public abstract class ATestEscapeType {
 	protected abstract IEscaper getEscaper();

@@ -1,7 +1,6 @@
 package com.g2forge.alexandria.java.text.quote;
 
-import com.g2forge.alexandria.java.text.escape.BackslashEscapeType;
-import com.g2forge.alexandria.java.text.escape.BashSingleEscapeType;
+import com.g2forge.alexandria.java.text.escape.BashEscapeType;
 import com.g2forge.alexandria.java.text.escape.IEscapeType;
 
 import lombok.Getter;
@@ -10,9 +9,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum BashQuoteType implements IQuoteType {
-	BashSingle(HQuote.QUOTE_SINGLE, "'", BashSingleEscapeType.create()),
-	BashDoubleNoExpand(HQuote.QUOTE_DOUBLE, "[$`\"\\\\]", BackslashEscapeType.create()),
-	BashDoubleExpand(HQuote.QUOTE_DOUBLE, "[\"]", BackslashEscapeType.create());
+	BashSingle(HQuote.QUOTE_SINGLE, "'", BashEscapeType.Single),
+	BashDoubleExpand(HQuote.QUOTE_DOUBLE, "[\"]", BashEscapeType.DoubleExpand),
+	BashDoubleNoExpand(HQuote.QUOTE_DOUBLE, "[$`\"\\\\]", BashEscapeType.DoubleNoExpand);
 
 	protected static final String OPCHARACTERS = "|&;()<>!#";
 

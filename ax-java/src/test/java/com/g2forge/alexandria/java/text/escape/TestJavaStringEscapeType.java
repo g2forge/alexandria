@@ -3,15 +3,15 @@ package com.g2forge.alexandria.java.text.escape;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.java.text.escape.v2.IEscaper;
-import com.g2forge.alexandria.java.text.escape.v2.JavaEscapeType;
+import com.g2forge.alexandria.java.text.escape.IEscaper;
+import com.g2forge.alexandria.java.text.escape.JavaEscapeType;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 
-public class TestJavaEscapeType extends ATestEscapeType {
+public class TestJavaStringEscapeType extends ATestEscapeType {
 	@Getter(AccessLevel.PROTECTED)
-	protected final IEscaper escaper = JavaEscapeType.create().getEscaper();
+	protected final IEscaper escaper = JavaEscapeType.String.getEscaper();
 
 	@Test
 	public void first() {

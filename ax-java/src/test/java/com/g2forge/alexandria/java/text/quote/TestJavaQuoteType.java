@@ -5,7 +5,12 @@ import org.junit.Test;
 
 public class TestJavaQuoteType {
 	@Test
-	public void quote() {
-		Assert.assertEquals("\"Hello, World!\\\n\"", JavaQuoteType.String.quote(QuoteControl.IfNeeded, "Hello, World!\n", JavaQuoteType.String));
+	public void patternCharacterClass() {
+		Assert.assertEquals("[abc]", JavaQuoteType.PatternCharClass.quote(QuoteControl.IfNeeded, "abc"));
+	}
+
+	@Test
+	public void stringQuoting() {
+		Assert.assertEquals("\"Hello, World!\\n\"", JavaQuoteType.String.quote(QuoteControl.IfNeeded, "Hello, World!\n", JavaQuoteType.String));
 	}
 }

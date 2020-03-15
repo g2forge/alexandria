@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.text.escape.v2;
+package com.g2forge.alexandria.java.text.escape;
 
 public interface IEscaper {
 	/**
@@ -8,6 +8,8 @@ public interface IEscaper {
 	 * @return The escaped text.
 	 */
 	public String escape(final String string);
+
+	public String getCharactersRequiringEscape();
 
 	/**
 	 * Unescape some text.

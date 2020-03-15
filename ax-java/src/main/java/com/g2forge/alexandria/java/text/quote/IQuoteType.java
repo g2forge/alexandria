@@ -4,15 +4,8 @@ import com.g2forge.alexandria.java.text.escape.IEscapeType;
 
 public interface IQuoteType {
 	public default String escape(final String string) {
-		return getEscapeType().escape(getEscapesRegex(), string);
+		return getEscapeType().getEscaper().escape(string);
 	}
-
-	/**
-	 * Get the regex pattern for character sequences which need to be escaped. Escaping will be done with {@link #escape(String)}.
-	 * 
-	 * @return A regex pattern for sequences to escape.
-	 */
-	public String getEscapesRegex();
 
 	public IEscapeType getEscapeType();
 
@@ -56,11 +49,11 @@ public interface IQuoteType {
 	}
 
 	public default String unescape(final String string) {
-		return getEscapeType().unescape(getEscapesRegex(), string);
+		return getEscapeType().getEscaper().unescape(string);
 	}
 
 	public default String unquote(final String string) {
-		if (isQuoted(string)) { return unescape(string.substring(getPrefix().length(), string.length() - getPostfix().length())); }
-		return string;
+		if (!isQuoted(string)) return string;
+		return unescape(string.substring(getPrefix().length(), string.length() - getPostfix().length()));
 	}
 }

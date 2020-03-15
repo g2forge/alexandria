@@ -12,6 +12,7 @@ public interface IRegexQuoteType extends IQuoteType {
 
 	@Override
 	public default boolean isQuoteNeeded(final CharSequence string) {
-		return Pattern.compile(getEscapesRegex()).matcher(string).find() || Pattern.compile(getQuoteRegex()).matcher(string).find();
+		final String charactersRequiringEscape = getEscapeType().getEscaper().getCharactersRequiringEscape();
+		return Pattern.compile(JavaQuoteType.PatternCharClass.quote(QuoteControl.Always, charactersRequiringEscape)).matcher(string).find() || Pattern.compile(getQuoteRegex()).matcher(string).find();
 	}
 }

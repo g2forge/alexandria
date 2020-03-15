@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.text.escape.v2;
+package com.g2forge.alexandria.java.text.escape;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
