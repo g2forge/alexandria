@@ -1,65 +1,59 @@
 package com.g2forge.alexandria.java.text.quote;
 
-import java.util.regex.Pattern;
+import com.g2forge.alexandria.java.text.escape.IEscapeType;
 
 public interface IQuoteType {
-	public default String escape(final String text) {
-		return getEscapeType().escape(getEscapes(), text);
+	public default String escape(final String string) {
+		return getEscapeType().getEscaper().escape(string);
 	}
-
-	public String getEnd();
-
-	/**
-	 * Get the regex pattern for character sequences which need to be escaped. Escaping will be done with {@link #escape(String)}.
-	 * 
-	 * @return A regex pattern for sequences to escape.
-	 */
-	public String getEscapes();
 
 	public IEscapeType getEscapeType();
 
 	/**
-	 * Get the regex pattern for character sequences whose presence indicate that a string must be quoted.
+	 * The postfix to use when quoting a string. For example this may be a single double quote character.
 	 * 
-	 * @return A regex pattern to determine whether a string must be quoted.
+	 * @return the postfix to use when quoting a string.
 	 */
-	public String getQuote();
+	public String getPostfix();
 
-	public String getStart();
+	/**
+	 * The prefix to use when quoting a string. For example this may be a single double quote character.
+	 * 
+	 * @return the prefix to use when quoting a string.
+	 */
+	public String getPrefix();
 
-	public default boolean isQuote(final String argument) {
-		return Pattern.compile(getEscapes()).matcher(argument).find() || Pattern.compile(getQuote()).matcher(argument).find();
+	public default boolean isQuoted(final String string) {
+		return string.startsWith(getPrefix()) && string.endsWith(getPostfix());
 	}
 
-	public default boolean isQuoted(final String argument) {
-		return argument.startsWith(getStart()) && argument.endsWith(getEnd());
-	}
+	public boolean isQuoteNeeded(final CharSequence string);
 
-	public default String quote(final QuoteControl option, final String text, IQuoteType... otherQuoteTypes) {
-		if (QuoteControl.Never.equals(option)) return text;
+	public default String quote(final QuoteControl option, final String string, IQuoteType... otherQuoteTypes) {
+		if (QuoteControl.Never.equals(option)) return string;
 		if (QuoteControl.IfNotAlready.equals(option)) {
 			for (final IQuoteType anytype : otherQuoteTypes) {
-				if (anytype.isQuoted(text)) return text;
+				if (anytype.isQuoted(string)) return string;
 			}
 		}
 
-		if ((option != QuoteControl.IfNeeded) || isQuote(text)) {
+		if ((option != QuoteControl.IfNeeded) || isQuoteNeeded(string)) {
 			final StringBuilder builder = new StringBuilder();
-			builder.append(getStart());
-			builder.append(escape(text));
-			builder.append(getEnd());
+			builder.append(getPrefix());
+			builder.append(escape(string));
+			builder.append(getPostfix());
 			return builder.toString();
 		}
 
-		return text;
+		return string;
 	}
 
-	public default String unescape(final String text) {
-		return getEscapeType().unescape(getEscapes(), text);
+	public default String unescape(final String string) {
+		return getEscapeType().getEscaper().unescape(string);
 	}
 
-	public default String unquote(final String text) {
-		if (isQuoted(text)) { return unescape(text.substring(getStart().length(), text.length() - getEnd().length())); }
-		return text;
+	public default String unquote(final String string) {
+		if (!isQuoted(string)) return string;
+		return unescape(string.substring(getPrefix().length(), string.length() - getPostfix().length()));
 	}
 }
