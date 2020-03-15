@@ -9,17 +9,15 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum BashQuoteType implements IQuoteType {
-	BashSingle(HQuote.QUOTE_SINGLE, "'", BashEscapeType.Single),
-	BashDoubleExpand(HQuote.QUOTE_DOUBLE, "[\"]", BashEscapeType.DoubleExpand),
-	BashDoubleNoExpand(HQuote.QUOTE_DOUBLE, "[$`\"\\\\]", BashEscapeType.DoubleNoExpand);
+	BashSingle(HQuote.QUOTE_SINGLE, BashEscapeType.Single),
+	BashDoubleExpand(HQuote.QUOTE_DOUBLE, BashEscapeType.DoubleExpand),
+	BashDoubleNoExpand(HQuote.QUOTE_DOUBLE, BashEscapeType.DoubleNoExpand);
 
 	protected static final String OPCHARACTERS = "|&;()<>!#";
 
 	protected static final String WHITESPACE = " \t\n\r";
 
 	protected final String prefix;
-
-	protected final String escapesRegex;
 
 	protected final IEscapeType escapeType;
 
