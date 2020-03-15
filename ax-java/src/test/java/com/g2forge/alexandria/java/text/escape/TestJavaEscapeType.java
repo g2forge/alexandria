@@ -9,7 +9,7 @@ import com.g2forge.alexandria.java.text.escape.v2.JavaEscapeType;
 import lombok.AccessLevel;
 import lombok.Getter;
 
-public class TestJavaEscapeType {
+public class TestJavaEscapeType extends ATestEscapeType {
 	@Getter(AccessLevel.PROTECTED)
 	protected final IEscaper escaper = JavaEscapeType.create().getEscaper();
 
@@ -37,11 +37,5 @@ public class TestJavaEscapeType {
 	public void tab() {
 		test("	", "	");
 		Assert.assertEquals("	", escaper.unescape("\t"));
-	}
-
-	public void test(String escaped, String unescaped) {
-		final IEscaper escaper = getEscaper();
-		Assert.assertEquals(escaped, escaper.escape(unescaped));
-		Assert.assertEquals(unescaped, escaper.unescape(escaped));
 	}
 }
