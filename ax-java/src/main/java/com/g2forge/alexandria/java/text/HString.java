@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.core.helpers;
+package com.g2forge.alexandria.java.text;
 
 import com.g2forge.alexandria.java.core.error.NotYetImplementedError;
 import com.g2forge.alexandria.java.core.marker.Helpers;

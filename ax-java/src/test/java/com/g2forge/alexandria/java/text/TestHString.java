@@ -1,9 +1,9 @@
-package com.g2forge.alexandria.java.core.helpers;
+package com.g2forge.alexandria.java.text;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.java.core.helpers.HString;
+import com.g2forge.alexandria.java.text.HString;
 
 public class TestHString {
 	@Test

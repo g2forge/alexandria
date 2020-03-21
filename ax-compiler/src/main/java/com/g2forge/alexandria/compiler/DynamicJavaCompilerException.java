@@ -6,7 +6,7 @@ import java.util.Locale;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
-import com.g2forge.alexandria.java.core.helpers.HString;
+import com.g2forge.alexandria.java.text.HString;
 
 import lombok.Getter;
 
