@@ -17,4 +17,12 @@ public class HEnum {
 		}
 		return map.get(text.toLowerCase());
 	}
+
+	public static <E extends Enum<E>> Class<E> getEnumClass(E object) {
+		final Class<?> klass = object.getClass();
+		final Class<?> declaringClass = klass.getDeclaringClass();
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		final Class<E> enumClass = (Class) (declaringClass == null ? klass : declaringClass);
+		return enumClass;
+	}
 }

@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum BashQuoteType implements IQuoteType {
+public enum BashQuoteType implements IEnumQuoteType<BashQuoteType> {
 	BashSingle(HQuote.QUOTE_SINGLE, BashEscapeType.Single),
 	BashDoubleExpand(HQuote.QUOTE_DOUBLE, BashEscapeType.DoubleExpand),
 	BashDoubleNoExpand(HQuote.QUOTE_DOUBLE, BashEscapeType.DoubleNoExpand);
