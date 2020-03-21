@@ -19,6 +19,15 @@ public class HArray {
 		return array;
 	}
 
+	@SuppressWarnings("unchecked")
+	public static <I extends O, O> O[] cast(Class<? super O> type, I... array) {
+		final Object retVal = Array.newInstance(type, array.length);
+		for (int i = 0; i < array.length; i++) {
+			Array.set(retVal, i, type.cast(array[i]));
+		}
+		return (O[]) retVal;
+	}
+
 	@SafeVarargs
 	public static <T> T[] concatenate(T[]... arrays) {
 		if (arrays.length == 1) return arrays[0];

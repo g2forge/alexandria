@@ -3,7 +3,7 @@ package com.g2forge.alexandria.java.reflect.accessor;
 import java.lang.reflect.Type;
 
 import com.g2forge.alexandria.java.core.helpers.HArray;
-import com.g2forge.alexandria.java.core.helpers.HString;
+import com.g2forge.alexandria.java.text.HString;
 
 public enum JavaAccessorType {
 	GET {
