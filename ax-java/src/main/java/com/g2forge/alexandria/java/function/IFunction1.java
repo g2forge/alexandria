@@ -4,9 +4,20 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import com.g2forge.alexandria.java.core.marker.ISingleton;
+
 @FunctionalInterface
 public interface IFunction1<I, O> extends Function<I, O>, IFunction<O>, IConsumer1<I>, IThrowFunction1<I, O, RuntimeException> {
-	public static class Identity<T> implements IFunction1<T, T> {
+	public static class Identity<T> implements IFunction1<T, T>, ISingleton {
+		protected static Identity<?> INSTANCE = new Identity<>();
+
+		@SuppressWarnings("unchecked")
+		public static <T> Identity<T> create() {
+			return (Identity<T>) INSTANCE;
+		}
+
+		private Identity() {}
+
 		@Override
 		public T apply(T t) {
 			return t;
@@ -28,7 +39,7 @@ public interface IFunction1<I, O> extends Function<I, O>, IFunction<O>, IConsume
 	}
 
 	public static <T> IFunction1<T, T> identity() {
-		return new Identity<>();
+		return Identity.create();
 	}
 
 	@SuppressWarnings("unchecked")
