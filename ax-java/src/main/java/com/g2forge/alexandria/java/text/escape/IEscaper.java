@@ -1,5 +1,7 @@
 package com.g2forge.alexandria.java.text.escape;
 
+import java.util.regex.Pattern;
+
 import com.g2forge.alexandria.java.function.IConsumer1;
 import com.g2forge.alexandria.java.text.TextUpdate;
 import com.g2forge.alexandria.java.text.TextUpdateBuilder;
@@ -21,7 +23,7 @@ public interface IEscaper {
 		return builder.build();
 	}
 
-	public String getCharactersRequiringEscape();
+	public Pattern getRequiresEscapePattern();
 
 	/**
 	 * Unescape some text.

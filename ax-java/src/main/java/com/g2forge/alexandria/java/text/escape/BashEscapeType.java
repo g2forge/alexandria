@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum BashEscapeType implements IEscapeType {
-	Single(new StandardEscaper("'\"", "\"'", "'", null, -1)),
-	DoubleExpand(new StandardEscaper("\\", null, "\"\\$`", null, 2)),
-	DoubleNoExpand(new StandardEscaper("\\", null, "\"\\$`", null, -1));
+	Single(new SingleCharacterEscaper("'\"", "\"'", "'", null, -1)),
+	DoubleExpand(new SingleCharacterEscaper("\\", null, "\"\\$`", null, 2)),
+	DoubleNoExpand(new SingleCharacterEscaper("\\", null, "\"\\$`", null, -1));
 
 	protected final IEscaper escaper;
 }
