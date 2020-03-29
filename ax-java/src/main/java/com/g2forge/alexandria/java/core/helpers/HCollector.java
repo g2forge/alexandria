@@ -55,8 +55,12 @@ public class HCollector {
 		}, Collections.emptySet());
 	}
 
-	public static <K, V> Collector<Tuple2G_O<K, V>, ?, Map<K, V>> toMap() {
+	public static <K, V> Collector<Tuple2G_O<K, V>, ?, Map<K, V>> toMapTuples() {
 		return Collectors.toMap(ITuple2G_::get0, ITuple2G_::get1, mergeFail(), () -> new LinkedHashMap<>());
+	}
+
+	public static <K, V> Collector<Map.Entry<K, V>, ?, Map<K, V>> toMapEntries() {
+		return Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, mergeFail(), () -> new LinkedHashMap<>());
 	}
 
 	public static <T, K> Collector<? super T, ?, Map<K, List<T>>> multiGroupingBy(Function<? super T, ? extends Iterable<? extends K>> classifier) {

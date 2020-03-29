@@ -3,7 +3,7 @@ package com.g2forge.alexandria.java.text.quote;
 import com.g2forge.alexandria.java.core.marker.ISingleton;
 import com.g2forge.alexandria.java.text.escape.EscapeType;
 import com.g2forge.alexandria.java.text.escape.IEscapeType;
-import com.g2forge.alexandria.java.text.escape.StandardEscaper;
+import com.g2forge.alexandria.java.text.escape.SingleCharacterEscaper;
 
 public class SedRegexQuoteType implements IRegexQuoteType, ISingleton {
 	protected static final SedRegexQuoteType INSTANCE = new SedRegexQuoteType();
@@ -12,7 +12,7 @@ public class SedRegexQuoteType implements IRegexQuoteType, ISingleton {
 
 	@Override
 	public IEscapeType getEscapeType() {
-		return new EscapeType(new StandardEscaper("\\", null, "[]/\\$*", null, -1));
+		return new EscapeType(new SingleCharacterEscaper("\\", null, "[]/\\$*", null, -1));
 	}
 
 	@Override
