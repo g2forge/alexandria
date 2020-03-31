@@ -18,6 +18,26 @@ public class TestHString {
 	}
 
 	@Test
+	public void match0() {
+		Assert.assertEquals(0, HString.nMatchesBefore("x1", 1, 'y'));
+	}
+
+	@Test
+	public void match1() {
+		Assert.assertEquals(1, HString.nMatchesBefore("x1foobar", 1, 'x'));
+	}
+
+	@Test
+	public void match2() {
+		Assert.assertEquals(2, HString.nMatchesBefore("foobarxx1foobar", 8, 'x'));
+	}
+
+	@Test
+	public void matchEmpty() {
+		Assert.assertEquals(0, HString.nMatchesBefore("", 0, 'x'));
+	}
+
+	@Test
 	public void propertyNames() {
 		Assert.assertEquals("foo", HString.lowercase(HString.stripPrefix("getFoo", "get")));
 		Assert.assertEquals("iFoo", HString.lowercase(HString.stripPrefix("getIFoo", "get")));
