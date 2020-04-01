@@ -13,7 +13,7 @@ public class HResource {
 		return new Resource(klass, resource).read(newline);
 	}
 
-	public static InputStream getResourceAsStream(Class<?> klass, String resource) {
-		return new Resource(klass, resource).getResourceAsStream();
+	public static InputStream getResourceAsStream(Class<?> klass, String resource, boolean assertExists) {
+		return new Resource(klass, resource).getResourceAsStream(assertExists);
 	}
 }

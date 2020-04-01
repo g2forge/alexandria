@@ -10,8 +10,10 @@ public interface IResource {
 
 	public String getResource();
 
-	public default InputStream getResourceAsStream() {
-		return getKlass().getResourceAsStream(getResource());
+	public default InputStream getResourceAsStream(boolean assertExists) {
+		final InputStream retVal = getKlass().getResourceAsStream(getResource());
+		if (retVal == null) throw new NullPointerException(String.format("Resource \"%1$s\" could not be found relative to class %2$s (if the file exists, check your maven resource configuration)", getResource(), getKlass().getName()));
+		return retVal;
 	}
 
 	public default URL getURL() {
@@ -19,8 +21,6 @@ public interface IResource {
 	}
 
 	public default String read(boolean newline) {
-		final InputStream stream = getResourceAsStream();
-		if (stream == null) throw new NullPointerException(String.format("Resource \"%1$s\" could not be found relative to class %2$s (if the file exists, check your maven resource configuration)", getResource(), getKlass().getName()));
-		return HIO.readAll(stream, newline);
+		return HIO.readAll(getResourceAsStream(true), newline);
 	}
 }
