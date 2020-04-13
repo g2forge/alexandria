@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.java.core.enums.EnumException;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
-import com.g2forge.alexandria.java.function.IFunction1;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +14,17 @@ import lombok.Getter;
 @Getter
 public enum Shell {
 	BASH(null, null, TXTSpec.UNIX, new String[] { "-c" }, PlatformCategory.Posix),
-	CMD("CMD.EXE", new ExeSpec[] { ExeSpec.BAT }, TXTSpec.DOS, new String[] { "/C" }, PlatformCategory.Microsoft),
+	CMD("CMD.EXE", new ExeSpec[] { ExeSpec.BAT }, TXTSpec.DOS, new String[] { "/C" }, PlatformCategory.Microsoft) {
+		@Override
+		public List<String> wrapCommand(List<? extends String> arguments) {
+			final String[] shellArguments = getArguments();
+			final List<String> retVal = new ArrayList<>(shellArguments.length + 1 + arguments.size());
+			retVal.add(((getName() == null) ? name().toLowerCase() : getName()));
+			retVal.addAll(HCollection.asList(shellArguments));
+			retVal.addAll(arguments);
+			return retVal;
+		}
+	},
 	TCSH(null, null, TXTSpec.UNIX, new String[] { "-c" }, PlatformCategory.Posix);
 
 	protected final String name;
@@ -27,17 +36,6 @@ public enum Shell {
 	protected final String[] arguments;
 
 	protected final PlatformCategory category;
-
-	public IFunction1<? super List<? extends String>, ? extends List<? extends String>> getCommandNesting() {
-		return arguments -> {
-			final String[] shellArguments = getArguments();
-			final List<String> retVal = new ArrayList<>(shellArguments.length + 2);
-			retVal.add(((getName() == null) ? name() : getName()).toLowerCase());
-			retVal.addAll(HCollection.asList(shellArguments));
-			retVal.add(arguments.stream().collect(Collectors.joining(" ")));
-			return retVal;
-		};
-	}
 
 	public PathSpec getPathSpec() {
 		return getPathSpec(null);
@@ -68,5 +66,14 @@ public enum Shell {
 			default:
 				throw new EnumException(PlatformCategory.class, category);
 		}
+	}
+
+	public List<String> wrapCommand(List<? extends String> arguments) {
+		final String[] shellArguments = getArguments();
+		final List<String> retVal = new ArrayList<>(shellArguments.length + 2);
+		retVal.add(((getName() == null) ? name().toLowerCase() : getName()));
+		retVal.addAll(HCollection.asList(shellArguments));
+		retVal.add(arguments.stream().collect(Collectors.joining(" ")));
+		return retVal;
 	}
 }
