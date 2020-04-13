@@ -17,6 +17,8 @@ public enum BashQuoteType implements IEnumQuoteType<BashQuoteType> {
 
 	protected static final String WHITESPACE = " \t\n\r";
 
+	protected static final String FORCE_QUOTE = OPCHARACTERS + WHITESPACE + HQuote.QUOTE_DOUBLE + HQuote.QUOTE_SINGLE;
+
 	protected final String prefix;
 
 	protected final IEscapeType escapeType;
@@ -28,26 +30,9 @@ public enum BashQuoteType implements IEnumQuoteType<BashQuoteType> {
 
 	@Override
 	public boolean isQuoteNeeded(CharSequence string) {
-		if (HQuote.QUOTE_SINGLE.contentEquals(string) || HQuote.QUOTE_DOUBLE.contentEquals(string)) return true;
-		boolean containsOpCharacters = false, containsNonOpCharacters = false;
 		for (int i = 0; i < string.length(); i++) {
 			final char character = string.charAt(i);
-			// If we find whitespace this thing definitely needs to be quoted
-			for (int j = 0; j < WHITESPACE.length(); j++) {
-				if (WHITESPACE.charAt(j) == character) return true;
-			}
-
-			boolean isOpCharacter = false;
-			for (int j = 0; j < OPCHARACTERS.length(); j++) {
-				if (OPCHARACTERS.charAt(j) == character) {
-					isOpCharacter = true;
-					break;
-				}
-			}
-			if (isOpCharacter) containsOpCharacters = true;
-			else containsNonOpCharacters = true;
-
-			if (containsOpCharacters && containsNonOpCharacters) return true;
+			if (FORCE_QUOTE.indexOf(character) >= 0) return true;
 		}
 		return false;
 	}
