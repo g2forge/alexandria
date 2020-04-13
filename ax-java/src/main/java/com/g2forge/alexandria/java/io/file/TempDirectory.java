@@ -32,7 +32,7 @@ public class TempDirectory extends CloseablePath {
 		}
 
 		public void resource(IResource resource, Path path) {
-			try (final InputStream input = resource.getResourceAsStream(); final OutputStream output = Files.newOutputStream(path)) {
+			try (final InputStream input = resource.getResourceAsStream(true); final OutputStream output = Files.newOutputStream(path)) {
 				HBinaryIO.copy(input, output);
 			} catch (IOException e) {
 				throw new RuntimeIOException(e);

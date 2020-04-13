@@ -7,6 +7,13 @@ import lombok.experimental.UtilityClass;
 @Helpers
 @UtilityClass
 public class HString {
+	public static int nMatchesBefore(String string, int index, char character) {
+		for (int count = 0; count < index; count++) {
+			if (string.charAt(index - count - 1) != character) return count;
+		}
+		return index;
+	}
+
 	public static String lowercase(String string) {
 		// Handle already lower-cased strings, we don't want to change them
 		final char char0 = string.charAt(0);
