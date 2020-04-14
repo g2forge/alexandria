@@ -1,8 +1,11 @@
 package com.g2forge.alexandria.java.platform;
 
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
+@Getter(AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 public enum ExeSpec implements IPlatformNamed {
 	Unknown(null, null),
 	EXE(null, ".exe"),
@@ -15,7 +18,7 @@ public enum ExeSpec implements IPlatformNamed {
 	protected final String suffix;
 
 	@Override
-	public String getPlatformName(String _base) {
-		return APlatformNamed.getPlatformName(prefix, _base, suffix);
+	public String getPlatformName(String name) {
+		return IPlatformNamed.getPlatformName(prefix, name, suffix);
 	}
 }

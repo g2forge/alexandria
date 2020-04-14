@@ -10,18 +10,20 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum Platform {
-	NONE(null, null, Shell.BASH, LibSpec.Unknown, new ExeSpec[] { ExeSpec.Unknown }, new UARTSpec[] { UARTSpec.Unknown }),
-	UNIX(null, PlatformCategory.Posix, Shell.BASH, LibSpec.SO, new ExeSpec[] { ExeSpec.None, ExeSpec.SH }, new UARTSpec[] { UARTSpec.ttyS, UARTSpec.ttyUSB }),
-	WINDOWS(null, PlatformCategory.Microsoft, Shell.CMD, LibSpec.DLL, new ExeSpec[] { ExeSpec.EXE, ExeSpec.BAT }, new UARTSpec[] { UARTSpec.COM }),
-	OS2("os/2", null, Shell.BASH, LibSpec.Unknown, new ExeSpec[] { ExeSpec.Unknown }, new UARTSpec[] { UARTSpec.Unknown }),
-	ZOS("z/os", null, Shell.BASH, LibSpec.Unknown, new ExeSpec[] { ExeSpec.Unknown }, new UARTSpec[] { UARTSpec.Unknown }),
-	OS400("os/400", null, Shell.BASH, LibSpec.Unknown, new ExeSpec[] { ExeSpec.Unknown }, new UARTSpec[] { UARTSpec.Unknown }),
-	DOS(null, PlatformCategory.Microsoft, Shell.CMD, LibSpec.Unknown, new ExeSpec[] { ExeSpec.EXE, ExeSpec.BAT }, new UARTSpec[] { UARTSpec.COM }),
-	MAC(null, null, Shell.BASH, LibSpec.Unknown, new ExeSpec[] { ExeSpec.Unknown }, new UARTSpec[] { UARTSpec.Unknown }),
-	OSX(null, PlatformCategory.Posix, Shell.BASH, LibSpec.SO, new ExeSpec[] { ExeSpec.Unknown }, new UARTSpec[] { UARTSpec.Unknown }),
-	TANDEM(null, null, Shell.BASH, LibSpec.Unknown, new ExeSpec[] { ExeSpec.Unknown }, new UARTSpec[] { UARTSpec.Unknown }),
-	OPENVMS(null, null, Shell.BASH, LibSpec.Unknown, new ExeSpec[] { ExeSpec.Unknown }, new UARTSpec[] { UARTSpec.Unknown }),
-	SOLARIS(null, PlatformCategory.Posix, Shell.BASH, LibSpec.SO, new ExeSpec[] { ExeSpec.None, ExeSpec.SH }, new UARTSpec[] { UARTSpec.ttyS, UARTSpec.ttyUSB });
+	// @formatter:off
+	NONE(	null,		null, 						Shell.BASH,	LibSpec.Unknown,	new ExeSpec[] { ExeSpec.Unknown },			new UARTSpec[] { UARTSpec.Unknown }),
+	UNIX(	null,		PlatformCategory.Posix,		Shell.BASH,	LibSpec.SO,			new ExeSpec[] { ExeSpec.None, ExeSpec.SH },	new UARTSpec[] { UARTSpec.ttyS, UARTSpec.ttyUSB }),
+	WINDOWS(null,		PlatformCategory.Microsoft,	Shell.CMD,	LibSpec.DLL,		new ExeSpec[] { ExeSpec.EXE, ExeSpec.BAT },	new UARTSpec[] { UARTSpec.COM }),
+	OS2(	"os/2",		null,						Shell.BASH,	LibSpec.Unknown,	new ExeSpec[] { ExeSpec.Unknown },			new UARTSpec[] { UARTSpec.Unknown }),
+	ZOS(	"z/os",		null,						Shell.BASH,	LibSpec.Unknown,	new ExeSpec[] { ExeSpec.Unknown },			new UARTSpec[] { UARTSpec.Unknown }),
+	OS400(	"os/400",	null,						Shell.BASH,	LibSpec.Unknown,	new ExeSpec[] { ExeSpec.Unknown },			new UARTSpec[] { UARTSpec.Unknown }),
+	DOS(	null, 		PlatformCategory.Microsoft,	Shell.CMD,	LibSpec.Unknown,	new ExeSpec[] { ExeSpec.EXE, ExeSpec.BAT },	new UARTSpec[] { UARTSpec.COM }),
+	MAC(	null,		null,						Shell.BASH,	LibSpec.Unknown,	new ExeSpec[] { ExeSpec.Unknown },			new UARTSpec[] { UARTSpec.Unknown }),
+	OSX(	null, 		PlatformCategory.Posix,		Shell.BASH,	LibSpec.SO,			new ExeSpec[] { ExeSpec.Unknown },			new UARTSpec[] { UARTSpec.Unknown }),
+	TANDEM(	null,		null,						Shell.BASH,	LibSpec.Unknown,	new ExeSpec[] { ExeSpec.Unknown },			new UARTSpec[] { UARTSpec.Unknown }),
+	OPENVMS(null, 		null,						Shell.BASH,	LibSpec.Unknown,	new ExeSpec[] { ExeSpec.Unknown },			new UARTSpec[] { UARTSpec.Unknown }),
+	SOLARIS(null, 		PlatformCategory.Posix,		Shell.BASH,	LibSpec.SO,			new ExeSpec[] { ExeSpec.None, ExeSpec.SH },	new UARTSpec[] { UARTSpec.ttyS, UARTSpec.ttyUSB });
+	// @formatter:on
 
 	@Getter(lazy = true)
 	private static final Platform platform = computePlatform();
@@ -77,15 +79,15 @@ public enum Platform {
 
 	protected final UARTSpec[] uartSpecs;
 
-	public Pattern getExePattern(String base) {
+	public Pattern getExePattern(String name) {
 		final ExeSpec[] exeSpecs = getExeSpecs();
 
 		final StringBuilder regex = new StringBuilder();
 		regex.append("^(");
-		regex.append(Pattern.quote(exeSpecs[0].getPlatformName(base)));
+		regex.append(Pattern.quote(exeSpecs[0].getPlatformName(name)));
 		for (int i = 1; i < exeSpecs.length; i++) {
 			regex.append('|');
-			regex.append(Pattern.quote(exeSpecs[i].getPlatformName(base)));
+			regex.append(Pattern.quote(exeSpecs[i].getPlatformName(name)));
 		}
 		regex.append(")$");
 		return Pattern.compile(regex.toString());

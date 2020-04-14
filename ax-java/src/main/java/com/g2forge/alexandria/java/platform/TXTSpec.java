@@ -2,11 +2,11 @@ package com.g2forge.alexandria.java.platform;
 
 import com.g2forge.alexandria.java.text.eol.EOLStyle;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
 @Getter
+@RequiredArgsConstructor
 public enum TXTSpec {
 	DOS(EOLStyle.DOS, EOFStyle.Add, false),
 	UNIX(EOLStyle.UNIX, EOFStyle.Remove, true);
