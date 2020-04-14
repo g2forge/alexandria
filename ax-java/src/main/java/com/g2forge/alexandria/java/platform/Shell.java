@@ -13,8 +13,12 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum Shell {
-	BASH(null, null, TXTSpec.UNIX, new String[] { "-c" }, PlatformCategory.Posix),
-	CMD("CMD.EXE", new ExeSpec[] { ExeSpec.BAT }, TXTSpec.DOS, new String[] { "/C" }, PlatformCategory.Microsoft) {
+	// @formatter:off
+	BASH(null,		null,																TextSpec.UNIX,	new String[] { "-c" },	PlatformCategory.Posix),
+	TCSH(null,		null,																TextSpec.UNIX,	new String[] { "-c" },	PlatformCategory.Posix),
+	ZSH(null,		null,																TextSpec.UNIX,	new String[] { "-c" },	PlatformCategory.Posix),
+	CMD("CMD.EXE",	new ExecutableSpec[] { ExecutableSpec.BAT, ExecutableSpec.CMD },	TextSpec.DOS,	new String[] { "/C" },	PlatformCategory.Microsoft) {
+		// @formatter:on
 		@Override
 		public List<String> wrapCommand(List<? extends String> arguments) {
 			final String[] shellArguments = getArguments();
@@ -24,31 +28,26 @@ public enum Shell {
 			retVal.addAll(arguments);
 			return retVal;
 		}
-	},
-	TCSH(null, null, TXTSpec.UNIX, new String[] { "-c" }, PlatformCategory.Posix);
+	};
 
 	protected final String name;
 
-	protected final ExeSpec[] scripts;
+	protected final ExecutableSpec[] scripts;
 
-	protected final TXTSpec text;
+	protected final TextSpec text;
 
 	protected final String[] arguments;
 
 	protected final PlatformCategory category;
 
-	public PathSpec getPathSpec() {
-		return getPathSpec(null);
-	}
-
 	/**
 	 * Get the path specification to use with this shell on the given platform.
 	 * 
-	 * @param platform Can be <code>null</code> to indicate the current platform.
+	 * @param platform Can be {@code null} to indicate the current platform.
 	 * @return The path specification to use with this shell.
 	 */
-	public PathSpec getPathSpec(Platform platform) {
-		if (platform == null) platform = Platform.getPlatform();
+	public PathSpec getPath(Platform platform) {
+		if (platform == null) platform = HPlatform.getPlatform();
 
 		final PlatformCategory category = getCategory();
 		switch (category) {

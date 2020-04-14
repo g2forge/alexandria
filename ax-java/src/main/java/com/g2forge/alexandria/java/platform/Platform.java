@@ -1,8 +1,6 @@
 package com.g2forge.alexandria.java.platform;
 
-import java.util.Objects;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,52 +9,34 @@ import lombok.Getter;
 @Getter
 public enum Platform {
 	// @formatter:off
-	NONE(	null,		null, 						Shell.BASH,	LibSpec.Unknown,	new ExeSpec[] { ExeSpec.Unknown },			new UARTSpec[] { UARTSpec.Unknown }),
-	UNIX(	null,		PlatformCategory.Posix,		Shell.BASH,	LibSpec.SO,			new ExeSpec[] { ExeSpec.None, ExeSpec.SH },	new UARTSpec[] { UARTSpec.ttyS, UARTSpec.ttyUSB }),
-	WINDOWS(null,		PlatformCategory.Microsoft,	Shell.CMD,	LibSpec.DLL,		new ExeSpec[] { ExeSpec.EXE, ExeSpec.BAT },	new UARTSpec[] { UARTSpec.COM }),
-	OS2(	"os/2",		null,						Shell.BASH,	LibSpec.Unknown,	new ExeSpec[] { ExeSpec.Unknown },			new UARTSpec[] { UARTSpec.Unknown }),
-	ZOS(	"z/os",		null,						Shell.BASH,	LibSpec.Unknown,	new ExeSpec[] { ExeSpec.Unknown },			new UARTSpec[] { UARTSpec.Unknown }),
-	OS400(	"os/400",	null,						Shell.BASH,	LibSpec.Unknown,	new ExeSpec[] { ExeSpec.Unknown },			new UARTSpec[] { UARTSpec.Unknown }),
-	DOS(	null, 		PlatformCategory.Microsoft,	Shell.CMD,	LibSpec.Unknown,	new ExeSpec[] { ExeSpec.EXE, ExeSpec.BAT },	new UARTSpec[] { UARTSpec.COM }),
-	MAC(	null,		null,						Shell.BASH,	LibSpec.Unknown,	new ExeSpec[] { ExeSpec.Unknown },			new UARTSpec[] { UARTSpec.Unknown }),
-	OSX(	null, 		PlatformCategory.Posix,		Shell.BASH,	LibSpec.SO,			new ExeSpec[] { ExeSpec.Unknown },			new UARTSpec[] { UARTSpec.Unknown }),
-	TANDEM(	null,		null,						Shell.BASH,	LibSpec.Unknown,	new ExeSpec[] { ExeSpec.Unknown },			new UARTSpec[] { UARTSpec.Unknown }),
-	OPENVMS(null, 		null,						Shell.BASH,	LibSpec.Unknown,	new ExeSpec[] { ExeSpec.Unknown },			new UARTSpec[] { UARTSpec.Unknown }),
-	SOLARIS(null, 		PlatformCategory.Posix,		Shell.BASH,	LibSpec.SO,			new ExeSpec[] { ExeSpec.None, ExeSpec.SH },	new UARTSpec[] { UARTSpec.ttyS, UARTSpec.ttyUSB });
-	// @formatter:on
-
-	@Getter(lazy = true)
-	private static final Platform platform = computePlatform();
-
-	@Getter(lazy = true)
-	private static final String[] envPath = computeEnvPath();
-
-	protected static final String[] computeEnvPath() {
-		final String path = Stream.of("PATH", "Path", "path").map(System::getenv).filter(Objects::nonNull).findFirst().get();
-		return getPlatform().getPathSpec().splitPaths(path);
-	}
-
-	protected static Platform computePlatform() {
-		final String os = System.getProperty("os.name").toLowerCase();
-
-		if (os.indexOf("windows") != -1) return WINDOWS;
-		if (os.indexOf("os/2") != -1) return OS2;
-		if (os.indexOf("z/os") != -1 || os.indexOf("os/390") != -1) return ZOS;
-		if (os.indexOf("os/400") != -1) return OS400;
-
-		final String pathSeparator = System.getProperty("path.separator");
-		if (pathSeparator.equals(";")) return DOS;
-		if (os.indexOf("mac") != -1) {
-			if (os.endsWith("x")) return OSX;
-			else return MAC;
+	NONE(	null,		null, 						Shell.BASH,	LibrarySpec.Unknown,	new ExecutableSpec[] { ExecutableSpec.Unknown },										new UARTSpec[] { UARTSpec.Unknown }),
+	UNIX(	null,		PlatformCategory.Posix,		Shell.BASH,	LibrarySpec.SO,			new ExecutableSpec[] { ExecutableSpec.None, ExecutableSpec.SH },						new UARTSpec[] { UARTSpec.ttyS, UARTSpec.ttyUSB }),
+	WINDOWS(null,		PlatformCategory.Microsoft,	Shell.CMD,	LibrarySpec.DLL,		new ExecutableSpec[] { ExecutableSpec.EXE, ExecutableSpec.BAT, ExecutableSpec.CMD },	new UARTSpec[] { UARTSpec.COM }),
+	OS2(	"os/2",		null,						Shell.BASH,	LibrarySpec.Unknown,	new ExecutableSpec[] { ExecutableSpec.Unknown },										new UARTSpec[] { UARTSpec.Unknown }),
+	ZOS(	"z/os",		null,						Shell.BASH,	LibrarySpec.Unknown,	new ExecutableSpec[] { ExecutableSpec.Unknown },										new UARTSpec[] { UARTSpec.Unknown }),
+	OS400(	"os/400",	null,						Shell.BASH,	LibrarySpec.Unknown,	new ExecutableSpec[] { ExecutableSpec.Unknown },										new UARTSpec[] { UARTSpec.Unknown }),
+	DOS(	null, 		PlatformCategory.Microsoft,	Shell.CMD,	LibrarySpec.Unknown,	new ExecutableSpec[] { ExecutableSpec.EXE, ExecutableSpec.BAT },						new UARTSpec[] { UARTSpec.COM }),
+	MAC(	null,		null,						Shell.BASH,	LibrarySpec.Unknown,	new ExecutableSpec[] { ExecutableSpec.Unknown },										new UARTSpec[] { UARTSpec.Unknown }),
+	OSX(	null, 		PlatformCategory.Posix,		Shell.ZSH,	LibrarySpec.SO,			new ExecutableSpec[] { ExecutableSpec.Unknown },										new UARTSpec[] { UARTSpec.Unknown }){
+		// @formatter:on
+		@Override
+		public Shell getShell() {
+			final String[] version = System.getProperty("os.version").split("\\.");
+			final int major = Integer.valueOf(version[0]);
+			if (major < 10) throw new UnsupportedOperationException("OSX is version 10 or later");
+			if (major == 10) {
+				final int minor = Integer.valueOf(version[1]);
+				if (minor < 3) return Shell.TCSH;
+				if (minor < 15) return Shell.BASH;
+			}
+			return Shell.ZSH;
 		}
-		if (os.indexOf("nonstop_kernel") != -1) return TANDEM;
-		if (os.indexOf("openvms") != -1) return OPENVMS;
-		if (os.indexOf("solaris") != -1) return SOLARIS;
-		if (pathSeparator.equals(":")) return UNIX;
-
-		return NONE;
-	}
+	// @formatter:off
+	},
+	TANDEM(	null,		null,						Shell.BASH,	LibrarySpec.Unknown,	new ExecutableSpec[] { ExecutableSpec.Unknown },										new UARTSpec[] { UARTSpec.Unknown }),
+	OPENVMS(null, 		null,						Shell.BASH,	LibrarySpec.Unknown,	new ExecutableSpec[] { ExecutableSpec.Unknown },										new UARTSpec[] { UARTSpec.Unknown }),
+	SOLARIS(null, 		PlatformCategory.Posix,		Shell.BASH,	LibrarySpec.SO,			new ExecutableSpec[] { ExecutableSpec.None, ExecutableSpec.SH },						new UARTSpec[] { UARTSpec.ttyS, UARTSpec.ttyUSB });
+	// @formatter:on
 
 	protected final String name;
 
@@ -71,23 +51,23 @@ public enum Platform {
 	 * @return The path specification for the default shell when run on this platform.
 	 */
 	@Getter(lazy = true)
-	private final PathSpec pathSpec = getShell().getPathSpec(this);
+	private final PathSpec pathSpec = getShell().getPath(this);
 
-	protected final LibSpec libSpec;
+	protected final LibrarySpec libSpec;
 
-	protected final ExeSpec[] exeSpecs;
+	protected final ExecutableSpec[] exeSpecs;
 
 	protected final UARTSpec[] uartSpecs;
 
-	public Pattern getExePattern(String name) {
-		final ExeSpec[] exeSpecs = getExeSpecs();
+	public Pattern getExecutablePattern(String name) {
+		final ExecutableSpec[] specs = getExeSpecs();
 
 		final StringBuilder regex = new StringBuilder();
 		regex.append("^(");
-		regex.append(Pattern.quote(exeSpecs[0].getPlatformName(name)));
-		for (int i = 1; i < exeSpecs.length; i++) {
+		regex.append(Pattern.quote(specs[0].getPlatformName(name)));
+		for (int i = 1; i < specs.length; i++) {
 			regex.append('|');
-			regex.append(Pattern.quote(exeSpecs[i].getPlatformName(name)));
+			regex.append(Pattern.quote(specs[i].getPlatformName(name)));
 		}
 		regex.append(")$");
 		return Pattern.compile(regex.toString());

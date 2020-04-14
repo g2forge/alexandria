@@ -1,10 +1,9 @@
 package com.g2forge.alexandria.java.platform;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Getter(AccessLevel.PROTECTED)
+@Getter
 @RequiredArgsConstructor
 public enum UARTSpec implements IPlatformNamed {
 	Unknown(null, null),
@@ -15,9 +14,4 @@ public enum UARTSpec implements IPlatformNamed {
 	protected final String prefix;
 
 	protected final String suffix;
-
-	@Override
-	public String getPlatformName(String base) {
-		return IPlatformNamed.getPlatformName(getPrefix(), base, getSuffix());
-	}
 }

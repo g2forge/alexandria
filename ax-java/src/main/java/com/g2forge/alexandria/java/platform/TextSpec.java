@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum TXTSpec {
+public enum TextSpec {
 	DOS(EOLStyle.DOS, EOFStyle.Add, false),
 	UNIX(EOLStyle.UNIX, EOFStyle.Remove, true);
 
