@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.platform.cmdline.format;
+package com.g2forge.alexandria.command.invocation.format;
 
 import com.g2forge.alexandria.java.core.marker.ISingleton;
 import com.g2forge.alexandria.java.text.quote.BashQuoteType;

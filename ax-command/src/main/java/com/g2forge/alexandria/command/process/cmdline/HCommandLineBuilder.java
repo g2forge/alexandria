@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.platform.cmdline.builder;
+package com.g2forge.alexandria.command.process.cmdline;
 
 import com.g2forge.alexandria.java.core.marker.Helpers;
 

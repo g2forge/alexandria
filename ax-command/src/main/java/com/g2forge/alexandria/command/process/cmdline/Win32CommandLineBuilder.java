@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.platform.cmdline.builder;
+package com.g2forge.alexandria.command.process.cmdline;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,8 +6,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.g2forge.alexandria.command.invocation.format.ICommandFormat;
 import com.g2forge.alexandria.java.core.marker.ISingleton;
-import com.g2forge.alexandria.java.platform.cmdline.format.ICommandFormat;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -8,6 +8,7 @@ import java.nio.file.Path;
 
 import com.g2forge.alexandria.command.exit.IExit;
 import com.g2forge.alexandria.command.invocation.CommandInvocation;
+import com.g2forge.alexandria.command.invocation.format.ICommandFormat;
 import com.g2forge.alexandria.command.stdio.StandardIO;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.function.IFunction1;
@@ -45,7 +46,7 @@ public interface IStandardCommand extends IStructuredCommand {
 		final ByteArrayOutputStream standardOutput = new ByteArrayOutputStream();
 		final ByteArrayOutputStream standardError = new ByteArrayOutputStream();
 		final StandardIO<InputStream, PrintStream> io = new StandardIO<>(standardInput, new PrintStream(standardOutput), new PrintStream(standardError));
-		final CommandInvocation<InputStream, PrintStream> invocation = new CommandInvocation<>(HCollection.asList(arguments), io, working);
+		final CommandInvocation<InputStream, PrintStream> invocation = new CommandInvocation<>(ICommandFormat.getDefault(), HCollection.asList(arguments), io, working);
 		final IExit exit = invoke(invocation);
 		return new TestResult(exit, new ByteArrayInputStream(standardOutput.toByteArray()), new ByteArrayInputStream(standardError.toByteArray()));
 	}

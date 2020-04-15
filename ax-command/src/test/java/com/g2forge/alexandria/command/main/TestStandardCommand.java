@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.command;
+package com.g2forge.alexandria.command.main;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

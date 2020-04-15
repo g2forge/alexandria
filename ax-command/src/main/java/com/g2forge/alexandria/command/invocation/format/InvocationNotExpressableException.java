@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.platform.cmdline.format;
+package com.g2forge.alexandria.command.invocation.format;
 
 public class InvocationNotExpressableException extends UnsupportedOperationException {
 	private static final long serialVersionUID = -7973115468696226395L;

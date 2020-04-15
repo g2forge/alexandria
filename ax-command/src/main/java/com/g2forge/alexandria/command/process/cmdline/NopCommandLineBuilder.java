@@ -1,9 +1,9 @@
-package com.g2forge.alexandria.java.platform.cmdline.builder;
+package com.g2forge.alexandria.command.process.cmdline;
 
 import java.util.List;
 
+import com.g2forge.alexandria.command.invocation.format.ICommandFormat;
 import com.g2forge.alexandria.java.core.marker.ISingleton;
-import com.g2forge.alexandria.java.platform.cmdline.format.ICommandFormat;
 
 /**
  * {@inheritDoc}

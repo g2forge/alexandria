@@ -1,11 +1,6 @@
 package com.g2forge.alexandria.java.platform;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.g2forge.alexandria.java.core.enums.EnumException;
-import com.g2forge.alexandria.java.core.helpers.HCollection;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,18 +12,8 @@ public enum Shell {
 	BASH(null,		null,																TextSpec.UNIX,	new String[] { "-c" },	PlatformCategory.Posix),
 	TCSH(null,		null,																TextSpec.UNIX,	new String[] { "-c" },	PlatformCategory.Posix),
 	ZSH(null,		null,																TextSpec.UNIX,	new String[] { "-c" },	PlatformCategory.Posix),
-	CMD("CMD.EXE",	new ExecutableSpec[] { ExecutableSpec.BAT, ExecutableSpec.CMD },	TextSpec.DOS,	new String[] { "/C" },	PlatformCategory.Microsoft) {
-		// @formatter:on
-		@Override
-		public List<String> wrapCommand(List<? extends String> arguments) {
-			final String[] shellArguments = getArguments();
-			final List<String> retVal = new ArrayList<>(shellArguments.length + 1 + arguments.size());
-			retVal.add(((getName() == null) ? name().toLowerCase() : getName()));
-			retVal.addAll(HCollection.asList(shellArguments));
-			retVal.addAll(arguments);
-			return retVal;
-		}
-	};
+	CMD("CMD.EXE",	new ExecutableSpec[] { ExecutableSpec.BAT, ExecutableSpec.CMD },	TextSpec.DOS,	new String[] { "/C" },	PlatformCategory.Microsoft);
+	//@formatter:on
 
 	protected final String name;
 
@@ -65,14 +50,5 @@ public enum Shell {
 			default:
 				throw new EnumException(PlatformCategory.class, category);
 		}
-	}
-
-	public List<String> wrapCommand(List<? extends String> arguments) {
-		final String[] shellArguments = getArguments();
-		final List<String> retVal = new ArrayList<>(shellArguments.length + 2);
-		retVal.add(((getName() == null) ? name().toLowerCase() : getName()));
-		retVal.addAll(HCollection.asList(shellArguments));
-		retVal.add(arguments.stream().collect(Collectors.joining(" ")));
-		return retVal;
 	}
 }
