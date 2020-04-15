@@ -8,6 +8,9 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 @Helpers
 public class HCommandLineBuilder {
+	/**
+	 * The {@link ICommandLineBuilder} to be used on the current Java runtime. This is decided based on the {@link java.lang.ProcessBuilder} implementation.
+	 */
 	@Getter(lazy = true)
 	private static final ICommandLineBuilder commandLineBuilder = computeCommandLineBuilder();
 
