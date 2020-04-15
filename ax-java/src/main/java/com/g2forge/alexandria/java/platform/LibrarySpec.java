@@ -5,11 +5,10 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum UARTSpec implements IPlatformNamed {
+public enum LibrarySpec implements IPlatformNamed {
 	Unknown(null, null),
-	COM("COM", null),
-	ttyS("ttyS", null),
-	ttyUSB("ttyUSB", null);
+	DLL(null, ".dll"),
+	SO("lib", ".so");
 
 	protected final String prefix;
 

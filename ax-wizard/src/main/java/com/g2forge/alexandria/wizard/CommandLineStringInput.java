@@ -3,7 +3,7 @@ package com.g2forge.alexandria.wizard;
 import java.io.InputStream;
 import java.io.PrintStream;
 
-import com.g2forge.alexandria.command.CommandInvocation;
+import com.g2forge.alexandria.command.invocation.CommandInvocation;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

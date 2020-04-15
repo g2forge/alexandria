@@ -5,11 +5,13 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum UARTSpec implements IPlatformNamed {
+public enum ExecutableSpec implements IPlatformNamed {
 	Unknown(null, null),
-	COM("COM", null),
-	ttyS("ttyS", null),
-	ttyUSB("ttyUSB", null);
+	EXE(null, ".exe"),
+	BAT(null, ".bat"),
+	CMD(null, ".cmd"),
+	SH(null, ".sh"),
+	None(null, null);
 
 	protected final String prefix;
 

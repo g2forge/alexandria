@@ -63,10 +63,11 @@ public class HCollection {
 
 	@SafeVarargs
 	public static <T> List<T> asListNonNull(T... elements) {
-		final List<T> retVal = new ArrayList<>(elements.length);
+		final ArrayList<T> retVal = new ArrayList<>(elements.length);
 		for (T element : elements) {
 			if (element != null) retVal.add(element);
 		}
+		retVal.trimToSize();
 		return retVal;
 	}
 
@@ -78,9 +79,17 @@ public class HCollection {
 	@SafeVarargs
 	public static <T> List<T> concatenate(final Collection<? extends T>... collections) {
 		if (collections == null) return null;
-		final List<T> retVal = new ArrayList<>();
+		final List<T> retVal = new ArrayList<>(totalSize(collections));
 		for (Collection<? extends T> collection : collections) {
 			if (collection != null) retVal.addAll(collection);
+		}
+		return retVal;
+	}
+
+	public static int totalSize(final Collection<?>... collections) {
+		int retVal = 0;
+		for (Collection<?> collection : collections) {
+			retVal += collection.size();
 		}
 		return retVal;
 	}
@@ -88,7 +97,7 @@ public class HCollection {
 	@SafeVarargs
 	public static <T> Set<T> union(final Collection<? extends T>... collections) {
 		if (collections == null) return null;
-		final Set<T> retVal = new HashSet<>();
+		final Set<T> retVal = new HashSet<>(totalSize(collections));
 		for (Collection<? extends T> collection : collections) {
 			if (collection != null) retVal.addAll(collection);
 		}
@@ -112,13 +121,20 @@ public class HCollection {
 
 	@SafeVarargs
 	public static <T> Collection<T> difference(final Collection<? extends T> minuend, final T... subtrahend) {
-		return difference(minuend, com.g2forge.alexandria.java.core.helpers.HCollection.asList(subtrahend));
+		return difference(minuend, HCollection.asList(subtrahend));
 	}
 
 	public static <T> Collection<T> filter(final Collection<? extends T> collection, final Predicate<? super T> predicate) {
 		return collection.stream().filter(predicate).collect(Collectors.toList());
 	}
 
+	/**
+	 * Get the element at the specified index within the specified collection. Supports negative indices to start from the end of the list.
+	 * 
+	 * @param collection The collection to get an element from.
+	 * @param index The index of the element to get. Must in the range {@code -size <= index < size}
+	 * @return The element at the specified index.
+	 */
 	public static <T> T get(final Iterable<? extends T> collection, int index) {
 		if (index >= 0) {
 			if (collection instanceof List) {
@@ -127,8 +143,9 @@ public class HCollection {
 			}
 
 			final Iterator<? extends T> iterator = collection.iterator();
-			while (index-- > 0)
+			while (index-- > 0) {
 				iterator.next();
+			}
 			return iterator.next();
 		} else {
 			if (collection instanceof List) {

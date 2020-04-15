@@ -1,8 +1,10 @@
-package com.g2forge.alexandria.command;
+package com.g2forge.alexandria.command.main;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.g2forge.alexandria.command.command.IStandardCommand;
+import com.g2forge.alexandria.command.command.IStructuredCommand;
 import com.g2forge.alexandria.command.exit.Exit;
 
 public class TestStructuredCommand {

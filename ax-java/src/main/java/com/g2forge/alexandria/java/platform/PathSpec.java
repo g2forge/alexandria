@@ -4,11 +4,11 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
 @Getter
+@RequiredArgsConstructor
 public enum PathSpec {
 	WinBack(";", "\\", DriveSpec.WINDOWS, false),
 	WinForward(";", "/", DriveSpec.WINDOWS, false),
@@ -29,7 +29,7 @@ public enum PathSpec {
 			if (pathSpec.getFileSeparator().equals(getFileSeparator())) continue;
 			path = path.replace(pathSpec.getFileSeparator(), getFileSeparator());
 		}
-		// Convert the drive spec
+		// Canonize the drive spec
 		return getDriveSpec().canonize(getFileSeparator(), path);
 	}
 
