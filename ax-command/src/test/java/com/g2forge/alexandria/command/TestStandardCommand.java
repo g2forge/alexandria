@@ -8,8 +8,11 @@ import java.io.PrintStream;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.command.IStandardCommand.TestResult;
+import com.g2forge.alexandria.command.command.IStandardCommand;
+import com.g2forge.alexandria.command.command.IStructuredCommand;
+import com.g2forge.alexandria.command.command.IStandardCommand.TestResult;
 import com.g2forge.alexandria.command.exit.IExit;
+import com.g2forge.alexandria.command.invocation.CommandInvocation;
 import com.g2forge.alexandria.command.stdio.IStandardIO;
 import com.g2forge.alexandria.java.io.HIO;
 

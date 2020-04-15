@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.command;
+package com.g2forge.alexandria.command.invocation;
 
 import java.io.InputStream;
 import java.io.PrintStream;

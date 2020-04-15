@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.command;
+package com.g2forge.alexandria.command.command;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -7,6 +7,7 @@ import java.io.PrintStream;
 import java.nio.file.Path;
 
 import com.g2forge.alexandria.command.exit.IExit;
+import com.g2forge.alexandria.command.invocation.CommandInvocation;
 import com.g2forge.alexandria.command.stdio.StandardIO;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.function.IFunction1;

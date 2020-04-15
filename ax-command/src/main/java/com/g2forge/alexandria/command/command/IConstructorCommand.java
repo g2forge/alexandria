@@ -1,9 +1,10 @@
-package com.g2forge.alexandria.command;
+package com.g2forge.alexandria.command.command;
 
 import java.io.InputStream;
 import java.io.PrintStream;
 
 import com.g2forge.alexandria.command.exit.IExit;
+import com.g2forge.alexandria.command.invocation.CommandInvocation;
 import com.g2forge.alexandria.java.function.IFunction1;
 
 @FunctionalInterface

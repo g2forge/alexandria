@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.command;
+package com.g2forge.alexandria.command.command;
 
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.g2forge.alexandria.command.exit.Exit;
 import com.g2forge.alexandria.command.exit.IExit;
+import com.g2forge.alexandria.command.invocation.CommandInvocation;
 import com.g2forge.alexandria.java.core.marker.ICommand;
 
 public interface IStructuredCommand extends ICommand {
@@ -28,7 +29,7 @@ public interface IStructuredCommand extends ICommand {
 				final String name = arguments.get(0);
 				final IStandardCommand subcommand = map.get(name);
 				if (subcommand == null) {
-					invocation.io.getStandardError().println(String.format("Unrecognized command \"%1$s\"!", name));
+					invocation.getIo().getStandardError().println(String.format("Unrecognized command \"%1$s\"!", name));
 					return FAIL;
 				} else {
 					final CommandInvocation<InputStream, PrintStream> subinvocation = new CommandInvocation<>(arguments.subList(1, arguments.size()), invocation.getIo(), invocation.getWorking());
@@ -38,7 +39,7 @@ public interface IStructuredCommand extends ICommand {
 		}
 	}
 
-	public static final IExit SUCCESS = new Exit(0);
+	public static final IExit SUCCESS = new Exit(ICommand.SUCCESS);
 
-	public static final IExit FAIL = new Exit(1);
+	public static final IExit FAIL = new Exit(ICommand.FAIL);
 }
