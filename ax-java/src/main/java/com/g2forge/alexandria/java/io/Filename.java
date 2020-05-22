@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.media;
+package com.g2forge.alexandria.java.io;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -30,6 +30,13 @@ public class Filename {
 		final List<String> components = getComponents();
 		if (components.isEmpty()) return null;
 		return components.get(0);
+	}
+
+	public String getFullExtensions() {
+		final List<String> components = getComponents();
+		final int size = components.size();
+		if (size < 2) return null;
+		return components.subList(1, size).stream().collect(Collectors.joining("."));
 	}
 
 	public String getFullName() {

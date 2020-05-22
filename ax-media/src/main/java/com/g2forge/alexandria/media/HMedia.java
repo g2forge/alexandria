@@ -3,6 +3,7 @@ package com.g2forge.alexandria.media;
 import java.nio.file.Path;
 
 import com.g2forge.alexandria.java.core.marker.Helpers;
+import com.g2forge.alexandria.java.io.Filename;
 
 import lombok.experimental.UtilityClass;
 

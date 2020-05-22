@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.java.core.helpers.HCollection;
+import com.g2forge.alexandria.java.io.Filename;
 
 public interface IMediaRegistry {
 	public default IMediaType computeMediaType(Filename filename) {

@@ -2,6 +2,7 @@ package com.g2forge.alexandria.media;
 
 import org.junit.Test;
 
+import com.g2forge.alexandria.java.io.Filename;
 import com.g2forge.alexandria.test.HAssert;
 
 public class TestHMedia {
