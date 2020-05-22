@@ -8,11 +8,12 @@ import com.g2forge.alexandria.java.function.IFunction2;
 import com.g2forge.alexandria.java.function.IPredicate1;
 
 public interface IRange<T extends Comparable<T>> {
-	public static <T extends Comparable<T>> List<IRange<T>> coalesce(List<? extends IRange<T>> ranges, IFunction2<? super T, ? super T, ? extends IRange<T>> constructor) {
+	public static <T extends Comparable<T>> List<? extends IRange<T>> coalesce(List<? extends IRange<T>> ranges, IFunction2<? super T, ? super T, ? extends IRange<T>> constructor) {
 		for (IRange<T> range : ranges) {
 			if (range.isReversed()) throw new IllegalArgumentException();
 		}
 		final List<IRange<T>> sorted = ranges.stream().filter(IPredicate1.<IRange<T>>create(IRange::isEmpty).negate()).sorted((r0, r1) -> r0.getMin().compareTo(r1.getMin())).collect(Collectors.toList());
+		if ((sorted == null) || sorted.isEmpty()) return sorted;
 		final List<IRange<T>> retVal = new ArrayList<>();
 		IRange<T> current = sorted.get(0);
 		for (IRange<T> range : sorted) {
