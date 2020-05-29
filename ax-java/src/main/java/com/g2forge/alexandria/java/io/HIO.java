@@ -167,4 +167,8 @@ public class HIO {
 		}
 		return digest.digest();
 	}
+	
+	public static byte[] sha1(String value) {
+		return sha1(value.getBytes(), ByteArrayInputStream::new);
+	}
 }
