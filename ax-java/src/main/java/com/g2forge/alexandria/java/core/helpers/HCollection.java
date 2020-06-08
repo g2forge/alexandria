@@ -89,7 +89,7 @@ public class HCollection {
 	public static int totalSize(final Collection<?>... collections) {
 		int retVal = 0;
 		for (Collection<?> collection : collections) {
-			retVal += collection.size();
+			if (collection != null) retVal += collection.size();
 		}
 		return retVal;
 	}
