@@ -12,4 +12,11 @@ public class TestHCollection {
 		Assert.assertEquals(2, HCollection.getLast(Arrays.asList(1, 2, 3), v -> v > 2));
 		Assert.assertEquals(0, HCollection.getLast(Arrays.asList(1, 2, 3), v -> v < 2));
 	}
+
+	@Test
+	public void totalSize() {
+		Assert.assertEquals(2, HCollection.totalSize(HCollection.asList("a", "b")));
+		Assert.assertEquals(2, HCollection.totalSize(HCollection.asList("a"), HCollection.asList("a")));
+		Assert.assertEquals(0, HCollection.totalSize(HCollection.emptyList(), null));
+	}
 }
