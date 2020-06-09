@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 public enum WebEscapeType implements IEscapeType {
 	XML(SequenceEscaper.builder().prefix("&").postfix(";").escape("\"", "quot", true).escape("&", "amp", true).escape("'", "apos", true).escape("<", "lt", true).escape(">", "gt", true).build()),
 	URL(new IEscaper() {
-
 		@Override
 		public void computeEscape(String string, IConsumer1<? super TextUpdate<?>> consumer) {
 			final String encoded;
