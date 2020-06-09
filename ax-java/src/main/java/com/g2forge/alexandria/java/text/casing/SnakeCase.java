@@ -11,6 +11,8 @@ public class SnakeCase extends ACase {
 	public static final ICase DASH = new SnakeCase("-");
 
 	public static final ICase UNDERSCORE = new SnakeCase("_");
+	
+	public static final ICase SPACE = new SnakeCase(" ");
 
 	protected final String tokenSeparator;
 
