@@ -109,7 +109,7 @@ public class FeatureServiceLoader<S> implements IServiceLoader<S> {
 	public FeatureServiceLoader(Class<S> type, Class<? extends IServiceFeatureHierarchy<S>> hierarchy, ITypeFunction1<S> instantiator) {
 		this.basic = new BasicServiceLoader<>(type);
 		this.hierarchy = hierarchy == null ? null : new BasicServiceLoader<>(hierarchy);
-		this.instantiator = instantiator == null ? new DefaultInstantiator<>(this) : instantiator;
+		this.instantiator = instantiator == null ? new NewInstanceInstantiator<>(this) : instantiator;
 	}
 
 	protected <_S extends S> ICollection<? extends Class<? extends _S>> best(final ICollection<? extends Class<? extends S>> collection, Class<_S> subtype) {
