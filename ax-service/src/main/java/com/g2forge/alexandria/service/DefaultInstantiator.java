@@ -1,53 +1,30 @@
 package com.g2forge.alexandria.service;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.lang.reflect.InvocationTargetException;
 
-import com.g2forge.alexandria.java.function.type.ITypeFunction1;
+import com.g2forge.alexandria.java.core.marker.ISingleton;
 
-import lombok.Getter;
-
-public class DefaultInstantiator<S> implements ITypeFunction1<S> {
-	@Getter
-	protected final Class<?> key;
-
-	@Getter
-	protected final Class<S> type;
-
-	protected final Map<String, S> cached = new LinkedHashMap<>();
-
+public class DefaultInstantiator<S> extends NewInstanceInstantiator<S> {
 	public DefaultInstantiator(Class<?> key, Class<S> type) {
-		this.key = (key == null) ? type : key;
-		this.type = Objects.requireNonNull(type, "You must specify a service type!");
+		super(key, type);
 	}
 
 	public DefaultInstantiator(Class<S> type) {
-		this(null, type);
+		super(type);
 	}
 
 	public DefaultInstantiator(IServiceLoader<S> loader) {
 		this(loader.getKey(), loader.getType());
 	}
 
-	@Override
-	public <_S extends S> _S apply(Class<_S> s) {
-		final String name = s.getName();
-		synchronized (cached) {
-			final S cached = this.cached.get(name);
-			if (cached != null) return s.cast(cached);
-
+	protected <_S extends S> _S instantiate(Class<_S> s) throws InstantiationException, IllegalAccessException {
+		if (ISingleton.class.isAssignableFrom(s)) {
 			try {
-				final _S retVal = s.cast(getType().cast(instantiate(s)));
-				this.cached.put(name, retVal);
-				return retVal;
-			} catch (Throwable throwable) {
-				throw new SmartServiceConfigurationError(getKey(), "Provider \"" + name + "\" could not be instantiated!", throwable);
+				return s.cast(s.getDeclaredMethod("create").invoke(null));
+			} catch (IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+				throw new RuntimeException(String.format("Class %1$s does not properly implement the %2$s contract with a static create() method!", s.getName(), ISingleton.class.getSimpleName()),  e);
 			}
 		}
-	}
-
-	protected <_S extends S> _S instantiate(Class<_S> s) throws InstantiationException, IllegalAccessException {
-		return s.newInstance();
+		return super.instantiate(s);
 	}
 }

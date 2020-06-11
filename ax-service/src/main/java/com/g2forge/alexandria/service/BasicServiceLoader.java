@@ -145,7 +145,7 @@ public class BasicServiceLoader<S> implements IServiceLoader<S> {
 	public BasicServiceLoader(Class<?> key, Class<S> type, ClassLoader classLoader, ITypeFunction1<S> instantiator) {
 		this.key = key == null ? type : key;
 		this.type = Objects.requireNonNull(type, "Type cannot be null");
-		this.instantiator = instantiator == null ? new DefaultInstantiator<>(this) : instantiator;
+		this.instantiator = instantiator == null ? new NewInstanceInstantiator<>(this) : instantiator;
 
 		this.classLoader = (classLoader == null) ? Thread.currentThread().getContextClassLoader() : classLoader;
 		this.acc = (System.getSecurityManager() != null) ? AccessController.getContext() : null;
