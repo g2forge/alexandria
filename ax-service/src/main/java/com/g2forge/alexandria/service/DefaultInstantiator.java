@@ -25,6 +25,6 @@ public class DefaultInstantiator<S> extends NewInstanceInstantiator<S> {
 				throw new RuntimeException(String.format("Class %1$s does not properly implement the %2$s contract with a static create() method!", s.getName(), ISingleton.class.getSimpleName()),  e);
 			}
 		}
-		return s.newInstance();
+		return super.instantiate(s);
 	}
 }
