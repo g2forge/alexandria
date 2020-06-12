@@ -23,7 +23,7 @@ public class InputStreamDataSource implements IDataSource {
 	@Note(type = NoteType.TODO, value = "Use static type switch", issue = "G2-432")
 	@Override
 	public <T extends Channel> T getChannel(ITypeRef<T> type) {
-		if ((type != null) && !ReadableByteChannel.class.equals(type.getErasedType())) throw new IllegalArgumentException();
+		if ((type != null) && !type.getErasedType().isAssignableFrom(ReadableByteChannel.class)) throw new IllegalArgumentException();
 		@SuppressWarnings("unchecked")
 		final T retVal = (T) Channels.newChannel(stream);
 		used = true;
