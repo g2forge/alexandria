@@ -16,7 +16,7 @@ import com.g2forge.alexandria.java.core.helpers.HCollector;
 import com.g2forge.alexandria.java.function.IFunction1;
 
 public class HGraph {
-	public static <N> List<N> toposort(Collection<N> nodes, Function<N, Set<N>> accessor, boolean isOut) {
+	public static <N> List<N> toposort(Collection<? extends N> nodes, Function<? super N, ? extends Set<? extends N>> accessor, boolean isOut) {
 		final Function<? super N, ? extends Node<N>> nodeConstructor = n -> {
 			final Node<N> retVal = new Node<>(n);
 			if (isOut) retVal.setIn(new LinkedHashSet<>());

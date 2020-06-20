@@ -39,10 +39,13 @@ public class HFile {
 		}
 	}
 
-	public static void delete(Path path) throws IOException {
-		final LinkedList<Path> onexit = new LinkedList<>();
-		Files.walkFileTree(path, new DirectoryTreeDeleteVisitor(onexit));
-		onexit.forEach(toDelete -> toDelete.toFile().deleteOnExit());
+	public static void delete(Path path, boolean onexit) throws IOException {
+		final LinkedList<Path> remaining = new LinkedList<>();
+		Files.walkFileTree(path, new DirectoryTreeDeleteVisitor(remaining));
+		if (!remaining.isEmpty()) {
+			if (onexit) remaining.forEach(toDelete -> toDelete.toFile().deleteOnExit());
+			else throw new IOException(String.format("Unable to delete complete directory tree! %1$s", remaining));
+		}
 	}
 
 	public static void gc() {

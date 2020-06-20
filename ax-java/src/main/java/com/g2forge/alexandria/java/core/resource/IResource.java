@@ -12,12 +12,16 @@ public interface IResource {
 
 	public default InputStream getResourceAsStream(boolean assertExists) {
 		final InputStream retVal = getKlass().getResourceAsStream(getResource());
-		if (retVal == null) throw new NullPointerException(String.format("Resource \"%1$s\" could not be found relative to class %2$s (if the file exists, check your maven resource configuration)", getResource(), getKlass().getName()));
+		if ((retVal == null) && assertExists) throw new NullPointerException(String.format("Resource \"%1$s\" could not be found relative to class %2$s (if the file exists, check your maven resource configuration)", getResource(), getKlass().getName()));
 		return retVal;
 	}
 
 	public default URL getURL() {
 		return getKlass().getResource(getResource());
+	}
+
+	public default boolean isExists() {
+		return getResourceAsStream(false) != null;
 	}
 
 	public default String read(boolean newline) {

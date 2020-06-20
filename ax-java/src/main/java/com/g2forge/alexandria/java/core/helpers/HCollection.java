@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
@@ -226,6 +227,26 @@ public class HCollection {
 		final T retVal = iterator.next();
 		if (iterator.hasNext()) throw new IllegalArgumentException("Input iterable had more than one element!");
 		return retVal;
+	}
+
+	/**
+	 * Test if an iterable contains a single, specified, item.
+	 * 
+	 * @param iterable The iterable to search.
+	 * @param object The object to search for.
+	 * @return {@code true} if {@code iterable} contains {@code object} and nothing else.
+	 */
+	public static boolean isOne(final Iterable<?> iterable, Object object) {
+		if (iterable instanceof Collection) {
+			final Collection<?> collection = (Collection<?>) iterable;
+			if (collection.size() != 1) return false;
+			return collection.contains(object);
+		}
+
+		final Iterator<?> iterator = iterable.iterator();
+		final Object first = iterator.next();
+		if (iterator.hasNext()) return false;
+		return Objects.equals(object, first);
 	}
 
 	public static <I, O> Collection<O> map(final Function<? super I, ? extends O> map, final Collection<? extends I> input) {

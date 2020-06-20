@@ -29,7 +29,7 @@ public class CloseablePath extends AGuaranteeClose implements ICloseableSupplier
 		try {
 			if (path != null && Files.exists(path)) {
 				HFile.gc();
-				HFile.delete(path);
+				HFile.delete(path, true);
 			}
 		} catch (IOException exception) {
 			throw new RuntimeIOException(exception);
