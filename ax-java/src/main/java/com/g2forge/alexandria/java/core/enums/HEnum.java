@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.g2forge.alexandria.java.core.marker.Helpers;
+import com.g2forge.alexandria.java.function.IFunction1;
 
 import lombok.experimental.UtilityClass;
 
@@ -11,11 +12,17 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class HEnum {
 	public static <E extends Enum<E>> E valueOfInsensitive(Class<E> klass, String text) {
+		return valueOf(klass, Enum::name, String::toLowerCase, text);
+	}
+
+	public static <E extends Enum<E>> E valueOf(Class<E> klass, IFunction1<? super E, ? extends String> toString, IFunction1<? super String, ? extends String> mangle, String text) {
 		final Map<String, E> map = new LinkedHashMap<>();
 		for (E value : klass.getEnumConstants()) {
-			if (map.put(value.toString().toLowerCase(), value) != null) throw new IllegalArgumentException("Cannot perform case insensitive matching on enum \"" + klass + "\" because the members are not unique without casing!");
+			if (map.put(mangle.apply(toString.apply(value)), value) != null) throw new IllegalArgumentException(String.format("Cannot perform matching on enum \"%1$s\" because the members are not unique under %2$s!", klass, mangle));
 		}
-		return map.get(text.toLowerCase());
+		final String mangled = mangle.apply(text);
+		if (!map.containsKey(mangled)) throw new IllegalArgumentException(String.format("Cannot find \"%1$s\" (mangled from \"%3$s\") in %2$s!", mangled, map.keySet(), text));
+		return map.get(mangled);
 	}
 
 	public static <E extends Enum<E>> Class<E> getEnumClass(E object) {
