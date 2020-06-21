@@ -14,12 +14,12 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class FileDataSource implements IDataSource {
+public class PathDataSource implements IDataSource {
 	protected final Path path;
 
 	@Override
 	public <T extends Channel> T getChannel(ITypeRef<T> type) {
-		if ((type != null) && !type.getErasedType().isAssignableFrom(SeekableByteChannel.class)) throw new IllegalArgumentException(String.format("Cannot generate channel type %1$s", type.getErasedType().getSimpleName()));
+		if ((type != null) && !type.isAssignableFrom(ITypeRef.of(SeekableByteChannel.class))) throw new IllegalArgumentException(String.format("Cannot generate channel type %1$s", type.getErasedType().getSimpleName()));
 		try {
 			@SuppressWarnings("unchecked")
 			final T retVal = (T) Files.newByteChannel(getPath());
