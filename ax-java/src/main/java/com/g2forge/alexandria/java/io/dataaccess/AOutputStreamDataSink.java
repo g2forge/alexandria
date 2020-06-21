@@ -15,11 +15,11 @@ import lombok.Getter;
 @Getter
 public abstract class AOutputStreamDataSink implements IDataSink {
 	protected boolean used = false;
-	
+
 	@Note(type = NoteType.TODO, value = "Use static type switch", issue = "G2-432")
 	@Override
 	public <T extends Channel> T getChannel(ITypeRef<T> type) {
-		if ((type != null) && !WritableByteChannel.class.equals(type.getErasedType())) throw new IllegalArgumentException();
+		if ((type != null) && !type.isAssignableFrom(ITypeRef.of(WritableByteChannel.class))) throw new IllegalArgumentException();
 		@SuppressWarnings("unchecked")
 		final T retVal = (T) Channels.newChannel(getStream());
 		used = true;

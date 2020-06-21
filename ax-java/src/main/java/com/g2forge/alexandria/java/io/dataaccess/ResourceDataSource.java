@@ -21,7 +21,7 @@ public class ResourceDataSource implements IDataSource {
 	@Note(type = NoteType.TODO, value = "Use static type switch", issue = "G2-432")
 	@Override
 	public <T extends Channel> T getChannel(ITypeRef<T> type) {
-		if ((type != null) && !type.getErasedType().isAssignableFrom(ReadableByteChannel.class)) throw new IllegalArgumentException();
+		if ((type != null) && !type.isAssignableFrom(ITypeRef.of(ReadableByteChannel.class))) throw new IllegalArgumentException();
 		@SuppressWarnings("unchecked")
 		final T retVal = (T) Channels.newChannel(getResource().getResourceAsStream(true));
 		return retVal;
