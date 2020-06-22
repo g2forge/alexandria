@@ -7,6 +7,11 @@ import com.g2forge.alexandria.test.HAssert;
 
 public class TestHMedia {
 	@Test
+	public void foo() {
+		HAssert.assertNull(MediaType.getRegistry().computeMediaType(new Filename("file.foo")));
+	}
+
+	@Test
 	public void jpg() {
 		HAssert.assertEquals(MediaType.JPG, MediaType.getRegistry().computeMediaType(new Filename("file.jpg")));
 		HAssert.assertEquals(MediaType.JPG, MediaType.getRegistry().computeMediaType(new Filename("file.jpeg")));

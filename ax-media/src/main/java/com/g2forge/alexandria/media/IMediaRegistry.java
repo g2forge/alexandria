@@ -11,6 +11,7 @@ public interface IMediaRegistry {
 	public default IMediaType computeMediaType(Filename filename) {
 		final String extension = filename.getLastExtension();
 		final List<IMediaType> matches = getMediaTypes().stream().filter(mediaType -> mediaType.getFileExtensions().isMatch(extension)).collect(Collectors.toList());
+		if (matches.isEmpty()) return null;
 		return HCollection.getOne(matches);
 	}
 
