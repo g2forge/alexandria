@@ -9,7 +9,7 @@ import java.nio.charset.Charset;
 import com.g2forge.alexandria.annotations.note.Note;
 import com.g2forge.alexandria.annotations.note.NoteType;
 import com.g2forge.alexandria.java.io.HBinaryIO;
-import com.g2forge.alexandria.java.io.HIO;
+import com.g2forge.alexandria.java.io.HTextIO;
 import com.g2forge.alexandria.java.type.ref.ITypeRef;
 
 public interface IDataSource extends IDataAccess {
@@ -34,6 +34,6 @@ public interface IDataSource extends IDataAccess {
 	}
 
 	public default String getString() {
-		return HIO.readAll(getStream(null), false);
+		return HTextIO.readAll(getStream(null), false);
 	}
 }

@@ -99,7 +99,7 @@ public class HZip {
 	 *         return value is {@code false}.
 	 */
 	public static IWithExplanation<Boolean, Collection<String>> isEqual(IFunction1<? super String, ? extends IPredicate1<? super Collection<? extends InputStream>>> equalsFactory, List<Path> paths) {
-		if (equalsFactory == null) equalsFactory = name -> HIO::isEqual;
+		if (equalsFactory == null) equalsFactory = name -> HBinaryIO::isEqual;
 		if (paths.size() < 2) return new SimpleWithExplanation<>(true, null);
 
 		final CollectionWithExplanationBuilder<Boolean, String> retVal = CollectionWithExplanation.<Boolean, String>builder().value(true);

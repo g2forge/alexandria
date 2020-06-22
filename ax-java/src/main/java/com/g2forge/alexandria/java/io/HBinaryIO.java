@@ -4,10 +4,19 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.g2forge.alexandria.java.close.ICloseable;
+import com.g2forge.alexandria.java.core.helpers.HCollection;
+import com.g2forge.alexandria.java.core.helpers.HStream;
 import com.g2forge.alexandria.java.core.marker.Helpers;
 import com.g2forge.alexandria.java.function.IRunnable;
 
@@ -45,6 +54,48 @@ public class HBinaryIO {
 
 			output.write(buffer, 0, actual);
 			if (post != null) post.run();
+		}
+	}
+
+	public static boolean isEqual(InputStream... streams) {
+		return isEqual(HCollection.asList(streams));
+	}
+
+	public static boolean isEqual(Collection<? extends InputStream> streams) {
+		if (streams.size() <= 1) {
+			if (streams.size() > 0) try {
+				HCollection.getOne(streams).close();
+			} catch (IOException exception) {
+				throw new RuntimeIOException(exception);
+			}
+			return true;
+		}
+
+		try (final ICloseable closeStreams = () -> HIO.closeAll(streams)) {
+			final List<ReadableByteChannel> channels = streams.stream().map(Channels::newChannel).collect(Collectors.toList());
+			try (final ICloseable closeChannels = () -> HIO.closeAll(channels)) {
+				final int bufferSize = HIO.getRecommendedBufferSize();
+				final List<ByteBuffer> buffers = streams.stream().map(stream -> ByteBuffer.allocateDirect(bufferSize)).collect(Collectors.toList());
+				while (true) {
+					final List<Integer> counts = HStream.zip(channels.stream(), buffers.stream(), (channel, buffer) -> {
+						try {
+							return channel.read(buffer);
+						} catch (IOException exception) {
+							throw new RuntimeIOException(exception);
+						}
+					}).collect(Collectors.toList());
+					// If any stream is done, then they're equals only if they're all done
+					if (counts.stream().anyMatch(count -> count == -1)) return counts.stream().allMatch(count -> count == -1);
+
+					// Compare all the buffer contents
+					buffers.forEach(Buffer::flip);
+					final ByteBuffer buffer = buffers.get(0);
+					for (int j = 1; j < buffers.size(); j++) {
+						if (!buffer.equals(buffers.get(j))) return false;
+					}
+					buffers.forEach(Buffer::clear);
+				}
+			}
 		}
 	}
 

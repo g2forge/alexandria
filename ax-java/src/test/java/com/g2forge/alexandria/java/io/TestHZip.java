@@ -33,7 +33,7 @@ public class TestHZip {
 			final Path contents = temp.get().resolve("contents");
 			Files.createDirectories(contents);
 			HZip.unzip(zipfile, contents);
-			Assert.assertEquals("Hello, World!", HIO.readAll(Files.newInputStream(contents.resolve("File.txt")), true));
+			Assert.assertEquals("Hello, World!", HTextIO.readAll(Files.newInputStream(contents.resolve("File.txt")), true));
 		}
 	}
 }

@@ -3,7 +3,7 @@ package com.g2forge.alexandria.java.core.resource;
 import java.io.InputStream;
 import java.net.URL;
 
-import com.g2forge.alexandria.java.io.HIO;
+import com.g2forge.alexandria.java.io.HTextIO;
 
 public interface IResource {
 	public Class<?> getKlass();
@@ -25,6 +25,6 @@ public interface IResource {
 	}
 
 	public default String read(boolean newline) {
-		return HIO.readAll(getResourceAsStream(true), newline);
+		return HTextIO.readAll(getResourceAsStream(true), newline);
 	}
 }
