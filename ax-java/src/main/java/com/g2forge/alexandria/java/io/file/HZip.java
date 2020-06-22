@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -20,9 +19,15 @@ import java.util.zip.ZipOutputStream;
 import com.g2forge.alexandria.java.close.ICloseable;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.core.marker.Helpers;
+import com.g2forge.alexandria.java.function.IFunction1;
+import com.g2forge.alexandria.java.function.IPredicate1;
 import com.g2forge.alexandria.java.io.HBinaryIO;
 import com.g2forge.alexandria.java.io.HIO;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
+import com.g2forge.alexandria.java.with.CollectionWithExplanation;
+import com.g2forge.alexandria.java.with.CollectionWithExplanation.CollectionWithExplanationBuilder;
+import com.g2forge.alexandria.java.with.IWithExplanation;
+import com.g2forge.alexandria.java.with.SimpleWithExplanation;
 
 import lombok.Data;
 import lombok.experimental.UtilityClass;
@@ -75,54 +80,71 @@ public class HZip {
 	}
 
 	/**
-	 * Compare the contents of several zipfiles or Jar files.
+	 * Compare the contents of several zip or jar files.
 	 * 
+	 * @param equalsFactory A function to create a stream comparator from the zip entry filename. Can be {@code null}.
 	 * @param paths Paths to the zip files to compare.
-	 * @return <code>true</code> if all the zipfiles contain exactly the same contents.
+	 * @return {@code true} if all the zipfiles contain exactly the same contents.
 	 */
-	public static boolean isEqual(Path... paths) {
-		return isEqual(HCollection.asList(paths));
+	public static IWithExplanation<Boolean, Collection<String>> isEqual(IFunction1<? super String, ? extends IPredicate1<? super Collection<? extends InputStream>>> equalsFactory, Path... paths) {
+		return isEqual(equalsFactory, HCollection.asList(paths));
 	}
 
 	/**
-	 * Compare the contents of several zipfiles or Jar files.
+	 * Compare the contents of several zip or jar files.
 	 * 
+	 * @param equalsFactory A function to create a stream comparator from the zip entry filename. Can be {@code null}.
 	 * @param paths Paths to the zip files to compare.
-	 * @return <code>true</code> if all the zipfiles contain exactly the same contents.
+	 * @return {@code true} if all the zipfiles contain exactly the same contents. The explanation will be a (possibly incomplete) list of mismatches if the
+	 *         return value is {@code false}.
 	 */
-	public static boolean isEqual(List<Path> paths) {
-		if (paths.size() < 2) return true;
+	public static IWithExplanation<Boolean, Collection<String>> isEqual(IFunction1<? super String, ? extends IPredicate1<? super Collection<? extends InputStream>>> equalsFactory, List<Path> paths) {
+		if (equalsFactory == null) equalsFactory = name -> HIO::isEqual;
+		if (paths.size() < 2) return new SimpleWithExplanation<>(true, null);
 
-		final List<ZipFile> files = paths.stream().map(p -> {
-			try {
-				return new ZipFile(p.toFile());
-			} catch (IOException e) {
-				throw new RuntimeIOException(e);
-			}
-		}).collect(Collectors.toList());
+		final CollectionWithExplanationBuilder<Boolean, String> retVal = CollectionWithExplanation.<Boolean, String>builder().value(true);
+		final List<ZipFile> files = new ArrayList<>(paths.size());
 		try (final ICloseable closeFiles = () -> HIO.closeAll(files)) {
+			// Add the files inside the try/finally to ensure they all get closed
+			for (Path path : paths) {
+				try {
+					files.add(new ZipFile(path.toFile()));
+				} catch (IOException e) {
+					throw new RuntimeIOException(e);
+				}
+			}
+
+			final int size = files.get(0).size();
+			for (int i = 1; i < files.size(); i++) {
+				if (files.get(i).size() != size) retVal.value(false).explanation(String.format("\"%1$s\" has %2$d entries, whereas \"%3$s\" has %4$d!", paths.get(0), size, paths.get(i), files.get(i).size()));
+			}
+
 			for (Enumeration<? extends ZipEntry> enuemration = files.get(0).entries(); enuemration.hasMoreElements();) {
 				final String name = enuemration.nextElement().getName();
 
-				final List<InputStream> streams = files.stream().map(zip -> {
-					final ZipEntry entry = zip.getEntry(name);
-					if (entry != null) {
+				final List<InputStream> streams = new ArrayList<>(files.size());
+				try (final ICloseable closeStreams = () -> HIO.closeAll(streams)) {
+					// Open the streams inside the try/finally to be sure they all get closed
+					for (int i = 0; i < paths.size(); i++) {
+						final ZipFile file = files.get(i);
+						final ZipEntry entry = file.getEntry(name);
+
+						// If any of the zipfiles don't have the entry, fail
+						if (entry == null) retVal.value(false).explanation(String.format("\"%1$s\" has entry \"%2$s\", which isn't present in \"%3$s\"!", paths.get(0), name, paths.get(i)));
+
 						try {
-							return zip.getInputStream(entry);
+							streams.add(file.getInputStream(entry));
 						} catch (IOException e) {
 							throw new RuntimeIOException(e);
 						}
-					} else return null;
-				}).collect(Collectors.toList());
-				try (final ICloseable closeStreams = () -> HIO.closeAll(streams)) {
-					// If any of the zipfiles don't have the entry, fail
-					if (streams.contains(null)) return false;
+					}
+
 					// Make sure all the entries have the same data
-					if (!HIO.isEqual(streams)) return false;
+					if (!equalsFactory.apply(name).test(streams)) retVal.value(false).explanation(String.format("Entry \"%1$s\", is not the same across archives!", name));
 				}
 			}
 		}
-		return true;
+		return retVal.build();
 	}
 
 	/**

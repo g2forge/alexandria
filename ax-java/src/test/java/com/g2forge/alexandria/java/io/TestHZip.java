@@ -21,7 +21,7 @@ public class TestHZip {
 			for (Path path : paths) {
 				temp.getResource().resource(getClass(), "zipequals.zip", path);
 			}
-			HZip.isEqual(paths);
+			Assert.assertTrue(HZip.isEqual(null, paths).get());
 		}
 	}
 

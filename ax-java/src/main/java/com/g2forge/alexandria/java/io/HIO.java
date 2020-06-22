@@ -131,7 +131,7 @@ public class HIO {
 							throw new RuntimeIOException(exception);
 						}
 					}).collect(Collectors.toList());
-					// If any stream is done, then they're equals only if they're all don
+					// If any stream is done, then they're equals only if they're all done
 					if (counts.stream().anyMatch(count -> count == -1)) return counts.stream().allMatch(count -> count == -1);
 
 					// Compare all the buffer contents
@@ -167,7 +167,7 @@ public class HIO {
 		}
 		return digest.digest();
 	}
-	
+
 	public static byte[] sha1(String value) {
 		return sha1(value.getBytes(), ByteArrayInputStream::new);
 	}
