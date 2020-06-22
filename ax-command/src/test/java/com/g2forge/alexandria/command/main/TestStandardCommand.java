@@ -15,6 +15,7 @@ import com.g2forge.alexandria.command.exit.IExit;
 import com.g2forge.alexandria.command.invocation.CommandInvocation;
 import com.g2forge.alexandria.command.stdio.IStandardIO;
 import com.g2forge.alexandria.java.io.HIO;
+import com.g2forge.alexandria.java.io.HTextIO;
 
 public class TestStandardCommand {
 	public static class Cat implements IStandardCommand {
@@ -48,7 +49,7 @@ public class TestStandardCommand {
 		final String message = "Hello, World!\nFoobar!\n";
 		final TestResult result = new Cat().test(HIO.toInputStream(message), null);
 		Assert.assertEquals(IStructuredCommand.SUCCESS, result.getExit());
-		Assert.assertEquals(message.replace("\n", System.lineSeparator()), HIO.readAll(result.getStandardOutput(), false));
+		Assert.assertEquals(message.replace("\n", System.lineSeparator()), HTextIO.readAll(result.getStandardOutput(), false));
 	}
 
 	@Test
@@ -56,6 +57,6 @@ public class TestStandardCommand {
 		final String message = "Hello, World!";
 		final TestResult result = new Echo().test(null, null, message);
 		Assert.assertEquals(IStructuredCommand.SUCCESS, result.getExit());
-		Assert.assertEquals(message, HIO.readAll(result.getStandardOutput(), false));
+		Assert.assertEquals(message, HTextIO.readAll(result.getStandardOutput(), false));
 	}
 }
