@@ -23,7 +23,11 @@ import com.g2forge.alexandria.java.adt.tuple.implementations.Tuple2G_O;
 import com.g2forge.alexandria.java.core.marker.Helpers;
 import com.g2forge.alexandria.java.function.IFunction1;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.UtilityClass;
 
 @Helpers
@@ -155,5 +159,107 @@ public class HCollector {
 			list0.addAll(list1);
 			return list0;
 		});
+	}
+
+	@Getter(AccessLevel.PROTECTED)
+	@Setter(AccessLevel.PROTECTED)
+	@RequiredArgsConstructor
+	public class StringJoinCollector {
+		/** Prefix to be used before any elements */
+		@NonNull
+		protected final CharSequence prefix;
+
+		/** Normal separator, to be used between all pairs of elements, except the last two. */
+		@NonNull
+		protected final CharSequence separatorNormal;
+
+		/** Last separator, to be used between the final two elements */
+		@NonNull
+		protected final CharSequence separatorLast;
+
+		/** Prefix to be used after all elements */
+		@NonNull
+		protected final CharSequence suffix;
+
+		/** The current set of elements, the prefix and the separators. The suffix is never added to this builder, nor is the last separator. */
+		protected StringBuilder builder;
+
+		/** The index in {@link #builder} of the most recently appended separator or {@code -1} if none has been appended. */
+		protected int lastSeparatorIndex = -1;
+
+		/**
+		 * Add a new element.
+		 * 
+		 * @param element The element to add.
+		 * @return {@code this}
+		 */
+		public StringJoinCollector add(CharSequence element) {
+			getBuilderNext().append(element);
+			return this;
+		}
+
+		public StringJoinCollector combine(StringJoinCollector that) {
+			Objects.requireNonNull(that);
+
+			final StringBuilder thatBuilder = that.getBuilder();
+			if (thatBuilder != null) {
+				final StringBuilder builder = getBuilderNext();
+				final int thisLength = builder.length();
+				final int thatPrefixLength = that.getPrefix().length();
+				builder.append(thatBuilder, thatPrefixLength, thatBuilder.length());
+				setLastSeparatorIndex(that.getLastSeparatorIndex() - thatPrefixLength + thisLength);
+			}
+
+			return this;
+		}
+
+		protected StringBuilder getBuilderNext() {
+			final StringBuilder builder = getBuilder();
+			if (builder != null) {
+				setLastSeparatorIndex(builder.length());
+				builder.append(getSeparatorNormal());
+			} else setBuilder(new StringBuilder().append(getPrefix()));
+			return getBuilder();
+		}
+
+		@Override
+		public String toString() {
+			final StringBuilder builder = getBuilder();
+			if (builder == null) return getPrefix().toString() + getSuffix();
+
+			final boolean hasLastSeparator = !getSeparatorNormal().equals(getSeparatorLast());
+			if ((suffix.length() < 1) && !hasLastSeparator) return builder.toString();
+			else {
+				// Replace the last separator
+				final int lastSeparatorIndex = getLastSeparatorIndex();
+				if (hasLastSeparator && (lastSeparatorIndex >= 0)) builder.replace(lastSeparatorIndex, lastSeparatorIndex + getSeparatorNormal().length(), getSeparatorLast().toString());
+
+				// Add the suffix, but remove it again right after
+				final int length = builder.length();
+				final String retVal = builder.append(suffix).toString();
+				builder.setLength(length);
+
+				// Switch back to the normal separator
+				if (hasLastSeparator && (lastSeparatorIndex >= 0)) builder.replace(lastSeparatorIndex, lastSeparatorIndex + getSeparatorLast().length(), getSeparatorNormal().toString());
+
+				return retVal;
+			}
+		}
+	}
+
+	public static Collector<CharSequence, ?, String> joining() {
+		return joining("");
+	}
+
+	public static Collector<CharSequence, ?, String> joining(CharSequence separator) {
+		return joining("", separator, "");
+	}
+
+	public static Collector<CharSequence, ?, String> joining(CharSequence prefix, CharSequence separator, CharSequence suffix) {
+		return joining(prefix, separator, separator, suffix);
+	}
+
+	public static Collector<CharSequence, ?, String> joining(CharSequence prefix, CharSequence separatorNormal, CharSequence separatorLast, CharSequence suffix) {
+		return new SimpleCollector<>(() -> new StringJoinCollector(prefix, separatorNormal, separatorLast, suffix), StringJoinCollector::add, StringJoinCollector::combine, StringJoinCollector::toString, Collections.emptySet());
 	}
 }
