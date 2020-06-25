@@ -259,6 +259,10 @@ public class HCollector {
 		return joining(prefix, separator, separator, suffix);
 	}
 
+	public static Collector<CharSequence, ?, String> joining(CharSequence separatorNormal, CharSequence separatorLast) {
+		return joining("", separatorNormal, separatorLast, "");
+	}
+
 	public static Collector<CharSequence, ?, String> joining(CharSequence prefix, CharSequence separatorNormal, CharSequence separatorLast, CharSequence suffix) {
 		return new SimpleCollector<>(() -> new StringJoinCollector(prefix, separatorNormal, separatorLast, suffix), StringJoinCollector::add, StringJoinCollector::combine, StringJoinCollector::toString, Collections.emptySet());
 	}
