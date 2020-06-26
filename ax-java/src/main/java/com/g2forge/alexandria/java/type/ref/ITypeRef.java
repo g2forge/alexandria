@@ -2,6 +2,7 @@ package com.g2forge.alexandria.java.type.ref;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.stream.Stream;
 
 import com.g2forge.alexandria.annotations.note.Note;
 import com.g2forge.alexandria.annotations.note.NoteType;
@@ -39,6 +40,11 @@ public interface ITypeRef<T> extends IDynamicType<T> {
 
 	public default T cast(Object value) {
 		return getErasedType().cast(value);
+	}
+
+	public default Stream<T> castIfInstance(Object value) {
+		if (!isInstance(value)) return Stream.empty();
+		return Stream.of(cast(value));
 	}
 
 	@Note(type = NoteType.TODO, value = "Properly implement erasure")
