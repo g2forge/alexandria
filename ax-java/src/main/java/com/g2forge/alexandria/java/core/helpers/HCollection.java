@@ -98,7 +98,7 @@ public class HCollection {
 	@SafeVarargs
 	public static <T> Set<T> union(final Collection<? extends T>... collections) {
 		if (collections == null) return null;
-		final Set<T> retVal = new HashSet<>(totalSize(collections));
+		final Set<T> retVal = new LinkedHashSet<>(totalSize(collections));
 		for (Collection<? extends T> collection : collections) {
 			if (collection != null) retVal.addAll(collection);
 		}
