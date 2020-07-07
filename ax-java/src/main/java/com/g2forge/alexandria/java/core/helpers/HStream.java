@@ -75,6 +75,15 @@ public class HStream {
 		return retVal;
 	}
 
+	public static <T> Iterable<T> toIterable(Stream<T> stream) {
+		return new Iterable<T>() {
+			@Override
+			public Iterator<T> iterator() {
+				return stream.iterator();
+			}
+		};
+	}
+
 	public static <T> Stream<T> toStream(Iterator<T> iterator) {
 		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED), false);
 	}

@@ -4,7 +4,6 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +67,7 @@ public class HCollector {
 	}
 
 	public static <T, K> Collector<? super T, ?, Map<K, List<T>>> multiGroupingBy(Function<? super T, ? extends Iterable<? extends K>> classifier) {
-		return multiGroupingBy(classifier, HashMap::new, Collectors.toList());
+		return multiGroupingBy(classifier, LinkedHashMap::new, Collectors.toList());
 	}
 
 	public static <T> BinaryOperator<T> mergeFail() {
