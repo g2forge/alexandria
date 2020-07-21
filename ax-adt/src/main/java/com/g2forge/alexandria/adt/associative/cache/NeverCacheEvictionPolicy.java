@@ -1,7 +1,7 @@
 package com.g2forge.alexandria.adt.associative.cache;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 import com.g2forge.alexandria.java.adt.identity.IIdentity;
 import com.g2forge.alexandria.java.core.marker.ISingleton;
@@ -17,7 +17,7 @@ public class NeverCacheEvictionPolicy<K> implements ISingleton, ICacheEvictionPo
 	private NeverCacheEvictionPolicy() {}
 
 	@Override
-	public Collection<K> access(boolean create, IIdentity<? super K> identity, K key) {
-		return Collections.emptyList();
+	public Set<K> access(boolean create, IIdentity<? super K> identity, K key) {
+		return Collections.emptySet();
 	}
 }

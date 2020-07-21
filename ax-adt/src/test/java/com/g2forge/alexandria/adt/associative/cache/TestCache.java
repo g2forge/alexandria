@@ -33,7 +33,7 @@ public class TestCache {
 
 	@Test
 	public void identitySame() {
-		final Cache<Integer, Integer> cache = new Cache<Integer, Integer>(IIdentity.same(), function, new LRUCacheEvictionPolicy<>(2), false);
+		final Cache<Integer, Integer> cache = Cache.<Integer, Integer>builder().identity(IIdentity.same()).function(function).policy(new LRUCacheEvictionPolicy<>(2)).build();
 		final Integer a = new Integer(0), b = new Integer(0);
 		Assert.assertEquals(1, cache.apply(a).intValue());
 		Assert.assertEquals(1, cache.apply(b).intValue());
@@ -46,7 +46,7 @@ public class TestCache {
 
 	@Test
 	public void identityStandard() {
-		final Cache<Integer, Integer> cache = new Cache<Integer, Integer>(IIdentity.standard(), function, NeverCacheEvictionPolicy.create(), false);
+		final Cache<Integer, Integer> cache = Cache.<Integer, Integer>builder().identity(IIdentity.standard()).function(function).policy(NeverCacheEvictionPolicy.create()).build();
 		Assert.assertEquals(1, cache.apply(new Integer(0)).intValue());
 		Assert.assertEquals(1, cache.apply(new Integer(0)).intValue());
 		Assert.assertEquals(HCollection.asList(0), function.getRecord().stream().map(ITuple2G_::get0).collect(Collectors.toList()));
