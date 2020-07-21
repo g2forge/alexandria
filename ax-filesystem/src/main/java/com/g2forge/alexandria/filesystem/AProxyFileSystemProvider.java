@@ -33,7 +33,7 @@ import com.g2forge.alexandria.filesystem.path.FileSystemPathURI;
 import com.g2forge.alexandria.filesystem.path.GenericFileSystem;
 import com.g2forge.alexandria.filesystem.path.GenericPath;
 import com.g2forge.alexandria.filesystem.path.IGenericFileSystemProviderInternal;
-import com.g2forge.alexandria.java.adt.identity.IIdentity;
+import com.g2forge.alexandria.java.function.IFunction1;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
 
 import lombok.Getter;
@@ -105,13 +105,13 @@ public abstract class AProxyFileSystemProvider<P extends Path> extends FileSyste
 
 	protected final Map<Path, GenericFileSystem> fileSystems = new HashMap<>();
 
-	protected final Cache<Path, Path> cache = new Cache<Path, Path>(IIdentity.same(), path -> {
+	protected final IFunction1<Path, Path> cache = Cache.<Path, Path>builder().function(path -> {
 		final P checked = check(path);
 		final Path root = getInternal(checked).getRoot();
 		final Path relative = checked.getRoot().relativize(checked);
 		final Path retVal = root.resolve(relative.toString());
 		return retVal;
-	}, new LRUCacheEvictionPolicy<>(2), true);
+	}).policy(new LRUCacheEvictionPolicy<>(5)).weak(true).build().sync(new Object());
 
 	protected abstract P check(Path path);
 

@@ -11,9 +11,11 @@ import com.g2forge.alexandria.java.adt.identity.Identified;
 import com.g2forge.alexandria.java.fluent.optional.IOptional;
 import com.g2forge.alexandria.java.function.IFunction1;
 
-import lombok.Data;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 
-@Data
+@Getter(AccessLevel.PROTECTED)
 public class Cache<K, V> implements IFunction1<K, V> {
 	protected final IIdentity<? super K> identity;
 
@@ -27,6 +29,7 @@ public class Cache<K, V> implements IFunction1<K, V> {
 		this(null, function, policy, false);
 	}
 
+	@Builder
 	public Cache(IIdentity<? super K> identity, Function<? super K, ? extends V> function, ICacheEvictionPolicy<K> policy, boolean weak) {
 		this.identity = identity == null ? IIdentity.standard() : identity;
 		this.function = function;
