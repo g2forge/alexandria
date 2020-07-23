@@ -6,14 +6,10 @@
 	<parent>
 		<groupId>com.g2forge.alexandria</groupId>
 		<artifactId>ax-project</artifactId>
-		<version>0.0.14</version>
+		<version>0.0.15-SNAPSHOT</version>
 		<relativePath>../ax-project/pom.xml</relativePath>
 	</parent>
 
 	<name>Alexandria Finite State Machine</name>
 	<description>A library for specifying, creating and interacting with abstract finite state machines.</description>
-
-  <scm>
-    <tag>0.0.14</tag>
-  </scm>
 </project>
