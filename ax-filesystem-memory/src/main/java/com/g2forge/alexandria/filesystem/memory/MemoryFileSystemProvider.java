@@ -44,8 +44,8 @@ import com.g2forge.alexandria.filesystem.path.FileSystemPathURI;
 import com.g2forge.alexandria.filesystem.path.GenericFileSystem;
 import com.g2forge.alexandria.filesystem.path.GenericPath;
 import com.g2forge.alexandria.filesystem.path.IGenericFileSystemProviderInternal;
-import com.g2forge.alexandria.java.adt.ComparableComparator;
-import com.g2forge.alexandria.java.adt.MapIterator;
+import com.g2forge.alexandria.java.adt.MappedIterator;
+import com.g2forge.alexandria.java.adt.compare.ComparableComparator;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 
 import lombok.Getter;
@@ -294,7 +294,7 @@ public class MemoryFileSystemProvider extends AGenericFileSystemProvider<Generic
 
 			@Override
 			public Iterator<Path> iterator() {
-				return new MapIterator<String, Path>(names.iterator(), dir::resolve);
+				return new MappedIterator<String, Path>(names.iterator(), dir::resolve);
 			}
 		};
 	}

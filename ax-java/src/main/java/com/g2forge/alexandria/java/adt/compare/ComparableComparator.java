@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.adt;
+package com.g2forge.alexandria.java.adt.compare;
 
 import java.util.Comparator;
 
@@ -14,6 +14,12 @@ public class ComparableComparator<T extends Comparable<? super T>> implements Co
 
 	@Override
 	public int compare(T o1, T o2) {
+		if (o1 == null) {
+			if (o2 == null) return 0;
+			return -1;
+		}
+		if (o2 == null) return 1;
+
 		return o1.compareTo(o2);
 	}
 }

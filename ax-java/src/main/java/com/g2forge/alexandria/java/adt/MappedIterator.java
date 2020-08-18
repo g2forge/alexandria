@@ -6,7 +6,7 @@ import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class MapIterator<I, O> implements Iterator<O> {
+public class MappedIterator<I, O> implements Iterator<O> {
 	protected final Iterator<? extends I> iterator;
 
 	protected final Function<? super I, ? extends O> function;

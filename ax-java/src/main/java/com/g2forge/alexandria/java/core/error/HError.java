@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 
 import com.g2forge.alexandria.java.concurrent.RuntimeInterruptedException;
 import com.g2forge.alexandria.java.core.marker.Helpers;
+import com.g2forge.alexandria.java.function.IFunction1;
 import com.g2forge.alexandria.java.function.IThrowRunnable;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
 
@@ -38,7 +39,7 @@ public class HError {
 	}
 
 	@SafeVarargs
-	public static <T> void multiprocess(Consumer<? super T> consumer, String message, T... values) {
+	public static <T> void accept(Consumer<? super T> consumer, String message, T... values) {
 		final Collection<Throwable> throwables = new ArrayList<>();
 		for (T value : values) {
 			try {
@@ -50,7 +51,20 @@ public class HError {
 		throw HError.multithrow(message, throwables);
 	}
 
-	public static void multirun(String message, IThrowRunnable<?>... runnables) {
+	@SafeVarargs
+	public static <I, O> O apply(IFunction1<? super I, ? extends O> function, String message, I... values) {
+		final Collection<Throwable> throwables = new ArrayList<>();
+		for (I value : values) {
+			try {
+				return function.apply(value);
+			} catch (Throwable throwable) {
+				throwables.add(throwable);
+			}
+		}
+		throw HError.multithrow(message, throwables);
+	}
+
+	public static void run(String message, IThrowRunnable<?>... runnables) {
 		final Collection<Throwable> throwables = new ArrayList<>();
 		for (IThrowRunnable<?> runnable : runnables) {
 			try {
