@@ -36,11 +36,11 @@ public class TestHEnum {
 
 	@Test
 	public void valueOfString() {
-		Assert.assertEquals(E.A, HEnum.valueOf(E.class, Object::toString, IFunction1.Identity.create(), "A"));
+		Assert.assertEquals(E.A, HEnum.valueOf(E.class, Object::toString, true, IFunction1.Identity.create(), "A"));
 		try {
-			HEnum.valueOf(E.class, Object::toString, IFunction1.Identity.create(), "B");
+			HEnum.valueOf(E.class, Object::toString, true, IFunction1.Identity.create(), "B");
 			Assert.fail("Should have thrown an exception!");
 		} catch (IllegalArgumentException e) {}
-		Assert.assertEquals(E.C, HEnum.valueOf(E.class, Object::toString, IFunction1.Identity.create(), "X"));
+		Assert.assertEquals(E.C, HEnum.valueOf(E.class, Object::toString, true, IFunction1.Identity.create(), "X"));
 	}
 }
