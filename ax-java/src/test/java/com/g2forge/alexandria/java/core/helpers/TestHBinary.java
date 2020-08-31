@@ -11,7 +11,12 @@ public class TestHBinary {
 	}
 
 	@Test
-	public void toBytes() {
+	public void toBytesInteger() {
+		Assert.assertArrayEquals(new byte[] { (byte) 0xBA, 0x5E, (byte) 0xBA, 0x11 }, HBinary.toBytes(0xBA5EBA11));
+	}
+
+	@Test
+	public void toBytesLong() {
 		Assert.assertArrayEquals(new byte[] { (byte) 0xBA, 0x5E, (byte) 0xBA, 0x11, 0x01, 0x23, 0x45, 0x67 }, HBinary.toBytes(0xBA5EBA1101234567l));
 	}
 
@@ -19,6 +24,11 @@ public class TestHBinary {
 	public void toHex() {
 		Assert.assertEquals("00", HBinary.toHex((byte) 0));
 		Assert.assertEquals("BA5E", HBinary.toHex((byte) 0xBA, (byte) 0x5E));
+	}
+
+	@Test
+	public void toInts() {
+		Assert.assertArrayEquals(new int[] { 0, 0x0102 }, HBinary.toInts((byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0x01, (byte) 0x02));
 	}
 
 	@Test

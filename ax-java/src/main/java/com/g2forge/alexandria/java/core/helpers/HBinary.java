@@ -52,4 +52,22 @@ public class HBinary {
 		}
 		return retVal;
 	}
+
+	public static byte[] toBytes(int... ints) {
+		final int conversion = Integer.SIZE / Byte.SIZE, c1 = conversion - 1;
+		final byte[] retVal = new byte[ints.length * conversion];
+		for (int i = 0; i < retVal.length; i++) {
+			retVal[i] = (byte) (ints[i / conversion] >>> ((c1 - (i & c1)) * Byte.SIZE));
+		}
+		return retVal;
+	}
+
+	public static int[] toInts(byte... bytes) {
+		final int conversion = Integer.SIZE / Byte.SIZE, c1 = conversion - 1;
+		final int[] retVal = new int[HMath.divideCeiling(bytes.length, conversion)];
+		for (int i = 0; i < bytes.length; i++) {
+			retVal[i / conversion] |= bytes[i] << ((c1 - (i & c1)) * Byte.SIZE);
+		}
+		return retVal;
+	}
 }
