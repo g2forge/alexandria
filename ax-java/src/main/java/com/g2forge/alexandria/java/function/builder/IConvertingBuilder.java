@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.regex;
+package com.g2forge.alexandria.java.function.builder;
 
 import com.g2forge.alexandria.java.function.IFunction1;
 
