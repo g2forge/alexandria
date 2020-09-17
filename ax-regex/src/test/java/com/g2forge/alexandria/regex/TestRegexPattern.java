@@ -1,5 +1,7 @@
 package com.g2forge.alexandria.regex;
 
+import java.util.Set;
+
 import org.junit.Test;
 
 import com.g2forge.alexandria.analysis.ISerializableFunction1;
@@ -33,7 +35,7 @@ public class TestRegexPattern {
 	protected static final RegexPattern<Version> version = computeVersion();
 
 	protected static RegexPattern<Version> computeVersion() {
-		final IPatternBuilder<Void, Version, RegexPattern<?>, RegexPattern<Version>> builder = RegexPattern.<Version>builder();
+		final IPatternBuilder<Set<RegexPattern.Flag>, Version, RegexPattern<?>, RegexPattern<Version>> builder = RegexPattern.<Version>builder();
 		builder.group(Version::getMajor, null).digit(10).plus().build();
 		builder.group().text(".").group(Version::getMinor, null).digit(10).plus().build().group().text(".").group(Version::getPatch, null).digit(10).plus().build().build().opt().build().opt();
 		return builder.build(TestRegexPattern.Version::createVersion);
@@ -44,6 +46,13 @@ public class TestRegexPattern {
 		final RegexPattern<?> pattern = RegexPattern.builder().alt(RegexPattern.builder().text("a").build(), RegexPattern.builder().text("b").build()).build();
 		HAssert.assertFalse(pattern.match("a").isEmpty());
 		HAssert.assertFalse(pattern.match("b").isEmpty());
+	}
+
+	@Test
+	public void caseInsensitive() {
+		final RegexPattern<Object> pattern = RegexPattern.builder(RegexPattern.Flag.CASE_INSENSITIVE).text("a").build();
+		HAssert.assertFalse(pattern.match("a").isEmpty());
+		HAssert.assertFalse(pattern.match("A").isEmpty());
 	}
 
 	@Test

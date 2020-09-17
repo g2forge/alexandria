@@ -1,8 +1,10 @@
 package com.g2forge.alexandria.regex;
 
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class RegexPattern<Result> implements IPattern<Result> {
 	@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 	@Getter(AccessLevel.PROTECTED)
-	protected static abstract class ARegexPatternBuilder<Result, Built, Builder> implements IPartialPatternBuilder<Void, Result, RegexPattern<?>, Built, Builder> {
+	protected static abstract class ARegexPatternBuilder<Result, Built, Builder> implements IPartialPatternBuilder<Set<Flag>, Result, RegexPattern<?>, Built, Builder> {
 		protected final RegexBuilder builder;
 
 		protected boolean active = true;
@@ -93,7 +95,7 @@ public class RegexPattern<Result> implements IPattern<Result> {
 		protected abstract Builder getThis();
 
 		@Override
-		public IGroupBuilder<Void, Result, RegexPattern<?>, ? extends Builder> group(ISerializableFunction1<? super Result, ?> field, Void arguments) {
+		public IGroupBuilder<Set<Flag>, Result, RegexPattern<?>, ? extends Builder> group(ISerializableFunction1<? super Result, ?> field, Set<Flag> arguments) {
 			assertActive();
 			if (arguments != null) throw new IllegalArgumentException("Arguments must be null!");
 
@@ -123,7 +125,7 @@ public class RegexPattern<Result> implements IPattern<Result> {
 		public Builder plus() {
 			return pattern("+");
 		}
-		
+
 		@Override
 		public Builder star() {
 			return pattern("*");
@@ -149,6 +151,14 @@ public class RegexPattern<Result> implements IPattern<Result> {
 			}
 			builder.nGroups += pattern.getNGroups();
 		}
+	}
+
+	@Getter
+	@RequiredArgsConstructor
+	public enum Flag {
+		CASE_INSENSITIVE(Pattern.CASE_INSENSITIVE);
+
+		protected final int flag;
 	}
 
 	protected static class RegexBuilder {
@@ -180,7 +190,7 @@ public class RegexPattern<Result> implements IPattern<Result> {
 	}
 
 	@Getter(AccessLevel.PROTECTED)
-	protected static class RegexGroupBuilder<Result, ParentBuilder> extends ARegexPatternBuilder<Result, ParentBuilder, IGroupBuilder<Void, Result, RegexPattern<?>, ParentBuilder>> implements IGroupBuilder<Void, Result, RegexPattern<?>, ParentBuilder> {
+	protected static class RegexGroupBuilder<Result, ParentBuilder> extends ARegexPatternBuilder<Result, ParentBuilder, IGroupBuilder<Set<Flag>, Result, RegexPattern<?>, ParentBuilder>> implements IGroupBuilder<Set<Flag>, Result, RegexPattern<?>, ParentBuilder> {
 		protected final ParentBuilder parent;
 
 		protected RegexGroupBuilder(RegexBuilder builder, ParentBuilder parent) {
@@ -204,15 +214,24 @@ public class RegexPattern<Result> implements IPattern<Result> {
 	}
 
 	@Getter(AccessLevel.PROTECTED)
-	protected static class RegexPatternBuilder<Result> extends ARegexPatternBuilder<Result, RegexPattern<Result>, IPatternBuilder<Void, Result, RegexPattern<?>, RegexPattern<Result>>> implements IPatternBuilder<Void, Result, RegexPattern<?>, RegexPattern<Result>> {
-		protected RegexPatternBuilder() {
+	protected static class RegexPatternBuilder<Result> extends ARegexPatternBuilder<Result, RegexPattern<Result>, IPatternBuilder<Set<Flag>, Result, RegexPattern<?>, RegexPattern<Result>>> implements IPatternBuilder<Set<Flag>, Result, RegexPattern<?>, RegexPattern<Result>> {
+		protected final Set<Flag> flags;
+
+		protected RegexPatternBuilder(Set<Flag> flags) {
 			super(new RegexBuilder());
+			this.flags = flags;
 		}
 
 		@Override
 		public RegexPattern<Result> build(IFunction1<? super IFunction1<ISerializableFunction1<? super Result, ?>, String>, Result> input) {
 			final RegexBuilder builder = getBuilder();
-			final Pattern pattern = Pattern.compile(builder.builder.toString());
+
+			int flags = 0;
+			for (Flag flag : getFlags()) {
+				flags |= flag.getFlag();
+			}
+
+			final Pattern pattern = Pattern.compile(builder.builder.toString(), flags);
 			return new RegexPattern<>(pattern, builder.nGroups, Collections.unmodifiableMap(builder.fields), input);
 		}
 
@@ -222,8 +241,11 @@ public class RegexPattern<Result> implements IPattern<Result> {
 		}
 	}
 
-	public static <T> IPatternBuilder<Void, T, RegexPattern<?>, RegexPattern<T>> builder() {
-		return new RegexPatternBuilder<T>();
+	public static <T> IPatternBuilder<Set<Flag>, T, RegexPattern<?>, RegexPattern<T>> builder(Flag... flags) {
+		final EnumSet<Flag> arguments = EnumSet.noneOf(Flag.class);
+		for (Flag flag : flags)
+			arguments.add(flag);
+		return new RegexPatternBuilder<T>(arguments);
 	}
 
 	protected final Pattern pattern;
