@@ -71,8 +71,8 @@ public class HCollector {
 	}
 
 	public static <T> BinaryOperator<T> mergeFail() {
-		return (k0, k1) -> {
-			throw new IllegalStateException(String.format("Duplicate key %s", k0));
+		return (v0, v1) -> {
+			throw new IllegalStateException(String.format("Duplicate values %1$s and %2$s", v0, v1));
 		};
 	}
 

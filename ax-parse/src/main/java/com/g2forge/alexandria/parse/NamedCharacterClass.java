@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.regex;
+package com.g2forge.alexandria.parse;
 
 import lombok.RequiredArgsConstructor;
 

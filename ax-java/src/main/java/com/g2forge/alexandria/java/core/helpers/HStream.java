@@ -42,7 +42,7 @@ public class HStream {
 
 	public static <T> T findOneOptional(Stream<? extends T> stream, ISupplier<T> ifNone) {
 		final List<T> list = stream.collect(Collectors.toList());
-		if (list.size() > 1) throw new IllegalArgumentException();
+		if (list.size() > 1) throw new IllegalArgumentException(String.format("Stream contained more than one element: %1$s", list));
 		if (list.isEmpty()) return ifNone.get();
 		return list.get(0);
 	}

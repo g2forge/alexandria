@@ -7,6 +7,21 @@ import com.g2forge.alexandria.java.text.HString;
 
 public class TestHString {
 	@Test
+	public void initialsAcronym() {
+		Assert.assertEquals("A", HString.initials("ABC"));
+	}
+
+	@Test
+	public void initialsLowercaseWords() {
+		Assert.assertEquals("AHW", HString.initials("ABC Hello from the World"));
+	}
+
+	@Test
+	public void initialsWords() {
+		Assert.assertEquals("AHW", HString.initials("ABC Hello World"));
+	}
+
+	@Test
 	public void lowercase() {
 		Assert.assertEquals("word", HString.lowercase("Word"));
 		Assert.assertEquals("tla", HString.lowercase("TLA"));
