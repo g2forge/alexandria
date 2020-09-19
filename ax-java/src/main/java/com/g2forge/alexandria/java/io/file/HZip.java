@@ -24,10 +24,9 @@ import com.g2forge.alexandria.java.function.IPredicate1;
 import com.g2forge.alexandria.java.io.HBinaryIO;
 import com.g2forge.alexandria.java.io.HIO;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
-import com.g2forge.alexandria.java.with.CollectionWithExplanation;
-import com.g2forge.alexandria.java.with.CollectionWithExplanation.CollectionWithExplanationBuilder;
 import com.g2forge.alexandria.java.with.IWithExplanation;
-import com.g2forge.alexandria.java.with.SimpleWithExplanation;
+import com.g2forge.alexandria.java.with.WithExplanation;
+import com.g2forge.alexandria.java.with.WithExplanations;
 
 import lombok.Data;
 import lombok.experimental.UtilityClass;
@@ -100,9 +99,9 @@ public class HZip {
 	 */
 	public static IWithExplanation<Boolean, Collection<String>> isEqual(IFunction1<? super String, ? extends IPredicate1<? super Collection<? extends InputStream>>> equalsFactory, List<Path> paths) {
 		if (equalsFactory == null) equalsFactory = name -> HBinaryIO::isEqual;
-		if (paths.size() < 2) return new SimpleWithExplanation<>(true, null);
+		if (paths.size() < 2) return new WithExplanation<>(true, null);
 
-		final CollectionWithExplanationBuilder<Boolean, String> retVal = CollectionWithExplanation.<Boolean, String>builder().value(true);
+		final WithExplanations.WithExplanationsBuilder<Boolean, String> retVal = WithExplanations.<Boolean, String>builder().value(true);
 		final List<ZipFile> files = new ArrayList<>(paths.size());
 		try (final ICloseable closeFiles = () -> HIO.closeAll(files)) {
 			// Add the files inside the try/finally to ensure they all get closed
