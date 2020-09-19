@@ -22,6 +22,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.java.core.marker.Helpers;
+import com.g2forge.alexandria.java.function.ISupplier;
 
 import lombok.experimental.UtilityClass;
 
@@ -223,6 +224,14 @@ public class HCollection {
 	public static <T> T getOne(final Iterable<? extends T> iterable) {
 		final Iterator<? extends T> iterator = iterable.iterator();
 		if (!iterator.hasNext()) throw new IllegalArgumentException("Input iterable was empty!");
+		final T retVal = iterator.next();
+		if (iterator.hasNext()) throw new IllegalArgumentException("Input iterable had more than one element!");
+		return retVal;
+	}
+
+	public static <T> T getOneOptional(final Iterable<? extends T> iterable, ISupplier<? extends T> ifNone) {
+		final Iterator<? extends T> iterator = iterable.iterator();
+		if (!iterator.hasNext()) return ifNone.get();
 		final T retVal = iterator.next();
 		if (iterator.hasNext()) throw new IllegalArgumentException("Input iterable had more than one element!");
 		return retVal;
