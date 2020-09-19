@@ -76,4 +76,12 @@ public class HAssert extends Assert {
 	public static void assertEquals(Resource expected, String actual) {
 		assertEquals(expected.read(true), actual);
 	}
+
+	public static <T> void assertThat(T actual, Matcher<? super T> matcher) {
+		assertThat("", actual, matcher);
+	}
+
+	public static <T> void assertThat(String reason, T actual, Matcher<? super T> matcher) {
+		MatcherAssert.assertThat(reason, actual, matcher);
+	}
 }

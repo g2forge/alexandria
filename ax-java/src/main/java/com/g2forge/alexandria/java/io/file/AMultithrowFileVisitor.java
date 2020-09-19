@@ -60,7 +60,7 @@ public abstract class AMultithrowFileVisitor implements FileVisitor<Path> {
 		}
 
 		// If there were any exceptions, then report them!
-		if (!getThrowables().isEmpty()) throw HError.addSuppressed(new RuntimeIOException(getMessageThrow(start)), getThrowables());
+		if (!getThrowables().isEmpty()) throw HError.withSuppressed(new RuntimeIOException(getMessageThrow(start)), getThrowables());
 		return retVal;
 	}
 }

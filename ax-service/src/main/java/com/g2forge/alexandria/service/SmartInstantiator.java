@@ -67,6 +67,6 @@ public class SmartInstantiator<S> extends DefaultInstantiator<S> {
 				throwables.add(throwable);
 			}
 		}
-		throw HError.multithrow("Failed to find a usable constructor!", throwables);
+		throw HError.withSuppressed(new RuntimeException("Failed to find a usable constructor!"), throwables);
 	}
 }
