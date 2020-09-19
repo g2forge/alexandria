@@ -8,4 +8,8 @@ public interface IMatch<Result> {
 	public String getAsString();
 
 	public String getAsString(ISerializableFunction1<? super Result, ?> field);
+
+	public default boolean isMatch() {
+		return getAsString() != null;
+	}
 }

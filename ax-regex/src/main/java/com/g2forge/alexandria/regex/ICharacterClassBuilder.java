@@ -1,11 +1,11 @@
 package com.g2forge.alexandria.regex;
 
-import com.g2forge.alexandria.java.function.builder.IBuilder;
+import com.g2forge.alexandria.java.close.ICloseable;
 
-public interface ICharacterClassBuilder<Result> extends IBuilder<Result> {
-	public ICharacterClassBuilder<Result> character(char character);
+public interface ICharacterClassBuilder extends ICloseable {
+	public ICharacterClassBuilder character(char character);
 
-	public ICharacterClassBuilder<Result> range(char start, char end);
-	
-	public ICharacterClassBuilder<Result> named(NamedCharacterClass named);
+	public ICharacterClassBuilder range(char start, char end);
+
+	public ICharacterClassBuilder named(NamedCharacterClass named);
 }

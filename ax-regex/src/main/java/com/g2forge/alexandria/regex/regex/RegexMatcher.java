@@ -1,23 +1,22 @@
 package com.g2forge.alexandria.regex.regex;
 
 import java.util.EnumSet;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.g2forge.alexandria.analysis.ISerializableFunction1;
 import com.g2forge.alexandria.java.fluent.optional.IOptional;
 import com.g2forge.alexandria.java.fluent.optional.NullableOptional;
-import com.g2forge.alexandria.regex.IPattern;
-import com.g2forge.alexandria.regex.IPatternBuilder;
+import com.g2forge.alexandria.regex.IMatcher;
+import com.g2forge.alexandria.regex.IMatcherBuilder;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Getter(AccessLevel.PROTECTED)
+@Getter
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class RegexPattern<Result> implements IPattern<Result> {
+public class RegexMatcher<Result> implements IMatcher<Result, Regex> {
 	@Getter
 	@RequiredArgsConstructor
 	public enum Flag {
@@ -26,29 +25,37 @@ public class RegexPattern<Result> implements IPattern<Result> {
 		protected final int flag;
 	}
 
-	public static <T> IPatternBuilder<Set<Flag>, T, RegexPattern<?>, RegexPattern<T>> builder(Flag... flags) {
+	public static <Parsed> IMatcherBuilder<Parsed, Regex> builder(Flag... flags) {
 		final EnumSet<Flag> arguments = EnumSet.noneOf(Flag.class);
-		for (Flag flag : flags)
+		for (Flag flag : flags) {
 			arguments.add(flag);
-		return new RegexPatternBuilder<T>(arguments);
+		}
+		return new MatcherBuilder<>(arguments);
 	}
 
 	protected static Object getFieldID(ISerializableFunction1<?, ?> field) {
 		return field.asMethodAnalyzer().getPath();
 	}
 
-	protected final Pattern pattern;
+	public static <Parsed> IMatcher<Parsed, Regex> create(IMatcher<?, Regex> gap, String text, Flag... flags) {
+		final IMatcherBuilder<Parsed, Regex> builder = builder(flags);
+		boolean first = true;
+		for (String word : text.split("\\s+")) {
+			if (first) first = false;
+			else builder.with(gap);
+			builder.text(word.trim());
+		}
+		return builder.build();
+	}
 
-	protected final int nGroups;
-
-	protected final Group<?> group;
+	protected final Regex pattern;
 
 	@Override
 	public IOptional<Result> match(String string) {
-		final Matcher matcher = getPattern().matcher(string);
+		final Matcher matcher = getPattern().getPattern().matcher(string);
 		if (!matcher.matches()) return NullableOptional.empty();
 		@SuppressWarnings("unchecked")
-		final IOptional<Result> retVal = (IOptional<Result>) group.construct(matcher);
+		final IOptional<Result> retVal = (IOptional<Result>) getPattern().getGroup().construct(matcher);
 		return retVal;
 	}
 
