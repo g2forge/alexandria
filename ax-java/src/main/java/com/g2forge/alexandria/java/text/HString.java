@@ -1,5 +1,7 @@
 package com.g2forge.alexandria.java.text;
 
+import java.util.regex.Pattern;
+
 import com.g2forge.alexandria.java.core.marker.Helpers;
 
 import lombok.experimental.UtilityClass;
@@ -7,11 +9,17 @@ import lombok.experimental.UtilityClass;
 @Helpers
 @UtilityClass
 public class HString {
+	protected static final Pattern INITIAL_PATTERN = Pattern.compile("([A-Z])?[a-zA-Z]+\\s*");
+
 	public static int nMatchesBefore(String string, int index, char character) {
 		for (int count = 0; count < index; count++) {
 			if (string.charAt(index - count - 1) != character) return count;
 		}
 		return index;
+	}
+
+	public static String initials(String string) {
+		return INITIAL_PATTERN.matcher(string).replaceAll("$1");
 	}
 
 	public static String lowercase(String string) {
