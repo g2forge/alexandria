@@ -1,16 +1,21 @@
 package com.g2forge.alexandria.java.with;
 
+import java.util.Collection;
+import java.util.List;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.Singular;
 
 @Data
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
-public class SimpleWithExplanation<T, E> implements IWithExplanation<T, E> {
+public class WithExplanations<T, E> implements IWithExplanation<T, Collection<E>> {
 	protected final T value;
 
-	protected final E explanation;
+	@Singular("explanation")
+	protected final List<E> explanation;
 
 	@Override
 	public T get() {
