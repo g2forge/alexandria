@@ -1,10 +1,10 @@
 package com.g2forge.alexandria.parse.regex;
 
-import java.util.EnumSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.g2forge.alexandria.analysis.ISerializableFunction1;
+import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.fluent.optional.IOptional;
 import com.g2forge.alexandria.java.fluent.optional.NullableOptional;
 import com.g2forge.alexandria.parse.IMatcher;
@@ -26,11 +26,7 @@ public class RegexMatcher<Result> implements IMatcher<Result, Regex> {
 	}
 
 	public static <Parsed> IMatcherBuilder<Parsed, Regex> builder(Flag... flags) {
-		final EnumSet<Flag> arguments = EnumSet.noneOf(Flag.class);
-		for (Flag flag : flags) {
-			arguments.add(flag);
-		}
-		return new MatcherBuilder<>(arguments);
+		return new MatcherBuilder<>(HCollection.asSet(Flag.class, flags));
 	}
 
 	protected static Object getFieldID(ISerializableFunction1<?, ?> field) {

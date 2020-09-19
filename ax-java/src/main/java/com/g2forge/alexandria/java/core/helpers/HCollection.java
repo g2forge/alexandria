@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -42,6 +43,15 @@ public class HCollection {
 		if (!map.containsKey(key)) map.put(key, collection = constructor.get());
 		else collection = map.get(key);
 		collection.add(value);
+	}
+
+	@SafeVarargs
+	public static <T extends Enum<T>> EnumSet<T> asSet(Class<T> type, T... elements) {
+		final EnumSet<T> retVal = EnumSet.noneOf(type);
+		if (elements != null) for (T element : elements) {
+			retVal.add(element);
+		}
+		return retVal;
 	}
 
 	public static <T> List<T> asList(Collection<T> collection) {
