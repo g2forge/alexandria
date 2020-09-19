@@ -44,7 +44,7 @@ public class HIO {
 	}
 
 	public static void closeAll(Iterable<? extends AutoCloseable> closeables) {
-		StreamSupport.stream(closeables.spliterator(), false).map(c -> HError.wrap(c::close).get()).collect(HError.collector(() -> new RuntimeIOException("Failed to close one or more closeables!"), false));
+		StreamSupport.stream(closeables.spliterator(), false).map(c -> HError.wrap(() -> c.close()).get()).collect(HError.collector(() -> new RuntimeIOException("Failed to close one or more closeables!"), false));
 	}
 
 	public static <T> byte[] sha1(T value, IThrowFunction1<T, InputStream, IOException> open) {
