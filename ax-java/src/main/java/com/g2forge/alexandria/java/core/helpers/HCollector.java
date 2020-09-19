@@ -41,10 +41,15 @@ public class HCollector {
 	}
 
 	public static <T> Collector<T, ?, T> toOne() {
-		return Collectors.collectingAndThen(Collectors.toList(), list -> {
-			if (list.size() != 1) throw new IllegalStateException("Result set had " + list.size() + " elements instead of 1!");
-			return list.get(0);
-		});
+		return Collectors.collectingAndThen(Collectors.toList(), HCollection::getOne);
+	}
+
+	public static <T> Collector<T, ?, T> toFirst() {
+		return Collectors.collectingAndThen(Collectors.toList(), HCollection::getFirst);
+	}
+
+	public static <T> Collector<T, ?, T> toAny() {
+		return Collectors.collectingAndThen(Collectors.toList(), HCollection::getAny);
 	}
 
 	public static <T> Collector<T, ?, T[]> toArray(Class<T> type) {

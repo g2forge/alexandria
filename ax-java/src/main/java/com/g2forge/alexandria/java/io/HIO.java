@@ -7,8 +7,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.stream.StreamSupport;
 
 import com.g2forge.alexandria.java.core.error.HError;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
@@ -45,17 +44,7 @@ public class HIO {
 	}
 
 	public static void closeAll(Iterable<? extends AutoCloseable> closeables) {
-		final Collection<Throwable> throwables = new ArrayList<>();
-		for (AutoCloseable closeable : closeables) {
-			if (closeable != null) {
-				try {
-					closeable.close();
-				} catch (Throwable throwable) {
-					throwables.add(throwable);
-				}
-			}
-		}
-		if (!throwables.isEmpty()) throw HError.addSuppressed(new RuntimeIOException("Failed to close one or more closeables!"), throwables);
+		StreamSupport.stream(closeables.spliterator(), false).map(c -> HError.wrap(() -> c.close()).get()).collect(HError.collector(() -> new RuntimeIOException("Failed to close one or more closeables!"), false));
 	}
 
 	public static <T> byte[] sha1(T value, IThrowFunction1<T, InputStream, IOException> open) {
