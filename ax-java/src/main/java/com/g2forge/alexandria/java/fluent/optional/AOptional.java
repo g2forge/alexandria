@@ -52,7 +52,16 @@ public abstract class AOptional<T> implements IOptional<T> {
 	protected abstract <U> AOptional<U> create(U value);
 
 	@Override
-	public abstract boolean equals(Object obj);
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (!(obj instanceof IOptional)) return false;
+
+		final IOptional<?> that = (IOptional<?>) obj;
+		if (!Objects.equals(isEmpty(), that.isEmpty())) return false;
+		if (!isEmpty() && !Objects.equals(get(), that.get())) return false;
+		return true;
+	}
 
 	@Override
 	public IOptional<T> fallback(IOptional<? extends T> fallback) {
@@ -72,7 +81,10 @@ public abstract class AOptional<T> implements IOptional<T> {
 	}
 
 	@Override
-	public abstract int hashCode();
+	public int hashCode() {
+		if (isEmpty()) return Objects.hash(isEmpty());
+		return Objects.hash(get());
+	}
 
 	public <U> AOptional<U> map(Function<? super T, ? extends U> mapper) {
 		Objects.requireNonNull(mapper);

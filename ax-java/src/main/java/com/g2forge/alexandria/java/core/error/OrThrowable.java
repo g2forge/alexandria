@@ -1,34 +1,45 @@
 package com.g2forge.alexandria.java.core.error;
 
-import com.g2forge.alexandria.java.adt.tuple.ITuple1G_;
+import com.g2forge.alexandria.java.fluent.optional.AOptional;
+import com.g2forge.alexandria.java.fluent.optional.AValueOptional;
+import com.g2forge.alexandria.java.fluent.optional.NullableOptional;
 
 import lombok.Getter;
 
-public class OrThrowable<T> implements ITuple1G_<T> {
-	protected final T value;
-
+public class OrThrowable<T> extends AValueOptional<T> {
 	@Getter
 	protected final Throwable throwable;
 
 	public OrThrowable(T value) {
-		this.value = value;
+		super(value);
 		this.throwable = null;
 	}
 
 	public OrThrowable(Throwable throwable) {
+		super();
 		if (throwable == null) throw new NullPointerException();
-		this.value = null;
 		this.throwable = throwable;
 	}
 
 	@Override
-	public T get0() {
+	protected <U> AOptional<U> create() {
+		return NullableOptional.empty();
+	}
+
+	@Override
+	protected <U> AOptional<U> create(U value) {
+		return new OrThrowable<U>(value);
+	}
+
+	@Override
+	public T get() {
 		final Throwable throwable = getThrowable();
 		if (throwable != null) HError.throwQuietly(throwable);
 		return value;
 	}
 
-	public boolean isValid() {
-		return getThrowable() == null;
+	@Override
+	public boolean isEmpty() {
+		return getThrowable() != null;
 	}
 }

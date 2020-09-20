@@ -118,13 +118,13 @@ public class HError {
 			left.addAll(right);
 			return left;
 		}, list -> {
-			final Map<Boolean, List<OrThrowable<? extends T>>> grouped = list.stream().collect(Collectors.groupingBy(OrThrowable::isValid));
+			final Map<Boolean, List<OrThrowable<? extends T>>> grouped = list.stream().collect(Collectors.groupingBy(OrThrowable::isNotEmpty));
 			final List<OrThrowable<? extends T>> successes = grouped.get(true);
 			if (!(allowPartial && (successes != null) && !successes.isEmpty())) {
 				final List<OrThrowable<? extends T>> failures = grouped.get(false);
 				if ((failures != null) && !failures.isEmpty()) HError.throwQuietly(HError.createWithSuppressed(supplier, failures.stream().map(OrThrowable::getThrowable).collect(Collectors.toList())));
 			}
-			return ((successes == null) ? Stream.<T>empty() : successes.stream().map(OrThrowable::get0)).collect(collector);
+			return ((successes == null) ? Stream.<T>empty() : successes.stream().map(OrThrowable::get)).collect(collector);
 		}, Collections.emptySet());
 	}
 
