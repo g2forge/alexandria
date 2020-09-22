@@ -1,5 +1,7 @@
 package com.g2forge.alexandria.java.reflect;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -9,6 +11,17 @@ import com.g2forge.alexandria.java.core.marker.Helpers;
 
 @Helpers
 public class HReflection {
+	protected static void addSignature(StringBuilder builder, Executable executable) {
+		builder.append('(');
+
+		final Class<?>[] parameterTypes = executable.getParameterTypes();
+		for (int i = 0; i < parameterTypes.length; i++) {
+			builder.append(toSignature(parameterTypes[i]));
+		}
+
+		builder.append(')');
+	}
+
 	public static Type getParentTypeArgument(Object child, Class<?> expected, int index) {
 		if (expected.getTypeParameters().length < index) throw new IllegalArgumentException(String.format("Cannot get type argument %1$d of type \"%2$s\", because it has only %3$d parameters!", index, expected.getClass(), expected.getTypeParameters().length));
 
@@ -46,16 +59,17 @@ public class HReflection {
 		return "L" + clazz.getName().replace('.', '/') + ";";
 	}
 
+	public static String toSignature(Constructor<?> constructor) {
+		final StringBuilder retVal = new StringBuilder();
+		addSignature(retVal, constructor);
+		retVal.append(toSignature(Void.TYPE));
+		return retVal.toString();
+	}
+
 	public static String toSignature(Method method) {
 		final StringBuilder retVal = new StringBuilder();
-		retVal.append('(');
-
-		final Class<?>[] parameterTypes = method.getParameterTypes();
-		for (int i = 0; i < parameterTypes.length; i++) {
-			retVal.append(toSignature(parameterTypes[i]));
-		}
-
-		retVal.append(')').append(toSignature(method.getReturnType()));
+		addSignature(retVal, method);
+		retVal.append(toSignature(method.getReturnType()));
 		return retVal.toString();
 	}
 }

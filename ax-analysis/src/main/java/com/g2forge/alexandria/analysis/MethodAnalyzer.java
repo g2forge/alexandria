@@ -154,7 +154,7 @@ class MethodAnalyzer implements IMethodAnalyzer {
 		throw new RuntimeReflectionException("Could not find method \"" + thunk.getImplClass() + "." + thunk.getImplMethodName() + "\"");
 	}
 
-	protected static java.lang.reflect.Method toJavaMethod(final T thunk) {
+	protected static java.lang.reflect.Executable toJavaExecutable(final T thunk) {
 		final Class<?> clazz;
 		try {
 			clazz = thunk.getClass().getClassLoader().loadClass(thunk.getImplClass().replace('/', '.'));
@@ -162,15 +162,25 @@ class MethodAnalyzer implements IMethodAnalyzer {
 			throw new RuntimeException(exception);
 		}
 
-		for (java.lang.reflect.Method[] methods : new java.lang.reflect.Method[][] { clazz.getMethods(), clazz.getDeclaredMethods() }) {
-			for (java.lang.reflect.Method method : methods) {
-				if (method.getName().equals(thunk.getImplMethodName())) {
-					final String signature = HReflection.toSignature(method);
-					if (signature.equals(thunk.getImplMethodSignature())) return method;
+		if ("<init>".equals(thunk.getImplMethodName())) {
+			for (java.lang.reflect.Constructor<?>[] constructors : new java.lang.reflect.Constructor[][] { clazz.getConstructors(), clazz.getDeclaredConstructors() }) {
+				for (java.lang.reflect.Constructor<?> constructor : constructors) {
+					final String signature = HReflection.toSignature(constructor);
+					if (signature.equals(thunk.getImplMethodSignature())) return constructor;
+				}
+			}
+		} else {
+			for (java.lang.reflect.Method[] methods : new java.lang.reflect.Method[][] { clazz.getMethods(), clazz.getDeclaredMethods() }) {
+				for (java.lang.reflect.Method method : methods) {
+					if (method.getName().equals(thunk.getImplMethodName())) {
+						final String signature = HReflection.toSignature(method);
+						if (signature.equals(thunk.getImplMethodSignature())) return method;
+					}
 				}
 			}
 		}
-		throw new RuntimeReflectionException("Could not find method \"" + thunk.getImplClass() + "." + thunk.getImplMethodName() + "\"");
+
+		throw new RuntimeReflectionException("Could not find executable (method or constructor) \"" + thunk.getImplClass() + "." + thunk.getImplMethodName() + "\"");
 	}
 
 	@Getter(value = AccessLevel.PROTECTED)
@@ -180,7 +190,7 @@ class MethodAnalyzer implements IMethodAnalyzer {
 	private final T thunk = T.create(getLambda());
 
 	@Getter(lazy = true)
-	private final java.lang.reflect.Method method = toJavaMethod(getThunk());
+	private final java.lang.reflect.Executable executable = toJavaExecutable(getThunk());
 
 	@Getter(lazy = true)
 	private final String path = computePath(getBCEL());
