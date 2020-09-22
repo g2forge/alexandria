@@ -115,8 +115,8 @@ public class HCollection {
 		return retVal;
 	}
 
-	public static <T> Collection<T> difference(final Collection<? extends T> minuend, final Collection<? extends T> subtrahend) {
-		final Collection<T> temp = new LinkedHashSet<>(minuend);
+	public static <T> Set<T> difference(final Collection<? extends T> minuend, final Collection<? extends T> subtrahend) {
+		final Set<T> temp = new LinkedHashSet<>(minuend);
 		temp.removeAll(subtrahend);
 		return temp;
 	}
