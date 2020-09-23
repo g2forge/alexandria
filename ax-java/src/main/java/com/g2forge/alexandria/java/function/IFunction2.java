@@ -10,6 +10,11 @@ public interface IFunction2<I0, I1, O> extends BiFunction<I0, I1, O>, IFunction<
 		return function;
 	}
 
+	public static <I0, I1, O> IFunction2<I0, I1, O> create(O constant) {
+		if (constant == null) return LiteralFunction2.getNull();
+		return new LiteralFunction2<>(constant);
+	}
+
 	public default void accept(I0 i0, I1 i1) {
 		apply(i0, i1);
 	}
@@ -77,7 +82,7 @@ public interface IFunction2<I0, I1, O> extends BiFunction<I0, I1, O>, IFunction<
 			return retVal;
 		};
 	}
-	
+
 	public default IFunction2<I0, I1, O> wrap(IRunnable pre, IRunnable post) {
 		return (i0, i1) -> {
 			if (pre != null) pre.run();
