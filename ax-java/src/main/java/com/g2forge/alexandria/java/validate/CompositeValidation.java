@@ -1,6 +1,7 @@
 package com.g2forge.alexandria.java.validate;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.java.core.helpers.HCollection;
@@ -22,8 +23,8 @@ public class CompositeValidation implements IValidation {
 	}
 
 	public static IValidation create(List<IValidation> validations) {
-		final List<IValidation> list = validations.stream().filter(v -> !(v instanceof ValidValidation)).collect(Collectors.toList());
-		if (list.size() == 1) return list.get(0);
+		final List<IValidation> list = validations.stream().filter(Objects::nonNull).filter(v -> !(v instanceof ValidValidation)).collect(Collectors.toList());
+		if (list.size() == 1) return HCollection.getOne(list);
 		return new CompositeValidation(list);
 
 	}
