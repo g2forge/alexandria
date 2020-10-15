@@ -47,6 +47,17 @@ public interface IFunction1<I, O> extends Function<I, O>, IFunction<O>, IConsume
 		return i -> type.isInstance(i) ? (O) i : null;
 	}
 
+	public static <I, O> IFunction1<I, O> liftNull(IFunction1<? super I, ? extends O> function) {
+		return liftNull(function, null);
+	}
+
+	public static <I, O> IFunction1<I, O> liftNull(IFunction1<? super I, ? extends O> function, O other) {
+		return i -> {
+			if (i == null) return other;
+			return function.apply(i);
+		};
+	}
+
 	public default void accept(I i) {
 		apply(i);
 	}
