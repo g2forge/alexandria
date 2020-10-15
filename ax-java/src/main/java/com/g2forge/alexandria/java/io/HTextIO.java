@@ -34,7 +34,7 @@ public class HTextIO {
 			while (true) {
 				final int read = reader.read(buffer);
 				if (read > 0) retVal.append(buffer, 0, read);
-				if (read < buffer.length) break;
+				if (read < 0) break;
 			}
 		} catch (IOException exception) {
 			throw new RuntimeIOException(String.format("Failed to read stream %1$s to string", stream), exception);
