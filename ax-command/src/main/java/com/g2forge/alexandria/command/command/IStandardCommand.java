@@ -6,11 +6,13 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.file.Path;
 
+import com.g2forge.alexandria.command.exit.Exit;
 import com.g2forge.alexandria.command.exit.IExit;
 import com.g2forge.alexandria.command.invocation.CommandInvocation;
 import com.g2forge.alexandria.command.invocation.format.ICommandFormat;
 import com.g2forge.alexandria.command.stdio.StandardIO;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
+import com.g2forge.alexandria.java.core.marker.ICommand;
 import com.g2forge.alexandria.java.function.IFunction1;
 
 import lombok.AllArgsConstructor;
@@ -39,6 +41,9 @@ public interface IStandardCommand extends IStructuredCommand {
 	public static IStandardCommand of(IFunction1<? super CommandInvocation<InputStream, PrintStream>, ? extends IConstructorCommand> factory) {
 		return invocation -> factory.apply(invocation).invoke();
 	}
+
+	IExit SUCCESS = new Exit(ICommand.SUCCESS);
+	IExit FAIL = new Exit(ICommand.FAIL);
 
 	public IExit invoke(CommandInvocation<InputStream, PrintStream> invocation) throws Throwable;
 
