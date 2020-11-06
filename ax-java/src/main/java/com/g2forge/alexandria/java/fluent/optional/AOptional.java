@@ -82,8 +82,8 @@ public abstract class AOptional<T> implements IOptional<T> {
 
 	@Override
 	public int hashCode() {
-		if (isEmpty()) return Objects.hash(isEmpty());
-		return Objects.hash(get());
+		if (isEmpty()) return Objects.hashCode(isEmpty());
+		return Objects.hashCode(get());
 	}
 
 	public <U> AOptional<U> map(Function<? super T, ? extends U> mapper) {
