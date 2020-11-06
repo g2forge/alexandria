@@ -12,6 +12,7 @@ import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.core.helpers.HObject;
 import com.g2forge.alexandria.java.fluent.optional.IOptional;
 import com.g2forge.alexandria.java.fluent.optional.factory.IOptionalFactory;
+import com.g2forge.alexandria.java.function.IFunction1;
 import com.g2forge.alexandria.java.function.IPredicate2;
 import com.g2forge.alexandria.java.function.LiteralSupplier;
 
@@ -19,7 +20,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @FunctionalInterface
-public interface IOptionalFunction<I, O> extends Function<I, IOptional<? extends O>>, IOptionalFunctional<I, O, IOptionalFunction<? super I, ? extends O>> {
+public interface IOptionalFunction<I, O> extends IFunction1<I, IOptional<? extends O>>, IOptionalFunctional<I, O, IOptionalFunction<? super I, ? extends O>> {
 	@Data
 	public static class Empty<I, O> implements IOptionalFunction<I, O> {
 		protected final IOptionalFactory factory;

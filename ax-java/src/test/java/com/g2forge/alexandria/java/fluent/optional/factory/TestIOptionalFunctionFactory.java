@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.java.fluent.optional;
+package com.g2forge.alexandria.java.fluent.optional.factory;
 
 import org.junit.Assert;
 import org.junit.Test;
