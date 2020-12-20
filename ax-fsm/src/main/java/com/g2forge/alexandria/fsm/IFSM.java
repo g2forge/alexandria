@@ -1,7 +1,6 @@
 package com.g2forge.alexandria.fsm;
 
 import com.g2forge.alexandria.fsm.value.IFSMValue;
-import com.g2forge.alexandria.java.type.IGeneric;
 
 /**
  * A finite state machine. Instances of this interfaces can be built with {@link FSMBuilder}.
@@ -10,7 +9,7 @@ import com.g2forge.alexandria.java.type.IGeneric;
  * @param <State> The root state type of this FSM.
  * @param <Emission> the type of values emitted on FSM transitions.
  */
-public interface IFSM<Event extends IGeneric<?>, State extends IGeneric<?>, Emission, Output> {
+public interface IFSM<Event , State , Emission, Output> {
 	/**
 	 * Fire an event, which may change the state of this FSM.
 	 * 

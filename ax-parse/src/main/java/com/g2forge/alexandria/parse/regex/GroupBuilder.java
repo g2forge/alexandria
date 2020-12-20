@@ -4,13 +4,12 @@ import com.g2forge.alexandria.java.fluent.optional.IOptional;
 import com.g2forge.alexandria.java.function.IFunction1;
 import com.g2forge.alexandria.parse.IMatch;
 import com.g2forge.alexandria.parse.IMatcher;
-import com.g2forge.alexandria.parse.IMatcherBuilder;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 
 @Getter(AccessLevel.PROTECTED)
-class GroupBuilder<Parsed, Constructed, ParentBuilder extends AMatcherBuilder<?>> extends AMatcherBuilder<Parsed> implements IMatcherBuilder<Parsed, Regex> {
+class GroupBuilder<Parsed, Constructed, ParentBuilder extends ARegexMatcherBuilder<?>> extends ARegexMatcherBuilder<Parsed> {
 	protected final ParentBuilder parent;
 
 	protected GroupBuilder(State builder, ParentBuilder parent) {

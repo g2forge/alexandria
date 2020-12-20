@@ -6,14 +6,13 @@ import com.g2forge.alexandria.java.fluent.optional.IOptional;
 import com.g2forge.alexandria.java.function.IFunction1;
 import com.g2forge.alexandria.parse.IMatch;
 import com.g2forge.alexandria.parse.IMatcher;
-import com.g2forge.alexandria.parse.IMatcherBuilder;
 import com.g2forge.alexandria.parse.regex.RegexMatcher.Flag;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 
 @Getter(AccessLevel.PROTECTED)
-class MatcherBuilder<Parsed, Constructed> extends AMatcherBuilder<Parsed> implements IMatcherBuilder<Parsed, Regex> {
+class MatcherBuilder<Parsed, Constructed> extends ARegexMatcherBuilder<Parsed> {
 	protected final Set<Flag> flags;
 
 	protected MatcherBuilder(Set<Flag> flags) {
