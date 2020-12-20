@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter(AccessLevel.PROTECTED)
-abstract class AMatcherBuilder<Parsed> implements IMatcherBuilder<Parsed, Regex> {
+abstract class ARegexMatcherBuilder<Parsed> implements IMatcherBuilder<Parsed, Regex> {
 	protected class CharacterClassBuilder implements ICharacterClassBuilder {
 		protected boolean active = true;
 
@@ -113,7 +113,7 @@ abstract class AMatcherBuilder<Parsed> implements IMatcherBuilder<Parsed, Regex>
 		return getThis();
 	}
 
-	protected abstract AMatcherBuilder<Parsed> getThis();
+	protected abstract ARegexMatcherBuilder<Parsed> getThis();
 
 	@Override
 	public <_Parsed> IMatcherBuilder<Parsed, Regex> group(ISerializableFunction1<? super Parsed, _Parsed> field, IConsumer1<? super IMatcherBuilder<_Parsed, Regex>> consumer) {
@@ -122,7 +122,7 @@ abstract class AMatcherBuilder<Parsed> implements IMatcherBuilder<Parsed, Regex>
 		final State state = getState();
 		state.startGroup(field == null ? null : RegexMatcher.getFieldID(field));
 		active = false;
-		final GroupBuilder<_Parsed, Object, AMatcherBuilder<Parsed>> builder = new GroupBuilder<>(state, getThis());
+		final GroupBuilder<_Parsed, Object, ARegexMatcherBuilder<Parsed>> builder = new GroupBuilder<>(state, getThis());
 
 		consumer.accept(builder);
 		if (builder.isActive()) builder.build();
