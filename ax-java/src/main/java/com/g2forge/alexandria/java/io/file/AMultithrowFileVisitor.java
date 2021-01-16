@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.nio.file.FileSystemLoopException;
 import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.SimpleFileVisitor;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
+import java.util.Objects;
 import java.util.Set;
 
 import com.g2forge.alexandria.java.core.error.HError;
@@ -18,7 +19,7 @@ import com.g2forge.alexandria.java.io.RuntimeIOException;
 import lombok.AccessLevel;
 import lombok.Getter;
 
-public abstract class AMultithrowFileVisitor implements FileVisitor<Path> {
+public abstract class AMultithrowFileVisitor extends SimpleFileVisitor<Path> {
 	@Getter(AccessLevel.PROTECTED)
 	protected final Collection<Throwable> throwables = new ArrayList<>();
 
@@ -35,20 +36,15 @@ public abstract class AMultithrowFileVisitor implements FileVisitor<Path> {
 	}
 
 	@Override
-	public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-		return FileVisitResult.CONTINUE;
-	}
-
-	@Override
-	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-		return FileVisitResult.CONTINUE;
-	}
-
-	@Override
 	public FileVisitResult visitFileFailed(Path value, IOException exception) {
+		Objects.requireNonNull(value);
 		if (exception instanceof FileSystemLoopException) add(new RuntimeIOException(String.format("Cyclic directory structure detected in %s", value), exception));
 		else add(new RuntimeIOException(getMessageFile(value), exception));
 		return FileVisitResult.CONTINUE;
+	}
+
+	public Path walkFileTree(Path start) {
+		return walkFileTree(start, EnumSet.noneOf(FileVisitOption.class), Integer.MAX_VALUE);
 	}
 
 	public Path walkFileTree(Path start, Set<FileVisitOption> options, int maxDepth) {
