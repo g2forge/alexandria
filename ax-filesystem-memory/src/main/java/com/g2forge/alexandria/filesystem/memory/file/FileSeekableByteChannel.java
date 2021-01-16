@@ -64,6 +64,11 @@ public class FileSeekableByteChannel implements SeekableByteChannel {
 		assertRead();
 		synchronized (file) {
 			final byte[] data = file.getData();
+			if (data.length == position) {
+				file.getBasicAttributes().access(null);
+				return -1;
+			}
+
 			final int retVal = (int) Math.min(dst.remaining(), data.length - position);
 			dst.put(data, (int) position, retVal);
 			position += retVal;

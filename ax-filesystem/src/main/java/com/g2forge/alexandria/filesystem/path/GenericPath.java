@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import com.g2forge.alexandria.adt.range.IntegerRange;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.core.helpers.HObject;
+import com.g2forge.alexandria.java.core.helpers.HStream;
 import com.g2forge.alexandria.java.function.IPredicate1;
 
 import lombok.Getter;
@@ -236,10 +237,15 @@ public class GenericPath implements Path {
 	}
 
 	@Override
-	public GenericPath resolve(Path other) {
-		final GenericPath otherChecked = check(other);
-		if (otherChecked.isAbsolute()) return otherChecked;
-		final List<String> names = HCollection.concatenate(this.names, otherChecked.names);
+	public Path resolve(Path other) {
+		if (other == null) throw new NullPointerException();
+		if (other.isAbsolute()) return other;
+
+		// Concatenate the names, taking a shortcut through casting if the other path is implemented using this class
+		final List<String> names;
+		if (other instanceof GenericPath) names = HCollection.concatenate(this.names, ((GenericPath) other).names);
+		else names = HStream.concat(this.names.stream(), HStream.toStream(other.iterator())).map(Object::toString).collect(Collectors.toList());
+
 		return new GenericPath(getGenericFileSystem(), root, names);
 	}
 
@@ -299,7 +305,7 @@ public class GenericPath implements Path {
 		if (!iterator.hasNext()) throw new UnsupportedOperationException("File system has no root directories");
 		final GenericPath root = check(iterator.next());
 		if (iterator.hasNext()) throw new UnsupportedOperationException("File system has multiple root directories");
-		return root.resolve(this);
+		return check(root.resolve(this));
 	}
 
 	@Override
