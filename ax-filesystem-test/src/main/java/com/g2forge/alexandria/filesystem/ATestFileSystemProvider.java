@@ -13,6 +13,7 @@ import java.nio.file.AccessMode;
 import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
@@ -24,8 +25,10 @@ import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.FileTime;
+import java.nio.file.spi.FileSystemProvider;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,6 +47,7 @@ import com.g2forge.alexandria.java.io.RuntimeIOException;
 import com.g2forge.alexandria.java.io.file.HFile;
 import com.g2forge.alexandria.test.FieldMatcher;
 import com.g2forge.alexandria.test.HAssert;
+import com.g2forge.alexandria.test.HAssume;
 import com.g2forge.alexandria.test.HMatchers;
 
 public abstract class ATestFileSystemProvider {
@@ -528,6 +532,18 @@ public abstract class ATestFileSystemProvider {
 		HConcurrent.wait(10);
 		Files.move(child, child);
 		HAssert.assertThat(Files.readAttributes(parent, BasicFileAttributes.class), new FieldMatcher<>(attributes, basicFileAttributeFunctions));
+	}
+
+	@Test
+	public void pathResolve() {
+		HAssert.assertEquals(createPath("a/b"), createPath("a").resolve(Paths.get("b")));
+
+		// If the filesystem of the OS we're on has a root directory, use it to test absolute path resolution
+		final Iterator<Path> iterator = FileSystems.getDefault().getRootDirectories().iterator();
+		if (iterator.hasNext()) {
+			final Path b = iterator.next().resolve("b");
+			HAssert.assertSame(b, createPath("a").resolve(b));
+		}
 	}
 
 	/**
