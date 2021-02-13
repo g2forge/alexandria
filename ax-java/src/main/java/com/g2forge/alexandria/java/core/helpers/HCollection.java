@@ -235,7 +235,7 @@ public class HCollection {
 		final Iterator<? extends T> iterator = iterable.iterator();
 		if (!iterator.hasNext()) throw new IllegalArgumentException("Input iterable was empty!");
 		final T retVal = iterator.next();
-		if (iterator.hasNext()) throw new IllegalArgumentException("Input iterable had more than one element!");
+		if (iterator.hasNext()) throw new IllegalArgumentException("Input iterable had more than one element: " + iterable);
 		return retVal;
 	}
 
@@ -243,7 +243,7 @@ public class HCollection {
 		final Iterator<? extends T> iterator = iterable.iterator();
 		if (!iterator.hasNext()) return ifNone.get();
 		final T retVal = iterator.next();
-		if (iterator.hasNext()) throw new IllegalArgumentException("Input iterable had more than one element!");
+		if (iterator.hasNext()) throw new IllegalArgumentException("Input iterable had more than one element: " + iterable);
 		return retVal;
 	}
 
