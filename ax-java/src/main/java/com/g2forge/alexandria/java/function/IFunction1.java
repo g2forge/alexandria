@@ -3,6 +3,7 @@ package com.g2forge.alexandria.java.function;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.ToIntFunction;
 
 import com.g2forge.alexandria.java.core.marker.ISingleton;
 
@@ -55,6 +56,14 @@ public interface IFunction1<I, O> extends Function<I, O>, IFunction<O>, IConsume
 		return i -> {
 			if (i == null) return other;
 			return function.apply(i);
+		};
+	}
+
+	static <T> ToIntFunction<T> liftNull(IFunction1<? super T, Integer> function, int other) {
+		return t -> {
+			final Integer retVal = function.apply(t);
+			if (retVal == null) return other;
+			return retVal;
 		};
 	}
 
