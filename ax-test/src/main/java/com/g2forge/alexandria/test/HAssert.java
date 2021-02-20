@@ -1,5 +1,9 @@
 package com.g2forge.alexandria.test;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Objects;
 
 import org.hamcrest.Matcher;
@@ -13,6 +17,8 @@ import com.g2forge.alexandria.java.function.IConsumer1;
 import com.g2forge.alexandria.java.function.IConsumer2;
 import com.g2forge.alexandria.java.function.IFunction1;
 import com.g2forge.alexandria.java.function.IThrowRunnable;
+import com.g2forge.alexandria.java.io.HTextIO;
+import com.g2forge.alexandria.java.io.RuntimeIOException;
 
 import lombok.experimental.UtilityClass;
 
@@ -75,6 +81,16 @@ public class HAssert extends Assert {
 
 	public static void assertEquals(Resource expected, String actual) {
 		assertEquals(expected.read(true), actual);
+	}
+
+	public static void assertEquals(Resource expected, Path actual) {
+		final String text;
+		try (final InputStream stream = Files.newInputStream(actual)) {
+			text = HTextIO.readAll(stream, true);
+		} catch (IOException e) {
+			throw new RuntimeIOException(e);
+		}
+		assertEquals(expected.read(true), text);
 	}
 
 	public static <T> void assertThat(T actual, Matcher<? super T> matcher) {
