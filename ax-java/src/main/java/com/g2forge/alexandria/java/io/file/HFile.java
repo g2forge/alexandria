@@ -3,18 +3,13 @@ package com.g2forge.alexandria.java.io.file;
 import java.io.IOException;
 import java.nio.file.CopyOption;
 import java.nio.file.DirectoryStream;
-import java.nio.file.FileVisitOption;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Function;
 
 import com.g2forge.alexandria.java.concurrent.HConcurrent;
 import com.g2forge.alexandria.java.core.marker.Helpers;
+import com.g2forge.alexandria.java.function.IFunction1;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
 
 import lombok.experimental.UtilityClass;
@@ -22,30 +17,12 @@ import lombok.experimental.UtilityClass;
 @Helpers
 @UtilityClass
 public class HFile {
-	public static void copy(Path source, Path target, boolean preserve, Function<Path, Boolean> overwrite) {
-		final Path destination = Files.isDirectory(target) ? target.resolve(source.getFileName()) : target;
-		final DirectoryTreeCopyVisitor visitor = new DirectoryTreeCopyVisitor(source, destination, preserve, overwrite);
-		visitor.walkFileTree(source, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE);
+	public static void copy(Path source, Path target, CopyOption... options) {
+		CopyWalker.builder().target(target).options(IFunction1.create(options)).build().walkFileTree(source);
 	}
 
-	public static void copyFile(Path source, Path target, boolean preserve, Function<Path, Boolean> overwrite) {
-		final CopyOption[] options = preserve ? new CopyOption[] { StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING } : new CopyOption[] { StandardCopyOption.REPLACE_EXISTING };
-		if (Files.notExists(target) || overwrite.apply(target)) {
-			try {
-				Files.copy(source, target, options);
-			} catch (IOException exception) {
-				throw new RuntimeIOException(String.format("Unable to copy %s to %s", source, target), exception);
-			}
-		}
-	}
-
-	public static void delete(Path path, boolean onexit) throws IOException {
-		final LinkedList<Path> remaining = new LinkedList<>();
-		Files.walkFileTree(path, new DirectoryTreeDeleteVisitor(remaining));
-		if (!remaining.isEmpty()) {
-			if (onexit) remaining.forEach(toDelete -> toDelete.toFile().deleteOnExit());
-			else throw new IOException(String.format("Unable to delete complete directory tree! %1$s", remaining));
-		}
+	public static void delete(Path path, boolean onexit) {
+		DeleteWalker.builder().onexit(onexit).build().walkFileTree(path);
 	}
 
 	public static void gc() {

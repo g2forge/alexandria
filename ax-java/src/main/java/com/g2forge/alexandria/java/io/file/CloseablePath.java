@@ -1,13 +1,11 @@
 package com.g2forge.alexandria.java.io.file;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 import com.g2forge.alexandria.java.close.AGuaranteeClose;
 import com.g2forge.alexandria.java.close.ICloseableSupplier;
 import com.g2forge.alexandria.java.function.ISupplier;
-import com.g2forge.alexandria.java.io.RuntimeIOException;
 
 public class CloseablePath extends AGuaranteeClose implements ICloseableSupplier<Path> {
 	protected final Path path;
@@ -26,13 +24,9 @@ public class CloseablePath extends AGuaranteeClose implements ICloseableSupplier
 
 	@Override
 	protected void closeInternal() {
-		try {
-			if (path != null && Files.exists(path)) {
-				HFile.gc();
-				HFile.delete(path, true);
-			}
-		} catch (IOException exception) {
-			throw new RuntimeIOException(exception);
+		if (path != null && Files.exists(path)) {
+			HFile.gc();
+			HFile.delete(path, true);
 		}
 	}
 

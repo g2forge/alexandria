@@ -25,7 +25,6 @@ import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.FileTime;
-import java.nio.file.spi.FileSystemProvider;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -47,7 +46,6 @@ import com.g2forge.alexandria.java.io.RuntimeIOException;
 import com.g2forge.alexandria.java.io.file.HFile;
 import com.g2forge.alexandria.test.FieldMatcher;
 import com.g2forge.alexandria.test.HAssert;
-import com.g2forge.alexandria.test.HAssume;
 import com.g2forge.alexandria.test.HMatchers;
 
 public abstract class ATestFileSystemProvider {
