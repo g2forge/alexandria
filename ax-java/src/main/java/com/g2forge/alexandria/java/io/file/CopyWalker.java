@@ -32,6 +32,14 @@ public class CopyWalker implements IFileTreeWalker {
 
 		protected final Path source;
 
+		protected void copyFile(Path fileSource, final Path fileTarget, final CopyOption[] options) {
+			try {
+				Files.copy(fileSource, fileTarget, options);
+			} catch (IOException exception) {
+				throw new RuntimeIOException(String.format("Unable to copy %s to %s", fileSource, fileTarget), exception);
+			}
+		}
+
 		@Override
 		protected String getMessageFile(Path path) {
 			return String.format("Unable to copy %s", path);
@@ -83,11 +91,8 @@ public class CopyWalker implements IFileTreeWalker {
 		@Override
 		public FileVisitResult visitFile(Path fileSource, BasicFileAttributes attrs) {
 			final Path fileTarget = getTarget(fileSource);
-			try {
-				Files.copy(fileSource, fileTarget, getConfig().getOptions().apply(fileTarget));
-			} catch (IOException exception) {
-				throw new RuntimeIOException(String.format("Unable to copy %s to %s", fileSource, fileTarget), exception);
-			}
+			final CopyOption[] options = getConfig().getOptions().apply(fileTarget);
+			copyFile(fileSource, fileTarget, options);
 			return FileVisitResult.CONTINUE;
 		}
 	}

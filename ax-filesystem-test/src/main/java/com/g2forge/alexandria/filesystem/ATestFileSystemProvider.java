@@ -175,6 +175,9 @@ public abstract class ATestFileSystemProvider {
 		assertChildren(HCollection.emptyList(), b);
 		HAssert.assertTrue(aAttributes.creationTime().compareTo(bAttributes.creationTime()) < 0);
 		if (supportLastAccess()) HAssert.assertTrue(aAttributes.lastAccessTime().compareTo(Files.getLastModifiedTime(aParent)) > 0);
+
+		Files.createDirectories(b.resolve("1"));
+		assertChildren(HCollection.asList("1"), b);
 	}
 
 	@Test

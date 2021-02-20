@@ -8,7 +8,6 @@ import com.g2forge.alexandria.java.function.ISupplier;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Singular;
 
 @Data
 @Builder
@@ -16,7 +15,6 @@ import lombok.Singular;
 public class Directory implements IEntry {
 	protected final BasicAttributes basicAttributes;
 
-	@Singular
 	protected final Map<String, IEntry> entries;
 
 	@Override
