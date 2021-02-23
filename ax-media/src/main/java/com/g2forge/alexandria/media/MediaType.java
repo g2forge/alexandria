@@ -1,9 +1,5 @@
 package com.g2forge.alexandria.media;
 
-import java.util.Collection;
-
-import com.g2forge.alexandria.java.core.helpers.HCollection;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -26,13 +22,8 @@ public enum MediaType implements IMediaType {
 	CSS(true, new SimpleFileExtensions("css")),
 	Markdown(true, new SimpleFileExtensions("md"));
 
-	protected static class MediaRegistry implements IMediaRegistry {
-		@Getter(lazy = true)
-		private final Collection<IMediaType> mediaTypes = HCollection.asList(MediaType.values());
-	}
-
 	@Getter(lazy = true)
-	private static final IMediaRegistry registry = new MediaRegistry();
+	private static final IMediaRegistry registry = new MediaRegistry(MediaType.values());
 
 	protected final boolean text;
 
