@@ -19,6 +19,7 @@ public class HEnum {
 	 * Determine which member of an enum matches {@code value}.
 	 * 
 	 * @param <E> The enum type.
+	 * @param <T> The value type, and the type used to represent enum elements (e.g. {@link java.lang.String})
 	 * @param klass The enum type.
 	 * @param represent A function to convert enum members to the representation on which we'll try to match them.
 	 * @param ignoreNull Should enum members whose representation is {@code null} be ignored? If so, those members will never be returned by this method.

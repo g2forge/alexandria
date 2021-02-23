@@ -15,6 +15,9 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 @Helpers
 public class HPlatform {
+	/**
+	 * The {@link com.g2forge.alexandria.java.platform.Platform} representation of the system on which this code is running.
+	 */
 	@Getter(lazy = true)
 	private static final Platform platform = computePlatform();
 

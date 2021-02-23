@@ -23,7 +23,7 @@ public class HPath {
 	 * Test if the specified path is empty. An empty path is one with a single name, whose string value is empty (has zero characters). This is used to
 	 * represent the default directory in a file system.
 	 * 
-	 * @param Path The path to test.
+	 * @param path The path to test.
 	 * @return {@code true} if this path is empty.
 	 */
 	public static boolean isEmpty(Path path) {
