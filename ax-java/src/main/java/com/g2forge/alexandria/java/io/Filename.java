@@ -2,6 +2,7 @@ package com.g2forge.alexandria.java.io;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.java.core.helpers.HCollection;
@@ -15,6 +16,12 @@ import lombok.Singular;
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
 public class Filename {
+	public static Path replaceLastExtension(Path path, String extension) {
+		final Path parent = path.getParent();
+		final String modified = new Filename(path).getFullName() + "." + extension;
+		return parent == null ? path.getFileSystem().getPath(modified) : parent.resolve(modified);
+	}
+
 	@Singular
 	protected final List<String> components;
 
@@ -50,6 +57,14 @@ public class Filename {
 		final List<String> components = getComponents();
 		if (components.size() < 2) return null;
 		return components.get(components.size() - 1);
+	}
+
+	public boolean isLastExtension(String extension, boolean caseSensitive) {
+		final String lastExtension = getLastExtension();
+		if ((lastExtension == null) || (extension == null)) return (lastExtension == null) && (extension == null);
+
+		if (caseSensitive) return Objects.equals(extension, lastExtension);
+		return Objects.equals(extension.toUpperCase(), lastExtension.toUpperCase());
 	}
 
 	@Override

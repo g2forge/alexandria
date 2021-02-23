@@ -17,4 +17,10 @@ public class HMedia {
 	public static IMediaType getMediaType(Path path) {
 		return MediaType.getRegistry().computeMediaType(new Filename(path));
 	}
+
+	public static boolean isText(Path path) {
+		final IMediaType mediaType = getMediaType(path);
+		if (mediaType == null) return false;
+		return mediaType.isText();
+	}
 }
