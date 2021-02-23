@@ -42,7 +42,6 @@ public class CompareWalker implements IFileTreeWalker {
 	public static class DirectoryMismatch implements IMismatch {
 		protected final Path relative;
 
-		@Singular
 		protected final Map<OrThrowable<List<String>>, Set<Path>> contents;
 
 		@Override
@@ -64,7 +63,6 @@ public class CompareWalker implements IFileTreeWalker {
 
 		protected final boolean isText;
 
-		@Singular
 		protected final Map<OrThrowable<String>, Set<Path>> contents;
 
 		@Override
