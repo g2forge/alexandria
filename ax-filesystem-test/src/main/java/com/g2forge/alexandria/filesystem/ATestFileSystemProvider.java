@@ -33,7 +33,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.g2forge.alexandria.analysis.ISerializableFunction1;
@@ -106,20 +105,20 @@ public abstract class ATestFileSystemProvider {
 		Files.newBufferedWriter(bPath).append("Hello, World!").append(System.lineSeparator()).close();
 
 		final BasicFileAttributes aAttributes = Files.readAttributes(aPath, BasicFileAttributes.class);
-		Assert.assertTrue(aAttributes.isDirectory());
-		Assert.assertFalse(aAttributes.isRegularFile());
-		Assert.assertFalse(aAttributes.isOther());
-		Assert.assertFalse(aAttributes.isSymbolicLink());
+		HAssert.assertTrue(aAttributes.isDirectory());
+		HAssert.assertFalse(aAttributes.isRegularFile());
+		HAssert.assertFalse(aAttributes.isOther());
+		HAssert.assertFalse(aAttributes.isSymbolicLink());
 
 		final BasicFileAttributes bAttributes = Files.readAttributes(bPath, BasicFileAttributes.class);
-		Assert.assertEquals(bAttributes.lastModifiedTime(), Files.getLastModifiedTime(bPath));
-		Assert.assertFalse(bAttributes.isDirectory());
-		Assert.assertTrue(bAttributes.isRegularFile());
-		Assert.assertFalse(bAttributes.isOther());
-		Assert.assertFalse(bAttributes.isSymbolicLink());
+		HAssert.assertEquals(bAttributes.lastModifiedTime(), Files.getLastModifiedTime(bPath));
+		HAssert.assertFalse(bAttributes.isDirectory());
+		HAssert.assertTrue(bAttributes.isRegularFile());
+		HAssert.assertFalse(bAttributes.isOther());
+		HAssert.assertFalse(bAttributes.isSymbolicLink());
 
 		final Object aFileKey = aAttributes.fileKey();
-		if (aFileKey != null) Assert.assertNotEquals(aFileKey, bAttributes.fileKey());
+		if (aFileKey != null) HAssert.assertNotEquals(aFileKey, bAttributes.fileKey());
 
 		final BasicFileAttributeView view = Files.getFileAttributeView(aPath, BasicFileAttributeView.class);
 		HAssert.assertThat(view.readAttributes(), new FieldMatcher<>(aAttributes, basicFileAttributeFunctions));
@@ -195,7 +194,7 @@ public abstract class ATestFileSystemProvider {
 		HAssert.assertThat(Files.readAttributes(b, BasicFileAttributes.class), new FieldMatcher<BasicFileAttributes>(Files.readAttributes(a, BasicFileAttributes.class), basicFileAttributeFunctionsAfterCopy));
 
 		try (final BufferedReader reader = Files.newBufferedReader(b)) {
-			Assert.assertEquals(content, reader.readLine());
+			HAssert.assertEquals(content, reader.readLine());
 		}
 	}
 
@@ -311,10 +310,10 @@ public abstract class ATestFileSystemProvider {
 						try {
 							line = reader.readLine();
 						} catch (IOException exception) {
-							Assert.fail(String.format("Failed to read line %1$d after writing line %2$d: %3$s", j, i, exception.getMessage()));
+							HAssert.fail(String.format("Failed to read line %1$d after writing line %2$d: %3$s", j, i, exception.getMessage()));
 							return;
 						}
-						Assert.assertEquals(String.format("Failed to read line %1$d after writing line %2$d", j, i), lines[j], line);
+						HAssert.assertEquals(String.format("Failed to read line %1$d after writing line %2$d", j, i), lines[j], line);
 					}
 				}
 			}
@@ -343,8 +342,8 @@ public abstract class ATestFileSystemProvider {
 		}
 
 		final BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
-		Assert.assertEquals(expected, attributes.creationTime());
-		Assert.assertTrue(attributes.lastAccessTime().compareTo(expected) > 0);
+		HAssert.assertEquals(expected, attributes.creationTime());
+		HAssert.assertTrue(attributes.lastAccessTime().compareTo(expected) > 0);
 	}
 
 	@Test
@@ -358,7 +357,7 @@ public abstract class ATestFileSystemProvider {
 
 		try (final FileTimeTester tester = FileTimeTester.read(path, supportLastAccess())) {
 			try (final BufferedReader reader = Files.newBufferedReader(path)) {
-				Assert.assertEquals(content, reader.readLine());
+				HAssert.assertEquals(content, reader.readLine());
 			}
 		}
 	}
@@ -372,7 +371,7 @@ public abstract class ATestFileSystemProvider {
 		try (final SeekableByteChannel channel = Files.newByteChannel(path, StandardOpenOption.READ, StandardOpenOption.APPEND)) {
 			HAssert.assertEquals(0, channel.position());
 		} catch (IllegalArgumentException exception) {
-			Assert.assertEquals("READ + APPEND not allowed", exception.getMessage());
+			HAssert.assertEquals("READ + APPEND not allowed", exception.getMessage());
 		}
 
 		try (final SeekableByteChannel channel = Files.newByteChannel(path, StandardOpenOption.WRITE, StandardOpenOption.APPEND)) {
@@ -416,7 +415,7 @@ public abstract class ATestFileSystemProvider {
 			try (final SeekableByteChannel channel = Files.newByteChannel(path)) {
 				channel.position(7);
 				try (final BufferedReader reader = new BufferedReader(new InputStreamReader(Channels.newInputStream(channel)))) {
-					Assert.assertEquals("World!", reader.readLine());
+					HAssert.assertEquals("World!", reader.readLine());
 				}
 			}
 		}
@@ -455,7 +454,7 @@ public abstract class ATestFileSystemProvider {
 		try (final SeekableByteChannel channel = Files.newByteChannel(path)) {
 			final ByteBuffer buffer = ByteBuffer.allocate(7);
 			channel.read(buffer);
-			Assert.assertArrayEquals(new byte[] { 1, 2, 0, 0, 0, 3, 4 }, buffer.array());
+			HAssert.assertArrayEquals(new byte[] { 1, 2, 0, 0, 0, 3, 4 }, buffer.array());
 		}
 	}
 
@@ -476,7 +475,7 @@ public abstract class ATestFileSystemProvider {
 		HAssert.assertEquals(Files.getLastModifiedTime(aParent), Files.getLastModifiedTime(bParent));
 
 		try (final BufferedReader reader = Files.newBufferedReader(b)) {
-			Assert.assertEquals(content, reader.readLine());
+			HAssert.assertEquals(content, reader.readLine());
 		}
 		HAssert.assertThat(Files.readAttributes(b, BasicFileAttributes.class), new FieldMatcher<>(attributes, basicFileAttributeFunctions));
 	}
@@ -487,7 +486,7 @@ public abstract class ATestFileSystemProvider {
 		Files.createDirectory(a);
 		Files.createDirectories(b.resolve("1"));
 		HAssert.<IOException>assertThat(() -> Files.move(a, b, StandardCopyOption.REPLACE_EXISTING), HMatchers.isThrowable(DirectoryNotEmptyException.class, HMatchers.<String>anyOf(HMatchers.equalTo(String.format("\"%1$s\" is not empty!", b)) /* Helpful error messages */, HMatchers.endsWith(b.toString()) /* Machine readable */)));
-		Assert.assertTrue(Files.isDirectory(a));
+		HAssert.assertTrue(Files.isDirectory(a));
 	}
 
 	@Test
@@ -496,7 +495,7 @@ public abstract class ATestFileSystemProvider {
 		Files.createDirectory(a);
 		Files.newBufferedWriter(b).append("Hello, World!").append(System.lineSeparator()).close();
 		HAssert.<IOException>assertThat(() -> Files.move(a, b), HMatchers.isThrowable(FileAlreadyExistsException.class, HMatchers.<String>anyOf(HMatchers.equalTo(String.format("\"%1$s\" already exists!", b)) /* Helpful error messages */, HMatchers.endsWith(b.toString()) /* Machine readable */)));
-		Assert.assertTrue(Files.isRegularFile(b));
+		HAssert.assertTrue(Files.isRegularFile(b));
 	}
 
 	@Test
@@ -505,7 +504,7 @@ public abstract class ATestFileSystemProvider {
 		Files.createDirectory(a);
 		Files.newBufferedWriter(b).append("Hello, World!").append(System.lineSeparator()).close();
 		Files.move(a, b, StandardCopyOption.REPLACE_EXISTING);
-		Assert.assertTrue(Files.isDirectory(b));
+		HAssert.assertTrue(Files.isDirectory(b));
 	}
 
 	@Test
@@ -518,7 +517,7 @@ public abstract class ATestFileSystemProvider {
 		Files.move(a, b);
 
 		try (final BufferedReader reader = Files.newBufferedReader(b)) {
-			Assert.assertEquals(content, reader.readLine());
+			HAssert.assertEquals(content, reader.readLine());
 		}
 		HAssert.assertThat(Files.readAttributes(b, BasicFileAttributes.class), new FieldMatcher<>(attributes, basicFileAttributeFunctions));
 	}
@@ -545,6 +544,13 @@ public abstract class ATestFileSystemProvider {
 			final Path b = iterator.next().resolve("b");
 			HAssert.assertSame(b, createPath("a").resolve(b));
 		}
+	}
+
+	@Test
+	public void resolveEmptyChild() throws IOException {
+		final Path emptyPath = Paths.get("");
+		final Path directory = createPath("").resolve(emptyPath);
+		HAssert.assertTrue(Files.isDirectory(directory));
 	}
 
 	/**
