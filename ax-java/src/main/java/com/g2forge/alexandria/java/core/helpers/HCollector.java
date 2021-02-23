@@ -204,7 +204,7 @@ public class HCollector {
 		/**
 		 * The current set of elements, the prefix and the separators. The suffix is never added to this builder, nor is the last separator.
 		 * 
-		 * @param The new working result to replace the current one completely.
+		 * @param builder The new working result to replace the current one completely.
 		 * @return The current working result.
 		 */
 		protected StringBuilder builder;
@@ -212,7 +212,7 @@ public class HCollector {
 		/**
 		 * The index in {@link #builder} of the most recently appended separator or {@code -1} if none has been appended.
 		 * 
-		 * @param The new index value.
+		 * @param lastSeparatorIndex The new index value.
 		 * @return The index in {@link #getBuilder()} of the most recently appended separator or {@code -1} if none has been appended.
 		 */
 		protected int lastSeparatorIndex = -1;
