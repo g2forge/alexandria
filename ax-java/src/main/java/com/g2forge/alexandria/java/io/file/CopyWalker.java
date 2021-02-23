@@ -99,7 +99,8 @@ public class CopyWalker implements IFileTreeWalker {
 
 	protected final Path target;
 
-	protected final IFunction1<? super Path, ? extends CopyOption[]> options;
+	@Builder.Default
+	protected final IFunction1<? super Path, ? extends CopyOption[]> options = IFunction1.create(new CopyOption[] { StandardCopyOption.COPY_ATTRIBUTES });
 
 	protected Visitor constructVisitor(Path start) {
 		return new Visitor(this, start);

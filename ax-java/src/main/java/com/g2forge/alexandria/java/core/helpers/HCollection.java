@@ -144,6 +144,7 @@ public class HCollection {
 	 * 
 	 * @param collection The collection to get an element from.
 	 * @param index The index of the element to get. Must in the range {@code -size <= index < size}
+	 * @param <T> A supertype of the elements of the collection.
 	 * @return The element at the specified index.
 	 */
 	public static <T> T get(final Iterable<? extends T> collection, int index) {

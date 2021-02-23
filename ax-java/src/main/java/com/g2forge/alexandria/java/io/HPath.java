@@ -18,4 +18,15 @@ public class HPath {
 	public String getExtension(Path path) {
 		return new Filename(path).getLastExtension();
 	}
+
+	/**
+	 * Test if the specified path is empty. An empty path is one with a single name, whose string value is empty (has zero characters). This is used to
+	 * represent the default directory in a file system.
+	 * 
+	 * @param path The path to test.
+	 * @return {@code true} if this path is empty.
+	 */
+	public static boolean isEmpty(Path path) {
+		return path.getNameCount() == 1 && path.getName(0).toString().isEmpty();
+	}
 }

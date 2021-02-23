@@ -24,6 +24,7 @@ import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.core.helpers.HObject;
 import com.g2forge.alexandria.java.core.helpers.HStream;
 import com.g2forge.alexandria.java.function.IPredicate1;
+import com.g2forge.alexandria.java.io.HPath;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -151,6 +152,18 @@ public class GenericPath implements Path {
 		return this.root != null;
 	}
 
+	/**
+	 * Test if this path is empty. An empty path is one with a single name, whose string value is empty (has zero characters). This is used to represent the
+	 * default directory in a file system.
+	 * 
+	 * @return {@code true} if this path is empty.
+	 * @see java.nio.file.Path
+	 * @see com.g2forge.alexandria.java.io.HPath#isEmpty(Path)
+	 */
+	public boolean isEmpty() {
+		return names.size() == 1 && names.get(0).isEmpty();
+	}
+
 	@Override
 	public Iterator<Path> iterator() {
 		return new Iterator<Path>() {
@@ -243,8 +256,13 @@ public class GenericPath implements Path {
 
 		// Concatenate the names, taking a shortcut through casting if the other path is implemented using this class
 		final List<String> names;
-		if (other instanceof GenericPath) names = HCollection.concatenate(this.names, ((GenericPath) other).names);
-		else names = HStream.concat(this.names.stream(), HStream.toStream(other.iterator())).map(Object::toString).collect(Collectors.toList());
+		if (other instanceof GenericPath) {
+			final GenericPath cast = (GenericPath) other;
+			names = cast.isEmpty() ? this.names : HCollection.concatenate(this.names, cast.names);
+		} else {
+			if (HPath.isEmpty(other)) names = this.names;
+			else names = HStream.concat(this.names.stream(), HStream.toStream(other.iterator())).map(Object::toString).collect(Collectors.toList());
+		}
 
 		return new GenericPath(getGenericFileSystem(), root, names);
 	}

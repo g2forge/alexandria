@@ -38,6 +38,7 @@ public class SimpleFileExtensions implements IFileExtensions {
 
 	@Override
 	public boolean isMatch(String extension) {
+		if (extension == null) return false;
 		return getExtensions().contains(extension.toLowerCase());
 	}
 }

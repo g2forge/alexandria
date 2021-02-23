@@ -11,6 +11,7 @@ import java.util.Stack;
 
 import com.g2forge.alexandria.filesystem.path.IGenericFileSystemInternal;
 import com.g2forge.alexandria.java.function.IFunction1;
+import com.g2forge.alexandria.java.io.HPath;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -74,6 +75,8 @@ public class GenericEntryReference<E, F, D, P extends Path> {
 		this.accessor = accessor;
 		this.check = check;
 
+		final boolean isEmpty = HPath.isEmpty(path);
+
 		final IGenericFileSystemInternal<P> internal = accessor.getGenericFileSystemInternal(path);
 		final String self = internal.getSelf();
 		final String parent = internal.getParent();
@@ -81,28 +84,33 @@ public class GenericEntryReference<E, F, D, P extends Path> {
 		final Stack<D> prev = new Stack<>();
 		E current = accessor.asEntry(base);
 		int i = 0;
-		for (; i < path.getNameCount(); i++) {
-			if ((current == null) || !accessor.isDirectory(current)) {
-				current = null;
-				break;
-			}
+		if (!isEmpty) {
+			for (; i < path.getNameCount(); i++) {
+				if ((current == null) || !accessor.isDirectory(current)) {
+					current = null;
+					break;
+				}
 
-			final Path name = path.getName(i);
-			final D directory = accessor.asDirectory(current);
-			prev.push(directory);
+				final Path name = path.getName(i);
+				final D directory = accessor.asDirectory(current);
+				prev.push(directory);
 
-			final String string = name.toString();
-			if (!Objects.equals(string, self)) {
-				if (Objects.equals(string, parent)) prev.pop();
-				else {
-					final E child = accessor.getEntry(directory, string);
-					if (child == null) {
-						current = null;
-						break;
+				final String string = name.toString();
+				if (!Objects.equals(string, self)) {
+					if (Objects.equals(string, parent)) prev.pop();
+					else {
+						final E child = accessor.getEntry(directory, string);
+						if (child == null) {
+							current = null;
+							break;
+						}
+						current = child;
 					}
-					current = child;
 				}
 			}
+		} else {
+			prev.push(accessor.asDirectory(current));
+			i++;
 		}
 
 		this.parent = prev.isEmpty() ? null : prev.peek();

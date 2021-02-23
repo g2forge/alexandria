@@ -15,11 +15,18 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 @Helpers
 public class HPlatform {
+	/**
+	 * The {@link com.g2forge.alexandria.java.platform.Platform} representation of the platform on which this code is running.
+	 * 
+	 * @return The platform on which this code is running.
+	 */
 	@Getter(lazy = true)
 	private static final Platform platform = computePlatform();
 
 	/**
-	 * The OS path, obtained from environment variables and properly converted to Java NIO paths.
+	 * The OS {@code PATH}, obtained from environment variables and properly converted to Java NIO paths.
+	 * 
+	 * @return The OS {@code PATH}.
 	 */
 	@Getter(lazy = true)
 	private static final List<Path> path = computePath();

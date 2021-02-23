@@ -169,26 +169,52 @@ public class HCollector {
 	@Setter(AccessLevel.PROTECTED)
 	@RequiredArgsConstructor
 	public class StringJoinCollector {
-		/** Prefix to be used before any elements */
+		/**
+		 * Prefix to be used before any elements.
+		 * 
+		 * @return The prefix to be used before any elements.
+		 */
 		@NonNull
 		protected final CharSequence prefix;
 
-		/** Normal separator, to be used between all pairs of elements, except the last two. */
+		/**
+		 * Normal separator, to be used between all pairs of elements, except the last two.
+		 * 
+		 * @return The normal separator, to be used between all pairs of elements, except the last two.
+		 */
 		@NonNull
 		protected final CharSequence separatorNormal;
 
-		/** Last separator, to be used between the final two elements */
+		/**
+		 * Last separator, to be used between the final two elements.
+		 * 
+		 * @return The last separator, to be used between the final two elements.
+		 */
 		@NonNull
 		protected final CharSequence separatorLast;
 
-		/** Prefix to be used after all elements */
+		/**
+		 * Suffix to be used after all elements.
+		 * 
+		 * @return The suffix to be used after all elements.
+		 */
 		@NonNull
 		protected final CharSequence suffix;
 
-		/** The current set of elements, the prefix and the separators. The suffix is never added to this builder, nor is the last separator. */
+		/**
+		 * The current set of elements, the prefix and the separators. The suffix is never added to this builder, nor is the last separator.
+		 * 
+		 * @param builder The new working result to replace the current one completely.
+		 * @return The current working result.
+		 */
 		protected StringBuilder builder;
 
-		/** The index in {@link #builder} of the most recently appended separator or {@code -1} if none has been appended. */
+		/**
+		 * The index in {@link #builder} of the most recently appended separator or {@code -1} if none has been appended.
+		 * 
+		 * @param lastSeparatorIndex The new index value.
+		 * @return The index in {@link #getBuilder()} of the most recently appended separator or {@code -1} if none has been appended.
+		 */
 		protected int lastSeparatorIndex = -1;
 
 		/**
@@ -232,7 +258,7 @@ public class HCollector {
 			if (builder == null) return getPrefix().toString() + getSuffix();
 
 			final boolean hasLastSeparator = !getSeparatorNormal().equals(getSeparatorLast());
-			if ((suffix.length() < 1) && !hasLastSeparator) return builder.toString();
+			if ((getSuffix().length() < 1) && !hasLastSeparator) return builder.toString();
 			else {
 				// Replace the last separator
 				final int lastSeparatorIndex = getLastSeparatorIndex();
@@ -240,7 +266,7 @@ public class HCollector {
 
 				// Add the suffix, but remove it again right after
 				final int length = builder.length();
-				final String retVal = builder.append(suffix).toString();
+				final String retVal = builder.append(getSuffix()).toString();
 				builder.setLength(length);
 
 				// Switch back to the normal separator
