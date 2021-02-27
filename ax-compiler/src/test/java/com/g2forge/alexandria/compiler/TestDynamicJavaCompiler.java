@@ -1,5 +1,6 @@
 package com.g2forge.alexandria.compiler;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,9 +39,9 @@ public class TestDynamicJavaCompiler {
 	}
 
 	@Test
-	public void invoke() throws InstantiationException, IllegalAccessException, ClassNotFoundException, URISyntaxException {
+	public void invoke() throws InstantiationException, IllegalAccessException, ClassNotFoundException, URISyntaxException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		final String string = "Hello";
 		final Class<?> type = new DynamicJavaCompiler().compile("foo.bar.MyClass", "package foo.bar; public class MyClass implements " + toString(Invocable.class) + " { @Override public String get() { return \"" + string + "\"; } }");
-		Assert.assertEquals(string, ((Invocable) type.newInstance()).get());
+		Assert.assertEquals(string, ((Invocable) type.getDeclaredConstructor().newInstance()).get());
 	}
 }

@@ -1,5 +1,6 @@
 package com.g2forge.alexandria.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -47,7 +48,7 @@ public class NewInstanceInstantiator<S> implements ITypeFunction1<S> {
 		}
 	}
 
-	protected <_S extends S> _S instantiate(Class<_S> s) throws InstantiationException, IllegalAccessException {
-		return s.newInstance();
+	protected <_S extends S> _S instantiate(Class<_S> s) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		return s.getDeclaredConstructor().newInstance();
 	}
 }

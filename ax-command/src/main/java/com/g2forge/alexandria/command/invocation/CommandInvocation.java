@@ -16,12 +16,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
-import lombok.experimental.Wither;
 
 @Data
 @Builder(toBuilder = true)
 @AllArgsConstructor
-@Wither
 public class CommandInvocation<I, O> {
 	public static class CommandInvocationBuilder<I, O> implements IBuilder<CommandInvocation<I, O>> {}
 

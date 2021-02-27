@@ -17,7 +17,7 @@ public class DefaultInstantiator<S> extends NewInstanceInstantiator<S> {
 		this(loader.getKey(), loader.getType());
 	}
 
-	protected <_S extends S> _S instantiate(Class<_S> s) throws InstantiationException, IllegalAccessException {
+	protected <_S extends S> _S instantiate(Class<_S> s) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		if (ISingleton.class.isAssignableFrom(s)) {
 			try {
 				return s.cast(s.getDeclaredMethod("create").invoke(null));

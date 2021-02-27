@@ -15,7 +15,7 @@
 		<archetype.encoding>${encoding}</archetype.encoding>
 
 		<mavencompiler.version>3.8.1</mavencompiler.version>
-		<mavencompiler.javaversion>1.8</mavencompiler.javaversion>
+		<mavencompiler.javaversion>1.11</mavencompiler.javaversion>
 		<mavenjar.version>3.1.2</mavenjar.version>
 		<mavensurefire.version>3.0.0-M5</mavensurefire.version>
 		<mavenfailsafe.version>3.0.0-M5</mavenfailsafe.version>
