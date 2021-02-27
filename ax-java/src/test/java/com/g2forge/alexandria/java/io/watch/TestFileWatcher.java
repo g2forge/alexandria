@@ -11,6 +11,7 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchEvent.Kind;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -22,7 +23,6 @@ import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.function.IConsumer2;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
 import com.g2forge.alexandria.java.io.file.TempDirectory;
-import com.g2forge.alexandria.java.io.watch.FileWatcher;
 
 import lombok.Builder;
 import lombok.Data;
@@ -60,7 +60,7 @@ public class TestFileWatcher {
 
 	@Test
 	public void modify() throws IOException, InterruptedException {
-		test((temp, file) -> writeFile(file, new byte[] { 0 }, StandardOpenOption.CREATE_NEW), (temp, file) -> writeFile(file, new byte[] { 1 }, StandardOpenOption.TRUNCATE_EXISTING), StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.ENTRY_MODIFY);
+		test((temp, file) -> writeFile(file, new byte[] { 0 }, StandardOpenOption.CREATE_NEW), (temp, file) -> writeFile(file, new byte[] { 1 }, StandardOpenOption.TRUNCATE_EXISTING), StandardWatchEventKinds.ENTRY_MODIFY);
 	}
 
 	@SafeVarargs
@@ -77,7 +77,6 @@ public class TestFileWatcher {
 			watcher.watch(temp.get(), (event, path) -> {
 				synchronized (events) {
 					events.add(event);
-					events.notifyAll();
 				}
 			}, HCollection.asSet(kinds).toArray(new Kind[0]));
 			synchronized (events) {
@@ -86,20 +85,19 @@ public class TestFileWatcher {
 
 			// Perform the modification
 			if (modify != null) modify.accept(temp.get(), file);
+			synchronized (events) {
+				events.wait(10);
+			}
 
 			// Look for the expected events
-			List<SimpleWatchEvent> expected = Stream.of(kinds).map(k -> new SimpleWatchEvent(k, file.getFileName())).collect(Collectors.toList());
+			final Set<SimpleWatchEvent> expected = Stream.of(kinds).map(k -> new SimpleWatchEvent(k, file.getFileName())).collect(Collectors.toSet());
 			synchronized (events) {
-				while (!expected.isEmpty()) {
-					// Test for expected events
-					events.wait(1000);
+				// Test for expected events
+				events.wait(1000);
 
-					final List<SimpleWatchEvent> actual = events.stream().map(SimpleWatchEvent::new).collect(Collectors.toList());
-					Assert.assertFalse("Timeout waiting for expected events: " + expected, actual.isEmpty());
-					events.clear();
-					Assert.assertEquals(expected.subList(0, Math.min(expected.size(), actual.size())), actual);
-					expected = expected.subList(actual.size(), expected.size());
-				}
+				final Set<SimpleWatchEvent> actual = events.stream().map(SimpleWatchEvent::new).collect(Collectors.toSet());
+				events.clear();
+				Assert.assertEquals(expected, actual);
 
 				// Make sure no more came in
 				events.wait(100);
