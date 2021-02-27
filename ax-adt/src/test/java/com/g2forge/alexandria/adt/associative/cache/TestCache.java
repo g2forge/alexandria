@@ -32,23 +32,25 @@ public class TestCache {
 	}
 
 	@Test
+	@SuppressWarnings("deprecation")
 	public void identitySame() {
 		final Cache<Integer, Integer> cache = Cache.<Integer, Integer>builder().identity(IIdentity.same()).function(function).policy(new LRUCacheEvictionPolicy<>(2)).build();
-		final Integer a = Integer.valueOf(0), b = Integer.valueOf(0);
+		final Integer a = new Integer(0), b = new Integer(0);
 		Assert.assertEquals(1, cache.apply(a).intValue());
 		Assert.assertEquals(1, cache.apply(b).intValue());
 		Assert.assertEquals(HCollection.asList(0, 0), function.getRecord().stream().map(ITuple2G_::get0).collect(Collectors.toList()));
 		Assert.assertEquals(1, cache.apply(a).intValue());
 		Assert.assertEquals(1, cache.apply(b).intValue());
-		Assert.assertEquals(1, cache.apply(Integer.valueOf(0)).intValue());
+		Assert.assertEquals(1, cache.apply(new Integer(0)).intValue());
 		Assert.assertEquals(HCollection.asList(0, 0, 0), function.getRecord().stream().map(ITuple2G_::get0).collect(Collectors.toList()));
 	}
 
 	@Test
+	@SuppressWarnings("deprecation")
 	public void identityStandard() {
 		final Cache<Integer, Integer> cache = Cache.<Integer, Integer>builder().identity(IIdentity.standard()).function(function).policy(NeverCacheEvictionPolicy.create()).build();
-		Assert.assertEquals(1, cache.apply(Integer.valueOf(0)).intValue());
-		Assert.assertEquals(1, cache.apply(Integer.valueOf(0)).intValue());
+		Assert.assertEquals(1, cache.apply(new Integer(0)).intValue());
+		Assert.assertEquals(1, cache.apply(new Integer(0)).intValue());
 		Assert.assertEquals(HCollection.asList(0), function.getRecord().stream().map(ITuple2G_::get0).collect(Collectors.toList()));
 	}
 }
