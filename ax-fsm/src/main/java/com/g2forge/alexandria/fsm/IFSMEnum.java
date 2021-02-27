@@ -8,6 +8,7 @@ import com.g2forge.alexandria.java.type.IGeneric;
  * Implementing this interface allows an enumeration to be used for the states or events of an FSM. It has the following parent types for the given reasons:
  * 
  * <table>
+ * <caption>Explanation of parent interfaces</caption>
  * <tr>
  * <th>Interface</th>
  * <th>Reason</th>
