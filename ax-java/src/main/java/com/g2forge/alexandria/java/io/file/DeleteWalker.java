@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.g2forge.alexandria.java.function.IPredicate1;
+import com.g2forge.alexandria.java.io.HPath;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
 
 import lombok.AccessLevel;
@@ -44,7 +45,7 @@ public class DeleteWalker implements IFileTreeWalker {
 
 		protected FileVisitResult deleteDirectory(Path path) throws IOException {
 			final Path relative = getRoot().relativize(path);
-			if (getKeep().contains(relative)) return FileVisitResult.CONTINUE;
+			if (getKeep().contains(relative) || (HPath.isEmpty(relative) && !getKeep().isEmpty())) return FileVisitResult.CONTINUE;
 
 			try {
 				return delete(path);
@@ -112,11 +113,7 @@ public class DeleteWalker implements IFileTreeWalker {
 	@Override
 	public Path walkFileTree(Path start, Set<FileVisitOption> options, int maxDepth) {
 		final List<Path> remaining = isOnexit() ? new ArrayList<>() : null;
-		try {
-			Files.walkFileTree(start, options, maxDepth, constructVisitor(start, remaining));
-		} catch (IOException exception) {
-			throw new RuntimeIOException(exception);
-		}
+		constructVisitor(start, remaining).walkFileTree(start, options, maxDepth);
 
 		if ((remaining != null) && !remaining.isEmpty()) {
 			if (isOnexit()) remaining.forEach(toDelete -> toDelete.toFile().deleteOnExit());

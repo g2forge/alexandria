@@ -149,11 +149,12 @@ public class CompareWalker implements IFileTreeWalker {
 			final Map<OrThrowable<String>, Set<Path>> grouped = getRoots().stream().map(p -> {
 				try {
 					final String hash;
+					final Path resolved = p.resolve(relative);
 					if (isText) {
-						try (final InputStream stream = Files.newInputStream(path)) {
+						try (final InputStream stream = Files.newInputStream(resolved)) {
 							hash = HBinary.toHex(HIO.sha1(HTextIO.readAll(stream, true)));
 						}
-					} else hash = HBinary.toHex(HIO.sha1(p.resolve(relative), Files::newInputStream));
+					} else hash = HBinary.toHex(HIO.sha1(resolved, Files::newInputStream));
 
 					return new Tuple2G_O<>(p, new OrThrowable<String>(hash));
 				} catch (RuntimeIOException exception) {
@@ -179,10 +180,6 @@ public class CompareWalker implements IFileTreeWalker {
 
 	@Override
 	public Path walkFileTree(Path start, Set<FileVisitOption> options, int maxDepth) {
-		try {
-			return Files.walkFileTree(start, options, maxDepth, constructVisitor(start));
-		} catch (IOException exception) {
-			throw new RuntimeIOException(exception);
-		}
+		return constructVisitor(start).walkFileTree(start, options, maxDepth);
 	}
 }
