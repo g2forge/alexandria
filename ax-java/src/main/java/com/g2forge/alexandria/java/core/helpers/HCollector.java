@@ -168,7 +168,7 @@ public class HCollector {
 	@Getter(AccessLevel.PROTECTED)
 	@Setter(AccessLevel.PROTECTED)
 	@RequiredArgsConstructor
-	public class StringJoinCollector {
+	public static class StringJoinCollector {
 		/**
 		 * Prefix to be used before any elements.
 		 * 
