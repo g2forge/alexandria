@@ -1,15 +1,19 @@
 package com.g2forge.alexandria.java.io.file;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.CopyOption;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.java.concurrent.HConcurrent;
 import com.g2forge.alexandria.java.core.marker.Helpers;
 import com.g2forge.alexandria.java.function.IFunction1;
+import com.g2forge.alexandria.java.function.IPredicate1;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
 
 import lombok.experimental.UtilityClass;
@@ -17,6 +21,15 @@ import lombok.experimental.UtilityClass;
 @Helpers
 @UtilityClass
 public class HFile {
+	public static <T> boolean optionEnabled(T option, final T[] options) {
+		return Arrays.stream(options).anyMatch(option::equals);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T[] optionFilter(final T[] options, IPredicate1<? super T> predicate) {
+		return Arrays.stream(options).filter(predicate).collect(Collectors.toList()).toArray((T[]) Array.newInstance(options.getClass().getComponentType(), 0));
+	}
+
 	public static void copy(Path source, Path target, CopyOption... options) {
 		CopyWalker.builder().target(target).options(IFunction1.create(options)).build().walkFileTree(source);
 	}

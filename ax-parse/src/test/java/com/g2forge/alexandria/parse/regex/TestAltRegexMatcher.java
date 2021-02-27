@@ -1,5 +1,6 @@
 package com.g2forge.alexandria.parse.regex;
 
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -28,7 +29,11 @@ public class TestAltRegexMatcher {
 	}
 
 	@Getter(lazy = true)
-	private static final IMatcher<Enum, Regex> matcher = RegexMatcher.builder().alt(Stream.of(Enum.values()).map(e -> RegexMatcher.builder().text(e.name()).buildFlag(e)).collect(Collectors.toList())).build();
+	private static final IMatcher<Enum, Regex> matcher = computeMatcher();
+
+	protected static IMatcher<Enum, Regex> computeMatcher() {
+		return RegexMatcher.builder().alt(Stream.<Enum>of(Enum.values()).map(e -> RegexMatcher.builder().text(e.name()).buildFlag(e)).collect(Collectors.<IMatcher<Enum, Regex>>toList())).build();
+	}
 
 	@Test
 	public void nested() {

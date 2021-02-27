@@ -16,10 +16,13 @@ import lombok.Singular;
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
 public class Filename {
-	public static Path replaceLastExtension(Path path, String extension) {
+	public static Path modifyFilename(Path path, final String modified) {
 		final Path parent = path.getParent();
-		final String modified = new Filename(path).getFullName() + "." + extension;
 		return parent == null ? path.getFileSystem().getPath(modified) : parent.resolve(modified);
+	}
+
+	public static Path replaceLastExtension(Path path, String extension) {
+		return modifyFilename(path, new Filename(path).getFullName() + "." + extension);
 	}
 
 	@Singular

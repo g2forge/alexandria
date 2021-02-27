@@ -75,7 +75,7 @@ public class DispatchCommand implements IStandardCommand {
 			return IStandardCommand.FAIL;
 		}
 
-		final CommandInvocation<InputStream, PrintStream> subinvocation = invocation.withArguments(arguments.subList(1, arguments.size()));
+		final CommandInvocation<InputStream, PrintStream> subinvocation = invocation.toBuilder().clearArguments().arguments(arguments.subList(1, arguments.size())).build();
 		return subcommand.invoke(subinvocation);
 	}
 
