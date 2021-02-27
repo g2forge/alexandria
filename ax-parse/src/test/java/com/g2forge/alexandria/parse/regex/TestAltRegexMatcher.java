@@ -28,7 +28,7 @@ public class TestAltRegexMatcher {
 	}
 
 	@Getter(lazy = true)
-	private static final IMatcher<Enum, Regex> matcher = RegexMatcher.builder().alt(Arrays.stream(Enum.values()).map(e -> RegexMatcher.builder().text(e.name()).buildFlag(e)).collect(Collectors.toList())).build();
+	private static final IMatcher<Enum, Regex> matcher = RegexMatcher.builder().alt(Arrays.<Enum>stream(Enum.values()).map(e -> RegexMatcher.builder().text(e.name()).buildFlag(e)).collect(Collectors.toList())).build();
 
 	@Test
 	public void nested() {
