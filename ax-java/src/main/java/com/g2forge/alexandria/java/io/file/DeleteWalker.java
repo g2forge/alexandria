@@ -96,7 +96,12 @@ public class DeleteWalker implements IFileTreeWalker {
 				if (relative.getNameCount() > 1) keep(relative.getParent());
 				return FileVisitResult.CONTINUE;
 			}
-			return delete(path);
+
+			try {
+				return delete(path);
+			} catch (IOException exception) {
+				return exception(path, exception);
+			}
 		}
 	}
 
