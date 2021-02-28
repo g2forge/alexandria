@@ -21,7 +21,10 @@ public abstract class AThreadActor implements ICloseable {
 		final boolean wasOpen = state == State.Opened;
 		if (wasOpen) shutdown();
 		state = State.Closed;
-		if (wasOpen) thread.interrupt();
+		if (wasOpen) {
+			thread.interrupt();
+			notifyAll();
+		}
 	}
 
 	public boolean isOpen() {
@@ -38,12 +41,22 @@ public abstract class AThreadActor implements ICloseable {
 			}
 		});
 		thread.setName(thread.getName() + " (" + getClass().getSimpleName() + ")");
-		thread.start();
 		state = State.Opened;
+		thread.start();
 		return this;
 	}
 
 	protected abstract void run();
 
 	protected void shutdown() {}
+
+	public synchronized void waitClosed() {
+		while (isOpen()) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				throw new RuntimeInterruptedException(e);
+			}
+		}
+	}
 }
