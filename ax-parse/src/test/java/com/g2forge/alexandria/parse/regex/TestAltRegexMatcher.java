@@ -1,6 +1,5 @@
 package com.g2forge.alexandria.parse.regex;
 
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
