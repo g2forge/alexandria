@@ -3,9 +3,6 @@ package com.g2forge.alexandria.java.text.escape;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.java.text.escape.IEscaper;
-import com.g2forge.alexandria.java.text.escape.JavaEscapeType;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 

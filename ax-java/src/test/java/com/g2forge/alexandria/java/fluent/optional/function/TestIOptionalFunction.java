@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import com.g2forge.alexandria.java.fluent.optional.NullableOptional;
 import com.g2forge.alexandria.java.fluent.optional.factory.OptionalFunctionFactory;
-import com.g2forge.alexandria.java.fluent.optional.function.IOptionalFunction;
 import com.g2forge.alexandria.java.function.IPredicate2;
 
 public class TestIOptionalFunction {

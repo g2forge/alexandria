@@ -8,9 +8,6 @@ import java.util.stream.Stream;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.java.core.helpers.HCollection;
-import com.g2forge.alexandria.java.core.helpers.HStream;
-
 public class TestHStream {
 	@Test
 	public void productMulti() {

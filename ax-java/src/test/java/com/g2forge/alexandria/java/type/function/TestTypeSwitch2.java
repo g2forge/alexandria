@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.g2forge.alexandria.java.function.IFunction2;
-import com.g2forge.alexandria.java.type.function.TypeSwitch2;
 
 public class TestTypeSwitch2 {
 	@Test

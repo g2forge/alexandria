@@ -3,8 +3,8 @@ package com.g2forge.alexandria.reflection.typed;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;
 import com.g2forge.alexandria.reflection.object.HReflection;
+import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;
 
 import lombok.Getter;
 

@@ -4,8 +4,6 @@ import org.junit.Test;
 
 import com.g2forge.alexandria.parse.IMatcher;
 import com.g2forge.alexandria.parse.NamedCharacterClass;
-import com.g2forge.alexandria.parse.regex.Regex;
-import com.g2forge.alexandria.parse.regex.RegexMatcher;
 import com.g2forge.alexandria.test.HAssert;
 
 public class TestBasicRegexMatcher {

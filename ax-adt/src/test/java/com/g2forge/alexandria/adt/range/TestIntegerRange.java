@@ -3,8 +3,6 @@ package com.g2forge.alexandria.adt.range;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.adt.range.IntegerRange;
-
 public class TestIntegerRange {
 	@Test
 	public void reversed() {

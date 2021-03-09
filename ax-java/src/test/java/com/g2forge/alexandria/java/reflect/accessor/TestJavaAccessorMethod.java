@@ -3,9 +3,6 @@ package com.g2forge.alexandria.java.reflect.accessor;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.java.reflect.accessor.JavaAccessorMethod;
-import com.g2forge.alexandria.java.reflect.accessor.JavaAccessorType;
-
 import lombok.Data;
 
 public class TestJavaAccessorMethod {

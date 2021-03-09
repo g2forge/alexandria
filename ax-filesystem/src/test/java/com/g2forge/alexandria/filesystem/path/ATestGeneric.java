@@ -5,11 +5,6 @@ import java.net.URISyntaxException;
 import java.nio.file.spi.FileSystemProvider;
 import java.util.Set;
 
-import com.g2forge.alexandria.filesystem.path.GenericFileSystem;
-import com.g2forge.alexandria.filesystem.path.GenericPath;
-import com.g2forge.alexandria.filesystem.path.IGenericFileSystemInternal;
-import com.g2forge.alexandria.filesystem.path.IGenericFileSystemProviderInternal;
-
 public class ATestGeneric {
 	protected static final IGenericFileSystemInternal<GenericPath> fileSystem = new GenericFileSystem(new IGenericFileSystemProviderInternal<GenericPath>() {
 		@Override

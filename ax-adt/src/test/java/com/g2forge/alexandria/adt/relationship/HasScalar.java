@@ -1,7 +1,5 @@
 package com.g2forge.alexandria.adt.relationship;
 
-import com.g2forge.alexandria.adt.relationship.ScalarRelationship;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

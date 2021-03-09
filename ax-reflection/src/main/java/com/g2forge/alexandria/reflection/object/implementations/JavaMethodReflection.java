@@ -6,9 +6,9 @@ import java.lang.reflect.Method;
 import com.g2forge.alexandria.generic.type.java.member.IJavaMethodType;
 import com.g2forge.alexandria.java.core.error.RuntimeReflectionException;
 import com.g2forge.alexandria.reflection.object.AJavaMemberReflection;
+import com.g2forge.alexandria.reflection.object.HReflection;
 import com.g2forge.alexandria.reflection.object.IJavaMethodReflection;
 import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;
-import com.g2forge.alexandria.reflection.object.HReflection;
 
 public class JavaMethodReflection<T, O> extends AJavaMemberReflection<T, IJavaMethodType>implements IJavaMethodReflection<T, O> {
 	public JavaMethodReflection(IJavaMethodType type) {

@@ -6,9 +6,6 @@ import java.util.Collection;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.java.type.ref.ATypeRef;
-import com.g2forge.alexandria.java.type.ref.ITypeRef;
-
 public class TestITypeRef {
 	@Test
 	public void equals() {

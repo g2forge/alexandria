@@ -10,8 +10,6 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.g2forge.alexandria.filesystem.path.GenericPath;
-
 @RunWith(Parameterized.class)
 public class TestRenderAndParse extends ATestGeneric {
 	@Parameters

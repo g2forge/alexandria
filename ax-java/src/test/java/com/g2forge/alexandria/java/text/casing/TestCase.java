@@ -3,10 +3,6 @@ package com.g2forge.alexandria.java.text.casing;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.java.text.casing.CamelCase;
-import com.g2forge.alexandria.java.text.casing.ICase;
-import com.g2forge.alexandria.java.text.casing.SnakeCase;
-
 public class TestCase {
 	public static void assertConversion(String expected, ICase target, ICase source, String input) {
 		final String actual = target.toString(source.fromString(input));
