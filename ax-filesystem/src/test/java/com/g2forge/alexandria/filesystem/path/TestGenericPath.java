@@ -6,8 +6,6 @@ import java.util.Iterator;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.filesystem.path.GenericPath;
-
 public class TestGenericPath extends ATestGeneric {
 	@Test
 	public void compareTo() {

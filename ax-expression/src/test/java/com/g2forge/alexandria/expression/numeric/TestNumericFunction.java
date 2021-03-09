@@ -5,13 +5,6 @@ import org.junit.Test;
 
 import com.g2forge.alexandria.expression.eval.EagerEvaluator;
 import com.g2forge.alexandria.expression.eval.SimpleEvaluator;
-import com.g2forge.alexandria.expression.numeric.BinaryNumericExpression;
-import com.g2forge.alexandria.expression.numeric.ConditionalNumericExpression;
-import com.g2forge.alexandria.expression.numeric.INumericExpression;
-import com.g2forge.alexandria.expression.numeric.NumericEnvironment;
-import com.g2forge.alexandria.expression.numeric.NumericFunction;
-import com.g2forge.alexandria.expression.numeric.NumericLiteral;
-import com.g2forge.alexandria.expression.numeric.NumericVariable;
 import com.g2forge.alexandria.java.close.ICloseable;
 
 public class TestNumericFunction {

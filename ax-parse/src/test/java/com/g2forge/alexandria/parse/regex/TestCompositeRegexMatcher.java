@@ -8,8 +8,6 @@ import com.g2forge.alexandria.java.core.helpers.HPrimitive;
 import com.g2forge.alexandria.parse.IMatch;
 import com.g2forge.alexandria.parse.IMatcher;
 import com.g2forge.alexandria.parse.IMatcherBuilder;
-import com.g2forge.alexandria.parse.regex.Regex;
-import com.g2forge.alexandria.parse.regex.RegexMatcher;
 import com.g2forge.alexandria.test.HAssert;
 
 import lombok.Builder;

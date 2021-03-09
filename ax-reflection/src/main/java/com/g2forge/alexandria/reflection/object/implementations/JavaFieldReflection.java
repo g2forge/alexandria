@@ -6,9 +6,9 @@ import com.g2forge.alexandria.generic.type.java.member.IJavaFieldType;
 import com.g2forge.alexandria.generic.type.java.type.implementations.ReflectionException;
 import com.g2forge.alexandria.java.adt.tuple.ITuple1GS;
 import com.g2forge.alexandria.reflection.object.AJavaMemberReflection;
+import com.g2forge.alexandria.reflection.object.HReflection;
 import com.g2forge.alexandria.reflection.object.IJavaFieldReflection;
 import com.g2forge.alexandria.reflection.object.IJavaTypeReflection;
-import com.g2forge.alexandria.reflection.object.HReflection;
 
 public class JavaFieldReflection<T, F> extends AJavaMemberReflection<T, IJavaFieldType>implements IJavaFieldReflection<T, F> {
 	public JavaFieldReflection(IJavaFieldType type) {

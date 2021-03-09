@@ -3,8 +3,6 @@ package com.g2forge.alexandria.filesystem.path;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.filesystem.path.GlobPathMatcher;
-
 public class TestGlobPathMatcher extends ATestGeneric {
 	@Test
 	public void star() {

@@ -3,8 +3,6 @@ package com.g2forge.alexandria.java.text;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.java.text.HString;
-
 public class TestHString {
 	@Test
 	public void initialsAcronym() {

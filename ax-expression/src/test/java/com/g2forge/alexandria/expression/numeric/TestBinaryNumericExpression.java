@@ -3,11 +3,6 @@ package com.g2forge.alexandria.expression.numeric;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.expression.numeric.BinaryNumericExpression;
-import com.g2forge.alexandria.expression.numeric.INumericExpression;
-import com.g2forge.alexandria.expression.numeric.NumericLiteral;
-import com.g2forge.alexandria.expression.numeric.NumericVariable;
-
 public class TestBinaryNumericExpression {
 	@Test
 	public void reduceAdd() {

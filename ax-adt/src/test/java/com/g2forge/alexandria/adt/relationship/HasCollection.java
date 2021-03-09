@@ -3,8 +3,6 @@ package com.g2forge.alexandria.adt.relationship;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.g2forge.alexandria.adt.relationship.CollectionRelationship;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

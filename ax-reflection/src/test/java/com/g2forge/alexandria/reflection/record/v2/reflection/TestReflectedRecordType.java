@@ -6,7 +6,6 @@ import org.junit.Test;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.reflection.record.v2.IPropertyType;
 import com.g2forge.alexandria.reflection.record.v2.IRecordType;
-import com.g2forge.alexandria.reflection.record.v2.reflection.ReflectedRecordType;
 
 public class TestReflectedRecordType {
 	public static class FieldRecord {
