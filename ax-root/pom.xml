@@ -21,6 +21,8 @@
 		<mavenjar.version>3.1.2</mavenjar.version>
 		<mavensurefire.version>3.0.0-M5</mavensurefire.version>
 		<mavenfailsafe.version>3.0.0-M5</mavenfailsafe.version>
+		<mavenresources.version>3.2.0</mavenresources.version>
+		<mavenassembly.version>3.3.0</mavenassembly.version>
 
 		<lombok.version>1.18.18</lombok.version>
 		<lombok-maven.version>${lombok.version}.0</lombok-maven.version>
