@@ -1,7 +1,9 @@
 package com.g2forge.alexandria.java.io.watch;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.util.ArrayList;
@@ -34,6 +36,8 @@ public class FileScanner extends AThreadActor {
 
 	protected final IConsumer1<Set<Path>> handler;
 
+	protected final IConsumer1<Throwable> errorHandler;
+
 	protected final boolean reportOnScan;
 
 	protected final Set<Path> directories;
@@ -43,8 +47,8 @@ public class FileScanner extends AThreadActor {
 	/** A map of the directories we have scanned, so that we can watch recursively, to their watcher controls. */
 	protected final Map<Path, ICloseable> scanned = new HashMap<>();
 
-	public FileScanner(IConsumer1<Set<Path>> handler, boolean reportOnScan, Path... directories) {
-		this(handler, reportOnScan, HCollection.asSet(directories));
+	public FileScanner(IConsumer1<Set<Path>> handler, IConsumer1<Throwable> errorHandler, boolean reportOnScan, Path... directories) {
+		this(handler, errorHandler, reportOnScan, HCollection.asSet(directories));
 	}
 
 	@Override
@@ -80,13 +84,23 @@ public class FileScanner extends AThreadActor {
 				final LinkedHashSet<Path> allPaths = events.stream().map(Event::getPaths).flatMap(Collection::stream).collect(Collectors.toCollection(LinkedHashSet::new));
 				for (Path path : allPaths) {
 					if (Files.isDirectory(path)) {
-						scan(path, watcher);
+						try {
+							scan(path, watcher);
+						} catch (RuntimeIOException | UncheckedIOException exception) {
+							if (!(exception.getCause() instanceof NoSuchFileException) || Files.isDirectory(path)) throw exception;
+						}
 					}
 				}
 
 				// Handle any changes
 				final LinkedHashSet<Path> reportPaths = reportOnScan ? allPaths : events.stream().filter(e -> !e.isScan()).map(Event::getPaths).flatMap(Collection::stream).collect(Collectors.toCollection(LinkedHashSet::new));
-				if (!reportPaths.isEmpty()) handler.accept(reportPaths);
+				if (!reportPaths.isEmpty()) {
+					try {
+						handler.accept(reportPaths);
+					} catch (Throwable throwable) {
+						errorHandler.accept(throwable);
+					}
+				}
 			}
 		}
 	}
