@@ -25,6 +25,7 @@ import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.FileTime;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -33,6 +34,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import com.g2forge.alexandria.analysis.ISerializableFunction1;
@@ -41,6 +43,7 @@ import com.g2forge.alexandria.filesystem.file.FileTimeMatcher;
 import com.g2forge.alexandria.filesystem.file.FileTimeTester;
 import com.g2forge.alexandria.java.concurrent.HConcurrent;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
+import com.g2forge.alexandria.java.core.math.HMath;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
 import com.g2forge.alexandria.java.io.file.HFile;
 import com.g2forge.alexandria.test.FieldMatcher;
@@ -51,6 +54,8 @@ public abstract class ATestFileSystemProvider {
 	protected static final Pattern DISABLE_LAST_ACCESS_PATTERN = Pattern.compile("DisableLastAccess = ([0-9]+).*");
 
 	protected static final ISerializableFunction1<BasicFileAttributes, ?>[] basicFileAttributeFunctions = FieldMatcher.create(BasicFileAttributes::creationTime, BasicFileAttributes::lastModifiedTime, BasicFileAttributes::lastAccessTime, BasicFileAttributes::isDirectory, BasicFileAttributes::isRegularFile, BasicFileAttributes::isSymbolicLink, BasicFileAttributes::isOther, BasicFileAttributes::size);
+
+	protected static final ISerializableFunction1<BasicFileAttributes, ?>[] basicFileAttributeFunctionsAfterAccess = FieldMatcher.create(BasicFileAttributes::creationTime, BasicFileAttributes::lastModifiedTime, BasicFileAttributes::isDirectory, BasicFileAttributes::isRegularFile, BasicFileAttributes::isSymbolicLink, BasicFileAttributes::isOther, BasicFileAttributes::size);
 
 	protected static final ISerializableFunction1<BasicFileAttributes, ?>[] basicFileAttributeFunctionsAfterCopy = FieldMatcher.create(BasicFileAttributes::lastModifiedTime, BasicFileAttributes::isDirectory, BasicFileAttributes::isRegularFile, BasicFileAttributes::isSymbolicLink, BasicFileAttributes::isOther, BasicFileAttributes::size);
 
@@ -78,7 +83,7 @@ public abstract class ATestFileSystemProvider {
 						final Matcher matcher = DISABLE_LAST_ACCESS_PATTERN.matcher(reader.readLine().trim());
 						if (!matcher.matches()) return false;
 						final int value = Integer.valueOf(matcher.group(1));
-						return (value == 0);
+						return ((value & 0x1) == 0);
 					}
 				} finally {
 					try {
@@ -126,15 +131,21 @@ public abstract class ATestFileSystemProvider {
 		{
 			HConcurrent.wait(10);
 			final FileTime value = FileTimeMatcher.now();
+			// Delay here to ensure that the written time isn't simply the time at which the attribute is written
+			HConcurrent.wait(10);
 			view.setTimes(value, aAttributes.lastAccessTime(), aAttributes.creationTime());
-			HAssert.assertEquals(value, Files.getLastModifiedTime(aPath));
+			// Allow a slight mismatch as filesystems may not record time to that much precision
+			HAssert.assertThat(Long.valueOf(HMath.abs(Duration.between(value.toInstant(), Files.getLastModifiedTime(aPath).toInstant()).toNanos())), Matchers.lessThan(1000l));
 		}
 
 		{
 			HConcurrent.wait(10);
 			final FileTime value = FileTimeMatcher.now();
+			// Delay here to ensure that the written time isn't simply the time at which the attribute is written
+			HConcurrent.wait(10);
 			Files.setAttribute(bPath, "basic:lastModifiedTime", value);
-			HAssert.assertEquals(value, Files.getLastModifiedTime(bPath));
+			// Allow a slight mismatch as filesystems may not record time to that much precision
+			HAssert.assertThat(Long.valueOf(HMath.abs(Duration.between(value.toInstant(), Files.getLastModifiedTime(bPath).toInstant()).toNanos())), Matchers.lessThan(1000l));
 		}
 	}
 
@@ -187,10 +198,12 @@ public abstract class ATestFileSystemProvider {
 		final Path a = aParent.resolve("a"), b = bParent.resolve("b");
 		final String content = "Hello, World!";
 		Files.newBufferedWriter(a).append(content).append(System.lineSeparator()).close();
+		final FileTime pretime = Files.readAttributes(aParent, BasicFileAttributes.class).lastModifiedTime();
 
 		HConcurrent.wait(10);
 		Files.copy(a, b, StandardCopyOption.COPY_ATTRIBUTES);
-		HAssert.assertTrue(Files.readAttributes(aParent, BasicFileAttributes.class).lastAccessTime().compareTo(Files.readAttributes(bParent, BasicFileAttributes.class).lastModifiedTime()) < 0);
+		if (supportLastAccess()) HAssert.assertThat(Files.readAttributes(aParent, BasicFileAttributes.class).lastAccessTime(), Matchers.greaterThanOrEqualTo(pretime));
+		HAssert.assertThat(Files.readAttributes(bParent, BasicFileAttributes.class).lastModifiedTime(), Matchers.greaterThan(pretime));
 		HAssert.assertThat(Files.readAttributes(b, BasicFileAttributes.class), new FieldMatcher<BasicFileAttributes>(Files.readAttributes(a, BasicFileAttributes.class), basicFileAttributeFunctionsAfterCopy));
 
 		try (final BufferedReader reader = Files.newBufferedReader(b)) {
@@ -477,7 +490,7 @@ public abstract class ATestFileSystemProvider {
 		try (final BufferedReader reader = Files.newBufferedReader(b)) {
 			HAssert.assertEquals(content, reader.readLine());
 		}
-		HAssert.assertThat(Files.readAttributes(b, BasicFileAttributes.class), new FieldMatcher<>(attributes, basicFileAttributeFunctions));
+		HAssert.assertThat(Files.readAttributes(b, BasicFileAttributes.class), new FieldMatcher<>(attributes, basicFileAttributeFunctionsAfterAccess));
 	}
 
 	@Test
@@ -519,7 +532,7 @@ public abstract class ATestFileSystemProvider {
 		try (final BufferedReader reader = Files.newBufferedReader(b)) {
 			HAssert.assertEquals(content, reader.readLine());
 		}
-		HAssert.assertThat(Files.readAttributes(b, BasicFileAttributes.class), new FieldMatcher<>(attributes, basicFileAttributeFunctions));
+		HAssert.assertThat(Files.readAttributes(b, BasicFileAttributes.class), new FieldMatcher<>(attributes, basicFileAttributeFunctionsAfterAccess));
 	}
 
 	@Test
