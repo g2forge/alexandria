@@ -18,6 +18,10 @@ public class FileTimeTester implements Closeable {
 		return new FileTimeTester(path, EnumSet.allOf(HBasicFileAttributes.Attribute.class));
 	}
 
+	public static FileTimeTester createModify(Path path, boolean supportLastAccess) {
+		return new FileTimeTester(path, EnumSet.allOf(HBasicFileAttributes.Attribute.class));
+	}
+
 	protected static FileTime getTime(BasicFileAttributes attributes, HBasicFileAttributes.Attribute attribute) {
 		switch (attribute) {
 			case CreationTime:
