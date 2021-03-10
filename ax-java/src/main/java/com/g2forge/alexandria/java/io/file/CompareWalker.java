@@ -2,6 +2,7 @@ package com.g2forge.alexandria.java.io.file;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -20,7 +21,9 @@ import com.g2forge.alexandria.java.core.error.HError;
 import com.g2forge.alexandria.java.core.error.OrThrowable;
 import com.g2forge.alexandria.java.core.helpers.HBinary;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
+import com.g2forge.alexandria.java.core.marker.ISingleton;
 import com.g2forge.alexandria.java.function.IFunction1;
+import com.g2forge.alexandria.java.function.LiteralFunction1;
 import com.g2forge.alexandria.java.io.HIO;
 import com.g2forge.alexandria.java.io.HTextIO;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
@@ -37,6 +40,19 @@ import lombok.Singular;
 @AllArgsConstructor
 @Builder
 public class CompareWalker implements IFileTreeWalker {
+	public static class BinaryHashFunction implements IFunction1<Path, String>, ISingleton {
+		protected static final BinaryHashFunction INSTANCE = new BinaryHashFunction();
+
+		public static BinaryHashFunction create() {
+			return INSTANCE;
+		}
+		
+		@Override
+		public String apply(Path path) {
+			return HBinary.toHex(HIO.sha1(path, Files::newInputStream));
+		}
+	}
+
 	@Data
 	@RequiredArgsConstructor
 	public static class DirectoryMismatch implements IMismatch {
@@ -61,7 +77,7 @@ public class CompareWalker implements IFileTreeWalker {
 	public static class FileMismatch implements IMismatch {
 		protected final Path relative;
 
-		protected final boolean isText;
+		protected final IFunction1<? super Path, ? extends String> hashFunction;
 
 		protected final Map<OrThrowable<String>, Set<Path>> contents;
 
@@ -73,19 +89,19 @@ public class CompareWalker implements IFileTreeWalker {
 				if (entry.getKey().isEmpty()) retVal.append(HError.toString(entry.getKey().getThrowable()));
 				else {
 					retVal.append(entry.getKey().get());
-					if (isText) {
+					if (hashFunction instanceof IHelpfulHashFunction) {
 						retVal.append(": ");
-						try (final InputStream stream = Files.newInputStream(HCollection.getAny(entry.getValue()).resolve(relative))) {
-							retVal.append(HTextIO.readAll(stream, true));
-						} catch (IOException e) {
-							retVal.append(HError.toString(e));
-						}
+						retVal.append(((IHelpfulHashFunction) hashFunction).explain(HCollection.getAny(entry.getValue()).resolve(relative)));
 					}
 					retVal.append("\n");
 				}
 			}
 			return retVal.toString();
 		}
+	}
+
+	public interface IHelpfulHashFunction extends IFunction1<Path, String> {
+		public String explain(Path path);
 	}
 
 	public interface IMismatch extends IHasExplanation<String> {
@@ -110,6 +126,32 @@ public class CompareWalker implements IFileTreeWalker {
 		public MismatchError(IMismatch mismatch, Exception cause) {
 			super(createMessage(mismatch), cause);
 			this.mismatch = mismatch;
+		}
+	}
+
+	public static class TextHashFunction implements IHelpfulHashFunction, ISingleton {
+		protected static final TextHashFunction INSTANCE = new TextHashFunction();
+
+		public static TextHashFunction create() {
+			return INSTANCE;
+		}
+
+		@Override
+		public String apply(Path path) {
+			try (final InputStream stream = Files.newInputStream(path)) {
+				return HBinary.toHex(HIO.sha1(HTextIO.readAll(stream, true)));
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			}
+		}
+
+		@Override
+		public String explain(Path path) {
+			try (final InputStream stream = Files.newInputStream(path)) {
+				return HTextIO.readAll(stream, true);
+			} catch (IOException e) {
+				return HError.toString(e);
+			}
 		}
 	}
 
@@ -145,25 +187,19 @@ public class CompareWalker implements IFileTreeWalker {
 		@Override
 		public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
 			final Path relative = getStart().relativize(path);
-			final boolean isText = getConfig().getIsTextFunction().apply(relative);
+			final IFunction1<? super Path, ? extends String> hashFunction = getConfig().getHashFunctionFunction().apply(relative);
 			final Map<OrThrowable<String>, Set<Path>> grouped = getRoots().stream().map(p -> {
 				try {
-					final String hash;
 					final Path resolved = p.resolve(relative);
-					if (isText) {
-						try (final InputStream stream = Files.newInputStream(resolved)) {
-							hash = HBinary.toHex(HIO.sha1(HTextIO.readAll(stream, true)));
-						}
-					} else hash = HBinary.toHex(HIO.sha1(resolved, Files::newInputStream));
-
+					final String hash = hashFunction.apply(resolved);
 					return new Tuple2G_O<>(p, new OrThrowable<String>(hash));
-				} catch (RuntimeIOException exception) {
+				} catch (RuntimeIOException | UncheckedIOException exception) {
 					return new Tuple2G_O<>(p, new OrThrowable<String>(exception.getCause()));
-				} catch (IOException exception) {
+				} catch (Throwable exception) {
 					return new Tuple2G_O<>(p, new OrThrowable<String>(exception));
 				}
 			}).collect(Collectors.groupingBy(ITuple2G_::get1, Collectors.mapping(ITuple2G_::get0, Collectors.toSet())));
-			if (grouped.size() > 1) throw new MismatchError(new FileMismatch(relative, isText, grouped));
+			if (grouped.size() > 1) throw new MismatchError(new FileMismatch(relative, hashFunction, grouped));
 			return FileVisitResult.CONTINUE;
 		}
 	}
@@ -172,7 +208,7 @@ public class CompareWalker implements IFileTreeWalker {
 	protected final List<Path> roots;
 
 	@Default
-	protected final IFunction1<? super Path, ? extends Boolean> isTextFunction = IFunction1.create(false);
+	protected final IFunction1<? super Path, ? extends IFunction1<? super Path, ? extends String>> hashFunctionFunction = new LiteralFunction1<>(BinaryHashFunction.create());
 
 	protected Visitor constructVisitor(Path start) {
 		return new Visitor(this, start, HCollection.concatenate(HCollection.asList(start), getRoots()));
