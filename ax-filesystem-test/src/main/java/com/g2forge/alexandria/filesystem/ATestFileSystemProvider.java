@@ -312,7 +312,7 @@ public abstract class ATestFileSystemProvider {
 		final Path path = createPath("a.txt");
 		final String[] lines = { "abc", "def", "ghi" };
 		for (int i = 0; i < lines.length; i++) {
-			try (final FileTimeTester tester = i == 0 ? FileTimeTester.all(path) : FileTimeTester.modify(path, true)) {
+			try (final FileTimeTester tester = i == 0 ? FileTimeTester.createModify(path, supportLastAccess()) : FileTimeTester.modify(path, supportLastAccess())) {
 				Files.newBufferedWriter(path, StandardOpenOption.APPEND, StandardOpenOption.CREATE).append(lines[i]).append(System.lineSeparator()).close();
 			}
 
