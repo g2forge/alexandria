@@ -485,7 +485,8 @@ public abstract class ATestFileSystemProvider {
 		HConcurrent.wait(10);
 		Files.move(a, b, StandardCopyOption.ATOMIC_MOVE);
 		HAssert.assertTrue(originalModifiedTime.compareTo(Files.getLastModifiedTime(aParent)) < 0);
-		HAssert.assertEquals(Files.getLastModifiedTime(aParent), Files.getLastModifiedTime(bParent));
+		// Allow a slight mismatch in modified time
+		HAssert.assertThat(Long.valueOf(HMath.abs(Duration.between(Files.getLastModifiedTime(aParent).toInstant(), Files.getLastModifiedTime(bParent).toInstant()).toMillis())), Matchers.lessThanOrEqualTo(1l));
 
 		try (final BufferedReader reader = Files.newBufferedReader(b)) {
 			HAssert.assertEquals(content, reader.readLine());
