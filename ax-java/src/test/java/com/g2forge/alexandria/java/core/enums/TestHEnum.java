@@ -18,6 +18,12 @@ public class TestHEnum {
 	}
 
 	@Test
+	public void getEnumClass() {
+		Assert.assertEquals(E.class, HEnum.getEnumClass(E.A));
+		Assert.assertEquals(E.class, HEnum.getEnumClass(E.C));
+	}
+
+	@Test
 	public void valueOf() {
 		Assert.assertEquals(E.A, E.valueOf("A"));
 		try {

@@ -44,9 +44,9 @@ public class HEnum {
 
 	public static <E extends Enum<E>> Class<E> getEnumClass(E object) {
 		final Class<?> klass = object.getClass();
-		final Class<?> declaringClass = klass.getDeclaringClass();
+		final Class<?> enclosing = klass.getEnclosingClass();
 		@SuppressWarnings({ "rawtypes", "unchecked" })
-		final Class<E> enumClass = (Class) (declaringClass == null ? klass : declaringClass);
-		return enumClass;
+		final Class<E> retVal = (Class) (((enclosing != null) && enclosing.isEnum() && enclosing.isInstance(object)) ? enclosing : klass);
+		return retVal;
 	}
 }
