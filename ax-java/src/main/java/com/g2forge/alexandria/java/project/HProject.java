@@ -34,7 +34,7 @@ public class HProject {
 	 * @return A handle to close the file system or {@code null} if the file system is already open.
 	 * @throws IOException An exception occurred while opening the file system.
 	 */
-	protected static Closeable openFileSystem(URI uri) throws IOException {
+	public static Closeable openFileSystem(URI uri) throws IOException {
 		try {
 			FileSystems.getFileSystem(uri);
 			return null;
