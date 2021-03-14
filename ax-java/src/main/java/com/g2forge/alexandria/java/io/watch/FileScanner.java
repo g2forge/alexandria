@@ -20,6 +20,7 @@ import com.g2forge.alexandria.java.concurrent.AThreadActor;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.function.IConsumer1;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
+import com.g2forge.alexandria.java.io.watch.FileWatcher.IWatchHandler;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +63,11 @@ public class FileScanner extends AThreadActor {
 		try (final FileWatcher watcher = new FileWatcher()) {
 			watcher.open();
 			for (Path directory : directories) {
-				scan(directory, watcher);
+				try {
+					scan(directory, watcher);
+				} catch (Throwable throwable) {
+					errorHandler.accept(throwable);
+				}
 			}
 
 			while (isOpen()) {
@@ -106,11 +111,12 @@ public class FileScanner extends AThreadActor {
 	}
 
 	protected void scan(Path directory, FileWatcher watcher) {
+		UnsupportedOperationException unsupported = null;
+
 		synchronized (scanned) {
 			if (scanned.containsKey(directory)) return;
 
-			// Watch the directory
-			final ICloseable watch = watcher.watch(directory, (event, path) -> {
+			final IWatchHandler handler = (event, path) -> {
 				synchronized (queue) {
 					// Stop watching a directory if it's deleted
 					if (scanned.containsKey(path) && !Files.isDirectory(path)) {
@@ -119,20 +125,35 @@ public class FileScanner extends AThreadActor {
 					queue.add(new Event(HCollection.asSet(path), false));
 					queue.notifyAll();
 				}
-			}, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.ENTRY_DELETE);
+			};
 
-			scanned.put(directory, watch);
-		}
-
-		// Scan the directory so that we don't miss any changes from before we knew there was directory here
-		synchronized (queue) {
 			try {
-				final Set<Path> children = Files.list(directory).collect(Collectors.toCollection(LinkedHashSet::new));
-				queue.add(new Event(children, true));
-				queue.notifyAll();
-			} catch (IOException exception) {
-				throw new RuntimeIOException(exception);
+				// Watch the directory
+				final ICloseable watch = watcher.watch(directory, handler, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.ENTRY_DELETE);
+				// Record that we've scanned the directory
+				scanned.put(directory, watch);
+			} catch (UnsupportedOperationException exception) {
+				// We can't watch this, but we might want to scan it anyway
+				unsupported = exception;
+				// Record that we've scanned the directory
+				scanned.put(directory, () -> {});
 			}
 		}
+
+		// If we were able to watch, or if the caller wanted files reported during the scan...
+		if ((unsupported == null) || reportOnScan) {
+			// Scan the directory so that we don't miss any changes from before we knew there was directory here
+			synchronized (queue) {
+				try {
+					final Set<Path> children = Files.list(directory).collect(Collectors.toCollection(LinkedHashSet::new));
+					queue.add(new Event(children, true));
+					queue.notifyAll();
+				} catch (IOException exception) {
+					throw new RuntimeIOException(exception);
+				}
+			}
+		}
+
+		if (unsupported != null) throw new RuntimeException(unsupported);
 	}
 }

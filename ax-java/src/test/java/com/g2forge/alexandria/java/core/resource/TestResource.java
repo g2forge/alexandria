@@ -15,11 +15,6 @@ public class TestResource {
 	}
 
 	@Test
-	public void nonewline() {
-		Assert.assertEquals("A", HResource.read(getClass(), "nonewline.txt", true));
-	}
-
-	@Test
 	public void line2() {
 		Assert.assertEquals("A\nB\n", HResource.read(getClass(), "line2.txt", true));
 	}
@@ -27,5 +22,10 @@ public class TestResource {
 	@Test(expected = NullPointerException.class)
 	public void missing() {
 		HResource.read(getClass(), "missing.txt", true);
+	}
+
+	@Test
+	public void nonewline() {
+		Assert.assertEquals("A", HResource.read(getClass(), "nonewline.txt", true));
 	}
 }
