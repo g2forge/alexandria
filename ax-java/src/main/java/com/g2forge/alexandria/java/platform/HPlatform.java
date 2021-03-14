@@ -31,8 +31,10 @@ public class HPlatform {
 	@Getter(lazy = true)
 	private static final List<Path> path = computePath();
 
+	public static final String PATH = "PATH";
+
 	protected static final List<Path> computePath() {
-		final String path = Stream.of("PATH", "Path", "path").map(System::getenv).filter(Objects::nonNull).findFirst().get();
+		final String path = Stream.of(HPlatform.PATH, "Path", "path").map(System::getenv).filter(Objects::nonNull).findFirst().get();
 		return Stream.of(getPlatform().getPathSpec().splitPaths(path)).map(Paths::get).collect(Collectors.toList());
 	}
 

@@ -6,6 +6,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import com.g2forge.alexandria.command.invocation.environment.IEnvironment;
+import com.g2forge.alexandria.command.invocation.environment.SystemEnvironment;
 import com.g2forge.alexandria.command.invocation.format.ICommandFormat;
 import com.g2forge.alexandria.command.stdio.IStandardIO;
 import com.g2forge.alexandria.command.stdio.StandardIO;
@@ -29,6 +31,7 @@ public class CommandInvocation<I, O> {
 		retVal.arguments(HCollection.asList(args));
 		retVal.io(StandardIO.of());
 		retVal.working(Paths.get(System.getProperty("user.dir")));
+		retVal.environment(SystemEnvironment.create());
 		return retVal.build();
 	}
 
@@ -40,4 +43,6 @@ public class CommandInvocation<I, O> {
 	protected final IStandardIO<I, O> io;
 
 	protected final Path working;
+
+	protected final IEnvironment environment;
 }
