@@ -11,6 +11,7 @@ public enum ExecutableSpec implements IPlatformNamed {
 	BAT(null, ".bat"),
 	CMD(null, ".cmd"),
 	SH(null, ".sh"),
+	PS1(null, ".ps1"),
 	None(null, null);
 
 	protected final String prefix;

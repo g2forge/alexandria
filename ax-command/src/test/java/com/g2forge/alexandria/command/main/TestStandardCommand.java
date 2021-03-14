@@ -12,6 +12,7 @@ import com.g2forge.alexandria.command.command.IStandardCommand;
 import com.g2forge.alexandria.command.command.IStandardCommand.TestResult;
 import com.g2forge.alexandria.command.exit.IExit;
 import com.g2forge.alexandria.command.invocation.CommandInvocation;
+import com.g2forge.alexandria.command.invocation.environment.MapEnvironment;
 import com.g2forge.alexandria.command.stdio.IStandardIO;
 import com.g2forge.alexandria.java.io.HIO;
 import com.g2forge.alexandria.java.io.HTextIO;
@@ -43,10 +44,19 @@ public class TestStandardCommand {
 		}
 	}
 
+	public static class EnvVar implements IStandardCommand {
+		@Override
+		public IExit invoke(CommandInvocation<InputStream, PrintStream> invocation) throws Throwable {
+			final PrintStream output = invocation.getIo().getStandardOutput();
+			output.print(invocation.getEnvironment().apply(getClass().getSimpleName()));
+			return IStandardCommand.SUCCESS;
+		}
+	}
+
 	@Test
 	public void cat() throws Throwable {
 		final String message = "Hello, World!\nFoobar!\n";
-		final TestResult result = new Cat().test(HIO.toInputStream(message), null);
+		final TestResult result = new Cat().test(HIO.toInputStream(message));
 		Assert.assertEquals(IStandardCommand.SUCCESS, result.getExit());
 		Assert.assertEquals(message.replace("\n", System.lineSeparator()), HTextIO.readAll(result.getStandardOutput(), false));
 	}
@@ -54,7 +64,15 @@ public class TestStandardCommand {
 	@Test
 	public void echo() throws Throwable {
 		final String message = "Hello, World!";
-		final TestResult result = new Echo().test(null, null, message);
+		final TestResult result = new Echo().test(message);
+		Assert.assertEquals(IStandardCommand.SUCCESS, result.getExit());
+		Assert.assertEquals(message, HTextIO.readAll(result.getStandardOutput(), false));
+	}
+
+	@Test
+	public void envVar() throws Throwable {
+		final String message = "Hello, World!";
+		final TestResult result = new EnvVar().tester().environment(MapEnvironment.builder().variable(EnvVar.class.getSimpleName(), message).build()).invoke();
 		Assert.assertEquals(IStandardCommand.SUCCESS, result.getExit());
 		Assert.assertEquals(message, HTextIO.readAll(result.getStandardOutput(), false));
 	}

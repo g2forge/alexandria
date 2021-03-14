@@ -9,10 +9,11 @@ import lombok.Getter;
 @Getter
 public enum Shell {
 	// @formatter:off
-	BASH(null,		null,																TextSpec.UNIX,	new String[] { "-c" },	PlatformCategory.Posix),
-	TCSH(null,		null,																TextSpec.UNIX,	new String[] { "-c" },	PlatformCategory.Posix),
-	ZSH(null,		null,																TextSpec.UNIX,	new String[] { "-c" },	PlatformCategory.Posix),
-	CMD("CMD.EXE",	new ExecutableSpec[] { ExecutableSpec.BAT, ExecutableSpec.CMD },	TextSpec.DOS,	new String[] { "/C" },	PlatformCategory.Microsoft);
+	BASH(null,			null,																TextSpec.UNIX,	new String[] { "-c" },			PlatformCategory.Posix,		VariableSpec.POSIX),
+	TCSH(null,			null,																TextSpec.UNIX,	new String[] { "-c" },			PlatformCategory.Posix,		VariableSpec.POSIX),
+	ZSH(null,			null,																TextSpec.UNIX,	new String[] { "-c" },			PlatformCategory.Posix,		VariableSpec.POSIX),
+	CMD("CMD.EXE",		new ExecutableSpec[] { ExecutableSpec.BAT, ExecutableSpec.CMD },	TextSpec.DOS,	new String[] { "/C" },			PlatformCategory.Microsoft,	VariableSpec.CMD),
+	POWERSHELL(null,	new ExecutableSpec[] { ExecutableSpec.PS1 },						TextSpec.DOS,	new String[] { "-Command" },	PlatformCategory.Microsoft,	VariableSpec.POWERSHELL);
 	//@formatter:on
 
 	protected final String name;
@@ -24,6 +25,8 @@ public enum Shell {
 	protected final String[] arguments;
 
 	protected final PlatformCategory category;
+
+	protected final VariableSpec variable;
 
 	/**
 	 * Get the path specification to use with this shell on the given platform.
