@@ -1,8 +1,11 @@
 package com.g2forge.alexandria.command.process;
 
 import java.util.List;
+import java.util.Map;
 
 import com.g2forge.alexandria.command.invocation.CommandInvocation;
+import com.g2forge.alexandria.command.invocation.environment.IEnvironment;
+import com.g2forge.alexandria.command.invocation.environment.SystemEnvironment;
 import com.g2forge.alexandria.command.process.cmdline.HCommandLineBuilder;
 import com.g2forge.alexandria.command.process.cmdline.ICommandLineBuilder;
 import com.g2forge.alexandria.command.stdio.IStandardIO;
@@ -18,7 +21,18 @@ public class HProcess {
 		working(builder, invocation);
 		arguments(builder, invocation);
 		redirects(builder, invocation);
+		environment(builder, invocation);
 		return builder;
+	}
+
+	protected static void environment(final ProcessBuilder builder, CommandInvocation<ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocation) {
+		final IEnvironment environment = invocation.getEnvironment();
+		if (environment == null) return;
+		if (environment instanceof SystemEnvironment) return;
+
+		final Map<String, String> map = builder.environment();
+		map.clear();
+		map.putAll(environment.toMap());
 	}
 
 	public static void working(final ProcessBuilder builder, CommandInvocation<ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocation) {

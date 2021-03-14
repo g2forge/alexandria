@@ -5,7 +5,17 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class MapBuilder<K, V> {
+	public static <K, V> Map<K, V> create(K key, V value) {
+		return new MapBuilder<>(key, value).build();
+	}
+	
 	protected final Map<K, V> map = new LinkedHashMap<>();
+
+	public MapBuilder() {}
+
+	public MapBuilder(K key, V value) {
+		put(key, value);
+	}
 
 	public Map<K, V> build() {
 		return map;

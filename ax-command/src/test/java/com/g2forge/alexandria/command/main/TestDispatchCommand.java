@@ -31,7 +31,7 @@ public class TestDispatchCommand {
 	@Test
 	public void naming() throws Throwable {
 		final IStandardCommand command = new DispatchCommand.NamingBuilder<NamedCommand>(IStringNamed::getName).command(new NamedCommand("a")).build();
-		Assert.assertEquals(IStandardCommand.SUCCESS, command.test(null, null, "a").getExit());
+		Assert.assertEquals(IStandardCommand.SUCCESS, command.test("a").getExit());
 	}
 
 	@Test
@@ -39,7 +39,7 @@ public class TestDispatchCommand {
 		final DispatchCommand.ManualBuilder builder = new DispatchCommand.ManualBuilder();
 		builder.command(invocation -> IStandardCommand.SUCCESS, "a");
 		final IStandardCommand command = builder.build();
-		Assert.assertEquals(IStandardCommand.FAIL, command.test(null, null, "x").getExit());
+		Assert.assertEquals(IStandardCommand.FAIL, command.test("x").getExit());
 	}
 
 	@Test
@@ -48,9 +48,9 @@ public class TestDispatchCommand {
 		builder.command(invocation -> new Exit(invocation.getArguments().size()), "a", "aa", "aaa");
 		builder.command(invocation -> new Exit(-1), "b");
 		final IStandardCommand command = builder.build();
-		Assert.assertEquals(0, command.test(null, null, "a").getExit().getCode());
-		Assert.assertEquals(1, command.test(null, null, "aaa", "b").getExit().getCode());
-		Assert.assertEquals(2, command.test(null, null, "aa", "b", "c").getExit().getCode());
-		Assert.assertEquals(-1, command.test(null, null, "b").getExit().getCode());
+		Assert.assertEquals(0, command.test("a").getExit().getCode());
+		Assert.assertEquals(1, command.test("aaa", "b").getExit().getCode());
+		Assert.assertEquals(2, command.test("aa", "b", "c").getExit().getCode());
+		Assert.assertEquals(-1, command.test("b").getExit().getCode());
 	}
 }
