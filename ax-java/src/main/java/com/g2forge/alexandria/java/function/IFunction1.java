@@ -59,7 +59,7 @@ public interface IFunction1<I, O> extends Function<I, O>, IFunction<O>, IConsume
 		};
 	}
 
-	static <T> ToIntFunction<T> liftNull(IFunction1<? super T, Integer> function, int other) {
+	public static <T> ToIntFunction<T> liftNull(IFunction1<? super T, Integer> function, int other) {
 		return t -> {
 			final Integer retVal = function.apply(t);
 			if (retVal == null) return other;
@@ -106,6 +106,13 @@ public interface IFunction1<I, O> extends Function<I, O>, IFunction<O>, IConsume
 
 	public default IConsumer1<I> noReturn() {
 		return i -> apply(i);
+	}
+
+	public default IFunction1<I, O> override(O compare, O output) {
+		return i -> {
+			final O retVal = apply(i);
+			return (retVal == compare) ? output : retVal;
+		};
 	}
 
 	public default IFunction1<I, O> sync(Object lock) {
