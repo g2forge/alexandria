@@ -59,8 +59,11 @@ public class HPath {
 
 		if (path.isAbsolute() && ((HCollection.toCollection(fileSystem.getRootDirectories()).size() > 1) || (HCollection.toCollection(path.getFileSystem().getRootDirectories()).size() > 1))) throw new NotYetImplementedError("Can't translate paths between filesystems when the root directories are complex!");
 		Path current = fileSystem.getPath(path.isAbsolute() ? fileSystem.getSeparator() : "");
-		for (final Path name : path) {
-			current = current.resolve(name.getFileName().toString());
+		// Resolve all the names, if there are any non-empty ones
+		if ((path.getNameCount() != 1) || (path.getName(0).getFileName() != null)) {
+			for (final Path name : path) {
+				current = current.resolve(name.getFileName().toString());
+			}
 		}
 		return current;
 	}
