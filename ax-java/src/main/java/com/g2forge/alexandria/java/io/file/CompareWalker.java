@@ -46,10 +46,14 @@ public class CompareWalker implements IFileTreeWalker {
 		public static BinaryHashFunction create() {
 			return INSTANCE;
 		}
-		
+
 		@Override
 		public String apply(Path path) {
-			return HBinary.toHex(HIO.sha1(path, Files::newInputStream));
+			try {
+				return "L" + Files.size(path) + "H" + HBinary.toHex(HIO.sha1(path, Files::newInputStream));
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			}
 		}
 	}
 
@@ -66,7 +70,7 @@ public class CompareWalker implements IFileTreeWalker {
 			for (Map.Entry<OrThrowable<List<String>>, Set<Path>> entry : getContents().entrySet()) {
 				retVal.append(entry.getValue()).append(": ");
 				if (entry.getKey().isEmpty()) retVal.append(HError.toString(entry.getKey().getThrowable()));
-				else retVal.append(entry.getKey().get());
+				else retVal.append(entry.getKey().get()).append("\n");
 			}
 			return retVal.toString();
 		}
