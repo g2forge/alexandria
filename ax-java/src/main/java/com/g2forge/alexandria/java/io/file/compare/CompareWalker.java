@@ -1,13 +1,12 @@
-package com.g2forge.alexandria.java.io.file;
+package com.g2forge.alexandria.java.io.file.compare;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,14 +18,11 @@ import com.g2forge.alexandria.java.adt.tuple.ITuple2G_;
 import com.g2forge.alexandria.java.adt.tuple.implementations.Tuple2G_O;
 import com.g2forge.alexandria.java.core.error.HError;
 import com.g2forge.alexandria.java.core.error.OrThrowable;
-import com.g2forge.alexandria.java.core.helpers.HBinary;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
-import com.g2forge.alexandria.java.core.marker.ISingleton;
 import com.g2forge.alexandria.java.function.IFunction1;
 import com.g2forge.alexandria.java.function.LiteralFunction1;
-import com.g2forge.alexandria.java.io.HIO;
-import com.g2forge.alexandria.java.io.HTextIO;
-import com.g2forge.alexandria.java.io.RuntimeIOException;
+import com.g2forge.alexandria.java.io.file.AMultithrowFileVisitor;
+import com.g2forge.alexandria.java.io.file.IFileTreeWalker;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,26 +33,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.Singular;
 
 @Data
+@Builder(toBuilder = true)
 @AllArgsConstructor
-@Builder
 public class CompareWalker implements IFileTreeWalker {
-	public static class BinaryHashFunction implements IFunction1<Path, String>, ISingleton {
-		protected static final BinaryHashFunction INSTANCE = new BinaryHashFunction();
-
-		public static BinaryHashFunction create() {
-			return INSTANCE;
-		}
-
-		@Override
-		public String apply(Path path) {
-			try {
-				return "L" + Files.size(path) + "H" + HBinary.toHex(HIO.sha1(path, Files::newInputStream));
-			} catch (IOException e) {
-				throw new UncheckedIOException(e);
-			}
-		}
-	}
-
 	@Data
 	@RequiredArgsConstructor
 	public static class DirectoryMismatch implements IMismatch {
@@ -81,31 +60,16 @@ public class CompareWalker implements IFileTreeWalker {
 	public static class FileMismatch implements IMismatch {
 		protected final Path relative;
 
-		protected final IFunction1<? super Path, ? extends String> hashFunction;
-
-		protected final Map<OrThrowable<String>, Set<Path>> contents;
+		protected final Map<IFileCompareGroup, Set<Path>> contents;
 
 		@Override
 		public String getExplanation() {
 			final StringBuilder retVal = new StringBuilder();
-			for (Map.Entry<OrThrowable<String>, Set<Path>> entry : getContents().entrySet()) {
-				retVal.append(entry.getValue()).append(": ");
-				if (entry.getKey().isEmpty()) retVal.append(HError.toString(entry.getKey().getThrowable()));
-				else {
-					retVal.append(entry.getKey().get());
-					if (hashFunction instanceof IHelpfulHashFunction) {
-						retVal.append(": ");
-						retVal.append(((IHelpfulHashFunction) hashFunction).explain(HCollection.getAny(entry.getValue()).resolve(relative)));
-					}
-					retVal.append("\n");
-				}
+			for (Map.Entry<IFileCompareGroup, Set<Path>> entry : getContents().entrySet()) {
+				retVal.append(entry.getValue()).append(": ").append(entry.getKey().describe(entry.getValue(), getRelative())).append("\n");
 			}
 			return retVal.toString();
 		}
-	}
-
-	public interface IHelpfulHashFunction extends IFunction1<Path, String> {
-		public String explain(Path path);
 	}
 
 	public interface IMismatch extends IHasExplanation<String> {
@@ -133,32 +97,6 @@ public class CompareWalker implements IFileTreeWalker {
 		}
 	}
 
-	public static class TextHashFunction implements IHelpfulHashFunction, ISingleton {
-		protected static final TextHashFunction INSTANCE = new TextHashFunction();
-
-		public static TextHashFunction create() {
-			return INSTANCE;
-		}
-
-		@Override
-		public String apply(Path path) {
-			try (final InputStream stream = Files.newInputStream(path)) {
-				return HBinary.toHex(HIO.sha1(HTextIO.readAll(stream, true)));
-			} catch (IOException e) {
-				throw new UncheckedIOException(e);
-			}
-		}
-
-		@Override
-		public String explain(Path path) {
-			try (final InputStream stream = Files.newInputStream(path)) {
-				return HTextIO.readAll(stream, true);
-			} catch (IOException e) {
-				return HError.toString(e);
-			}
-		}
-	}
-
 	@RequiredArgsConstructor
 	@Getter
 	public static class Visitor extends AMultithrowFileVisitor {
@@ -167,6 +105,16 @@ public class CompareWalker implements IFileTreeWalker {
 		protected final Path start;
 
 		protected final List<Path> roots;
+
+		protected <T> Map<IFileCompareGroup, Set<Path>> group(final Path relative, final IFileCompareGroupFunction<T> groupFunction) {
+			final Map<Path, T> hashes = new LinkedHashMap<>();
+			for (Path p : getRoots()) {
+				final Path resolved = p.resolve(relative);
+				final T hashed = groupFunction.hash(resolved);
+				hashes.put(p, hashed);
+			}
+			return groupFunction.group(hashes);
+		}
 
 		@Override
 		public FileVisitResult preVisitDirectory(Path path, BasicFileAttributes attributes) {
@@ -191,19 +139,9 @@ public class CompareWalker implements IFileTreeWalker {
 		@Override
 		public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
 			final Path relative = getStart().relativize(path);
-			final IFunction1<? super Path, ? extends String> hashFunction = getConfig().getHashFunctionFunction().apply(relative);
-			final Map<OrThrowable<String>, Set<Path>> grouped = getRoots().stream().map(p -> {
-				try {
-					final Path resolved = p.resolve(relative);
-					final String hash = hashFunction.apply(resolved);
-					return new Tuple2G_O<>(p, new OrThrowable<String>(hash));
-				} catch (RuntimeIOException | UncheckedIOException exception) {
-					return new Tuple2G_O<>(p, new OrThrowable<String>(exception.getCause()));
-				} catch (Throwable exception) {
-					return new Tuple2G_O<>(p, new OrThrowable<String>(exception));
-				}
-			}).collect(Collectors.groupingBy(ITuple2G_::get1, Collectors.mapping(ITuple2G_::get0, Collectors.toSet())));
-			if (grouped.size() > 1) throw new MismatchError(new FileMismatch(relative, hashFunction, grouped));
+			final IFileCompareGroupFunction<?> groupFunction = getConfig().getGroupFunctionFunction().apply(relative);
+			final Map<IFileCompareGroup, Set<Path>> grouped = group(relative, groupFunction);
+			if (grouped.size() > 1) throw new MismatchError(new FileMismatch(relative, grouped));
 			return FileVisitResult.CONTINUE;
 		}
 	}
@@ -212,7 +150,7 @@ public class CompareWalker implements IFileTreeWalker {
 	protected final List<Path> roots;
 
 	@Default
-	protected final IFunction1<? super Path, ? extends IFunction1<? super Path, ? extends String>> hashFunctionFunction = new LiteralFunction1<>(BinaryHashFunction.create());
+	protected final IFunction1<? super Path, ? extends IFileCompareGroupFunction<?>> groupFunctionFunction = new LiteralFunction1<>(SHA1HashFileCompareGroupFunction.create());
 
 	protected Visitor constructVisitor(Path start) {
 		return new Visitor(this, start, HCollection.concatenate(HCollection.asList(start), getRoots()));
