@@ -29,13 +29,14 @@ import lombok.RequiredArgsConstructor;
 public class FileScanner extends AThreadActor {
 	@RequiredArgsConstructor
 	@Getter
-	protected static class Event {
+	public static class Event {
 		protected final Set<Path> paths;
 
+		/** {@code true} if this event is the result of a scan (as opposed to a change). */
 		protected final boolean scan;
 	}
 
-	protected final IConsumer1<Set<Path>> handler;
+	protected final IConsumer1<Event> handler;
 
 	protected final IConsumer1<Throwable> errorHandler;
 
@@ -48,7 +49,7 @@ public class FileScanner extends AThreadActor {
 	/** A map of the directories we have scanned, so that we can watch recursively, to their watcher controls. */
 	protected final Map<Path, ICloseable> scanned = new HashMap<>();
 
-	public FileScanner(IConsumer1<Set<Path>> handler, IConsumer1<Throwable> errorHandler, boolean reportOnScan, Path... directories) {
+	public FileScanner(IConsumer1<Event> handler, IConsumer1<Throwable> errorHandler, boolean reportOnScan, Path... directories) {
 		this(handler, errorHandler, reportOnScan, HCollection.asSet(directories));
 	}
 
@@ -97,11 +98,12 @@ public class FileScanner extends AThreadActor {
 					}
 				}
 
-				// Handle any changes
-				final LinkedHashSet<Path> reportPaths = reportOnScan ? allPaths : events.stream().filter(e -> !e.isScan()).map(Event::getPaths).flatMap(Collection::stream).collect(Collectors.toCollection(LinkedHashSet::new));
-				if (!reportPaths.isEmpty()) {
+				// Handle any changes/events
+				for (Event event : events) {
+					if (!reportOnScan && event.isScan()) continue;
+					if (event.getPaths().isEmpty()) continue;
 					try {
-						handler.accept(reportPaths);
+						handler.accept(event);
 					} catch (Throwable throwable) {
 						errorHandler.accept(throwable);
 					}
