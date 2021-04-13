@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.g2forge.alexandria</groupId>
 		<artifactId>ax-project</artifactId>
-		<version>0.0.16-SNAPSHOT</version>
+		<version>0.0.16</version>
 		<relativePath>../ax-project/pom.xml</relativePath>
 	</parent>
 
@@ -31,4 +31,8 @@
 			<version>${slf4j.version}</version>
 		</dependency>
 	</dependencies>
+
+  <scm>
+    <tag>0.0.16</tag>
+  </scm>
 </project>
