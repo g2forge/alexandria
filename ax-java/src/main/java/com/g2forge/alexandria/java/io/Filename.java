@@ -18,7 +18,8 @@ import lombok.Singular;
 public class Filename {
 	public static Path modifyFilename(Path path, final String modified) {
 		final Path parent = path.getParent();
-		return parent == null ? path.getFileSystem().getPath(modified) : parent.resolve(modified);
+		if ((parent == null) || (!path.isAbsolute() && (path.getNameCount() == 1))) return path.getFileSystem().getPath(modified);
+		return parent.resolve(modified);
 	}
 
 	public static Path replaceLastExtension(Path path, String extension) {
