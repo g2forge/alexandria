@@ -7,14 +7,10 @@
 	<parent>
 		<groupId>com.g2forge.alexandria</groupId>
 		<artifactId>ax-project</artifactId>
-		<version>0.0.17</version>
+		<version>0.0.18-SNAPSHOT</version>
 		<relativePath>../ax-project/pom.xml</relativePath>
 	</parent>
 
 	<name>Alexandria Command</name>
 	<description>Library for command line programming.</description>
-
-  <scm>
-    <tag>0.0.17</tag>
-  </scm>
 </project>
