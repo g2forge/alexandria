@@ -58,7 +58,7 @@ public class TextHashFileCompareGroupFunction extends AHashFileCompareGroupFunct
 	public Map<IFileCompareGroup, Set<Path>> group(Map<Path, ? extends OrThrowable<String>> hashes) {
 		final Map<IFileCompareGroup, Set<Path>> retVal = new HashMap<>();
 		for (Map.Entry<Path, ? extends OrThrowable<String>> entry : hashes.entrySet()) {
-			final IFileCompareGroup group = new HashFileCompareGroup(entry.getValue());
+			final IFileCompareGroup group = computeGroup(entry.getKey(), entry.getValue());
 			retVal.computeIfAbsent(group, k -> new LinkedHashSet<>()).add(entry.getKey());
 		}
 		return retVal;
