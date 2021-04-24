@@ -41,6 +41,8 @@ public class FileScanner extends AThreadActor {
 	protected final IConsumer1<Throwable> errorHandler;
 
 	protected final boolean reportOnScan;
+	
+	protected final boolean reportUnsupportedWatch;
 
 	protected final Set<Path> directories;
 
@@ -49,8 +51,8 @@ public class FileScanner extends AThreadActor {
 	/** A map of the directories we have scanned, so that we can watch recursively, to their watcher controls. */
 	protected final Map<Path, ICloseable> scanned = new HashMap<>();
 
-	public FileScanner(IConsumer1<Event> handler, IConsumer1<Throwable> errorHandler, boolean reportOnScan, Path... directories) {
-		this(handler, errorHandler, reportOnScan, HCollection.asSet(directories));
+	public FileScanner(IConsumer1<Event> handler, IConsumer1<Throwable> errorHandler, boolean reportOnScan, boolean reportUnsupportedWatch, Path... directories) {
+		this(handler, errorHandler, reportOnScan, reportUnsupportedWatch, HCollection.asSet(directories));
 	}
 
 	@Override
@@ -93,7 +95,9 @@ public class FileScanner extends AThreadActor {
 						try {
 							scan(path, watcher);
 						} catch (RuntimeIOException | UncheckedIOException exception) {
-							if (!(exception.getCause() instanceof NoSuchFileException) || Files.isDirectory(path)) throw exception;
+							if (!(exception.getCause() instanceof NoSuchFileException) || Files.isDirectory(path)) errorHandler.accept(exception);
+						} catch (Throwable throwable) {
+							errorHandler.accept(throwable);
 						}
 					}
 				}
@@ -156,6 +160,6 @@ public class FileScanner extends AThreadActor {
 			}
 		}
 
-		if (unsupported != null) throw new RuntimeException(unsupported);
+		if ((unsupported != null) && reportUnsupportedWatch) throw new UnsupportedOperationException("Cannot watch \"" + directory + "\"", unsupported);
 	}
 }
