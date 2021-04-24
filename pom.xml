@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>com.g2forge.alexandria</groupId>
 		<artifactId>ax-project</artifactId>
-		<version>0.0.17-SNAPSHOT</version>
+		<version>0.0.17</version>
 		<relativePath>ax-project/pom.xml</relativePath>
 	</parent>
 
@@ -49,4 +49,8 @@
 			</modules>
 		</profile>
 	</profiles>
+
+  <scm>
+    <tag>0.0.17</tag>
+  </scm>
 </project>
