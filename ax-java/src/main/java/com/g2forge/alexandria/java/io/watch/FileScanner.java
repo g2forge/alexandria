@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.g2forge.alexandria.java.close.ICloseable;
 import com.g2forge.alexandria.java.concurrent.AThreadActor;
@@ -151,7 +152,7 @@ public class FileScanner extends AThreadActor {
 			// Scan the directory so that we don't miss any changes from before we knew there was directory here
 			synchronized (queue) {
 				try {
-					final Set<Path> children = Files.list(directory).collect(Collectors.toCollection(LinkedHashSet::new));
+					final Set<Path> children = Stream.concat(Stream.of(directory), Files.list(directory)).collect(Collectors.toCollection(LinkedHashSet::new));
 					queue.add(new Event(children, true));
 					queue.notifyAll();
 				} catch (IOException exception) {
