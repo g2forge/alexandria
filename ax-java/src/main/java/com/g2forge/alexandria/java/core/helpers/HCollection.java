@@ -182,6 +182,13 @@ public class HCollection {
 		return getFirst(iterable);
 	}
 
+	public static <T> T removeFirst(final Collection<T> collection) {
+		final Iterator<T> iterator = collection.iterator();
+		final T retVal = iterator.next();
+		iterator.remove();
+		return retVal;
+	}
+
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> emptyList() {
 		return Collections.EMPTY_LIST;
@@ -274,10 +281,7 @@ public class HCollection {
 	}
 
 	public static <T> T removeAny(final Collection<T> collection) {
-		final Iterator<T> iterator = collection.iterator();
-		final T retVal = iterator.next();
-		iterator.remove();
-		return retVal;
+		return removeFirst(collection);
 	}
 
 	public static <T> Collection<T> toCollection(final Iterable<T> iterable) {
