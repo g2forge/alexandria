@@ -219,6 +219,23 @@ public class HCollection {
 		return retVal;
 	}
 
+	public static <T> T removeLast(final Iterable<? extends T> iterable) {
+		if (iterable instanceof Deque) return ((Deque<? extends T>) iterable).removeLast();
+		if (iterable instanceof List) {
+			final List<? extends T> list = (List<? extends T>) iterable;
+			return list.remove(list.size() - 1);
+		}
+
+		final Iterator<? extends T> iterator = iterable.iterator();
+		if (!iterator.hasNext()) throw new NoSuchElementException();
+		T retVal = null;
+		while (iterator.hasNext()) {
+			retVal = iterator.next();
+		}
+		iterator.remove();
+		return retVal;
+	}
+
 	public static <T> int getLast(List<? extends T> list, Predicate<? super T> test) {
 		return getLast(list, (position, value) -> test.test(value));
 	}
