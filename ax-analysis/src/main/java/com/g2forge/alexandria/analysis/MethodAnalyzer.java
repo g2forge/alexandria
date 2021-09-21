@@ -1,5 +1,8 @@
 package com.g2forge.alexandria.analysis;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.bcel.Repository;
@@ -20,6 +23,7 @@ import org.apache.bcel.generic.ReturnInstruction;
 import org.apache.bcel.generic.Type;
 
 import com.g2forge.alexandria.java.core.error.RuntimeReflectionException;
+import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.reflect.HReflection;
 import com.g2forge.alexandria.java.reflect.JavaPrimitive;
 import com.g2forge.alexandria.java.reflect.accessor.IJavaAccessorMethod;
@@ -33,9 +37,9 @@ import lombok.ToString;
 @RequiredArgsConstructor
 @ToString
 @EqualsAndHashCode
-class MethodAnalyzer implements IMethodAnalyzer {
-	protected static String computePath(org.apache.bcel.classfile.Method method) throws Error {
-		if (method.isAbstract()) return new IJavaAccessorMethod() {
+public class MethodAnalyzer implements IMethodAnalyzer {
+	public static List<String> computePath(org.apache.bcel.classfile.Method method) throws Error {
+		if (method.isAbstract()) return HCollection.asList(new IJavaAccessorMethod() {
 			@Override
 			public String getName() {
 				return method.getName();
@@ -50,7 +54,7 @@ class MethodAnalyzer implements IMethodAnalyzer {
 			public java.lang.reflect.Type getReturnType() {
 				return HBCEL.toJava(method.getReturnType());
 			}
-		}.getFieldName();
+		}.getFieldName());
 
 		final Code code = method.getCode();
 		final Instruction[] instructions = new InstructionList(code.getCode()).getInstructions();
@@ -61,7 +65,7 @@ class MethodAnalyzer implements IMethodAnalyzer {
 		if (!(instructions[limit] instanceof ReturnInstruction)) throw new Error("Cannot parse method to path, because last instruction is not a return");
 
 		// Parse through all the instructions in the middle
-		final StringBuilder retVal = new StringBuilder();
+		final List<String> retVal = new ArrayList<>();
 		final ConstantPoolGen constantPoolGen = new ConstantPoolGen(method.getConstantPool());
 		for (int i = 1; i < limit; i++) {
 			// The field we're traversing on this instruction, can be null if the instruction is not a field traversal
@@ -115,11 +119,10 @@ class MethodAnalyzer implements IMethodAnalyzer {
 			}
 
 			if (field != null) {
-				if (retVal.length() > 0) retVal.append('.');
-				retVal.append(field);
+				retVal.add(field);
 			}
 		}
-		return retVal.toString();
+		return retVal;
 	}
 
 	protected static String getField(Type target, String name, Type ret, Type[] args) throws ClassNotFoundException {
@@ -193,7 +196,7 @@ class MethodAnalyzer implements IMethodAnalyzer {
 	private final java.lang.reflect.Executable executable = toJavaExecutable(getThunk());
 
 	@Getter(lazy = true)
-	private final String path = computePath(getBCEL());
+	private final String path = computePath(getBCEL()).stream().collect(Collectors.joining("."));
 
 	@Getter(lazy = true)
 	private final org.apache.bcel.classfile.Method BCEL = toBCELMethod(getThunk());
