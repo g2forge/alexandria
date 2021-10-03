@@ -42,7 +42,7 @@ public class FileScanner extends AThreadActor {
 	protected final IConsumer1<Throwable> errorHandler;
 
 	protected final boolean reportOnScan;
-	
+
 	protected final boolean reportUnsupportedWatch;
 
 	protected final Set<Path> directories;
@@ -56,6 +56,60 @@ public class FileScanner extends AThreadActor {
 		this(handler, errorHandler, reportOnScan, reportUnsupportedWatch, HCollection.asSet(directories));
 	}
 
+	protected void handle(FileWatcher watcher) {
+		final List<Event> events;
+		// Grab the next changed file at the source that we should handle
+		synchronized (queue) {
+			if (queue.isEmpty()) try {
+				queue.wait();
+			} catch (InterruptedException exception) {
+				return;
+			}
+
+			events = new ArrayList<>(queue);
+			queue.clear();
+			if (events.isEmpty()) return;
+		}
+
+		{ // Scan anything we found
+			final LinkedHashSet<Path> allPaths = events.stream().map(Event::getPaths).flatMap(Collection::stream).collect(Collectors.toCollection(LinkedHashSet::new));
+			boolean foundNew = false;
+			for (Path path : allPaths) {
+				if (Files.isDirectory(path)) {
+					try {
+						foundNew |= scan(path, watcher);
+					} catch (RuntimeIOException | UncheckedIOException exception) {
+						if (!(exception.getCause() instanceof NoSuchFileException) || Files.isDirectory(path)) errorHandler.accept(exception);
+						foundNew = true;
+					} catch (Throwable throwable) {
+						errorHandler.accept(throwable);
+						foundNew = true;
+					}
+				}
+			}
+			if (foundNew) {
+				synchronized (queue) {
+					final List<Event> events2 = new ArrayList<>(queue);
+					queue.clear();
+					queue.addAll(events);
+					queue.addAll(events2);
+				}
+				return;
+			}
+		}
+
+		// Handle any changes/events
+		for (Event event : events) {
+			if (!reportOnScan && event.isScan()) continue;
+			if (event.getPaths().isEmpty()) continue;
+			try {
+				handler.accept(event);
+			} catch (Throwable throwable) {
+				errorHandler.accept(throwable);
+			}
+		}
+	}
+
 	@Override
 	public FileScanner open() {
 		return (FileScanner) super.open();
@@ -67,61 +121,22 @@ public class FileScanner extends AThreadActor {
 		try (final FileWatcher watcher = new FileWatcher()) {
 			watcher.open();
 			for (Path directory : directories) {
-				try {
-					scan(directory, watcher);
-				} catch (Throwable throwable) {
-					errorHandler.accept(throwable);
-				}
+				queue.add(new Event(HCollection.asSet(directory), true));
+				handle(watcher);
+
 			}
 
 			while (isOpen()) {
-				final List<Event> events;
-				// Grab the next changed file at the source that we should handle
-				synchronized (queue) {
-					if (queue.isEmpty()) try {
-						queue.wait();
-					} catch (InterruptedException exception) {
-						continue;
-					}
-
-					events = new ArrayList<>(queue);
-					queue.clear();
-					if (events.isEmpty()) continue;
-				}
-
-				// Scan anything we found
-				final LinkedHashSet<Path> allPaths = events.stream().map(Event::getPaths).flatMap(Collection::stream).collect(Collectors.toCollection(LinkedHashSet::new));
-				for (Path path : allPaths) {
-					if (Files.isDirectory(path)) {
-						try {
-							scan(path, watcher);
-						} catch (RuntimeIOException | UncheckedIOException exception) {
-							if (!(exception.getCause() instanceof NoSuchFileException) || Files.isDirectory(path)) errorHandler.accept(exception);
-						} catch (Throwable throwable) {
-							errorHandler.accept(throwable);
-						}
-					}
-				}
-
-				// Handle any changes/events
-				for (Event event : events) {
-					if (!reportOnScan && event.isScan()) continue;
-					if (event.getPaths().isEmpty()) continue;
-					try {
-						handler.accept(event);
-					} catch (Throwable throwable) {
-						errorHandler.accept(throwable);
-					}
-				}
+				handle(watcher);
 			}
 		}
 	}
 
-	protected void scan(Path directory, FileWatcher watcher) {
+	protected boolean scan(Path directory, FileWatcher watcher) {
 		UnsupportedOperationException unsupported = null;
 
 		synchronized (scanned) {
-			if (scanned.containsKey(directory)) return;
+			if (scanned.containsKey(directory)) return false;
 
 			final IWatchHandler handler = (event, path) -> {
 				synchronized (queue) {
@@ -162,5 +177,6 @@ public class FileScanner extends AThreadActor {
 		}
 
 		if ((unsupported != null) && reportUnsupportedWatch) throw new UnsupportedOperationException("Cannot watch \"" + directory + "\"", unsupported);
+		return true;
 	}
 }
