@@ -1,5 +1,6 @@
 package com.g2forge.alexandria.java.reflect;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
@@ -20,6 +21,11 @@ public class HReflection {
 		}
 
 		builder.append(')');
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T getDefaultValue(Class<T> type) {
+		return (T) Array.get(Array.newInstance(type, 1), 0);
 	}
 
 	public static Type getParentTypeArgument(Object child, Class<?> expected, int index) {
