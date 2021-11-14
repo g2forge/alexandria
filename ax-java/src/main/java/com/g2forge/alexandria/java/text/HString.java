@@ -69,4 +69,14 @@ public class HString {
 		}
 		return string;
 	}
+
+	public static String pad(String string, String padding, int minLength) {
+		if (string.length() >= minLength) return string;
+		final StringBuilder retVal = new StringBuilder();
+		retVal.append(string);
+		while (retVal.length() < minLength) {
+			retVal.append(padding);
+		}
+		return retVal.toString();
+	}
 }
