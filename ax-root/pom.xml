@@ -135,6 +135,9 @@
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>${mavenfailsafe.version}</version>
 				<configuration>
+					<argLine>
+						--illegal-access=permit
+					</argLine>
 					<includes>
 						<include>**/Integration*.java</include>
 						<include>**/*Integration.java</include>
