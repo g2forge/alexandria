@@ -119,6 +119,9 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${mavensurefire.version}</version>
 				<configuration>
+					<argLine>
+						--illegal-access=permit
+					</argLine>
 					<parallel>classes</parallel>
 					<threadCount>8</threadCount>
 					<systemPropertyVariables>
