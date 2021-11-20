@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.g2forge.alexandria.command.exit.Exit;
@@ -18,6 +19,7 @@ import com.g2forge.alexandria.command.stdio.StandardIO;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.core.marker.ICommand;
 import com.g2forge.alexandria.java.function.IFunction1;
+import com.g2forge.alexandria.java.io.HIO;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -29,7 +31,7 @@ import lombok.experimental.Accessors;
 @FunctionalInterface
 public interface IStandardCommand extends IStructuredCommand {
 	@Data
-	@Accessors(fluent = true)
+	@Accessors(chain = true)
 	@Getter(AccessLevel.PROTECTED)
 	@RequiredArgsConstructor
 	public static class Tester {
@@ -43,18 +45,33 @@ public interface IStandardCommand extends IStructuredCommand {
 
 		protected IEnvironment environment = SystemEnvironment.create();
 
-		public Tester argument(String... arguments) {
-			arguments().addAll(HCollection.asList(arguments));
+		public Tester addArguments(Collection<? extends String> arguments) {
+			getArguments().addAll(arguments);
+			return this;
+		}
+
+		public Tester addArguments(String... arguments) {
+			getArguments().addAll(HCollection.asList(arguments));
 			return this;
 		}
 
 		public TestResult invoke() throws Throwable {
 			final ByteArrayOutputStream standardOutput = new ByteArrayOutputStream();
 			final ByteArrayOutputStream standardError = new ByteArrayOutputStream();
-			final StandardIO<InputStream, PrintStream> io = new StandardIO<>(standardInput(), new PrintStream(standardOutput), new PrintStream(standardError));
-			final CommandInvocation<InputStream, PrintStream> invocation = new CommandInvocation<>(ICommandFormat.getDefault(), arguments, io, working(), environment());
-			final IExit exit = command().invoke(invocation);
+			final StandardIO<InputStream, PrintStream> io = new StandardIO<>(getStandardInput(), new PrintStream(standardOutput), new PrintStream(standardError));
+			final CommandInvocation<InputStream, PrintStream> invocation = new CommandInvocation<>(ICommandFormat.getDefault(), arguments, io, getWorking(), getEnvironment());
+			final IExit exit = getCommand().invoke(invocation);
 			return new TestResult(exit, new ByteArrayInputStream(standardOutput.toByteArray()), new ByteArrayInputStream(standardError.toByteArray()));
+		}
+
+		public Tester setStandardInput(InputStream standardInput) {
+			this.standardInput = standardInput;
+			return this;
+		}
+
+		public Tester setStandardInput(String standardInput) {
+			setStandardInput(HIO.toInputStream(standardInput));
+			return this;
 		}
 	}
 
@@ -90,11 +107,11 @@ public interface IStandardCommand extends IStructuredCommand {
 	}
 
 	public default TestResult test(InputStream standardInput) throws Throwable {
-		return tester().standardInput(standardInput).invoke();
+		return tester().setStandardInput(standardInput).invoke();
 	}
 
 	public default TestResult test(String... arguments) throws Throwable {
-		return tester().argument(arguments).invoke();
+		return tester().addArguments(arguments).invoke();
 	}
 
 	public default Tester tester() throws Throwable {

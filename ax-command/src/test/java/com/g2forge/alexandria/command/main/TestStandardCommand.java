@@ -14,7 +14,6 @@ import com.g2forge.alexandria.command.exit.IExit;
 import com.g2forge.alexandria.command.invocation.CommandInvocation;
 import com.g2forge.alexandria.command.invocation.environment.MapEnvironment;
 import com.g2forge.alexandria.command.stdio.IStandardIO;
-import com.g2forge.alexandria.java.io.HIO;
 import com.g2forge.alexandria.java.io.HTextIO;
 
 public class TestStandardCommand {
@@ -56,7 +55,7 @@ public class TestStandardCommand {
 	@Test
 	public void cat() throws Throwable {
 		final String message = "Hello, World!\nFoobar!\n";
-		final TestResult result = new Cat().test(HIO.toInputStream(message));
+		final TestResult result = new Cat().tester().setStandardInput(message).invoke();
 		Assert.assertEquals(IStandardCommand.SUCCESS, result.getExit());
 		Assert.assertEquals(message.replace("\n", System.lineSeparator()), HTextIO.readAll(result.getStandardOutput(), false));
 	}
@@ -72,7 +71,7 @@ public class TestStandardCommand {
 	@Test
 	public void envVar() throws Throwable {
 		final String message = "Hello, World!";
-		final TestResult result = new EnvVar().tester().environment(MapEnvironment.builder().variable(EnvVar.class.getSimpleName(), message).build()).invoke();
+		final TestResult result = new EnvVar().tester().setEnvironment(MapEnvironment.builder().variable(EnvVar.class.getSimpleName(), message).build()).invoke();
 		Assert.assertEquals(IStandardCommand.SUCCESS, result.getExit());
 		Assert.assertEquals(message, HTextIO.readAll(result.getStandardOutput(), false));
 	}
