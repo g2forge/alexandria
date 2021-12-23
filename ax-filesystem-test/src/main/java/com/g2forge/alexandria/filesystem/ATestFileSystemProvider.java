@@ -46,6 +46,8 @@ import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.core.math.HMath;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
 import com.g2forge.alexandria.java.io.file.HFile;
+import com.g2forge.alexandria.java.platform.HPlatform;
+import com.g2forge.alexandria.java.platform.PlatformCategory;
 import com.g2forge.alexandria.test.FieldMatcher;
 import com.g2forge.alexandria.test.HAssert;
 import com.g2forge.alexandria.test.HMatchers;
@@ -71,6 +73,7 @@ public abstract class ATestFileSystemProvider {
 	 * @return <code>true</code> if, to the best of our knowledge, the file system underlying the specified path will support last access times.
 	 */
 	public static boolean isSupportsLastAccess(final Path path) {
+		if (!PlatformCategory.Microsoft.equals(HPlatform.getPlatform().getCategory())) return true;
 		if (!path.getFileSystem().supportedFileAttributeViews().contains("dos")) return true;
 		else {
 			final ProcessBuilder builder = new ProcessBuilder();
@@ -225,14 +228,18 @@ public abstract class ATestFileSystemProvider {
 
 	@Test
 	public void createDirectoriesMultiple() throws IOException {
-		try (final FileTimeTester a = FileTimeTester.all(createPath("/a")); final FileTimeTester b = FileTimeTester.all(createPath("/a/b")); final FileTimeTester c = FileTimeTester.all(createPath("/a/b/c"))) {
+		try (final FileTimeTester a = FileTimeTester.all(createPath("/a"));
+			final FileTimeTester b = FileTimeTester.all(createPath("/a/b"));
+			final FileTimeTester c = FileTimeTester.all(createPath("/a/b/c"))) {
 			Files.createDirectories(createPath("/a/b/c"));
 		}
 		HConcurrent.wait(10);
 		try (final FileTimeTester a = FileTimeTester.modify(createPath("/a"), true)) {
 			Files.createDirectories(createPath("/a/d"));
 		}
-		try (final FileTimeTester a = FileTimeTester.read(createPath("/a"), supportLastAccess()); final FileTimeTester b = FileTimeTester.untouched(createPath("/a/b")); final FileTimeTester d = FileTimeTester.untouched(createPath("/a/d"))) {
+		try (final FileTimeTester a = FileTimeTester.read(createPath("/a"), supportLastAccess());
+			final FileTimeTester b = FileTimeTester.untouched(createPath("/a/b"));
+			final FileTimeTester d = FileTimeTester.untouched(createPath("/a/d"))) {
 			assertChildren(HCollection.asList("b", "d"), fs.getPath("/a"));
 		}
 	}
