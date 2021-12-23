@@ -29,6 +29,8 @@ import java.time.Duration;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,7 +44,9 @@ import com.g2forge.alexandria.filesystem.attributes.HBasicFileAttributes;
 import com.g2forge.alexandria.filesystem.file.FileTimeMatcher;
 import com.g2forge.alexandria.filesystem.file.FileTimeTester;
 import com.g2forge.alexandria.java.concurrent.HConcurrent;
+import com.g2forge.alexandria.java.core.enums.EnumException;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
+import com.g2forge.alexandria.java.core.helpers.HCollector;
 import com.g2forge.alexandria.java.core.math.HMath;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
 import com.g2forge.alexandria.java.io.file.HFile;
@@ -52,8 +56,21 @@ import com.g2forge.alexandria.test.FieldMatcher;
 import com.g2forge.alexandria.test.HAssert;
 import com.g2forge.alexandria.test.HMatchers;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 public abstract class ATestFileSystemProvider {
-	protected static final Pattern DISABLE_LAST_ACCESS_PATTERN = Pattern.compile("DisableLastAccess = ([0-9]+).*");
+	protected static final Pattern MICROSOFT_DISABLE_LAST_ACCESS_PATTERN = Pattern.compile("DisableLastAccess = ([0-9]+).*");
+
+	@Getter
+	@AllArgsConstructor
+	protected static enum PosixATimeAttributes {
+		atime(true),
+		noatime(false),
+		relatime(false); // Technical it supports an atime, but it won't be strict enough to match our tests.  We could support relatime in the tests, but it's not really worth it.
+
+		protected final boolean supportsLastAccess;
+	}
 
 	protected static final ISerializableFunction1<BasicFileAttributes, ?>[] basicFileAttributeFunctions = FieldMatcher.create(BasicFileAttributes::creationTime, BasicFileAttributes::lastModifiedTime, BasicFileAttributes::lastAccessTime, BasicFileAttributes::isDirectory, BasicFileAttributes::isRegularFile, BasicFileAttributes::isSymbolicLink, BasicFileAttributes::isOther, BasicFileAttributes::size);
 
@@ -73,29 +90,60 @@ public abstract class ATestFileSystemProvider {
 	 * @return <code>true</code> if, to the best of our knowledge, the file system underlying the specified path will support last access times.
 	 */
 	public static boolean isSupportsLastAccess(final Path path) {
-		if (!PlatformCategory.Microsoft.equals(HPlatform.getPlatform().getCategory())) return true;
-		if (!path.getFileSystem().supportedFileAttributeViews().contains("dos")) return true;
-		else {
-			final ProcessBuilder builder = new ProcessBuilder();
-			builder.command("powershell", "fsutil", "behavior", "query", "disablelastaccess");
-			builder.directory(path.toFile());
-			try {
-				final Process process = builder.start();
-				try {
-					try (final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-						final Matcher matcher = DISABLE_LAST_ACCESS_PATTERN.matcher(reader.readLine().trim());
-						if (!matcher.matches()) return false;
-						final int value = Integer.valueOf(matcher.group(1));
-						return ((value & 0x1) == 0);
-					}
-				} finally {
+		final PlatformCategory category = HPlatform.getPlatform().getCategory();
+		switch (category) {
+			case Microsoft:
+				if (!path.getFileSystem().supportedFileAttributeViews().contains("dos")) return true;
+				else {
+					final ProcessBuilder builder = new ProcessBuilder();
+					builder.command("powershell", "fsutil", "behavior", "query", "disablelastaccess");
+					builder.directory(path.toFile());
 					try {
-						process.waitFor();
-					} catch (InterruptedException e) {}
+						final Process process = builder.start();
+						try {
+							try (final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+								final Matcher matcher = MICROSOFT_DISABLE_LAST_ACCESS_PATTERN.matcher(reader.readLine().trim());
+								if (!matcher.matches()) return false;
+								final int value = Integer.valueOf(matcher.group(1));
+								return ((value & 0x1) == 0);
+							}
+						} finally {
+							try {
+								process.waitFor();
+							} catch (InterruptedException e) {}
+						}
+					} catch (IOException e) {
+						throw new RuntimeIOException(e);
+					}
 				}
-			} catch (IOException e) {
-				throw new RuntimeIOException(e);
+			case Posix: {
+				final ProcessBuilder builder = new ProcessBuilder();
+				builder.command("bash", "-c", "cat /proc/mounts | grep \"^$(df --output=source . | tail -n 1)\" | cut -f 4 -d ' '");
+				builder.directory(path.toFile());
+				try {
+					final Process process = builder.start();
+					try {
+						try (final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+							final Optional<PosixATimeAttributes> optional = HCollection.asSet(reader.readLine().trim().split(",")).stream().map(attribute -> {
+								try {
+									return PosixATimeAttributes.valueOf(attribute);
+								} catch (Throwable throwable) {
+									return null;
+								}
+							}).filter(Objects::nonNull).collect(HCollector.toOptional());
+							return optional.orElse(PosixATimeAttributes.relatime).isSupportsLastAccess();
+						}
+					} finally {
+						try {
+							process.waitFor();
+						} catch (InterruptedException e) {}
+					}
+				} catch (IOException e) {
+					throw new RuntimeIOException(e);
+				}
 			}
+			default:
+				throw new EnumException(PlatformCategory.class, category);
 		}
 	}
 
