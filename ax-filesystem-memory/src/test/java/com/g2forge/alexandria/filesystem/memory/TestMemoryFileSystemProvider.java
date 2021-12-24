@@ -11,6 +11,7 @@ import org.junit.Assert;
 import org.junit.Before;
 
 import com.g2forge.alexandria.filesystem.ATestFileSystemProvider;
+import com.g2forge.alexandria.filesystem.FileSystemTimeTester;
 
 public class TestMemoryFileSystemProvider extends ATestFileSystemProvider {
 	protected static final String MYFS = "memory:myfs";
@@ -29,5 +30,10 @@ public class TestMemoryFileSystemProvider extends ATestFileSystemProvider {
 
 	protected Path createPath(String absolute) {
 		return Paths.get(URI.create(MYFS + "!" + absolute));
+	}
+
+	@Override
+	protected FileSystemTimeTester getFileSystemTimeTester() {
+		return new FileSystemTimeTester(FileSystemTimeTester.CreationTimeMode.Supported, FileSystemTimeTester.LastAccessTimeMode.ATime);
 	}
 }

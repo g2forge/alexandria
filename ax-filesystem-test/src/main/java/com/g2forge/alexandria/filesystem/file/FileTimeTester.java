@@ -14,14 +14,6 @@ import com.g2forge.alexandria.java.core.enums.EnumException;
 import com.g2forge.alexandria.test.HAssert;
 
 public class FileTimeTester implements Closeable {
-	public static FileTimeTester all(Path path) {
-		return new FileTimeTester(path, EnumSet.allOf(HBasicFileAttributes.Attribute.class));
-	}
-
-	public static FileTimeTester createModify(Path path, boolean supportLastAccess) {
-		return new FileTimeTester(path, EnumSet.allOf(HBasicFileAttributes.Attribute.class));
-	}
-
 	protected static FileTime getTime(BasicFileAttributes attributes, HBasicFileAttributes.Attribute attribute) {
 		switch (attribute) {
 			case CreationTime:
@@ -35,25 +27,13 @@ public class FileTimeTester implements Closeable {
 		}
 	}
 
-	public static FileTimeTester modify(Path path, boolean supportLastAccess) {
-		return supportLastAccess ? new FileTimeTester(path, HBasicFileAttributes.Attribute.LastModifiedTime, HBasicFileAttributes.Attribute.LastAccessTime) : new FileTimeTester(path, HBasicFileAttributes.Attribute.LastModifiedTime);
-	}
-
-	public static FileTimeTester read(Path path, boolean supportLastAccess) {
-		return supportLastAccess ? new FileTimeTester(path, HBasicFileAttributes.Attribute.LastAccessTime) : new FileTimeTester(path);
-	}
-
-	public static FileTimeTester untouched(Path path) {
-		return new FileTimeTester(path);
-	}
-
 	protected final Path path;
 
 	protected final EnumSet<HBasicFileAttributes.Attribute> changed;
 
 	protected final FileTimeMatcher.FileTimeMatcherBuilder matcher;
 
-	protected FileTimeTester(Path path, EnumSet<HBasicFileAttributes.Attribute> changed) {
+	public FileTimeTester(Path path, EnumSet<HBasicFileAttributes.Attribute> changed) {
 		this.path = path;
 		this.changed = changed;
 		this.matcher = FileTimeMatcher.start();
@@ -64,10 +44,15 @@ public class FileTimeTester implements Closeable {
 		this.path = path;
 		this.changed = EnumSet.noneOf(HBasicFileAttributes.Attribute.class);
 		for (HBasicFileAttributes.Attribute change : changed) {
-			this.changed.add(change);
+			if (change != null) this.changed.add(change);
 		}
 		this.matcher = FileTimeMatcher.start();
 		delayForMismatch();
+	}
+
+	protected void assertTimeAttribute(final FileTimeMatcher changedMatcher, final FileTimeMatcher unchangedMatcher, HBasicFileAttributes.Attribute attribute, final boolean changed, final FileTime time) {
+		if (changed) HAssert.assertThat(attribute + " time on " + path + " was not changed in correct range", time, changedMatcher);
+		else HAssert.assertThat(attribute + " time on " + path + " was changed when it shouldn't have", time, unchangedMatcher);
 	}
 
 	@Override
@@ -76,14 +61,11 @@ public class FileTimeTester implements Closeable {
 		final FileTimeMatcher changedMatcher = this.matcher.max(FileTimeMatcher.now()).build();
 		final BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
 
-		for (HBasicFileAttributes.Attribute attribute : changed) {
-			HAssert.assertThat(attribute + " time on " + path + " was not changed in correct range", getTime(attributes, attribute), changedMatcher);
-		}
-
 		final FileTimeMatcher unchangedMatcher = new FileTimeMatcher(null, changedMatcher.getMin());
-		final EnumSet<HBasicFileAttributes.Attribute> unchanged = EnumSet.complementOf(changed);
-		for (HBasicFileAttributes.Attribute attribute : unchanged) {
-			HAssert.assertThat(attribute + " time on " + path + " was changed", getTime(attributes, attribute), unchangedMatcher);
+		for (HBasicFileAttributes.Attribute attribute : HBasicFileAttributes.Attribute.values()) {
+			final boolean changed = this.changed.contains(attribute);
+			final FileTime time = getTime(attributes, attribute);
+			assertTimeAttribute(changedMatcher, unchangedMatcher, attribute, changed, time);
 		}
 	}
 
