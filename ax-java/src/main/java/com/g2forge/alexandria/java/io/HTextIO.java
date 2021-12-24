@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import com.g2forge.alexandria.java.close.ICloseable;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.core.marker.Helpers;
+import com.g2forge.alexandria.java.function.IConsumer1;
 
 import lombok.experimental.UtilityClass;
 
@@ -44,15 +45,19 @@ public class HTextIO {
 
 	public List<String> readAll(InputStream stream) {
 		final List<String> retVal = new ArrayList<>();
+		readAll(stream, retVal::add);
+		return retVal;
+	}
+
+	public void readAll(InputStream stream, IConsumer1<? super String> consumer) {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
 			String line;
 			while ((line = reader.readLine()) != null) {
-				retVal.add(line);
+				consumer.accept(line);
 			}
 		} catch (IOException exception) {
 			throw new RuntimeIOException(String.format("Failed to read stream %1$s to list of strings", stream), exception);
 		}
-		return retVal;
 	}
 
 	public static boolean isEqual(InputStream... streams) {
