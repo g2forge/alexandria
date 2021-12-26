@@ -27,6 +27,11 @@ public class ModifiedEnvironment implements IEnvironment {
 		return modifier.modify(base);
 	}
 
+	public IEnvironment simplify() {
+		if (getModifiers().isEmpty()) return getBase();
+		return this;
+	}
+
 	@Override
 	public Map<String, String> toMap() {
 		final Map<String, String> retVal = new LinkedHashMap<>(getBase().toMap());
