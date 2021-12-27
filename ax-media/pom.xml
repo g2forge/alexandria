@@ -7,10 +7,14 @@
 	<parent>
 		<groupId>com.g2forge.alexandria</groupId>
 		<artifactId>ax-project</artifactId>
-		<version>0.0.18-SNAPSHOT</version>
+		<version>0.0.18</version>
 		<relativePath>../ax-project/pom.xml</relativePath>
 	</parent>
 
 	<name>Alexandria Media</name>
 	<description>Media types and file extensions.</description>
+
+  <scm>
+    <tag>0.0.18</tag>
+  </scm>
 </project>
