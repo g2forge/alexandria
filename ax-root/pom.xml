@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.g2forge.alexandria</groupId>
 	<artifactId>ax-root</artifactId>
-	<version>0.0.18</version>
+	<version>0.0.19-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<properties>
@@ -59,12 +59,6 @@
 			<url>https://github.com/${alexandria.organization}/${alexandria.repository}/blob/${project.version}/LICENSE</url>
 		</license>
 	</licenses>
-	<scm>
-		<connection>scm:git:git://github.com/${alexandria.organization}/${alexandria.repository}.git</connection>
-		<developerConnection>scm:git:ssh://github.com:${alexandria.organization}/${alexandria.repository}.git</developerConnection>
-		<url>http://github.com/${alexandria.organization}/${alexandria.repository}/tree/${project.version}</url>
-	  <tag>0.0.18</tag>
-  </scm>
 
 	<distributionManagement>
 		<snapshotRepository>
