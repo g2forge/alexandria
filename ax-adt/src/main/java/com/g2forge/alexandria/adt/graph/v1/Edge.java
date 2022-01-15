@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.adt.graph;
+package com.g2forge.alexandria.adt.graph.v1;
 
 import lombok.Data;
 
