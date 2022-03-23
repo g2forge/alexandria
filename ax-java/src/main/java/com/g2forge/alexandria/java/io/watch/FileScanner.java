@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -23,13 +24,17 @@ import com.g2forge.alexandria.java.function.IConsumer1;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
 import com.g2forge.alexandria.java.io.watch.FileWatcher.IWatchHandler;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @RequiredArgsConstructor
 public class FileScanner extends AThreadActor {
 	@RequiredArgsConstructor
 	@Getter
+	@ToString
+	@EqualsAndHashCode
 	public static class Event {
 		protected final Set<Path> paths;
 
@@ -99,7 +104,7 @@ public class FileScanner extends AThreadActor {
 		}
 
 		// Handle any changes/events
-		for (Event event : events) {
+		for (Event event : simplify(events)) {
 			if (!reportOnScan && event.isScan()) continue;
 			if (event.getPaths().isEmpty()) continue;
 			try {
@@ -178,5 +183,37 @@ public class FileScanner extends AThreadActor {
 
 		if ((unsupported != null) && reportUnsupportedWatch) throw new UnsupportedOperationException("Cannot watch \"" + directory + "\"", unsupported);
 		return true;
+	}
+
+	protected List<Event> simplify(List<Event> events) {
+		if ((events == null) || (events.size() < 2)) return events;
+
+		final List<Event> retVal = new ArrayList<>();
+		Set<Path> paths = null;
+		boolean scan = false;
+		boolean pathsCopied = false;
+
+		for (Event event : events) {
+			if (paths == null) {
+				paths = event.getPaths();
+				scan = event.isScan();
+				continue;
+			}
+
+			if (scan == event.isScan()) {
+				if (!pathsCopied) {
+					paths = new LinkedHashSet<>(paths);
+					pathsCopied = true;
+				}
+				paths.addAll(event.getPaths());
+			} else {
+				retVal.add(new Event(Collections.unmodifiableSet(paths), scan));
+				paths = event.getPaths();
+				scan = event.isScan();
+				pathsCopied = false;
+			}
+		}
+		if (paths != null) retVal.add(new Event(Collections.unmodifiableSet(paths), scan));
+		return retVal;
 	}
 }
