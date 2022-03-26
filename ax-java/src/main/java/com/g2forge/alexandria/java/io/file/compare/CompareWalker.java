@@ -41,11 +41,13 @@ public class CompareWalker implements IFileTreeWalker {
 	public static class DirectoryMismatch implements IMismatch {
 		protected final Path relative;
 
+		/** Map from directory contents (or exception) to the directories that contain those contents. */
 		protected final Map<OrThrowable<List<String>>, Set<Path>> contents;
 
 		@Override
 		public String getExplanation() {
 			final StringBuilder retVal = new StringBuilder();
+			retVal.append("Below are groups of input directories and the contents of those directories\n");
 			for (Map.Entry<OrThrowable<List<String>>, Set<Path>> entry : getContents().entrySet()) {
 				retVal.append(entry.getValue()).append(": ");
 				if (entry.getKey().isEmpty()) retVal.append(HError.toString(entry.getKey().getThrowable()));
@@ -65,6 +67,7 @@ public class CompareWalker implements IFileTreeWalker {
 		@Override
 		public String getExplanation() {
 			final StringBuilder retVal = new StringBuilder();
+			retVal.append("Below are groups of input files and a description of the contents of those files\n");
 			for (Map.Entry<IFileCompareGroup, Set<Path>> entry : getContents().entrySet()) {
 				retVal.append(entry.getValue()).append(": ").append(entry.getKey().describe(entry.getValue(), getRelative())).append("\n");
 			}
@@ -80,7 +83,7 @@ public class CompareWalker implements IFileTreeWalker {
 		private static final long serialVersionUID = -7307790845007062634L;
 
 		protected static String createMessage(IMismatch mismatch) {
-			return String.format("\"%1$s\" is not the same across all root directories:\n%2$s", mismatch.getRelative(), mismatch.getExplanation());
+			return String.format("Entry at path \"%1$s\" is not the same across all root directories:\n%2$s", mismatch.getRelative(), mismatch.getExplanation());
 		}
 
 		@Getter
