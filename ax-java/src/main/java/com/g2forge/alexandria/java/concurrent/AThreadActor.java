@@ -1,10 +1,10 @@
 package com.g2forge.alexandria.java.concurrent;
 
-import com.g2forge.alexandria.java.close.ICloseable;
+import com.g2forge.alexandria.java.close.IWaitCloseable;
 
 import lombok.Getter;
 
-public abstract class AThreadActor implements ICloseable {
+public abstract class AThreadActor implements IWaitCloseable {
 	protected enum State {
 		Initialized,
 		Opened,
@@ -50,6 +50,7 @@ public abstract class AThreadActor implements ICloseable {
 
 	protected void shutdown() {}
 
+	@Override
 	public synchronized void waitClosed() {
 		while (isOpen()) {
 			try {
