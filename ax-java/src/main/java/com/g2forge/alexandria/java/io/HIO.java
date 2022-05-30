@@ -19,18 +19,6 @@ import lombok.experimental.UtilityClass;
 @Helpers
 @UtilityClass
 public class HIO {
-	public static InputStream toInputStream(String string) {
-		final ByteArrayOutputStream output = new ByteArrayOutputStream();
-		try (final PrintStream print = new PrintStream(output)) {
-			print.print(string);
-		}
-		return new ByteArrayInputStream(output.toByteArray());
-	}
-
-	public static int getRecommendedBufferSize() {
-		return 16384;
-	}
-
 	public static void close(AutoCloseable closeable) {
 		try {
 			closeable.close();
@@ -47,29 +35,23 @@ public class HIO {
 		StreamSupport.stream(closeables.spliterator(), false).map(c -> HError.wrap(() -> c.close()).get()).collect(HError.collector(() -> new RuntimeIOException("Failed to close one or more closeables!"), false));
 	}
 
-	public static <T> byte[] sha1(T value, IThrowFunction1<T, InputStream, IOException> open) {
-		final MessageDigest digest;
-		try {
-			digest = MessageDigest.getInstance("SHA-1");
-		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
-		}
-		try (final InputStream stream = open.apply(value)) {
-			final byte[] buffer = new byte[getRecommendedBufferSize()];
-			int n = 0;
-			while (n != -1) {
-				n = stream.read(buffer);
-				if (n > 0) {
-					digest.update(buffer, 0, n);
-				}
-			}
-		} catch (IOException e) {
-			throw new RuntimeIOException(e);
-		}
-		return digest.digest();
+	public static int getRecommendedBufferSize() {
+		return 16384;
 	}
 
 	public static byte[] sha1(String value) {
-		return sha1(value.getBytes(), ByteArrayInputStream::new);
+		return HashAlgorithm.SHA_1.hash(value);
+	}
+
+	public static <T> byte[] sha1(T value, IThrowFunction1<T, InputStream, IOException> open) {
+		return HashAlgorithm.SHA_1.hash(value, open);
+	}
+
+	public static InputStream toInputStream(String string) {
+		final ByteArrayOutputStream output = new ByteArrayOutputStream();
+		try (final PrintStream print = new PrintStream(output)) {
+			print.print(string);
+		}
+		return new ByteArrayInputStream(output.toByteArray());
 	}
 }
