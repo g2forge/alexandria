@@ -39,7 +39,9 @@ public class TestDispatchCommand {
 		final DispatchCommand.ManualBuilder builder = new DispatchCommand.ManualBuilder();
 		builder.command(invocation -> IStandardCommand.SUCCESS, "a");
 		final IStandardCommand command = builder.build();
+
 		Assert.assertEquals(IStandardCommand.FAIL, command.test("x").getExit());
+		Assert.assertEquals(IStandardCommand.FAIL, command.test().getExit());
 	}
 
 	@Test
@@ -48,6 +50,7 @@ public class TestDispatchCommand {
 		builder.command(invocation -> new Exit(invocation.getArguments().size()), "a", "aa", "aaa");
 		builder.command(invocation -> new Exit(-1), "b");
 		final IStandardCommand command = builder.build();
+
 		Assert.assertEquals(0, command.test("a").getExit().getCode());
 		Assert.assertEquals(1, command.test("aaa", "b").getExit().getCode());
 		Assert.assertEquals(2, command.test("aa", "b", "c").getExit().getCode());

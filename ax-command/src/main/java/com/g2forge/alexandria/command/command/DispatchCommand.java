@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.g2forge.alexandria.command.exit.IExit;
 import com.g2forge.alexandria.command.invocation.CommandInvocation;
+import com.g2forge.alexandria.java.core.helpers.HCollector;
 import com.g2forge.alexandria.java.function.IFunction1;
 import com.g2forge.alexandria.java.function.builder.IBuilder;
 
@@ -64,14 +65,22 @@ public class DispatchCommand implements IStandardCommand {
 	@Singular
 	protected final Map<String, IStandardCommand> commands;
 
+	protected String getKnownSubCommands() {
+		return getCommands().keySet().stream().map(s -> '"' + s + '"').collect(HCollector.joining(", ", ", & "));
+	}
+
 	@Override
 	public IExit invoke(CommandInvocation<InputStream, PrintStream> invocation) throws Throwable {
 		final List<String> arguments = invocation.getArguments();
+		if (arguments.size() < 1) {
+			invocation.getIo().getStandardError().println(String.format("No sub-command (or any arguments) were specified, known sub commands are: %1$s!", getKnownSubCommands()));
+			return IStandardCommand.FAIL;
+		}
 
 		final String name = arguments.get(0);
 		final IStandardCommand subcommand = getCommands().get(name);
 		if (subcommand == null) {
-			invocation.getIo().getStandardError().println(String.format("Unrecognized sub-command \"%1$s\"!", name));
+			invocation.getIo().getStandardError().println(String.format("Unrecognized sub-command \"%1$s\", known sub commands are: %2$s!", name, getCommands().keySet().stream().map(s -> '"' + s + '"').collect(HCollector.joining(", ", ", & "))));
 			return IStandardCommand.FAIL;
 		}
 
