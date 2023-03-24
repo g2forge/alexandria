@@ -11,11 +11,18 @@ import lombok.experimental.UtilityClass;
 public class HString {
 	protected static final Pattern INITIAL_PATTERN = Pattern.compile("([A-Z])?[a-zA-Z]+\\s*");
 
-	public static int nMatchesBefore(String string, int index, char character) {
-		for (int count = 0; count < index; count++) {
-			if (string.charAt(index - count - 1) != character) return count;
+	public static boolean hasLowercase(String string) {
+		for (int i = 0; i < string.length(); i++) {
+			if (Character.isLowerCase(string.charAt(i))) return true;
 		}
-		return index;
+		return false;
+	}
+
+	public static boolean hasUppercase(String string) {
+		for (int i = 0; i < string.length(); i++) {
+			if (Character.isUpperCase(string.charAt(i))) return true;
+		}
+		return false;
 	}
 
 	public static String initials(String string) {
@@ -52,8 +59,25 @@ public class HString {
 		return Character.toLowerCase(char0) + string.substring(1);
 	}
 
+	public static int nMatchesBefore(String string, int index, char character) {
+		for (int count = 0; count < index; count++) {
+			if (string.charAt(index - count - 1) != character) return count;
+		}
+		return index;
+	}
+
 	public static String nonWhiteSpace(String string) {
 		return ((string == null) || (string.trim().length() < 1)) ? null : string;
+	}
+
+	public static String pad(String string, String padding, int minLength) {
+		if (string.length() >= minLength) return string;
+		final StringBuilder retVal = new StringBuilder();
+		retVal.append(string);
+		while (retVal.length() < minLength) {
+			retVal.append(padding);
+		}
+		return retVal.toString();
 	}
 
 	public static String stripPrefix(String string, String... prefixes) {
@@ -68,15 +92,5 @@ public class HString {
 			if (string.endsWith(suffix)) return string.substring(0, string.length() - suffix.length());
 		}
 		return string;
-	}
-
-	public static String pad(String string, String padding, int minLength) {
-		if (string.length() >= minLength) return string;
-		final StringBuilder retVal = new StringBuilder();
-		retVal.append(string);
-		while (retVal.length() < minLength) {
-			retVal.append(padding);
-		}
-		return retVal.toString();
 	}
 }
