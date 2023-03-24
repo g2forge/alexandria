@@ -18,11 +18,16 @@ public class TestCase {
 
 	@Test
 	public void camel2snake() {
-		assertConversion("abc-hello-world-xyz", new SnakeCase("-"), CamelCase.create(), "ABCHelloWorldXYZ");
+		assertConversion("abc-hello-world-xyz", new SnakeCase("-", false), CamelCase.create(), "ABCHelloWorldXYZ");
 	}
-	
+
 	@Test
 	public void snake2camel() {
-		assertConversion("AbcHelloWorldXyz", CamelCase.create(), new SnakeCase("-"), "abc-hello-world-xyz");
+		assertConversion("AbcHelloWorldXyz", CamelCase.create(), new SnakeCase("-", false), "abc-hello-world-xyz");
+	}
+
+	@Test
+	public void snake2cased() {
+		assertConversion("hello_world", new SnakeCase("_", false), new SnakeCase(" ", true), "Hello World");
 	}
 }
