@@ -6,21 +6,23 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum MediaType implements IMediaType {
-	Text(true, new SimpleFileExtensions("txt")),
+	Text(true, new SimpleFileExtensions("txt"), new MimeType("text", "plain")),
 	Java(true, new SimpleFileExtensions("java")),
 	Class(false, new SimpleFileExtensions("class")),
-	XML(true, new SimpleFileExtensions("xml")),
-	JSON(true, new SimpleFileExtensions("json")),
-	CSV(true, new SimpleFileExtensions("csv")),
-	ZIP(false, new SimpleFileExtensions("zip")),
-	TAR(false, new SimpleFileExtensions("tar")),
-	GZ(false, new SimpleFileExtensions("gz")),
-	JPG(false, new SimpleFileExtensions("jpg", "jpeg")),
-	PNG(false, new SimpleFileExtensions("png")),
-	SVG(true, new SimpleFileExtensions("svg")),
-	HTML(true, new SimpleFileExtensions("html")),
-	CSS(true, new SimpleFileExtensions("css")),
-	Markdown(true, new SimpleFileExtensions("md"));
+	JAR(false, new SimpleFileExtensions("jar"), new MimeType("application", "java-archive")),
+	XML(true, new SimpleFileExtensions("xml"), new MimeType("application", "xml")),
+	JSON(true, new SimpleFileExtensions("json"), new MimeType("application", "json")),
+	YAML(true, new SimpleFileExtensions("yaml", "yml"), new MimeType("application", "yaml")),
+	CSV(true, new SimpleFileExtensions("csv"), new MimeType("text", "csv")),
+	ZIP(false, new SimpleFileExtensions("zip"), new MimeType("application", "zip")),
+	TAR(false, new SimpleFileExtensions("tar"), new MimeType("application", "x-tar")),
+	GZ(false, new SimpleFileExtensions("gz"), new MimeType("application", "gzip")),
+	JPG(false, new SimpleFileExtensions("jpg", "jpeg"), new MimeType("image", "jpeg")),
+	PNG(false, new SimpleFileExtensions("png"), new MimeType("image", "png")),
+	SVG(true, new SimpleFileExtensions("svg"), new MimeType("image", "svg+xml")),
+	HTML(true, new SimpleFileExtensions("html", "htm"), new MimeType("text", "html")),
+	CSS(true, new SimpleFileExtensions("css"), new MimeType("text", "css")),
+	Markdown(true, new SimpleFileExtensions("md"), new MimeType("text", "markdown"));
 
 	@Getter(lazy = true)
 	private static final IMediaRegistry registry = new MediaRegistry(MediaType.values());
@@ -28,4 +30,10 @@ public enum MediaType implements IMediaType {
 	protected final boolean text;
 
 	protected final IFileExtensions fileExtensions;
+
+	protected final MimeType mimeType;
+	
+	private MediaType(boolean text, IFileExtensions fileExtensions) {
+		this(text, fileExtensions, null);
+	}
 }
