@@ -60,10 +60,6 @@ public class HStream {
 		return current;
 	}
 
-	public static <T> Stream<T> of(final Collection<T> collection) {
-		return collection == null ? Stream.empty() : collection.stream();
-	}
-
 	public static <I0, I1, O> Stream<O> product(BiFunction<I0, I1, O> aggregator, Supplier<Stream<I0>> stream0, Supplier<Stream<I1>> stream1) {
 		return stream0.get().flatMap(v0 -> stream1.get().map(v1 -> aggregator.apply(v0, v1)));
 	}
@@ -90,6 +86,10 @@ public class HStream {
 		final Collection<T> retVal = constructor.get();
 		iterator.forEachRemaining(retVal::add);
 		return retVal;
+	}
+
+	public static <T> Stream<T> toStream(final Collection<T> collection) {
+		return collection == null ? Stream.empty() : collection.stream();
 	}
 
 	public static <T> Stream<T> toStream(Iterator<T> iterator) {
