@@ -4,15 +4,22 @@ import java.util.regex.Pattern;
 
 import com.g2forge.alexandria.java.core.marker.ISingleton;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 @ToString
+@RequiredArgsConstructor
 public class CamelCase extends ACase implements ISingleton {
-	protected static final CamelCase instance = new CamelCase();
+	public static final CamelCase NORMAL = new CamelCase(Pattern.compile("([A-Z]([a-z0-9]+|([A-Z0-9]+((?=[A-Z][a-z])|$))))"));
 
 	public static CamelCase create() {
-		return instance;
+		return NORMAL;
 	}
+
+	@Getter(AccessLevel.PROTECTED)
+	protected final Pattern tokenPattern;
 
 	@Override
 	protected String convertToken(CasedToken token) {
@@ -24,11 +31,6 @@ public class CamelCase extends ACase implements ISingleton {
 			default:
 				return string.isEmpty() ? string : Character.toUpperCase(string.charAt(0)) + string.substring(1);
 		}
-	}
-
-	@Override
-	protected Pattern getTokenPattern() {
-		return Pattern.compile("([A-Z]([a-z0-9]+|([A-Z0-9]+((?=[A-Z][a-z])|$))))");
 	}
 
 	@Override
