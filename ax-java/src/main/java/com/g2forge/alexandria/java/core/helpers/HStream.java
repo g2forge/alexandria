@@ -69,10 +69,8 @@ public class HStream {
 		return Arrays.stream(streams).reduce((s0, s1) -> () -> s0.get().flatMap(v0 -> s1.get().map(v1 -> aggregator.apply(v0, v1)))).orElse(Stream::empty).get();
 	}
 
-	public static <T> Collection<T> toList(Iterator<T> iterator, Supplier<? extends Collection<T>> constructor) {
-		final Collection<T> retVal = constructor.get();
-		iterator.forEachRemaining(retVal::add);
-		return retVal;
+	public static <T> Stream<T> subtype(Stream<?> stream, Class<T> subtype) {
+		return stream.filter(s -> subtype.isInstance(s)).map(subtype::cast);
 	}
 
 	public static <T> Iterable<T> toIterable(Stream<T> stream) {
@@ -82,6 +80,16 @@ public class HStream {
 				return stream.iterator();
 			}
 		};
+	}
+
+	public static <T> Collection<T> toList(Iterator<T> iterator, Supplier<? extends Collection<T>> constructor) {
+		final Collection<T> retVal = constructor.get();
+		iterator.forEachRemaining(retVal::add);
+		return retVal;
+	}
+
+	public static <T> Stream<T> toStream(final Collection<T> collection) {
+		return collection == null ? Stream.empty() : collection.stream();
 	}
 
 	public static <T> Stream<T> toStream(Iterator<T> iterator) {
@@ -94,10 +102,6 @@ public class HStream {
 
 	public static <T> Stream<? extends ITuple2G_<Integer, T>> toStreamIndexed(List<? extends T> list) {
 		return IntStream.range(0, list.size()).mapToObj(i -> new Tuple2G_O<>(i, list.get(i)));
-	}
-
-	public static <T> Stream<T> subtype(Stream<?> stream, Class<T> subtype) {
-		return stream.filter(s -> subtype.isInstance(s)).map(subtype::cast);
 	}
 
 	public static <I0, I1, O> Stream<O> zip(Stream<? extends I0> stream0, Stream<? extends I1> stream1, BiFunction<? super I0, ? super I1, ? extends O> func) {
