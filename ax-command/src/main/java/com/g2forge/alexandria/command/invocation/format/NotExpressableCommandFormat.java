@@ -13,6 +13,6 @@ public class NotExpressableCommandFormat implements ICommandFormat, ISingleton {
 
 	@Override
 	public String quote(String argument) {
-		throw new InvocationNotExpressableException("There is no way to quote the arguments for this command, due to bugs in the Java runtime library for Win32! See the javadocs for Win32CommandLineBuilder.build(...) for more information.");
+		throw new InvocationNotExpressableException("There is no way to quote the argument \"" + argument + "\" for this command, due to bugs in the Java runtime library for Win32! See the javadocs for Win32CommandLineBuilder.build(...) for more information.");
 	}
 }
