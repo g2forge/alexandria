@@ -16,13 +16,13 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class SnakeCase extends ACase {
-	public static final ICase DASH = new SnakeCase("-");
+	public static final SnakeCase DASH = new SnakeCase("-");
 
-	public static final ICase UNDERSCORE = new SnakeCase("_");
+	public static final SnakeCase UNDERSCORE = new SnakeCase("_");
 
-	public static final ICase SPACE = new SnakeCase(" ");
+	public static final SnakeCase SPACE = new SnakeCase(" ");
 
-	public static final ICase SPACE_CASED = new SnakeCase(" ", true);
+	public static final SnakeCase SPACE_CASED = new SnakeCase(" ", true);
 
 	protected final String tokenSeparator;
 
