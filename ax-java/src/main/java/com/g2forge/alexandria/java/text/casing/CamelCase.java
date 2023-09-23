@@ -40,8 +40,9 @@ public class CamelCase extends ACase implements ISingleton {
 
 	@Override
 	protected CasedToken.Type getType(String string) {
-		for (int i = 0; i < string.length(); i++) {
-			if (!Character.isUpperCase(string.charAt(i))) return CasedToken.Type.Word;
+		final boolean firstCase = Character.isUpperCase(string.charAt(0));
+		for (int i = 1; i < string.length(); i++) {
+			if (firstCase != Character.isUpperCase(string.charAt(i))) return CasedToken.Type.Word;
 		}
 		return CasedToken.Type.Acronym;
 	}
