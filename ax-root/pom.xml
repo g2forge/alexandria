@@ -115,7 +115,7 @@
 				<version>${mavensurefire.version}</version>
 				<configuration>
 					<argLine>
-						--illegal-access=permit
+						--add-opens java.base/java.lang=ALL-UNNAMED
 					</argLine>
 					<parallel>classes</parallel>
 					<threadCount>8</threadCount>
@@ -131,7 +131,7 @@
 				<version>${mavenfailsafe.version}</version>
 				<configuration>
 					<argLine>
-						--illegal-access=permit
+						--add-opens java.base/java.lang=ALL-UNNAMED
 					</argLine>
 					<includes>
 						<include>**/Integration*.java</include>
