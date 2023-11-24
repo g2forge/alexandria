@@ -116,6 +116,7 @@
 				<configuration>
 					<argLine>
 						--add-opens java.base/java.lang=ALL-UNNAMED
+						--add-opens java.base/java.lang.invoke=ALL-UNNAMED
 					</argLine>
 					<parallel>classes</parallel>
 					<threadCount>8</threadCount>
@@ -132,6 +133,7 @@
 				<configuration>
 					<argLine>
 						--add-opens java.base/java.lang=ALL-UNNAMED
+						--add-opens java.base/java.lang.invoke=ALL-UNNAMED
 					</argLine>
 					<includes>
 						<include>**/Integration*.java</include>
