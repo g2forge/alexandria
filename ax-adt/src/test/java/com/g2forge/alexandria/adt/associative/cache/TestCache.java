@@ -32,7 +32,7 @@ public class TestCache {
 	}
 
 	@Test
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings("removal")
 	public void identitySame() {
 		final Cache<Integer, Integer> cache = Cache.<Integer, Integer>builder().identity(IIdentity.same()).function(function).policy(new LRUCacheEvictionPolicy<>(2)).build();
 		final Integer a = new Integer(0), b = new Integer(0);
@@ -46,7 +46,7 @@ public class TestCache {
 	}
 
 	@Test
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings("removal")
 	public void identityStandard() {
 		final Cache<Integer, Integer> cache = Cache.<Integer, Integer>builder().identity(IIdentity.standard()).function(function).policy(NeverCacheEvictionPolicy.create()).build();
 		Assert.assertEquals(1, cache.apply(new Integer(0)).intValue());
