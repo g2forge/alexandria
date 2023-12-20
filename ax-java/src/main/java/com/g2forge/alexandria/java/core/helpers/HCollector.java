@@ -71,6 +71,10 @@ public class HCollector {
 		return Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, mergeFail(), () -> new LinkedHashMap<>());
 	}
 
+	public static <T, K> Collector<? super T, ?, Map<K, List<T>>> groupingBy(Function<? super T, ? extends K> classifier) {
+		return Collectors.groupingBy(classifier, LinkedHashMap::new, Collectors.toList());
+	}
+
 	public static <T, K> Collector<? super T, ?, Map<K, List<T>>> multiGroupingBy(Function<? super T, ? extends Iterable<? extends K>> classifier) {
 		return multiGroupingBy(classifier, LinkedHashMap::new, Collectors.toList());
 	}
