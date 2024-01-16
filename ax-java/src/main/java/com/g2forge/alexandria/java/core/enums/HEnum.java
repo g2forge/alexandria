@@ -2,6 +2,7 @@ package com.g2forge.alexandria.java.core.enums;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import com.g2forge.alexandria.java.core.marker.Helpers;
 import com.g2forge.alexandria.java.function.IFunction1;
@@ -47,6 +48,30 @@ public class HEnum {
 		final Class<?> enclosing = klass.getEnclosingClass();
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		final Class<E> retVal = (Class) (((enclosing != null) && enclosing.isEnum() && enclosing.isInstance(object)) ? enclosing : klass);
+		return retVal;
+	}
+
+	@SafeVarargs
+	public static <E extends Enum<E>> E min(E... input) {
+		Objects.requireNonNull(input);
+		if (input.length < 1) throw new IllegalArgumentException();
+
+		E retVal = input[0];
+		for (int i = 1; i < input.length; i++) {
+			if (retVal.compareTo(input[i]) > 0) retVal = input[i];
+		}
+		return retVal;
+	}
+
+	@SafeVarargs
+	public static <E extends Enum<E>> E max(E... input) {
+		Objects.requireNonNull(input);
+		if (input.length < 1) throw new IllegalArgumentException();
+
+		E retVal = input[0];
+		for (int i = 1; i < input.length; i++) {
+			if (retVal.compareTo(input[i]) < 0) retVal = input[i];
+		}
 		return retVal;
 	}
 }

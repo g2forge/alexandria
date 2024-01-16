@@ -49,4 +49,36 @@ public class TestHEnum {
 		} catch (IllegalArgumentException e) {}
 		Assert.assertEquals(E.C, HEnum.valueOf(E.class, Object::toString, true, IFunction1.Identity.create(), "X"));
 	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void minEmpty() {
+		HEnum.min();
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void maxEmpty() {
+		HEnum.max();
+	}
+
+	@Test
+	public void max1() {
+		Assert.assertEquals(E.A, HEnum.max(E.A));
+	}
+
+	@Test
+	public void min1() {
+		Assert.assertEquals(E.A, HEnum.min(E.A));
+	}
+
+	@Test
+	public void max2() {
+		Assert.assertEquals(E.b, HEnum.max(E.A, E.b));
+		Assert.assertEquals(E.C, HEnum.max(E.C, E.b));
+	}
+
+	@Test
+	public void min2() {
+		Assert.assertEquals(E.A, HEnum.min(E.A, E.b));
+		Assert.assertEquals(E.b, HEnum.min(E.C, E.b));
+	}
 }
