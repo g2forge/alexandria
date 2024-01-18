@@ -27,7 +27,7 @@ import lombok.experimental.UtilityClass;
 public class HStream {
 	@SafeVarargs
 	public static <T> Stream<T> concat(Stream<? extends T>... streams) {
-		return Arrays.stream(streams).reduce(Stream::concat).get().map(t -> t);
+		return Arrays.stream(streams).filter(Objects::nonNull).reduce(Stream::concat).get().map(t -> t);
 	}
 
 	public static <T> T findOne(Stream<? extends T> stream) {
