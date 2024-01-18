@@ -20,4 +20,9 @@ public class TestHStream {
 		final List<String> actual = HStream.product((String a, Integer b) -> a + b, () -> Stream.of("A", "B"), () -> Stream.of(0, 1)).collect(Collectors.toList());
 		Assert.assertEquals(new ArrayList<>(HCollection.asList("A0", "A1", "B0", "B1")), actual);
 	}
+
+	@Test
+	public void ofNull() {
+		Assert.assertEquals(HCollection.asList(0, 1), HStream.concat(null, Stream.of(0, 1)).collect(Collectors.toList()));
+	}
 }
