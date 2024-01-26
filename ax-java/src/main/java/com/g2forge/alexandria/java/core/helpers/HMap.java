@@ -1,8 +1,10 @@
-package com.g2forge.alexandria.adt.associative.map;
+package com.g2forge.alexandria.java.core.helpers;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.function.Function;
 
 import com.g2forge.alexandria.java.core.marker.Helpers;
@@ -32,5 +34,20 @@ public class HMap {
 			retVal.putAll(map);
 		}
 		return retVal;
+	}
+
+	public static <T> Map<String, T> copy(Map<String, T> map) {
+		if (map instanceof SortedMap) {
+			final SortedMap<String, T> cast = (SortedMap<String, T>) map;
+			final TreeMap<String, T> retVal = new TreeMap<>(cast.comparator());
+			retVal.putAll(map);
+			return retVal;
+		}
+		return new LinkedHashMap<>(map);
+	}
+
+	public static <K, V> Map<K, V> unmodifiableMap(Map<K, V> map) {
+		if (map instanceof SortedMap) return Collections.unmodifiableSortedMap((SortedMap<K, V>) map);
+		return Collections.unmodifiableMap(map);
 	}
 }
