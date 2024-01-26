@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.command.main;
+package com.g2forge.alexandria.command.command;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -8,7 +8,6 @@ import java.io.PrintStream;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.command.command.IStandardCommand;
 import com.g2forge.alexandria.command.command.IStandardCommand.TestResult;
 import com.g2forge.alexandria.command.exit.IExit;
 import com.g2forge.alexandria.command.invocation.CommandInvocation;

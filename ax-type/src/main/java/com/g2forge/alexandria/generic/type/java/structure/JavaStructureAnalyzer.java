@@ -14,7 +14,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import com.g2forge.alexandria.adt.associative.map.HMap;
+import com.g2forge.alexandria.java.core.helpers.HMap;
 import com.g2forge.alexandria.java.core.helpers.HTree;
 import com.g2forge.alexandria.java.reflect.JavaProtection;
 import com.g2forge.alexandria.java.reflect.JavaScope;

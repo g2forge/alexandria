@@ -1,10 +1,9 @@
 package com.g2forge.alexandria.command.invocation.environment.modified;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.g2forge.alexandria.command.invocation.environment.IEnvironment;
+import com.g2forge.alexandria.java.core.helpers.HMap;
 
 import lombok.Builder;
 import lombok.Data;
@@ -34,7 +33,7 @@ public class ModifiedEnvironment implements IEnvironment {
 
 	@Override
 	public Map<String, String> toMap() {
-		final Map<String, String> retVal = new LinkedHashMap<>(getBase().toMap());
+		final Map<String, String> retVal = HMap.copy(getBase().toMap());
 		for (Map.Entry<String, IEnvironmentModifier> entry : getModifiers().entrySet()) {
 			final String variable = entry.getKey();
 
@@ -44,6 +43,6 @@ public class ModifiedEnvironment implements IEnvironment {
 			else retVal.put(variable, modified);
 		}
 
-		return Collections.unmodifiableMap(retVal);
+		return HMap.unmodifiableMap(retVal);
 	}
 }
