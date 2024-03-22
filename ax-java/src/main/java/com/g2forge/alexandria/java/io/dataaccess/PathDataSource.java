@@ -11,8 +11,10 @@ import com.g2forge.alexandria.java.io.RuntimeIOException;
 import com.g2forge.alexandria.java.type.ref.ITypeRef;
 
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class PathDataSource implements IDataSource {
 	protected final Path path;
 	
