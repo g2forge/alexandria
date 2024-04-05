@@ -23,6 +23,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
+import javax.tools.JavaFileManager.Location;
 import javax.tools.StandardLocation;
 
 import com.g2forge.alexandria.annotations.ElementAnnotations;
@@ -30,7 +31,9 @@ import com.g2forge.alexandria.annotations.HAnnotationProcessor;
 import com.g2forge.alexandria.annotations.IAnnotationHandler;
 
 public class ServiceAnnotationHandler implements IAnnotationHandler<Service> {
-	protected static void readImplementations(final Collection<String> retVal, ProcessingEnvironment processingEnvironment, final String fileName, final StandardLocation location) throws IOException {
+	protected static final Location[] READ_LOCATIONS = new Location[] { StandardLocation.CLASS_OUTPUT, StandardLocation.SOURCE_OUTPUT, StandardLocation.CLASS_PATH, StandardLocation.SOURCE_PATH };
+
+	protected static void readImplementations(final Collection<String> retVal, ProcessingEnvironment processingEnvironment, final String fileName, final Location location) throws IOException {
 		final FileObject inputResource;
 
 		try {
@@ -69,14 +72,15 @@ public class ServiceAnnotationHandler implements IAnnotationHandler<Service> {
 			final Set<String> implementations = new HashSet<>();
 
 			try {
-				readImplementations(implementations, processingEnvironment, fileName, StandardLocation.SOURCE_PATH);
-				readImplementations(implementations, processingEnvironment, fileName, StandardLocation.CLASS_OUTPUT);
+				for (Location location : READ_LOCATIONS) {
+					readImplementations(implementations, processingEnvironment, fileName, location);
+				}
 
 				final Set<String> newServices = entry.getValue().stream().map(TypeElement.class::cast).map(TypeElement::getQualifiedName).map(Object::toString).collect(Collectors.toSet());
 				if (implementations.addAll(newServices)) {
 					final List<String> sorted = new ArrayList<>(implementations);
 					Collections.sort(sorted);
-					writeImplementations(processingEnvironment, StandardLocation.CLASS_OUTPUT, fileName, entry.getValue(), sorted);
+					writeImplementations(processingEnvironment, StandardLocation.SOURCE_OUTPUT, fileName, entry.getValue(), sorted);
 				}
 			} catch (Throwable throwable) {
 				final Messager messager = processingEnvironment.getMessager();
