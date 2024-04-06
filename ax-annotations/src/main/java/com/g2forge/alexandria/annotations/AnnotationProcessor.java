@@ -2,6 +2,7 @@ package com.g2forge.alexandria.annotations;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Repeatable;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -95,11 +96,12 @@ public class AnnotationProcessor extends AbstractProcessor {
 
 						final Class<? extends IAnnotationHandler<?>> handlerType = handlerAnnotation.value();
 						try {
+							Constructor<? extends IAnnotationHandler<?>> constructor = handlerType.getConstructor();
 							@SuppressWarnings({ "unchecked", "rawtypes" })
-							final IAnnotationHandler<Annotation> temp = (IAnnotationHandler) handlerType.newInstance();
+							final IAnnotationHandler<Annotation> temp = (IAnnotationHandler) constructor.newInstance();
 							return temp;
-						} catch (InstantiationException | IllegalAccessException exception) {
-							throw new Error(String.format("Failed to instantiate annotation handler for %1$s", at.getName()), exception);
+						} catch (Throwable throwable) {
+							throw new Error(String.format("Failed to instantiate annotation handler for %1$s", at.getName()), throwable);
 						}
 					});
 
