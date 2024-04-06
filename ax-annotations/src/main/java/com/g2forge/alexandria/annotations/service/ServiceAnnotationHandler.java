@@ -64,8 +64,12 @@ public class ServiceAnnotationHandler implements IAnnotationHandler<Service> {
 	}
 
 	protected static void writeImplementations(final ProcessingEnvironment processingEnvironment, final StandardLocation location, final String fileName, Map<String, Element> implementations) throws IOException {
-		if (implementations.isEmpty()) processingEnvironment.getFiler().getResource(location, "", fileName).delete();
+		if (implementations.isEmpty()) {
+			if (ENABLE_DEBUGGING) processingEnvironment.getMessager().printMessage(Diagnostic.Kind.WARNING, "Deleting " + fileName + " from " + location);
+			processingEnvironment.getFiler().getResource(location, "", fileName).delete();
+		}
 		else {
+			if (ENABLE_DEBUGGING) processingEnvironment.getMessager().printMessage(Diagnostic.Kind.WARNING, "Writing " + fileName + " to " + location);
 			final FileObject outputResource = processingEnvironment.getFiler().createResource(location, "", fileName, implementations.values().toArray(new Element[0]));
 			try (final PrintStream outputStream = new PrintStream(outputResource.openOutputStream())) {
 				implementations.keySet().forEach(outputStream::println);
@@ -93,8 +97,17 @@ public class ServiceAnnotationHandler implements IAnnotationHandler<Service> {
 					}
 				}
 				
+				for (Element element : entry.getValue()) {
+					final TypeElement typeElement = (TypeElement) element;
+					implementations.put(typeElement.getQualifiedName().toString(), element);
+				}
+				
+				if (ENABLE_DEBUGGING) {
+					processingEnvironment.getMessager().printMessage(Diagnostic.Kind.WARNING, "Existing: " + existing.toString());
+					processingEnvironment.getMessager().printMessage(Diagnostic.Kind.WARNING, "Implementations: " + implementations.keySet());
+				}
 				if (existing == null || !existing.equals(implementations.keySet())) {
-					writeImplementations(processingEnvironment, StandardLocation.SOURCE_OUTPUT, fileName, implementations);
+					writeImplementations(processingEnvironment, StandardLocation.CLASS_OUTPUT, fileName, implementations);
 				}
 			} catch (Throwable throwable) {
 				final Messager messager = processingEnvironment.getMessager();
