@@ -29,7 +29,7 @@ import com.g2forge.alexandria.annotations.service.Service;
 
 import lombok.RequiredArgsConstructor;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_11)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 public class AnnotationProcessor extends AbstractProcessor {
 	@RequiredArgsConstructor
 	protected static class PathSupplier implements Supplier<String> {
