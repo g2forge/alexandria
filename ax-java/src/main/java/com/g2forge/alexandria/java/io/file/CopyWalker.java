@@ -13,6 +13,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Set;
 
 import com.g2forge.alexandria.java.function.IFunction1;
+import com.g2forge.alexandria.java.function.IPredicate2;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
 
 import lombok.AllArgsConstructor;
@@ -84,6 +85,8 @@ public class CopyWalker implements IFileTreeWalker {
 		public FileVisitResult preVisitDirectory(Path directorySource, BasicFileAttributes attributes) {
 			// Copy the directory before visiting it's children
 			final Path directoryTarget = getTarget(directorySource);
+			// Skip the subtree if it's not included
+			if (!getConfig().getInclude().test(directoryTarget, false)) return FileVisitResult.SKIP_SUBTREE;
 			final CopyOption[] options = getConfig().getOptions().apply(directoryTarget);
 			try {
 				Files.copy(directorySource, directoryTarget, HFile.optionFilter(options, o -> !(o instanceof ExtendedCopyOption)));
@@ -101,8 +104,10 @@ public class CopyWalker implements IFileTreeWalker {
 		@Override
 		public FileVisitResult visitFile(Path fileSource, BasicFileAttributes attrs) {
 			final Path fileTarget = getTarget(fileSource);
-			final CopyOption[] options = getConfig().getOptions().apply(fileTarget);
-			copyFile(fileSource, fileTarget, options);
+			if (getConfig().getInclude().test(fileTarget, true)) {
+				final CopyOption[] options = getConfig().getOptions().apply(fileTarget);
+				copyFile(fileSource, fileTarget, options);
+			}
 			return FileVisitResult.CONTINUE;
 		}
 	}
@@ -111,6 +116,9 @@ public class CopyWalker implements IFileTreeWalker {
 
 	@Builder.Default
 	protected final IFunction1<? super Path, ? extends CopyOption[]> options = IFunction1.create(new CopyOption[] { StandardCopyOption.COPY_ATTRIBUTES });
+
+	@Builder.Default
+	protected final IPredicate2<? super Path, ? super Boolean> include = IPredicate2.create(true);
 
 	protected Visitor constructVisitor(Path start) {
 		return new Visitor(this, start);
