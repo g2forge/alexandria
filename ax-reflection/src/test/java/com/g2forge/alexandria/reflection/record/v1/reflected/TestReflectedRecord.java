@@ -5,7 +5,7 @@ import java.util.Objects;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.g2forge.alexandria.adt.record.IField;
+import com.g2forge.alexandria.adt.record.v1.IField;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.reflection.record.v1.reflected.implementations.ReflectedRecordType;
 

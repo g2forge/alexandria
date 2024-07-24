@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.adt.record;
+package com.g2forge.alexandria.adt.record.v1;
 
 import com.g2forge.alexandria.java.adt.tuple.ITuple1GS;
 import com.g2forge.alexandria.java.type.IGenericTyped;

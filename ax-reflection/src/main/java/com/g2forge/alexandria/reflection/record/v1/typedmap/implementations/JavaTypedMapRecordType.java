@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-import com.g2forge.alexandria.adt.record.IFieldType;
+import com.g2forge.alexandria.adt.record.v1.IFieldType;
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.IJavaUntype;
 import com.g2forge.alexandria.generic.type.java.type.implementations.JavaClassType;
