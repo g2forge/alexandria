@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.adt.record;
+package com.g2forge.alexandria.adt.record.v1;
 
 import java.util.function.Function;
 

@@ -1,9 +1,9 @@
-package com.g2forge.alexandria.adt.record.map.implementations;
+package com.g2forge.alexandria.adt.record.v1.map;
 
 import java.util.Objects;
 
-import com.g2forge.alexandria.adt.record.IField;
-import com.g2forge.alexandria.adt.record.IFieldType;
+import com.g2forge.alexandria.adt.record.v1.IField;
+import com.g2forge.alexandria.adt.record.v1.IFieldType;
 
 public class MapFieldType<T> implements IFieldType<MapRecord, T> {
 	protected final String name;
