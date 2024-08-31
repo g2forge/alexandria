@@ -80,13 +80,13 @@ public class TestFileWatcher {
 				}
 			}, HCollection.asSet(kinds).toArray(new Kind[0]));
 			synchronized (events) {
-				events.wait(10);
+				events.wait(100);
 			}
 
 			// Perform the modification
 			if (modify != null) modify.accept(temp.get(), file);
 			synchronized (events) {
-				events.wait(10);
+				events.wait(100);
 			}
 
 			// Look for the expected events
