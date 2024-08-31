@@ -24,6 +24,7 @@ import com.g2forge.alexandria.java.function.type.TypeMapIterator;
 
 import lombok.Getter;
 
+@SuppressWarnings("removal")
 public class BasicServiceLoader<S> implements IServiceLoader<S> {
 	public class ProviderIterator implements Iterator<Class<? extends S>> {
 		protected final Iterator<Class<? extends S>> loaded = BasicServiceLoader.this.loaded.values().iterator();
@@ -48,6 +49,7 @@ public class BasicServiceLoader<S> implements IServiceLoader<S> {
 
 		protected String nextProviderName = null;
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public boolean hasNext() {
 			if (acc == null) return hasNextInternal();
@@ -85,6 +87,7 @@ public class BasicServiceLoader<S> implements IServiceLoader<S> {
 		}
 
 		@Override
+		@SuppressWarnings("deprecation")
 		public Class<? extends S> next() {
 			if (acc == null) return nextInternal();
 			else return AccessController.doPrivileged((PrivilegedAction<Class<? extends S>>) this::nextInternal, acc);
@@ -142,6 +145,7 @@ public class BasicServiceLoader<S> implements IServiceLoader<S> {
 		this(key, type, null, null);
 	}
 
+	@SuppressWarnings("deprecation")
 	public BasicServiceLoader(Class<?> key, Class<S> type, ClassLoader classLoader, ITypeFunction1<S> instantiator) {
 		this.key = key == null ? type : key;
 		this.type = Objects.requireNonNull(type, "Type cannot be null");
