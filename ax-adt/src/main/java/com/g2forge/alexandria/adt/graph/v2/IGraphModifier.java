@@ -1,5 +1,7 @@
 package com.g2forge.alexandria.adt.graph.v2;
 
+import com.g2forge.alexandria.adt.collection.CollectionCollection;
+import com.g2forge.alexandria.adt.collection.ICollection;
 import com.g2forge.alexandria.java.function.builder.IModifier;
 
 public interface IGraphModifier<V, E, Result> extends IGraphGeneric<V, E> {
@@ -28,9 +30,21 @@ public interface IGraphModifier<V, E, Result> extends IGraphGeneric<V, E> {
 
 	public IPathModifier<V, E, Result> path(V source);
 
-	public Result removeEdges(@SuppressWarnings("unchecked") E... edges);
+	public default Result removeEdges(@SuppressWarnings("unchecked") E... edges) {
+		return removeEdges(new CollectionCollection<>(edges));
+	}
 
-	public Result removeVertices(@SuppressWarnings("unchecked") V... vertices);
+	public Result removeEdges(ICollection<E> edges);
 
-	public Result vertices(@SuppressWarnings("unchecked") V... vertices);
+	public Result removeVertices(ICollection<V> vertices);
+
+	public default Result removeVertices(@SuppressWarnings("unchecked") V... vertices) {
+		return removeVertices(new CollectionCollection<>(vertices));
+	}
+
+	public Result vertices(ICollection<V> vertices);
+
+	public default Result vertices(@SuppressWarnings("unchecked") V... vertices) {
+		return vertices(new CollectionCollection<>(vertices));
+	}
 }
