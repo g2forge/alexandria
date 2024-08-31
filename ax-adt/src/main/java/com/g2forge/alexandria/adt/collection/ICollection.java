@@ -17,4 +17,8 @@ public interface ICollection<T> extends Iterable<T> {
 	public Stream<T> stream();
 
 	public Collection<T> toCollection();
+
+	public default boolean isEmpty() {
+		return !iterator().hasNext();
+	}
 }

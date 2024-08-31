@@ -10,10 +10,17 @@ import java.util.stream.Stream;
  */
 @FunctionalInterface
 public interface DCollectionCollection<T> extends ICollection<T> {
+	@Override
+	public default boolean isEmpty() {
+		return toCollection().isEmpty();
+	}
+
+	@Override
 	public default Iterator<T> iterator() {
 		return toCollection().iterator();
 	}
 
+	@Override
 	public default Stream<T> stream() {
 		return toCollection().stream();
 	}

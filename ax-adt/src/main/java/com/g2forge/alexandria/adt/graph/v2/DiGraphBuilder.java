@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import com.g2forge.alexandria.adt.collection.ICollection;
 import com.g2forge.alexandria.adt.graph.v2.DiGraph.EdgeData;
 import com.g2forge.alexandria.adt.graph.v2.DiGraph.ILockableGraphKey;
 import com.g2forge.alexandria.adt.graph.v2.DiGraph.ImmutableGraphKey;
@@ -12,7 +13,6 @@ import com.g2forge.alexandria.adt.graph.v2.DiGraph.VertexData;
 import com.g2forge.alexandria.adt.graph.v2.member.IMemberDataStrategy;
 import com.g2forge.alexandria.annotations.note.Note;
 import com.g2forge.alexandria.annotations.note.NoteType;
-import com.g2forge.alexandria.java.core.helpers.HCollection;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -108,13 +108,13 @@ public class DiGraphBuilder<V, E> implements IGraphBuilder<V, E, DiGraphBuilder<
 	}
 
 	@Override
-	public DiGraphBuilder<V, E> removeEdges(@SuppressWarnings("unchecked") E... edges) {
+	public DiGraphBuilder<V, E> removeEdges(ICollection<E> edges) {
 		if (!getGraph().getKey().isWriteAllowed()) throw new IllegalStateException();
-		return removeEdges(HCollection.asList(edges));
+		return removeEdges(edges.toCollection());
 	}
 
 	@Override
-	public DiGraphBuilder<V, E> removeVertices(@SuppressWarnings("unchecked") V... vertices) {
+	public DiGraphBuilder<V, E> removeVertices(ICollection<V> vertices) {
 		final DiGraph<V, E> graph = getGraph();
 		if (!graph.getKey().isWriteAllowed()) throw new IllegalStateException();
 
@@ -143,7 +143,7 @@ public class DiGraphBuilder<V, E> implements IGraphBuilder<V, E, DiGraphBuilder<
 	}
 
 	@Override
-	public DiGraphBuilder<V, E> vertices(@SuppressWarnings("unchecked") V... vertices) {
+	public DiGraphBuilder<V, E> vertices(ICollection<V> vertices) {
 		final DiGraph<V, E> graph = getGraph();
 		if (!graph.getKey().isWriteAllowed()) throw new IllegalStateException();
 

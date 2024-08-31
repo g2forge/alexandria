@@ -2,6 +2,8 @@ package com.g2forge.alexandria.adt.graph.v2;
 
 import java.util.LinkedHashSet;
 
+import com.g2forge.alexandria.adt.collection.ICollection;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -52,19 +54,19 @@ public class MutableDiGraph<V, E> extends DiGraph<V, E> implements IMutableDiGra
 	}
 
 	@Override
-	public Void removeEdges(@SuppressWarnings("unchecked") E... edges) {
+	public Void removeEdges(ICollection<E> edges) {
 		getModifier().removeEdges(edges);
 		return null;
 	}
 
 	@Override
-	public Void removeVertices(@SuppressWarnings("unchecked") V... vertices) {
+	public Void removeVertices(ICollection<V> vertices) {
 		getModifier().removeVertices(vertices);
 		return null;
 	}
 
 	@Override
-	public Void vertices(@SuppressWarnings("unchecked") V... vertices) {
+	public Void vertices(ICollection<V> vertices) {
 		getModifier().vertices(vertices);
 		return null;
 	}
