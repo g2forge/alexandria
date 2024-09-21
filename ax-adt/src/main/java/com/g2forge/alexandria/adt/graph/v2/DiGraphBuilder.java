@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import com.g2forge.alexandria.adt.collection.ICollection;
 import com.g2forge.alexandria.adt.graph.v2.DiGraph.EdgeData;
 import com.g2forge.alexandria.adt.graph.v2.DiGraph.ILockableGraphKey;
 import com.g2forge.alexandria.adt.graph.v2.DiGraph.ImmutableGraphKey;
@@ -13,6 +12,7 @@ import com.g2forge.alexandria.adt.graph.v2.DiGraph.VertexData;
 import com.g2forge.alexandria.adt.graph.v2.member.IMemberDataStrategy;
 import com.g2forge.alexandria.annotations.note.Note;
 import com.g2forge.alexandria.annotations.note.NoteType;
+import com.g2forge.alexandria.collection.ICollection;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
