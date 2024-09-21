@@ -1,7 +1,7 @@
 package com.g2forge.alexandria.adt.graph.v2;
 
-import com.g2forge.alexandria.adt.collection.CollectionCollection;
-import com.g2forge.alexandria.adt.collection.ICollection;
+import com.g2forge.alexandria.collection.CollectionCollection;
+import com.g2forge.alexandria.collection.ICollection;
 import com.g2forge.alexandria.java.function.builder.IModifier;
 
 public interface IGraphModifier<V, E, Result> extends IGraphGeneric<V, E> {

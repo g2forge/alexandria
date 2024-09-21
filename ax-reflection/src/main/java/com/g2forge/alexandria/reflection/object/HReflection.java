@@ -4,8 +4,8 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
 
-import com.g2forge.alexandria.adt.collection.strategy.ICollectionStrategy;
-import com.g2forge.alexandria.adt.collection.strategy.implementations.CollectionStrategy;
+import com.g2forge.alexandria.collection.strategy.ICollectionStrategy;
+import com.g2forge.alexandria.collection.strategy.implementations.CollectionStrategy;
 import com.g2forge.alexandria.generic.type.environment.ITypeEnvironment;
 import com.g2forge.alexandria.generic.type.environment.implementations.EmptyTypeEnvironment;
 import com.g2forge.alexandria.generic.type.java.IJavaUntype;

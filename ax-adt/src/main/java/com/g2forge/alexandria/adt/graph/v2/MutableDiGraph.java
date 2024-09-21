@@ -2,7 +2,7 @@ package com.g2forge.alexandria.adt.graph.v2;
 
 import java.util.LinkedHashSet;
 
-import com.g2forge.alexandria.adt.collection.ICollection;
+import com.g2forge.alexandria.collection.ICollection;
 
 import lombok.AccessLevel;
 import lombok.Getter;
