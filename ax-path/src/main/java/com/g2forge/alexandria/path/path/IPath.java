@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.path;
+package com.g2forge.alexandria.path.path;
 
 import com.g2forge.alexandria.collection.ICollection;
 

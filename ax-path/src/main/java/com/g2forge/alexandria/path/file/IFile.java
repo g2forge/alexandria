@@ -1,9 +1,9 @@
 package com.g2forge.alexandria.path.file;
 
-import com.g2forge.alexandria.path.directory.IDirectorySystem;
+import com.g2forge.alexandria.path.file.system.IFileSystem;
 
 public interface IFile<T> {
-	public IDirectorySystem<T> getDirectorySystem();
+	public IFileSystem<T> getDirectorySystem();
 
 	public IFile<T> getParent();
 

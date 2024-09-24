@@ -1,18 +1,18 @@
-package com.g2forge.alexandria.path.directory;
+package com.g2forge.alexandria.path.file.system;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.g2forge.alexandria.path.IPath;
-import com.g2forge.alexandria.path.Path;
+import com.g2forge.alexandria.path.path.IPath;
+import com.g2forge.alexandria.path.path.Path;
 
-public interface IStandardDirectorySystem extends IDirectorySystem<String> {
-	public default String getSelf() {
-		return ".";
-	}
-
+public interface IStandardFileSystem extends IFileSystem<String> {
 	public default String getParent() {
 		return "..";
+	}
+
+	public default String getSelf() {
+		return ".";
 	}
 
 	@Override
