@@ -3,8 +3,8 @@ package com.g2forge.alexandria.path.file;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import com.g2forge.alexandria.path.directory.DirectorySystem;
-import com.g2forge.alexandria.path.directory.IDirectorySystem;
+import com.g2forge.alexandria.path.file.system.OSFileSystem;
+import com.g2forge.alexandria.path.file.system.IFileSystem;
 
 import lombok.Builder;
 import lombok.Data;
@@ -26,8 +26,8 @@ public class LocalFile implements IFile<String> {
 	}
 
 	@Override
-	public IDirectorySystem<String> getDirectorySystem() {
-		return DirectorySystem.getDirectorySystem();
+	public IFileSystem<String> getDirectorySystem() {
+		return OSFileSystem.getDirectorySystem();
 	}
 
 	@Override

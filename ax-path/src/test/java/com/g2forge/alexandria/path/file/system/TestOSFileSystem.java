@@ -1,4 +1,4 @@
-package com.g2forge.alexandria.path.directory;
+package com.g2forge.alexandria.path.file.system;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.g2forge.alexandria.path.Path;
+import com.g2forge.alexandria.path.path.Path;
 import com.g2forge.alexandria.test.HAssert;
 
 import lombok.Getter;
@@ -18,13 +18,13 @@ import lombok.RequiredArgsConstructor;
 @RunWith(Parameterized.class)
 @RequiredArgsConstructor
 @Getter
-public class TestDirectorySystem {
+public class TestOSFileSystem {
 	@Parameters
 	public static Collection<Object[]> data() {
-		return Stream.of(DirectorySystem.values()).map(s -> new Object[] { s }).collect(Collectors.toList());
+		return Stream.of(OSFileSystem.values()).map(s -> new Object[] { s }).collect(Collectors.toList());
 	}
 
-	protected final IStandardDirectorySystem system;
+	protected final IStandardFileSystem system;
 
 	@Test
 	public void empty() {
