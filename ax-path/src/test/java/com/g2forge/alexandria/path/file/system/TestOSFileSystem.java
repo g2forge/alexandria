@@ -32,6 +32,26 @@ public class TestOSFileSystem {
 	}
 
 	@Test
+	public void isEscapeRootFalse() {
+		HAssert.assertFalse(getSystem().isRootEscape(new Path<>(getSystem().getSelf(), getSystem().getSelf(), "a", getSystem().getParent(), getSystem().getSelf(), "b", getSystem().getSelf(), getSystem().getParent())));
+	}
+
+	@Test
+	public void isEscapeRootTrue() {
+		HAssert.assertTrue(getSystem().isRootEscape(new Path<>(getSystem().getSelf(), getSystem().getSelf(), "a", getSystem().getParent(), getSystem().getParent(), "b", getSystem().getParent(), getSystem().getSelf())));
+	}
+
+	@Test
+	public void normalizeEscape() {
+		HAssert.assertEquals(new Path<>(getSystem().getParent()), getSystem().normalize(new Path<>(getSystem().getSelf(), getSystem().getSelf(), "a", getSystem().getParent(), getSystem().getParent(), "b", getSystem().getParent(), getSystem().getSelf())));
+	}
+
+	@Test
+	public void normalizeEscapeB() {
+		HAssert.assertEquals(new Path<>(getSystem().getParent(), "b"), getSystem().normalize(new Path<>(getSystem().getSelf(), getSystem().getSelf(), "a", getSystem().getParent(), getSystem().getSelf(), getSystem().getParent(), getSystem().getSelf(), "b")));
+	}
+
+	@Test
 	public void parentEnd() {
 		HAssert.assertEquals(new Path<>("a"), getSystem().normalize(new Path<>("a", "b", getSystem().getParent())));
 	}

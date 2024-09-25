@@ -16,6 +16,11 @@ public interface IStandardFileSystem extends IFileSystem<String> {
 	}
 
 	@Override
+	public default boolean isRootEscape(IPath<String> path) {
+		return normalize(path).startsWith(new Path<>(getParent()));
+	}
+
+	@Override
 	public default IPath<String> normalize(IPath<String> path) {
 		if (path.isEmpty()) return path;
 
