@@ -24,13 +24,33 @@ public class TestPath {
 	}
 
 	@Test
+	public void endsWithAComponent() {
+		HAssert.assertTrue(new Path<>("a").endsWith("a"));
+	}
+
+	@Test
 	public void endsWithB() {
 		HAssert.assertFalse(new Path<>("a").endsWith(new Path<>("b")));
 	}
 
 	@Test
+	public void endsWithBComponent() {
+		HAssert.assertFalse(new Path<>("a").endsWith("b"));
+	}
+
+	@Test
+	public void endsWithCComponent() {
+		HAssert.assertTrue(new Path<>("a", "b", "c").endsWith("c"));
+	}
+
+	@Test
 	public void endsWithShort() {
 		HAssert.assertFalse(new Path<>("a").endsWith(new Path<>("a", "b")));
+	}
+
+	@Test
+	public void endsWithShortComponent() {
+		HAssert.assertFalse(Path.createEmpty().endsWith("a"));
 	}
 
 	@Test
@@ -122,12 +142,32 @@ public class TestPath {
 	}
 
 	@Test
+	public void startsWithAComponent() {
+		HAssert.assertTrue(new Path<>("a").startsWith("a"));
+	}
+
+	@Test
 	public void startsWithB() {
 		HAssert.assertFalse(new Path<>("a").startsWith(new Path<>("b")));
 	}
 
 	@Test
+	public void startsWithBComponent() {
+		HAssert.assertFalse(new Path<>("a").startsWith("b"));
+	}
+
+	@Test
+	public void startsWithCComponent() {
+		HAssert.assertTrue(new Path<>("a", "b", "c").startsWith("a"));
+	}
+
+	@Test
 	public void startsWithShort() {
 		HAssert.assertFalse(new Path<>("a").startsWith(new Path<>("a", "b")));
+	}
+
+	@Test
+	public void startsWithShortComponent() {
+		HAssert.assertFalse(Path.createEmpty().startsWith("a"));
 	}
 }

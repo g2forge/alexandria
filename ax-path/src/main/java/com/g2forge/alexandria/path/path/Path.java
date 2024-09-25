@@ -1,10 +1,12 @@
 package com.g2forge.alexandria.path.path;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.g2forge.alexandria.collection.CollectionCollection;
 import com.g2forge.alexandria.collection.EmptyCollection;
 import com.g2forge.alexandria.collection.ICollection;
+import com.g2forge.alexandria.java.core.error.IllegalOperationException;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 
 import lombok.Builder;
@@ -31,6 +33,13 @@ public class Path<T> implements IPath<T> {
 	@SafeVarargs
 	public Path(T... components) {
 		this(components.length < 1 ? EmptyCollection.create() : new CollectionCollection<>(components));
+	}
+
+	@Override
+	public IPath<T> getParent() {
+		if (isEmpty()) throw new IllegalOperationException();
+		final List<T> list = HCollection.asList(getComponents().toCollection());
+		return new Path<>(list.subList(0, list.size() - 1));
 	}
 
 	@Override

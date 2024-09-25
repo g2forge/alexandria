@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.g2forge.alexandria.collection.ICollection;
 import com.g2forge.alexandria.java.adt.compare.CollectionComparator;
-import com.g2forge.alexandria.java.core.error.IllegalOperationException;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 
 public interface IPath<T> {
@@ -32,17 +31,26 @@ public interface IPath<T> {
 		return thisEnding.equals(thatList);
 	}
 
+	public default boolean endsWith(T component) {
+		if (isEmpty()) return false;
+		return getLast().equals(component);
+	}
+
 	public default T getComponent(int index) {
 		return HCollection.get(getComponents().toCollection(), index);
 	}
 
 	public ICollection<T> getComponents();
 
-	public default IPath<T> getParent() {
-		if (isEmpty()) throw new IllegalOperationException();
-		final List<T> list = HCollection.asList(getComponents().toCollection());
-		return new Path<>(list.subList(0, list.size() - 1));
+	public default T getFirst() {
+		return HCollection.getFirst(getComponents().toCollection());
 	}
+
+	public default T getLast() {
+		return HCollection.getLast(getComponents().toCollection());
+	}
+
+	public IPath<T> getParent();
 
 	public default boolean isEmpty() {
 		return getComponents().isEmpty();
@@ -65,5 +73,10 @@ public interface IPath<T> {
 		if (thisSize < thatSize) return false;
 		final List<T> beginning = HCollection.asList(getComponents().toCollection()).subList(0, thatSize);
 		return beginning.equals(other.getComponents().toCollection());
+	}
+
+	public default boolean startsWith(T component) {
+		if (isEmpty()) return false;
+		return getFirst().equals(component);
 	}
 }

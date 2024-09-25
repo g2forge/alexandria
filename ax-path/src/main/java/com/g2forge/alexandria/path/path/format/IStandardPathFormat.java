@@ -1,19 +1,21 @@
 package com.g2forge.alexandria.path.path.format;
 
+import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.g2forge.alexandria.collection.CollectionCollection;
 import com.g2forge.alexandria.path.path.IPath;
-import com.g2forge.alexandria.path.path.Path;
 
-public interface IStandardPathFormat<T> extends IPathFormat<T> {
+public interface IStandardPathFormat<T, P extends IPath<T>> extends IPathFormat<T, P> {
 	public String getSeparator();
 
 	@Override
-	public default IPath<T> toPath(String path) {
-		final String[] components = path.split(Pattern.quote(getSeparator()));
-		return new Path<>(Stream.of(components).map(this::toComponent).collect(Collectors.toList()));
+	public default P toPath(String path) {
+		final String[] componentsArray = path.split(Pattern.quote(getSeparator()));
+		final List<T> componentsList = Stream.of(componentsArray).map(this::toComponent).collect(Collectors.toList());
+		return toPath(new CollectionCollection<>(componentsList));
 	}
 
 	@Override
