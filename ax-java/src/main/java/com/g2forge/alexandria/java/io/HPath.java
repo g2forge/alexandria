@@ -13,40 +13,6 @@ import lombok.experimental.UtilityClass;
 @Helpers
 public class HPath {
 	/**
-	 * Get the file extension.
-	 * 
-	 * @param path The path to the file to get the extension of.
-	 * @return The extension, including the period.
-	 */
-	public String getExtension(Path path) {
-		return new Filename(path).getLastExtension();
-	}
-
-	/**
-	 * Test if the specified path is empty. An empty path is one with a single name, whose string value is empty (has zero characters). This is used to
-	 * represent the default directory in a file system.
-	 * 
-	 * @param path The path to test.
-	 * @return {@code true} if this path is empty.
-	 */
-	public static boolean isEmpty(Path path) {
-		return path.getNameCount() == 1 && path.getName(0).toString().isEmpty();
-	}
-
-	/**
-	 * Resolve the {@code path} against the {@code base} after ensuring they're from the same filesystem.
-	 * 
-	 * @param base The base path.
-	 * @param path The path to resolve against the base.
-	 * @return The resolved path.
-	 * @see Path#resolve(Path)
-	 * @see #ensureFS(FileSystem, Path)
-	 */
-	public static Path resolveFS(Path base, Path path) {
-		return base.resolve(ensureFS(base.getFileSystem(), path));
-	}
-
-	/**
 	 * Return a path in the specified filesystem which is equivalent to {@code path}. Maybe return {@code path} if it is already in the appropriate
 	 * {@code fileSystem}.
 	 * 
@@ -66,5 +32,35 @@ public class HPath {
 			}
 		}
 		return current;
+	}
+
+	/**
+	 * Test if the specified path is empty. An empty path is one with a single name, whose string value is empty (has zero characters). This is used to
+	 * represent the default directory in a file system.
+	 * 
+	 * @param path The path to test.
+	 * @return {@code true} if this path is empty.
+	 */
+	public static boolean isEmpty(Path path) {
+		return path.getNameCount() == 1 && path.getName(0).toString().isEmpty();
+	}
+
+	public static Path replaceFilename(Path path, final String filename) {
+		final Path parent = path.getParent();
+		if ((parent == null) || (!path.isAbsolute() && (path.getNameCount() == 1))) return path.getFileSystem().getPath(filename);
+		return parent.resolve(filename);
+	}
+
+	/**
+	 * Resolve the {@code path} against the {@code base} after ensuring they're from the same filesystem.
+	 * 
+	 * @param base The base path.
+	 * @param path The path to resolve against the base.
+	 * @return The resolved path.
+	 * @see Path#resolve(Path)
+	 * @see #ensureFS(FileSystem, Path)
+	 */
+	public static Path resolveFS(Path base, Path path) {
+		return base.resolve(ensureFS(base.getFileSystem(), path));
 	}
 }

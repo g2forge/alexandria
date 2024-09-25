@@ -22,7 +22,10 @@ public enum MediaType implements IMediaType {
 	SVG(true, new SimpleFileExtensions("svg"), new MimeType("image", "svg+xml")),
 	HTML(true, new SimpleFileExtensions("html", "htm"), new MimeType("text", "html")),
 	CSS(true, new SimpleFileExtensions("css"), new MimeType("text", "css")),
-	Markdown(true, new SimpleFileExtensions("md"), new MimeType("text", "markdown"));
+	Markdown(true, new SimpleFileExtensions("md"), new MimeType("text", "markdown")),
+	MP3(true, new SimpleFileExtensions("mp3"), new MimeType("audio", "mpeg")),
+	M4A(true, new SimpleFileExtensions("m4a"), new MimeType("audio", "mp4")),
+	M4V(true, new SimpleFileExtensions("m4v"), new MimeType("video", "mp4"));
 
 	@Getter(lazy = true)
 	private static final IMediaRegistry registry = new MediaRegistry(MediaType.values());
@@ -32,7 +35,7 @@ public enum MediaType implements IMediaType {
 	protected final IFileExtensions fileExtensions;
 
 	protected final MimeType mimeType;
-	
+
 	private MediaType(boolean text, IFileExtensions fileExtensions) {
 		this(text, fileExtensions, null);
 	}
