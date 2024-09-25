@@ -34,11 +34,6 @@ public class Path<T> implements IPath<T> {
 	}
 
 	@Override
-	public boolean isEmpty() {
-		return getComponents().isEmpty();
-	}
-
-	@Override
 	public IPath<T> resolve(IPath<T> subpath) {
 		if (isEmpty()) return subpath;
 		if (subpath.isEmpty()) return this;
