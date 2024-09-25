@@ -3,6 +3,9 @@ package com.g2forge.alexandria.collection;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
 import java.util.stream.Stream;
 
 import com.g2forge.alexandria.java.core.helpers.HCollection;
@@ -39,6 +42,10 @@ public class CollectionCollection<T> implements ICollection<T> {
 
 	@Override
 	public Collection<T> toCollection() {
-		return Collections.unmodifiableCollection(getElements());
+		final Collection<T> elements = getElements();
+		if (elements instanceof List) return Collections.unmodifiableList((List<T>) elements);
+		if (elements instanceof SortedSet) return Collections.unmodifiableSet((SortedSet<T>) elements);
+		if (elements instanceof Set) return Collections.unmodifiableSet((Set<T>) elements);
+		return Collections.unmodifiableCollection(elements);
 	}
 }
