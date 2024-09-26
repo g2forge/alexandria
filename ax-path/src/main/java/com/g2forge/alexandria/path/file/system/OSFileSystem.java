@@ -8,7 +8,7 @@ public enum OSFileSystem implements IStandardFileSystem {
 	Microsoft,
 	POSIX;
 
-	public static OSFileSystem getDirectorySystem() {
+	public static OSFileSystem getFileSystem() {
 		final PlatformCategory category = HPlatform.getPlatform().getCategory();
 		switch (category) {
 			case Microsoft:
