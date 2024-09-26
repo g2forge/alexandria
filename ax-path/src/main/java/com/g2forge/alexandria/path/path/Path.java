@@ -35,17 +35,25 @@ public class Path<T> implements IPath<T> {
 		this(components.length < 1 ? EmptyCollection.create() : new CollectionCollection<>(components));
 	}
 
+	protected IPath<T> cast(IPath<T> path) {
+		return path;
+	}
+
+	protected IPath<T> create(Collection<T> components) {
+		return new Path<>(components);
+	}
+
 	@Override
 	public IPath<T> getParent() {
 		if (isEmpty()) throw new IllegalOperationException();
 		final List<T> list = HCollection.asList(getComponents().toCollection());
-		return new Path<>(list.subList(0, list.size() - 1));
+		return create(list.subList(0, list.size() - 1));
 	}
 
 	@Override
 	public IPath<T> resolve(IPath<T> subpath) {
-		if (isEmpty()) return subpath;
+		if (isEmpty()) return cast(subpath);
 		if (subpath.isEmpty()) return this;
-		return new Path<>(HCollection.concatenate(getComponents().toCollection(), subpath.getComponents().toCollection()));
+		return create(HCollection.concatenate(getComponents().toCollection(), subpath.getComponents().toCollection()));
 	}
 }

@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 
 import com.g2forge.alexandria.collection.ICollection;
-import com.g2forge.alexandria.java.core.error.IllegalOperationException;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.io.HPath;
 import com.g2forge.alexandria.path.path.IPath;
@@ -46,6 +45,17 @@ public class Filename extends com.g2forge.alexandria.path.path.Path<String> {
 		super(components);
 	}
 
+	@Override
+	protected Filename cast(IPath<String> path) {
+		if (path instanceof Filename) return (Filename) path;
+		return create(path.getComponents().toCollection());
+	}
+
+	@Override
+	protected Filename create(Collection<String> components) {
+		return new Filename(components);
+	}
+
 	/**
 	 * Get the last extension on the filename.
 	 * 
@@ -68,13 +78,6 @@ public class Filename extends com.g2forge.alexandria.path.path.Path<String> {
 		return getFirst();
 	}
 
-	@Override
-	public Filename getParent() {
-		if (isEmpty()) throw new IllegalOperationException();
-		final List<String> list = HCollection.asList(getComponents().toCollection());
-		return new Filename(list.subList(0, list.size() - 1));
-	}
-
 	/**
 	 * Get the name of the file without the last extension.
 	 * 
@@ -83,7 +86,7 @@ public class Filename extends com.g2forge.alexandria.path.path.Path<String> {
 	 */
 	public Filename getPrefix() {
 		final List<String> list = HCollection.asList(components.toCollection());
-		return new Filename(list.subList(0, list.size() == 1 ? 1 : list.size() - 1));
+		return create(list.subList(0, list.size() == 1 ? 1 : list.size() - 1));
 	}
 
 	/**
@@ -95,7 +98,7 @@ public class Filename extends com.g2forge.alexandria.path.path.Path<String> {
 	public Filename getSuffix() {
 		if (size() <= 1) return null;
 		final List<String> list = HCollection.asList(components.toCollection());
-		return new Filename(list.subList(1, list.size()));
+		return create(list.subList(1, list.size()));
 	}
 
 	@Override
