@@ -6,18 +6,13 @@ import java.util.List;
 import com.g2forge.alexandria.path.path.IPath;
 import com.g2forge.alexandria.path.path.Path;
 
-public interface IStandardFileSystem extends IFileSystem<String> {
+public interface IStandardFileSystem extends ISelfFileSystem<String>, ITreeFileSystem<String> {
 	public default String getParent() {
 		return "..";
 	}
 
 	public default String getSelf() {
 		return ".";
-	}
-
-	@Override
-	public default boolean isRootEscape(IPath<String> path) {
-		return normalize(path).startsWith(new Path<>(getParent()));
 	}
 
 	@Override
