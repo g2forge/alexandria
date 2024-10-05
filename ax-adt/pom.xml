@@ -22,7 +22,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.g2forge.alexandria</groupId>
-			<artifactId>ax-collection</artifactId>
+			<artifactId>ax-path</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

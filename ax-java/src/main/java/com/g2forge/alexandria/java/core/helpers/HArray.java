@@ -14,11 +14,6 @@ import lombok.experimental.UtilityClass;
 @Helpers
 @UtilityClass
 public class HArray {
-	@SafeVarargs
-	public static <T> T[] create(T... array) {
-		return array;
-	}
-
 	@SuppressWarnings("unchecked")
 	public static <I extends O, O> O[] cast(Class<? super O> type, I... array) {
 		final Object retVal = Array.newInstance(type, array.length);
@@ -49,6 +44,11 @@ public class HArray {
 	}
 
 	@SafeVarargs
+	public static <T> T[] create(T... array) {
+		return array;
+	}
+
+	@SafeVarargs
 	public static <A, B> B[] map(final Class<? super B> type, final Function<? super A, ? extends B> function, final A... values) {
 		@SuppressWarnings("unchecked")
 		final B[] retVal = (B[]) Array.newInstance(type, values.length);
@@ -62,6 +62,55 @@ public class HArray {
 		final List<B> retVal = new ArrayList<>();
 		for (int i = 0; i < values.length; i++)
 			retVal.add(function.apply(values[i]));
+		return retVal;
+	}
+
+	public static Byte[] toObject(byte[] array) {
+		final Byte[] retVal = new Byte[array.length];
+		for (int i = 0; i < array.length; i++)
+			retVal[i] = array[i];
+		return retVal;
+	}
+
+	public static Character[] toObject(char[] array) {
+		final Character[] retVal = new Character[array.length];
+		for (int i = 0; i < array.length; i++)
+			retVal[i] = array[i];
+		return retVal;
+	}
+
+	public static Double[] toObject(double[] array) {
+		final Double[] retVal = new Double[array.length];
+		for (int i = 0; i < array.length; i++)
+			retVal[i] = array[i];
+		return retVal;
+	}
+
+	public static Float[] toObject(float[] array) {
+		final Float[] retVal = new Float[array.length];
+		for (int i = 0; i < array.length; i++)
+			retVal[i] = array[i];
+		return retVal;
+	}
+
+	public static Integer[] toObject(int[] array) {
+		final Integer[] retVal = new Integer[array.length];
+		for (int i = 0; i < array.length; i++)
+			retVal[i] = array[i];
+		return retVal;
+	}
+
+	public static Long[] toObject(long[] array) {
+		final Long[] retVal = new Long[array.length];
+		for (int i = 0; i < array.length; i++)
+			retVal[i] = array[i];
+		return retVal;
+	}
+
+	public static Short[] toObject(short[] array) {
+		final Short[] retVal = new Short[array.length];
+		for (int i = 0; i < array.length; i++)
+			retVal[i] = array[i];
 		return retVal;
 	}
 }

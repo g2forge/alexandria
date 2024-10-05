@@ -52,6 +52,16 @@ public interface IPath<T> {
 
 	public IPath<T> getParent();
 
+	/**
+	 * Extract a portion of this path. Negative indices are measured from the end, with {@code -2} indicating the last component of the path. This means
+	 * {@code subPath(-2, -1)} returns a path consisting only of the last component.
+	 * 
+	 * @param fromIndex The index of the first component to include (inclusive).
+	 * @param toIndex The index of the first component to exclude (exclusive).
+	 * @return A portion of this path.
+	 */
+	public IPath<T> subPath(int fromIndex, int toIndex);
+
 	public default boolean isEmpty() {
 		return getComponents().isEmpty();
 	}
