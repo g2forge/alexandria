@@ -6,7 +6,7 @@ import com.g2forge.alexandria.java.fluent.optional.IOptional;
 import com.g2forge.alexandria.test.HAssert;
 
 public class TestTrie5Node {
-	protected static final ITrie<Character, String> trie = new Trie<>(new NodeBuilder("t", null).children(c0 -> {
+	protected static final Trie<Character, String> trie = new Trie<>(new NodeBuilder("t", null).children(c0 -> {
 		c0.child("est", "test");
 		c0.child("oast", "toast").children(c1 -> {
 			c1.child("er", "toaster");
@@ -64,5 +64,10 @@ public class TestTrie5Node {
 	public void trip() {
 		final IOptional<String> result = trie.get(NodeBuilder.toLabel("trip"));
 		HAssert.assertFalse(result.isNotEmpty());
+	}
+
+	@Test
+	public void validate() {
+		HAssert.assertTrue(trie.root.validate().isValid());
 	}
 }
