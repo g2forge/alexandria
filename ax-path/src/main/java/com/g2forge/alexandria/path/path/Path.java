@@ -56,4 +56,12 @@ public class Path<T> implements IPath<T> {
 		if (subpath.isEmpty()) return this;
 		return create(HCollection.concatenate(getComponents().toCollection(), subpath.getComponents().toCollection()));
 	}
+
+	@Override
+	public IPath<T> subPath(int fromIndex, int toIndex) {
+		if (fromIndex < 0) fromIndex += size() + 1;
+		if (toIndex < 0) toIndex += size() + 1;
+		final List<T> list = HCollection.asList(getComponents().toCollection());
+		return create(list.subList(fromIndex, toIndex));
+	}
 }

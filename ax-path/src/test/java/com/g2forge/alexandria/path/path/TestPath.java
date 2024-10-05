@@ -170,4 +170,12 @@ public class TestPath {
 	public void startsWithShortComponent() {
 		HAssert.assertFalse(Path.createEmpty().startsWith("a"));
 	}
+
+	@Test
+	public void subPath() {
+		HAssert.assertEquals(new Path<>("b"), new Path<>("a", "b", "c").subPath(1, -2));
+		HAssert.assertEquals(new Path<>("b"), new Path<>("a", "b", "c").subPath(-3, 2));
+		HAssert.assertEquals(new Path<>("a", "b", "c"), new Path<>("a", "b", "c").subPath(0, -1));
+		HAssert.assertEquals(new Path<>("a", "b", "c"), new Path<>("a", "b", "c").subPath(-4, 3));
+	}
 }
