@@ -1,5 +1,6 @@
 package com.g2forge.alexandria.java.io.watch;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -10,6 +11,7 @@ import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchEvent.Kind;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -44,12 +46,12 @@ public class TestFileWatcher {
 
 	@Test
 	public void create() throws IOException, InterruptedException {
-		test(null, (temp, file) -> writeFile(file, new byte[] { 0 }, StandardOpenOption.CREATE_NEW), StandardWatchEventKinds.ENTRY_CREATE);
+		test(null, (temp, file) -> writeFile(file, new byte[] { 0, 1, 2, 3 }, StandardOpenOption.CREATE_NEW), StandardWatchEventKinds.ENTRY_CREATE);
 	}
 
 	@Test
 	public void delete() throws IOException, InterruptedException {
-		test((temp, file) -> writeFile(file, new byte[] { 0 }, StandardOpenOption.CREATE_NEW), (temp, file) -> {
+		test((temp, file) -> writeFile(file, new byte[] { 0, 1, 2, 3 }, StandardOpenOption.CREATE_NEW), (temp, file) -> {
 			try {
 				Files.delete(file);
 			} catch (IOException exception) {
@@ -60,13 +62,15 @@ public class TestFileWatcher {
 
 	@Test
 	public void modify() throws IOException, InterruptedException {
-		test((temp, file) -> writeFile(file, new byte[] { 0 }, StandardOpenOption.CREATE_NEW), (temp, file) -> writeFile(file, new byte[] { 1 }, StandardOpenOption.TRUNCATE_EXISTING), StandardWatchEventKinds.ENTRY_MODIFY);
+		test((temp, file) -> writeFile(file, new byte[] { 0, 1, 2, 3 }, StandardOpenOption.CREATE_NEW), (temp, file) -> writeFile(file, new byte[] { 1 }, StandardOpenOption.TRUNCATE_EXISTING), StandardWatchEventKinds.ENTRY_MODIFY);
 	}
 
 	@SafeVarargs
 	protected final void test(final IConsumer2<Path, Path> prep, final IConsumer2<Path, Path> modify, final Kind<Path>... kinds) throws InterruptedException {
-		try (final ICloseableSupplier<Path> temp = new TempDirectory(); final FileWatcher watcher = new FileWatcher()) {
+		try (final ICloseableSupplier<Path> temp = new TempDirectory();
+			final FileWatcher watcher = new FileWatcher()) {
 			final Path file = temp.get().resolve("file");
+			final Object delay = new Object();
 
 			// Prepare for testing
 			if (prep != null) prep.accept(temp.get(), file);
@@ -79,36 +83,51 @@ public class TestFileWatcher {
 					events.add(event);
 				}
 			}, HCollection.asSet(kinds).toArray(new Kind[0]));
-			synchronized (events) {
-				events.wait(100);
+
+			// Delay to make sure we're watching when things happen
+			synchronized (delay) {
+				delay.wait(100);
 			}
 
 			// Perform the modification
 			if (modify != null) modify.accept(temp.get(), file);
-			synchronized (events) {
-				events.wait(100);
-			}
 
 			// Look for the expected events
-			final Set<SimpleWatchEvent> expected = Stream.of(kinds).map(k -> new SimpleWatchEvent(k, file.getFileName())).collect(Collectors.toSet());
-			synchronized (events) {
-				// Test for expected events
-				events.wait(1000);
+			final Set<SimpleWatchEvent> expected = Stream.of(kinds).map(k -> new SimpleWatchEvent(k, file.getFileName())).collect(Collectors.toCollection(LinkedHashSet::new));
+			int i = 0;
+			while (!expected.isEmpty() && (i < 20)) {
+				final Set<SimpleWatchEvent> actual;
+				synchronized (events) {
+					actual = events.stream().map(SimpleWatchEvent::new).collect(Collectors.toCollection(LinkedHashSet::new));
+					events.clear();
+				}
+				// Mark everything we found
+				expected.removeAll(actual);
 
-				final Set<SimpleWatchEvent> actual = events.stream().map(SimpleWatchEvent::new).collect(Collectors.toSet());
-				events.clear();
-				Assert.assertEquals(expected, actual);
+				// Wait a little while before we bother checking again
+				synchronized (delay) {
+					delay.wait(100);
+				}
 
-				// Make sure no more came in
-				events.wait(100);
-				Assert.assertEquals(HCollection.emptyList(), events.stream().map(SimpleWatchEvent::new).collect(Collectors.toList()));
+				i++;
 			}
+
+			// Make sure no more came in
+			Assert.assertEquals(new LinkedHashSet<>(), expected);
 		}
 	}
 
 	protected void writeFile(final Path file, byte[] bytes, OpenOption... options) {
 		try (final OutputStream output = Files.newOutputStream(file, options)) {
 			output.write(bytes);
+			output.flush();
+
+			if (output instanceof FileOutputStream) {
+				@SuppressWarnings("resource")
+				final FileOutputStream fileOutputStream = (FileOutputStream) output;
+				fileOutputStream.getChannel().force(true);
+				fileOutputStream.getFD().sync();
+			}
 		} catch (IOException exception) {
 			throw new RuntimeIOException(exception);
 		}

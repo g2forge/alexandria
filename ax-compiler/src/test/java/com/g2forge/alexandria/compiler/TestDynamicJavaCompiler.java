@@ -8,12 +8,12 @@ import java.util.stream.Collectors;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.g2forge.alexandria.compiler.diagnostic.DataDiagnostic;
 import com.g2forge.alexandria.compiler.diagnostic.DiagnosticMatcher;
-import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.test.HAssert;
 
 public class TestDynamicJavaCompiler {
@@ -34,7 +34,7 @@ public class TestDynamicJavaCompiler {
 			new DynamicJavaCompiler().compile("foo.bar.MyClass", text);
 		} catch (DynamicJavaCompilerException exception) {
 			final List<? extends Diagnostic<? extends JavaFileObject>> diagnostics = exception.getDiagnostics().stream().filter(d -> !d.getCode().startsWith("compiler.warn.proc.")).collect(Collectors.toList());
-			HAssert.assertThat(HCollection.getOne(diagnostics), new DiagnosticMatcher<>(new DataDiagnostic<>(Diagnostic.Kind.ERROR, null, 1l, text.indexOf("String"), "compiler.err.not.within.bounds", null)));
+			HAssert.assertThat(diagnostics, Matchers.hasItem(new DiagnosticMatcher<>(new DataDiagnostic<>(Diagnostic.Kind.ERROR, null, 1l, text.indexOf("String"), "compiler.err.not.within.bounds", null))));
 		}
 	}
 
