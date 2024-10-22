@@ -14,7 +14,6 @@ import org.junit.Test;
 
 import com.g2forge.alexandria.compiler.diagnostic.DataDiagnostic;
 import com.g2forge.alexandria.compiler.diagnostic.DiagnosticMatcher;
-import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.test.HAssert;
 
 public class TestDynamicJavaCompiler {
