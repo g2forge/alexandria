@@ -45,4 +45,15 @@ public class CommandInvocation<I, O> {
 	protected final Path working;
 
 	protected final IEnvironment environment;
+
+	public Path getArgumentAsPath(int index) {
+		final String string = getArguments().get(index);
+		if (string == null) return null;
+
+		final Path path = Paths.get(string);
+		if (path.isAbsolute()) return path;
+		final Path working = getWorking();
+		if (working == null) return path;
+		return working.resolve(path);
+	}
 }
