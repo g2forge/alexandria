@@ -17,4 +17,12 @@ public enum ExecutableSpec implements IPlatformNamed {
 	protected final String prefix;
 
 	protected final String suffix;
+
+	public String fromBase(String base) {
+		final StringBuilder retVal = new StringBuilder();
+		if (getPrefix() != null) retVal.append(getPrefix());
+		retVal.append(base);
+		if (getSuffix() != null) retVal.append(getSuffix());
+		return retVal.toString();
+	}
 }
