@@ -57,12 +57,13 @@ public class TestICommandRunner {
 			} catch (IOException e) {
 				throw new RuntimeIOException("Failed to mark clireport executable", e);
 			}
+			HAssert.assertTrue(Files.isExecutable(cliReport));
 		}
 	}
 
 	@Test
 	public void test() throws IOException, InterruptedException {
-		final List<String> arguments = HCollection.asList(getCliReport().toString(), "argument");
+		final List<String> arguments = HCollection.asList(HPlatform.getPlatform().getCategory().convertExecutablePathToString(getCliReport()), "argument");
 		final List<String> output = test(arguments);
 		final List<String> expected = HCollection.concatenate(HCollection.asList(String.format("CLIReport: %1$d arguments", arguments.size())), arguments.stream().map(argument -> String.format("%1$04d: %2$s", argument.length(), argument)).collect(Collectors.toList()));
 		HAssert.assertEquals(expected, output);
