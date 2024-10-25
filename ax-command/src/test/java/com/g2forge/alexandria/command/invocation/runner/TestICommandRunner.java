@@ -7,7 +7,9 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,6 +50,13 @@ public class TestICommandRunner {
 				throw new RuntimeIOException("Failed to download clireport", e);
 			}
 			HAssert.assertTrue(Files.exists(cliReport));
+			try {
+				Files.setPosixFilePermissions(cliReport, EnumSet.allOf(PosixFilePermission.class));
+			} catch (UnsupportedOperationException e) {
+				// Ignore this - it's not required on platforms where it's not supported
+			} catch (IOException e) {
+				throw new RuntimeIOException("Failed to mark clireport executable", e);
+			}
 		}
 	}
 
