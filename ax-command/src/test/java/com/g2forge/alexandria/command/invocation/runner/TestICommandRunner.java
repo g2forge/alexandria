@@ -63,16 +63,14 @@ public class TestICommandRunner {
 
 	@Test
 	public void test() throws IOException, InterruptedException {
-		final List<String> arguments = HCollection.asList(HPlatform.getPlatform().getCategory().convertExecutablePathToString(getCliReport()), "argument");
-		final List<String> output = test(arguments);
-		final List<String> expected = HCollection.concatenate(HCollection.asList(String.format("CLIReport: %1$d arguments", arguments.size())), arguments.stream().map(argument -> String.format("%1$04d: %2$s", argument.length(), argument)).collect(Collectors.toList()));
-		HAssert.assertEquals(expected, output);
+		test("argument");
 	}
 
-	protected List<String> test(final List<String> arguments) throws IOException, InterruptedException {
+	protected void test(String... arguments) throws IOException, InterruptedException {
 		final CommandInvocation.CommandInvocationBuilder<ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocationBuilder = CommandInvocation.builder();
 		invocationBuilder.format(ICommandFormat.getDefault());
-		invocationBuilder.arguments(arguments);
+		invocationBuilder.argument(HPlatform.getPlatform().getCategory().convertExecutablePathToString(getCliReport()));
+		invocationBuilder.arguments(HCollection.asList(arguments));
 		invocationBuilder.io(new StandardIO<>(ProcessBuilder.Redirect.INHERIT, ProcessBuilder.Redirect.PIPE, ProcessBuilder.Redirect.DISCARD));
 		invocationBuilder.working(Paths.get(System.getProperty("user.dir")));
 		invocationBuilder.environment(SystemEnvironment.create());
@@ -99,6 +97,8 @@ public class TestICommandRunner {
 			}
 		}
 		HAssert.assertEquals(0, exitCode);
-		return output;
+
+		final List<String> expected = HCollection.concatenate(HCollection.asList(String.format("CLIReport: %1$d arguments", invocation.getArguments().size())), invocation.getArguments().stream().map(argument -> String.format("%1$04d: %2$s", argument.length(), argument)).collect(Collectors.toList()));
+		HAssert.assertEquals(expected, output);
 	}
 }
