@@ -13,6 +13,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,6 +28,7 @@ import com.g2forge.alexandria.java.io.HIO;
 import com.g2forge.alexandria.java.io.HTextIO;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
 import com.g2forge.alexandria.java.platform.HPlatform;
+import com.g2forge.alexandria.java.platform.PlatformCategory;
 import com.g2forge.alexandria.test.HAssert;
 
 import lombok.Getter;
@@ -38,6 +40,14 @@ public class TestICommandRunner {
 
 	@Getter
 	protected Path cliReport;
+
+	protected void assumeMicrosoft() {
+		Assume.assumeTrue(PlatformCategory.Microsoft.equals(HPlatform.getPlatform().getCategory()));
+	}
+
+	protected void assumePosix() {
+		Assume.assumeTrue(PlatformCategory.Posix.equals(HPlatform.getPlatform().getCategory()));
+	}
 
 	@Before
 	public void before() {
@@ -62,7 +72,25 @@ public class TestICommandRunner {
 	}
 
 	@Test
-	public void test() throws IOException, InterruptedException {
+	public void microsoftBasic() throws IOException, InterruptedException {
+		assumeMicrosoft();
+		test("a", "'", "%VAR%", "$env:VAR");
+	}
+
+	@Test
+	public void microsoftQuote() throws IOException, InterruptedException {
+		assumeMicrosoft();
+		test("a", "\"\\\"\"", "b");
+	}
+
+	@Test
+	public void posix() throws IOException, InterruptedException {
+		assumePosix();
+		test("a", "\"", "'", "${VAR}");
+	}
+
+	@Test
+	public void simple() throws IOException, InterruptedException {
 		test("argument");
 	}
 
