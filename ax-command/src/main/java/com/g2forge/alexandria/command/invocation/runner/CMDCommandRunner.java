@@ -18,7 +18,7 @@ public class CMDCommandRunner extends AShellCommandRunner {
 	@Override
 	public <I, O> CommandInvocation<I, O> wrap(CommandInvocation<I, O> invocation) {
 		final List<? extends String> shellArguments = getShellArguments();
-		final List<String> retVal = new ArrayList<>(shellArguments.size() + 1 + invocation.getArguments().size());
+		final List<String> retVal = new ArrayList<>(1 + shellArguments.size() + invocation.getArguments().size());
 		retVal.add(getShellExecutable());
 		retVal.addAll(shellArguments);
 		retVal.addAll(invocation.getArguments());

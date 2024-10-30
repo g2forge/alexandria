@@ -19,7 +19,7 @@ public class PosixShellCommandRunner extends AShellCommandRunner {
 	@Override
 	public <I, O> CommandInvocation<I, O> wrap(CommandInvocation<I, O> invocation) {
 		final List<? extends String> shellArguments = getShellArguments();
-		final List<String> retVal = new ArrayList<>(shellArguments.size() + 2);
+		final List<String> retVal = new ArrayList<>(1 + shellArguments.size() + 1);
 		retVal.add(getShellExecutable());
 		retVal.addAll(shellArguments);
 		retVal.add(invocation.getArguments().stream().collect(Collectors.joining(" ")));
