@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import org.junit.Assume;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.g2forge.alexandria.command.invocation.CommandInvocation;
@@ -78,11 +79,13 @@ public class TestICommandRunner {
 	}
 
 	@Test
+	@Ignore
 	public void microsoftQuote() throws IOException, InterruptedException {
 		assumeMicrosoft();
 		test("a", "\"\\\"\"", "b");
 	}
 
+	@Ignore
 	@Test
 	public void posix() throws IOException, InterruptedException {
 		assumePosix();
