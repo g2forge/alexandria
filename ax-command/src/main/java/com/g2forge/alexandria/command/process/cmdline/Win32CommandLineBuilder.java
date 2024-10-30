@@ -99,7 +99,7 @@ public class Win32CommandLineBuilder implements ICommandLineBuilder, ISingleton 
 
 	protected boolean isQuoted(String string) {
 		final int last = string.length() - 1;
-		return (last >= 1) && (string.charAt(0) == '"') && (string.charAt(last) == '"');
+		return (last > 1) && (string.charAt(0) == '"') && (string.charAt(last) == '"');
 	}
 
 	public boolean isQuoteRequired(SpecialCharacterSet specialCharacterSet, String string) {

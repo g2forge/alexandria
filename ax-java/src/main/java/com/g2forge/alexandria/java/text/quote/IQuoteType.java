@@ -3,10 +3,6 @@ package com.g2forge.alexandria.java.text.quote;
 import com.g2forge.alexandria.java.text.escape.IEscapeType;
 
 public interface IQuoteType {
-	public default String escape(final String string) {
-		return getEscapeType().getEscaper().escape(string);
-	}
-
 	public IEscapeType getEscapeType();
 
 	/**
@@ -40,7 +36,7 @@ public interface IQuoteType {
 		if ((option != QuoteControl.IfNeeded) || isQuoteNeeded(string)) {
 			final StringBuilder builder = new StringBuilder();
 			builder.append(getPrefix());
-			builder.append(escape(string));
+			builder.append(getEscapeType().getEscaper().escape(string));
 			builder.append(getPostfix());
 			return builder.toString();
 		}
@@ -48,12 +44,8 @@ public interface IQuoteType {
 		return string;
 	}
 
-	public default String unescape(final String string) {
-		return getEscapeType().getEscaper().unescape(string);
-	}
-
 	public default String unquote(final String string) {
 		if (!isQuoted(string)) return string;
-		return unescape(string.substring(getPrefix().length(), string.length() - getPostfix().length()));
+		return getEscapeType().getEscaper().unescape(string.substring(getPrefix().length(), string.length() - getPostfix().length()));
 	}
 }

@@ -13,7 +13,9 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.junit.Assume;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.g2forge.alexandria.command.invocation.CommandInvocation;
@@ -27,6 +29,7 @@ import com.g2forge.alexandria.java.io.HIO;
 import com.g2forge.alexandria.java.io.HTextIO;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
 import com.g2forge.alexandria.java.platform.HPlatform;
+import com.g2forge.alexandria.java.platform.PlatformCategory;
 import com.g2forge.alexandria.test.HAssert;
 
 import lombok.Getter;
@@ -38,6 +41,14 @@ public class TestICommandRunner {
 
 	@Getter
 	protected Path cliReport;
+
+	protected void assumeMicrosoft() {
+		Assume.assumeTrue(PlatformCategory.Microsoft.equals(HPlatform.getPlatform().getCategory()));
+	}
+
+	protected void assumePosix() {
+		Assume.assumeTrue(PlatformCategory.Posix.equals(HPlatform.getPlatform().getCategory()));
+	}
 
 	@Before
 	public void before() {
@@ -62,17 +73,35 @@ public class TestICommandRunner {
 	}
 
 	@Test
-	public void test() throws IOException, InterruptedException {
-		final List<String> arguments = HCollection.asList(HPlatform.getPlatform().getCategory().convertExecutablePathToString(getCliReport()), "argument");
-		final List<String> output = test(arguments);
-		final List<String> expected = HCollection.concatenate(HCollection.asList(String.format("CLIReport: %1$d arguments", arguments.size())), arguments.stream().map(argument -> String.format("%1$04d: %2$s", argument.length(), argument)).collect(Collectors.toList()));
-		HAssert.assertEquals(expected, output);
+	public void microsoftBasic() throws IOException, InterruptedException {
+		assumeMicrosoft();
+		test("a", "'", "%VAR%", "$env:VAR");
 	}
 
-	protected List<String> test(final List<String> arguments) throws IOException, InterruptedException {
+	@Test
+	@Ignore
+	public void microsoftQuote() throws IOException, InterruptedException {
+		assumeMicrosoft();
+		test("a", "\"\\\"\"", "b");
+	}
+
+	@Ignore
+	@Test
+	public void posix() throws IOException, InterruptedException {
+		assumePosix();
+		test("a", "\"", "'", "${VAR}");
+	}
+
+	@Test
+	public void simple() throws IOException, InterruptedException {
+		test("argument");
+	}
+
+	protected void test(String... arguments) throws IOException, InterruptedException {
 		final CommandInvocation.CommandInvocationBuilder<ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocationBuilder = CommandInvocation.builder();
 		invocationBuilder.format(ICommandFormat.getDefault());
-		invocationBuilder.arguments(arguments);
+		invocationBuilder.argument(HPlatform.getPlatform().getCategory().convertExecutablePathToString(getCliReport()));
+		invocationBuilder.arguments(HCollection.asList(arguments));
 		invocationBuilder.io(new StandardIO<>(ProcessBuilder.Redirect.INHERIT, ProcessBuilder.Redirect.PIPE, ProcessBuilder.Redirect.DISCARD));
 		invocationBuilder.working(Paths.get(System.getProperty("user.dir")));
 		invocationBuilder.environment(SystemEnvironment.create());
@@ -99,6 +128,8 @@ public class TestICommandRunner {
 			}
 		}
 		HAssert.assertEquals(0, exitCode);
-		return output;
+
+		final List<String> expected = HCollection.concatenate(HCollection.asList(String.format("CLIReport: %1$d arguments", invocation.getArguments().size())), invocation.getArguments().stream().map(argument -> String.format("%1$04d: %2$s", argument.length(), argument)).collect(Collectors.toList()));
+		HAssert.assertEquals(expected, output);
 	}
 }
