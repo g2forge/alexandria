@@ -1,8 +1,11 @@
 package com.g2forge.alexandria.java.platform;
 
+import java.nio.file.Path;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import com.g2forge.alexandria.java.text.HString;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -49,5 +52,20 @@ public enum PathSpec {
 	public String[] splitPaths(String path) {
 		if (path == null) return new String[0];
 		return path.split(Pattern.quote(getPathSeparator()) + "+");
+	}
+
+	public String toString(Path path) {
+		final String fileSeparator = getFileSeparator();
+		if (path == null) return fileSeparator;
+		final StringBuilder retVal = new StringBuilder();
+		if (path.getRoot() != null) {
+			if (HPlatform.getPlatform().getCategory() == PlatformCategory.Microsoft) retVal.append(HString.stripSuffix(path.getRoot().toString(), fileSeparator));
+			else retVal.append(path.getRoot().toString());
+		}
+		for (int i = 0; i < path.getNameCount(); i++) {
+			if (!retVal.isEmpty()) retVal.append(fileSeparator);
+			retVal.append(path.getName(i).toString());
+		}
+		return retVal.toString();
 	}
 }
