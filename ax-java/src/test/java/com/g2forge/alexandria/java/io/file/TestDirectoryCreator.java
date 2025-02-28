@@ -61,6 +61,18 @@ public class TestDirectoryCreator {
 	}
 
 	@Test
+	public void executable() throws IOException {
+		final Path root = temp.get().resolve("executable");
+		DirectoryCreator.create(root, d0 -> {
+			d0.file("file").empty().executable();
+		});
+		Assert.assertTrue(Files.isDirectory(root));
+		final Path file = root.resolve("file");
+		Assert.assertTrue(Files.isRegularFile(file));
+		Assert.assertEquals(0l, Files.size(file));
+	}
+
+	@Test
 	public void nop() {
 		final Path root = temp.get().resolve("nop");
 		DirectoryCreator.create(root, null);
@@ -91,7 +103,7 @@ public class TestDirectoryCreator {
 			});
 			Assert.fail();
 		} catch (IllegalArgumentException exception) {
-			//Assert.assertTrue(exception.getMessage().contains("outside"));
+			// Assert.assertTrue(exception.getMessage().contains("outside"));
 		}
 	}
 
