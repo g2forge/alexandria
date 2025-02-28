@@ -4,8 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFileAttributeView;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import com.g2forge.alexandria.java.core.resource.IResource;
 import com.g2forge.alexandria.java.function.IConsumer1;
@@ -26,17 +31,22 @@ public class DirectoryCreator {
 	protected static class FileCreator implements IFileCreator {
 		protected final Path path;
 
+		@Getter(lazy = true)
+		@ToString.Exclude
+		private final IFileModifier modifier = new FileModifier(getPath());
+
 		@Override
-		public void empty() {
+		public IFileModifier empty() {
 			try {
 				Files.createFile(getPath());
 			} catch (IOException e) {
 				throw new RuntimeIOException(e);
 			}
+			return getModifier();
 		}
 
 		@Override
-		public void from(InputStream source) {
+		public IFileModifier from(InputStream source) {
 			try {
 				try (final OutputStream output = Files.newOutputStream(getPath())) {
 					HBinaryIO.copy(source, output);
@@ -50,25 +60,57 @@ public class DirectoryCreator {
 					throw new RuntimeIOException(e);
 				}
 			}
+			return getModifier();
 		}
 
 		@Override
-		public void from(Path source) {
+		public IFileModifier from(Path source) {
 			HFile.copy(source, getPath());
+			return getModifier();
 		}
+	}
 
+	@Getter(AccessLevel.PROTECTED)
+	@ToString
+	@RequiredArgsConstructor
+	protected static class FileModifier implements IFileModifier {
+		protected final Path path;
+
+		@Override
+		public IFileModifier with(IConsumer1<? super Path> modifier) {
+			modifier.accept(getPath());
+			return this;
+		}
 	}
 
 	public interface IFileCreator {
-		public void empty();
+		public IFileModifier empty();
 
-		public void from(InputStream source);
+		public IFileModifier from(InputStream source);
 
-		public default void from(IResource source) {
-			from(source.getResourceAsStream(true));
+		public default IFileModifier from(IResource source) {
+			return from(source.getResourceAsStream(true));
 		}
 
-		public void from(Path source);
+		public IFileModifier from(Path source);
+	}
+
+	public interface IFileModifier {
+		public default IFileModifier executable() {
+			return with(path -> {
+				try {
+					final PosixFileAttributeView view = Files.getFileAttributeView(path, PosixFileAttributeView.class, LinkOption.NOFOLLOW_LINKS);
+					if (view != null) {
+						final Set<PosixFilePermission> permissions = new LinkedHashSet<>(view.readAttributes().permissions());
+						if (permissions.add(PosixFilePermission.OWNER_EXECUTE)) view.setPermissions(permissions);
+					}
+				} catch (IOException exception) {
+					throw new RuntimeIOException(String.format("Failed to make %1$s executable by owner!", path), exception);
+				}
+			});
+		}
+
+		public IFileModifier with(IConsumer1<? super Path> modifier);
 	}
 
 	public static void create(Path path, IConsumer1<DirectoryCreator> consumer) {
