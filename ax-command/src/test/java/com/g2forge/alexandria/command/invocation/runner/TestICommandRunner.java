@@ -1,15 +1,9 @@
 package com.g2forge.alexandria.command.invocation.runner;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.PosixFilePermission;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,16 +12,15 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.g2forge.alexandria.command.clireport.HCLIReport;
 import com.g2forge.alexandria.command.invocation.CommandInvocation;
 import com.g2forge.alexandria.command.invocation.environment.SystemEnvironment;
 import com.g2forge.alexandria.command.invocation.format.ICommandFormat;
 import com.g2forge.alexandria.command.process.HProcess;
 import com.g2forge.alexandria.command.stdio.StandardIO;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
-import com.g2forge.alexandria.java.io.HBinaryIO;
 import com.g2forge.alexandria.java.io.HIO;
 import com.g2forge.alexandria.java.io.HTextIO;
-import com.g2forge.alexandria.java.io.RuntimeIOException;
 import com.g2forge.alexandria.java.platform.HPlatform;
 import com.g2forge.alexandria.java.platform.PlatformCategory;
 import com.g2forge.alexandria.test.HAssert;
@@ -52,24 +45,7 @@ public class TestICommandRunner {
 
 	@Before
 	public void before() {
-		cliReport = Paths.get(HPlatform.getPlatform().getExeSpecs()[0].fromBase(CLIREPORT_FILENAME));
-		if (!Files.exists(cliReport)) {
-			try (final InputStream input = new URL(String.format("https://github.com/g2forge/clireport/releases/download/%1$s/%2$s", CLIREPORT_VERSION, cliReport.getFileName().toString())).openStream();
-				final OutputStream output = Files.newOutputStream(cliReport)) {
-				HBinaryIO.copy(input, output);
-			} catch (IOException e) {
-				throw new RuntimeIOException("Failed to download clireport", e);
-			}
-			HAssert.assertTrue(Files.exists(cliReport));
-			try {
-				Files.setPosixFilePermissions(cliReport, EnumSet.allOf(PosixFilePermission.class));
-			} catch (UnsupportedOperationException e) {
-				// Ignore this - it's not required on platforms where it's not supported
-			} catch (IOException e) {
-				throw new RuntimeIOException("Failed to mark clireport executable", e);
-			}
-			HAssert.assertTrue(Files.isExecutable(cliReport));
-		}
+		cliReport = HCLIReport.download(null).get();
 	}
 
 	@Test
