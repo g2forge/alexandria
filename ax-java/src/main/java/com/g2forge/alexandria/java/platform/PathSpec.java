@@ -59,8 +59,11 @@ public enum PathSpec {
 		if (path == null) return fileSeparator;
 		final StringBuilder retVal = new StringBuilder();
 		if (path.getRoot() != null) {
-			if (HPlatform.getPlatform().getCategory() == PlatformCategory.Microsoft) retVal.append(HString.stripSuffix(path.getRoot().toString(), fileSeparator));
-			else retVal.append(path.getRoot().toString());
+			final String rootString = path.getRoot().toString(), modifiedRootString;
+			final Platform platform = HPlatform.getPlatform();
+			if (PlatformCategory.Microsoft.equals(platform.getCategory())) modifiedRootString = HString.stripSuffix(rootString, HPlatform.getPlatform().getPathSpec().getFileSeparator());
+			else modifiedRootString = rootString;
+			retVal.append(modifiedRootString);
 		}
 		for (int i = 0; i < path.getNameCount(); i++) {
 			if (!retVal.isEmpty()) retVal.append(fileSeparator);
