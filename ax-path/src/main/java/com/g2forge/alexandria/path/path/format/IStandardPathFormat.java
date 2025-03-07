@@ -11,9 +11,13 @@ import com.g2forge.alexandria.path.path.IPath;
 public interface IStandardPathFormat<T, P extends IPath<T>> extends IPathFormat<T, P> {
 	public String getSeparator();
 
+	public default String getSeparatorPattern() {
+		return Pattern.quote(getSeparator());
+	}
+
 	@Override
 	public default P toPath(String path) {
-		final String[] componentsArray = path.split(Pattern.quote(getSeparator()));
+		final String[] componentsArray = path.split(getSeparatorPattern());
 		final List<T> componentsList = Stream.of(componentsArray).map(this::toComponent).collect(Collectors.toList());
 		return toPath(new CollectionCollection<>(componentsList));
 	}
