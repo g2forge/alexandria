@@ -45,6 +45,11 @@ public class HCollection {
 		return Collections.unmodifiableMap(retVal);
 	}
 
+	public static <T> List<T> asList(Collection<T> collection) {
+		if (collection instanceof List) return (List<T>) collection;
+		return new ArrayList<>((Collection<T>) collection);
+	}
+
 	public static <T> List<T> asList(Iterable<T> collection) {
 		if (collection instanceof List) return (List<T>) collection;
 		if (collection instanceof Collection) return new ArrayList<>((Collection<T>) collection);
