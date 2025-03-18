@@ -30,6 +30,13 @@ import lombok.experimental.UtilityClass;
 @Helpers
 @UtilityClass
 public class HCollection {
+	public static <K, C extends Collection<V>, V> void add(Map<K, C> map, Supplier<? extends C> constructor, K key, V value) {
+		final C collection;
+		if (!map.containsKey(key)) map.put(key, collection = constructor.get());
+		else collection = map.get(key);
+		collection.add(value);
+	}
+
 	public static <T> Map<T, Integer> asIndexMap(List<T> list) {
 		final Map<T, Integer> retVal = new HashMap<>();
 		for (int i = 0; i < list.size(); i++) {
@@ -38,30 +45,29 @@ public class HCollection {
 		return Collections.unmodifiableMap(retVal);
 	}
 
-	public static <K, C extends Collection<V>, V> void add(Map<K, C> map, Supplier<? extends C> constructor, K key, V value) {
-		final C collection;
-		if (!map.containsKey(key)) map.put(key, collection = constructor.get());
-		else collection = map.get(key);
-		collection.add(value);
-	}
-
-	@SafeVarargs
-	public static <T extends Enum<T>> EnumSet<T> asSet(Class<T> type, T... elements) {
-		final EnumSet<T> retVal = EnumSet.noneOf(type);
-		if (elements != null) for (T element : elements) {
-			retVal.add(element);
+	public static <T> List<T> asList(Iterable<T> collection) {
+		if (collection instanceof List) return (List<T>) collection;
+		if (collection instanceof Collection) return new ArrayList<>((Collection<T>) collection);
+		final List<T> retVal = new ArrayList<>();
+		for (T value : collection) {
+			retVal.add(value);
 		}
 		return retVal;
-	}
-
-	public static <T> List<T> asList(Collection<T> collection) {
-		if (collection instanceof List) return (List<T>) collection;
-		return new ArrayList<>(collection);
 	}
 
 	@SafeVarargs
 	public static <T> List<T> asList(T... elements) {
 		return Arrays.asList(elements);
+	}
+
+	@SafeVarargs
+	public static <T> List<T> asListNonNull(T... elements) {
+		final ArrayList<T> retVal = new ArrayList<>(elements.length);
+		for (T element : elements) {
+			if (element != null) retVal.add(element);
+		}
+		retVal.trimToSize();
+		return retVal;
 	}
 
 	public static <T> List<T> asListRepeated(int count, T element) {
@@ -73,12 +79,11 @@ public class HCollection {
 	}
 
 	@SafeVarargs
-	public static <T> List<T> asListNonNull(T... elements) {
-		final ArrayList<T> retVal = new ArrayList<>(elements.length);
-		for (T element : elements) {
-			if (element != null) retVal.add(element);
+	public static <T extends Enum<T>> EnumSet<T> asSet(Class<T> type, T... elements) {
+		final EnumSet<T> retVal = EnumSet.noneOf(type);
+		if (elements != null) for (T element : elements) {
+			retVal.add(element);
 		}
-		retVal.trimToSize();
 		return retVal;
 	}
 
@@ -97,24 +102,6 @@ public class HCollection {
 		return retVal;
 	}
 
-	public static int totalSize(final Collection<?>... collections) {
-		int retVal = 0;
-		for (Collection<?> collection : collections) {
-			if (collection != null) retVal += collection.size();
-		}
-		return retVal;
-	}
-
-	@SafeVarargs
-	public static <T> Set<T> union(final Collection<? extends T>... collections) {
-		if (collections == null) return null;
-		final Set<T> retVal = new LinkedHashSet<>(totalSize(collections));
-		for (Collection<? extends T> collection : collections) {
-			if (collection != null) retVal.addAll(collection);
-		}
-		return retVal;
-	}
-
 	public static <T> Set<T> difference(final Collection<? extends T> minuend, final Collection<? extends T> subtrahend) {
 		final Set<T> temp = new LinkedHashSet<>(minuend);
 		temp.removeAll(subtrahend);
@@ -122,17 +109,18 @@ public class HCollection {
 	}
 
 	@SafeVarargs
-	public static <T> Set<T> intersection(final Collection<? extends T>... collections) {
-		final Set<T> temp = new LinkedHashSet<>(collections[0]);
-		for (int i = 1; i < collections.length; i++) {
-			temp.retainAll(collections[i]);
-		}
-		return temp;
-	}
-
-	@SafeVarargs
 	public static <T> Collection<T> difference(final Collection<? extends T> minuend, final T... subtrahend) {
 		return difference(minuend, HCollection.asList(subtrahend));
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> emptyList() {
+		return Collections.EMPTY_LIST;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> Set<T> emptySet() {
+		return Collections.EMPTY_SET;
 	}
 
 	public static <T> Collection<T> filter(final Collection<? extends T> collection, final Predicate<? super T> predicate) {
@@ -182,23 +170,6 @@ public class HCollection {
 		return getFirst(iterable);
 	}
 
-	public static <T> T removeFirst(final Collection<T> collection) {
-		final Iterator<T> iterator = collection.iterator();
-		final T retVal = iterator.next();
-		iterator.remove();
-		return retVal;
-	}
-
-	@SuppressWarnings("unchecked")
-	public static <T> List<T> emptyList() {
-		return Collections.EMPTY_LIST;
-	}
-
-	@SuppressWarnings("unchecked")
-	public static <T> Set<T> emptySet() {
-		return Collections.EMPTY_SET;
-	}
-
 	public static <T> T getFirst(final Iterable<? extends T> iterable) {
 		return iterable.iterator().next();
 	}
@@ -219,33 +190,16 @@ public class HCollection {
 		return retVal;
 	}
 
-	public static <T> T removeLast(final Iterable<? extends T> iterable) {
-		if (iterable instanceof Deque) return ((Deque<? extends T>) iterable).removeLast();
-		if (iterable instanceof List) {
-			final List<? extends T> list = (List<? extends T>) iterable;
-			return list.remove(list.size() - 1);
-		}
-
-		final Iterator<? extends T> iterator = iterable.iterator();
-		if (!iterator.hasNext()) throw new NoSuchElementException();
-		T retVal = null;
-		while (iterator.hasNext()) {
-			retVal = iterator.next();
-		}
-		iterator.remove();
-		return retVal;
-	}
-
-	public static <T> int getLast(List<? extends T> list, Predicate<? super T> test) {
-		return getLast(list, (position, value) -> test.test(value));
-	}
-
 	public static <T> int getLast(List<? extends T> list, BiPredicate<Integer, ? super T> test) {
 		for (final ListIterator<? extends T> iterator = list.listIterator(list.size()); iterator.hasPrevious();) {
 			final int retVal = iterator.previousIndex();
 			if (test.test(retVal, iterator.previous())) return retVal;
 		}
 		return -1;
+	}
+
+	public static <T> int getLast(List<? extends T> list, Predicate<? super T> test) {
+		return getLast(list, (position, value) -> test.test(value));
 	}
 
 	/**
@@ -270,6 +224,15 @@ public class HCollection {
 		final T retVal = iterator.next();
 		if (iterator.hasNext()) throw new IllegalArgumentException("Input iterable had more than one element: " + iterable);
 		return retVal;
+	}
+
+	@SafeVarargs
+	public static <T> Set<T> intersection(final Collection<? extends T>... collections) {
+		final Set<T> temp = new LinkedHashSet<>(collections[0]);
+		for (int i = 1; i < collections.length; i++) {
+			temp.retainAll(collections[i]);
+		}
+		return temp;
 	}
 
 	/**
@@ -301,6 +264,38 @@ public class HCollection {
 		return removeFirst(collection);
 	}
 
+	public static <T> T removeFirst(final Collection<T> collection) {
+		final Iterator<T> iterator = collection.iterator();
+		final T retVal = iterator.next();
+		iterator.remove();
+		return retVal;
+	}
+
+	public static <T> T removeLast(final Iterable<? extends T> iterable) {
+		if (iterable instanceof Deque) return ((Deque<? extends T>) iterable).removeLast();
+		if (iterable instanceof List) {
+			final List<? extends T> list = (List<? extends T>) iterable;
+			return list.remove(list.size() - 1);
+		}
+
+		final Iterator<? extends T> iterator = iterable.iterator();
+		if (!iterator.hasNext()) throw new NoSuchElementException();
+		T retVal = null;
+		while (iterator.hasNext()) {
+			retVal = iterator.next();
+		}
+		iterator.remove();
+		return retVal;
+	}
+
+	public static <T> List<T> sort(Collection<? extends T> collection, Comparator<? super T> comparator) {
+		if (collection == null) return HCollection.emptyList();
+
+		final List<T> sorted = new ArrayList<>(collection);
+		Collections.sort(sorted, comparator);
+		return sorted;
+	}
+
 	public static <T> Collection<T> toCollection(final Iterable<T> iterable) {
 		if (iterable == null) return null;
 		if (iterable instanceof Collection) return (Collection<T>) iterable;
@@ -317,11 +312,21 @@ public class HCollection {
 		return retVal;
 	}
 
-	public static <T> List<T> sort(Collection<? extends T> collection, Comparator<? super T> comparator) {
-		if (collection == null) return HCollection.emptyList();
+	public static int totalSize(final Collection<?>... collections) {
+		int retVal = 0;
+		for (Collection<?> collection : collections) {
+			if (collection != null) retVal += collection.size();
+		}
+		return retVal;
+	}
 
-		final List<T> sorted = new ArrayList<>(collection);
-		Collections.sort(sorted, comparator);
-		return sorted;
+	@SafeVarargs
+	public static <T> Set<T> union(final Collection<? extends T>... collections) {
+		if (collections == null) return null;
+		final Set<T> retVal = new LinkedHashSet<>(totalSize(collections));
+		for (Collection<? extends T> collection : collections) {
+			if (collection != null) retVal.addAll(collection);
+		}
+		return retVal;
 	}
 }
