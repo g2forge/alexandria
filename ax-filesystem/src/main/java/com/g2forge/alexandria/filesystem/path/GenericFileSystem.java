@@ -59,7 +59,7 @@ public class GenericFileSystem extends FileSystem {
 	protected volatile transient boolean open = true;
 
 	@Getter(lazy = true)
-	private final List<Path> rootDirectories = HCollection.asList(new GenericPath(internal, ""));
+	private final List<Path> rootDirectories = HCollection.asList(new Path[] { new GenericPath(internal, "") });
 
 	protected String buildPath(String first, String... more) {
 		final String path;
