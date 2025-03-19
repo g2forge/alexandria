@@ -34,4 +34,15 @@ public abstract class AInputStreamDataSource implements IDataSource {
 	}
 
 	public abstract InputStream getStream();
+
+	@Override
+	public <T extends InputStream> T getStream(ITypeRef<T> type) {
+		final InputStream stream = getStream();
+		if (type == null) {
+			@SuppressWarnings("unchecked")
+			final T cast = (T) stream;
+			return cast;
+		}
+		return type.cast(stream);
+	}
 }
