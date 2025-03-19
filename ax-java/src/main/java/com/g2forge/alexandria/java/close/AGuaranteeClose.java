@@ -1,5 +1,9 @@
 package com.g2forge.alexandria.java.close;
 
+import java.io.PrintStream;
+
+import com.g2forge.alexandria.java.core.error.HError;
+
 public abstract class AGuaranteeClose implements ICloseable {
 	private transient volatile Thread thread;
 
@@ -12,7 +16,15 @@ public abstract class AGuaranteeClose implements ICloseable {
 			this.thread = new Thread() {
 				public void run() {
 					thread = null;
-					close();
+					try {
+						close();
+					} catch (Throwable throwable) {
+						final PrintStream shutdownErrorStream = System.err;
+						if (shutdownErrorStream != null) {
+							shutdownErrorStream.println("Exception in thread \"" + Thread.currentThread().getName() + "\" created to guarantee close of \"" + AGuaranteeClose.this + "\"");
+							throwable.printStackTrace(shutdownErrorStream);
+						} else HError.throwQuietly(throwable);
+					}
 				}
 			};
 			Runtime.getRuntime().addShutdownHook(thread);
