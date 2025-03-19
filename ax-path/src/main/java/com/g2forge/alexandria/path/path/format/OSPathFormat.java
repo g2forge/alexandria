@@ -1,5 +1,7 @@
 package com.g2forge.alexandria.path.path.format;
 
+import java.util.regex.Pattern;
+
 import com.g2forge.alexandria.collection.ICollection;
 import com.g2forge.alexandria.path.path.IPath;
 import com.g2forge.alexandria.path.path.Path;
@@ -11,9 +13,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum OSPathFormat implements IStringPathFormat<IPath<String>> {
 	Microsoft("\\"),
-	POSIX("/");
+	POSIX("/"),
+	MicrosoftFlexible("\\", "[/\\\\]+"),
+	POSIXFlexible("/", "[/\\\\]+");
+
+	private OSPathFormat(String separator) {
+		this(separator, Pattern.quote(separator));
+	}
 
 	protected final String separator;
+
+	protected final String separatorPattern;
 
 	@Override
 	public IPath<String> toPath(ICollection<String> components) {
