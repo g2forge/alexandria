@@ -41,6 +41,7 @@
 		<module>ax-fsm-test</module>
 		<module>ax-media</module>
 		<module>ax-parse</module>
+		<module>ax-match</module>
 	</modules>
 
 	<profiles>
