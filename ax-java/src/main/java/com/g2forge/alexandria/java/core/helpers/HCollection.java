@@ -50,19 +50,18 @@ public class HCollection {
 		return new ArrayList<>((Collection<T>) collection);
 	}
 
-	public static <T> List<T> asList(Iterable<T> collection) {
-		if (collection instanceof List) return (List<T>) collection;
-		if (collection instanceof Collection) return new ArrayList<>((Collection<T>) collection);
+	@SafeVarargs
+	public static <T> List<T> asList(T... elements) {
+		return Arrays.asList(elements);
+	}
+
+	public static <T> List<T> asListIterable(Iterable<T> collection) {
+		if (collection instanceof Collection) return asList((Collection<T>) collection);
 		final List<T> retVal = new ArrayList<>();
 		for (T value : collection) {
 			retVal.add(value);
 		}
 		return retVal;
-	}
-
-	@SafeVarargs
-	public static <T> List<T> asList(T... elements) {
-		return Arrays.asList(elements);
 	}
 
 	@SafeVarargs
