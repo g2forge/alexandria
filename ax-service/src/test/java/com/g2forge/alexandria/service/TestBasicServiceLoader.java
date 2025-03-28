@@ -1,5 +1,10 @@
 package com.g2forge.alexandria.service;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ServiceConfigurationError;
 import java.util.stream.Collectors;
 
 import org.junit.Assert;
@@ -58,5 +63,29 @@ public class TestBasicServiceLoader {
 		Assert.assertEquals(ServiceB1.class.getSimpleName(), HStream.subtype(loader.load().stream(), ServiceB1.class).findAny().get().getValue());
 		Assert.assertEquals(ServiceB2.class.getSimpleName(), HStream.subtype(loader.load().stream(), ServiceB2.class).findAny().get().getValue());
 		Assert.assertEquals(2l, loader.load().stream().collect(Collectors.counting()).longValue());
+	}
+
+	@Test
+	public void duplicatesExclude() {
+		final IServiceLoader<IServiceA> loader = new BasicServiceLoader<>(IServiceA.class, IServiceA.class, null, null, false) {
+			protected Iterator<String> parse(URL url) throws ServiceConfigurationError {
+				final List<String> retVal = new ArrayList<>();
+				super.parse(url).forEachRemaining(retVal::add);
+				return HCollection.concatenate(retVal, retVal).iterator();
+			}
+		};
+		Assert.assertEquals(2l, loader.load().stream().collect(Collectors.counting()).longValue());
+	}
+
+	@Test
+	public void duplicatesInclude() {
+		final IServiceLoader<IServiceA> loader = new BasicServiceLoader<>(IServiceA.class, IServiceA.class, null, null, true) {
+			protected Iterator<String> parse(URL url) throws ServiceConfigurationError {
+				final List<String> retVal = new ArrayList<>();
+				super.parse(url).forEachRemaining(retVal::add);
+				return HCollection.concatenate(retVal, retVal).iterator();
+			}
+		};
+		Assert.assertEquals(4l, loader.load().stream().collect(Collectors.counting()).longValue());
 	}
 }

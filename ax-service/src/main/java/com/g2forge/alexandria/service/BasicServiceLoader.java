@@ -62,6 +62,13 @@ public class BasicServiceLoader<S> implements IServiceLoader<S> {
 			loadConfig();
 			if (currentConfig == null) return false;
 			nextProviderName = currentConfig.next();
+			if (!includeDuplicates) {
+				while (loaded.containsKey(nextProviderName)) {
+					loadConfig();
+					if (currentConfig == null) return false;
+					nextProviderName = currentConfig.next();
+				}
+			}
 			return true;
 		}
 
@@ -117,11 +124,11 @@ public class BasicServiceLoader<S> implements IServiceLoader<S> {
 
 	protected static String readLine(BufferedReader reader) throws IOException {
 		String line = reader.readLine();
-		if (line != null) {
-			final int comment = line.indexOf('#');
-			if (comment >= 0) line = line.substring(0, comment);
-			line = line.trim();
-		}
+		if (line == null) return null;
+
+		final int octothorpe = line.indexOf('#');
+		if (octothorpe >= 0) line = line.substring(0, octothorpe);
+		line = line.strip();
 		return line;
 	}
 
@@ -141,18 +148,26 @@ public class BasicServiceLoader<S> implements IServiceLoader<S> {
 
 	protected final ProviderLoader loader;
 
+	protected final boolean includeDuplicates;
+
 	public BasicServiceLoader(Class<?> key, Class<S> type) {
 		this(key, type, null, null);
 	}
 
-	@SuppressWarnings("deprecation")
 	public BasicServiceLoader(Class<?> key, Class<S> type, ClassLoader classLoader, ITypeFunction1<S> instantiator) {
+		this(key, type, classLoader, instantiator, false);
+	}
+
+	public BasicServiceLoader(Class<?> key, Class<S> type, ClassLoader classLoader, ITypeFunction1<S> instantiator, boolean includeDuplicates) {
 		this.key = key == null ? type : key;
 		this.type = Objects.requireNonNull(type, "Type cannot be null");
 		this.instantiator = instantiator == null ? new NewInstanceInstantiator<>(this) : instantiator;
+		this.includeDuplicates = includeDuplicates;
 
 		this.classLoader = (classLoader == null) ? Thread.currentThread().getContextClassLoader() : classLoader;
-		this.acc = (System.getSecurityManager() != null) ? AccessController.getContext() : null;
+		@SuppressWarnings("deprecation")
+		final AccessControlContext acc = (System.getSecurityManager() != null) ? AccessController.getContext() : null;
+		this.acc = acc;
 		loaded.clear();
 		loader = new ProviderLoader();
 	}
