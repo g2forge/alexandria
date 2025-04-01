@@ -5,7 +5,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.junit.Assume;
 import org.junit.Before;
@@ -105,7 +104,7 @@ public class TestICommandRunner {
 		}
 		HAssert.assertEquals(0, exitCode);
 
-		final List<String> expected = HCollection.concatenate(HCollection.asList(String.format("CLIReport: %1$d arguments", invocation.getArguments().size())), invocation.getArguments().stream().map(argument -> String.format("%1$04d: %2$s", argument.length(), argument)).collect(Collectors.toList()));
+		final List<String> expected = HCLIReport.computeExpectedOutput(invocation.getArguments());
 		HAssert.assertEquals(expected, output);
 	}
 }
