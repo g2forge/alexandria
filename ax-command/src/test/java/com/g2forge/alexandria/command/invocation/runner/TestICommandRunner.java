@@ -27,12 +27,18 @@ import com.g2forge.alexandria.test.HAssert;
 import lombok.Getter;
 
 public class TestICommandRunner {
-	protected static final String CLIREPORT_VERSION = "v0.0.1";
-
-	protected static final String CLIREPORT_FILENAME = "clireport";
-
 	@Getter
 	protected Path cliReport;
+
+	@Test
+	public void a() throws IOException, InterruptedException {
+		test("a");
+	}
+
+	@Test
+	public void ab() throws IOException, InterruptedException {
+		test("A", "B");
+	}
 
 	protected void assumeMicrosoft() {
 		Assume.assumeTrue(PlatformCategory.Microsoft.equals(HPlatform.getPlatform().getCategory()));
@@ -45,6 +51,26 @@ public class TestICommandRunner {
 	@Before
 	public void before() {
 		cliReport = HCLIReport.download(null).get();
+	}
+
+	@Test
+	public void exitCodeInvalid() throws IOException, InterruptedException {
+		test("--exit", "x");
+	}
+
+	@Test
+	public void exitCodeMissing() throws IOException, InterruptedException {
+		test("--exit");
+	}
+
+	@Test
+	public void exitCodeNotFirst() throws IOException, InterruptedException {
+		test("a", "--exit", "1");
+	}
+
+	@Test
+	public void exitCodeValid() throws IOException, InterruptedException {
+		test("--exit", "1", "A", "B");
 	}
 
 	@Test
@@ -65,11 +91,6 @@ public class TestICommandRunner {
 	public void posix() throws IOException, InterruptedException {
 		assumePosix();
 		test("a", "\"", "'", "${VAR}");
-	}
-
-	@Test
-	public void simple() throws IOException, InterruptedException {
-		test("argument");
 	}
 
 	protected void test(String... arguments) throws IOException, InterruptedException {
@@ -102,9 +123,9 @@ public class TestICommandRunner {
 				HIO.closeAll(process.getInputStream(), process.getErrorStream(), process.getOutputStream());
 			}
 		}
-		HAssert.assertEquals(0, exitCode);
 
-		final List<String> expected = HCLIReport.computeExpectedOutput(invocation.getArguments());
-		HAssert.assertEquals(expected, output);
+		final HCLIReport.Output expected = HCLIReport.computeExpectedOutput(invocation.getArguments());
+		HAssert.assertEquals((byte) expected.getExitCode(), (byte) exitCode);
+		HAssert.assertEquals(expected.getOutput(), output);
 	}
 }
