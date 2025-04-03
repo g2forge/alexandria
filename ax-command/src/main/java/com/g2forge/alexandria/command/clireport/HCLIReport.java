@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,18 +19,50 @@ import com.g2forge.alexandria.java.io.HBinaryIO;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
 import com.g2forge.alexandria.java.platform.HPlatform;
 
+import lombok.Builder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+
 public class HCLIReport {
-	public static final String CLIREPORT_VERSION = "v0.0.2";
+	@Data
+	@Builder(toBuilder = true)
+	@RequiredArgsConstructor
+	public static class Output {
+		protected final int exitCode;
+
+		protected final List<String> output;
+	}
+
+	public static final String CLIREPORT_VERSION = "v0.0.3";
 
 	public static final String CLIREPORT_FILENAME = "clireport";
 
 	public static final String CLIREPORT_DOWNLOADFORMAT = "https://github.com/g2forge/clireport/releases/download/%1$s/%2$s";
 
-	public static List<String> computeExpectedOutput(final List<String> arguments) {
-		return HCollection.concatenate(HCollection.asList(String.format("CLIReport: %1$d arguments", arguments.size())), arguments.stream().map(argument -> String.format("%1$04d: %2$s", argument.length(), argument)).collect(Collectors.toList()));
+	public static Output computeExpectedOutput(final List<String> arguments) {
+		final List<String> output = new ArrayList<>();
+		output.add(String.format("CLIReport: %1$d arguments", arguments.size()));
+		output.addAll(arguments.stream().map(argument -> String.format("%1$04d: %2$s", argument.length(), argument)).collect(Collectors.toList()));
+
+		Integer exitCode = null;
+		if ((arguments.size() > 2) && ("--exit".equals(arguments.get(1)))) {
+			try {
+				exitCode = Integer.parseInt(arguments.get(2));
+			} catch (NumberFormatException exception) {}
+			if (exitCode != null) output.add(String.format("Exit code \"%s\" (%d) is valid", arguments.get(2), exitCode));
+			else {
+				output.add(String.format("Exit code \"%s\" is not valid, using -1 instead", arguments.get(2)));
+				exitCode = -1;
+			}
+		} else {
+			output.add("Exit code was not specified");
+			exitCode = 0;
+		}
+
+		return new Output(exitCode, output);
 	}
 
-	public static List<String> computeExpectedOutput(String executable, String... arguments) {
+	public static Output computeExpectedOutput(String executable, String... arguments) {
 		return computeExpectedOutput(HCollection.concatenate(HCollection.asList(executable), HCollection.asList(arguments)));
 	}
 
