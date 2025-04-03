@@ -125,7 +125,7 @@ public class TestICommandRunner {
 		}
 
 		final HCLIReport.Output expected = HCLIReport.computeExpectedOutput(invocation.getArguments());
-		HAssert.assertEquals(expected.getExitCode(), exitCode);
+		HAssert.assertEquals((byte) expected.getExitCode(), (byte) exitCode);
 		HAssert.assertEquals(expected.getOutput(), output);
 	}
 }
