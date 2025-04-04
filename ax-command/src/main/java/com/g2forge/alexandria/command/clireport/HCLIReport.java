@@ -66,7 +66,7 @@ public class HCLIReport {
 		return computeExpectedOutput(HCollection.concatenate(HCollection.asList(executable), HCollection.asList(arguments)));
 	}
 
-	public static ICloseableSupplier<Path> download(Path directory) {
+	public static synchronized ICloseableSupplier<Path> download(Path directory) {
 		final String filename = HPlatform.getPlatform().getExeSpecs()[0].fromBase(CLIREPORT_FILENAME);
 		final Path path = directory == null ? Paths.get(filename) : directory.resolve(filename);
 		if (!Files.exists(path)) {
