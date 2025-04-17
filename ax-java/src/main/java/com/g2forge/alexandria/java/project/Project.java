@@ -10,5 +10,8 @@ import lombok.RequiredArgsConstructor;
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
 public class Project {
+	/**
+	 * The root directory of this project, which may be the directory containing a {@code pom.xml} for example.
+	 */
 	protected final Path root;
 }
