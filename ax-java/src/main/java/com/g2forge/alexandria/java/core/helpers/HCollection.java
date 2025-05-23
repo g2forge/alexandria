@@ -23,6 +23,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.java.core.marker.Helpers;
+import com.g2forge.alexandria.java.function.IFunction1;
 import com.g2forge.alexandria.java.function.ISupplier;
 
 import lombok.experimental.UtilityClass;
@@ -332,5 +333,11 @@ public class HCollection {
 			if (collection != null) retVal.addAll(collection);
 		}
 		return retVal;
+	}
+
+	@SafeVarargs
+	public static <T> Collection<T> xor(final Collection<? extends T>... collections) {
+		final Map<? extends T, Long> map = HCollection.asList(collections).stream().flatMap(Collection::stream).collect(Collectors.groupingBy(IFunction1.identity(), Collectors.counting()));
+		return map.entrySet().stream().filter(entry -> entry.getValue() < 2).map(Map.Entry::getKey).collect(Collectors.toList());
 	}
 }

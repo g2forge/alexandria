@@ -19,4 +19,12 @@ public class TestHCollection {
 		Assert.assertEquals(2, HCollection.totalSize(HCollection.asList("a"), HCollection.asList("a")));
 		Assert.assertEquals(0, HCollection.totalSize(HCollection.emptyList(), null));
 	}
+
+	@Test
+	public void xor() {
+		Assert.assertEquals(HCollection.asList("a", "c"), HCollection.xor(HCollection.asList("a", "b"), HCollection.asList("b", "c")));
+		Assert.assertEquals(HCollection.asList("a", "c"), HCollection.xor(HCollection.asList("a", "b"), HCollection.asList("b", "c"), HCollection.asList("b")));
+		Assert.assertEquals(HCollection.asList("a"), HCollection.xor(HCollection.asList("a"), HCollection.asList("b", "c"), HCollection.asList("b", "c")));
+		Assert.assertEquals(HCollection.asList("a"), HCollection.xor(HCollection.asList("a", "b", "b")));
+	}
 }
