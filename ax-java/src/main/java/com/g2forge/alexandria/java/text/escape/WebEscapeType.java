@@ -44,8 +44,8 @@ public enum WebEscapeType implements IEscapeType {
 		public Pattern getRequiresEscapePattern() {
 			throw new UnsupportedOperationException();
 		}
-
-	});
+	}),
+	JSON(new SingleCharacterEscaper("\\", null, "\"\\\b\n\r\f\t/", "\"\\bnrft/", 2));
 
 	protected final IEscaper escaper;
 }
