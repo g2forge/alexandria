@@ -79,6 +79,32 @@ public class TestBasicRegexMatcher {
 	}
 
 	@Test
+	public void repeatExact() {
+		final IMatcher<?, Regex> pattern = RegexMatcher.builder().text("a").repeat(1).build();
+		HAssert.assertFalse(pattern.match("a").isEmpty());
+		HAssert.assertTrue(pattern.match("aa").isEmpty());
+		HAssert.assertTrue(pattern.match("b").isEmpty());
+	}
+
+	@Test
+	public void repeatMin() {
+		final IMatcher<?, Regex> pattern = RegexMatcher.builder().text("a").repeat(2, null).build();
+		HAssert.assertTrue(pattern.match("a").isEmpty());
+		HAssert.assertFalse(pattern.match("aa").isEmpty());
+		HAssert.assertFalse(pattern.match("aaa").isEmpty());
+		HAssert.assertFalse(pattern.match("aaaa").isEmpty());
+	}
+
+	@Test
+	public void repeatRange() {
+		final IMatcher<?, Regex> pattern = RegexMatcher.builder().text("a").repeat(2, 3).build();
+		HAssert.assertTrue(pattern.match("a").isEmpty());
+		HAssert.assertFalse(pattern.match("aa").isEmpty());
+		HAssert.assertFalse(pattern.match("aaa").isEmpty());
+		HAssert.assertTrue(pattern.match("aaaa").isEmpty());
+	}
+
+	@Test
 	public void star() {
 		final IMatcher<?, Regex> pattern = RegexMatcher.builder().text("a").text("b").star().build();
 		HAssert.assertFalse(pattern.match("a").isEmpty());

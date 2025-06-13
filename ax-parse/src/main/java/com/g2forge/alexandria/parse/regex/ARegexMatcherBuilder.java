@@ -151,6 +151,16 @@ abstract class ARegexMatcherBuilder<Parsed> implements IMatcherBuilder<Parsed, R
 	}
 
 	@Override
+	public IMatcherBuilder<Parsed, Regex> repeat(int repeat) {
+		return pattern("{" + repeat + "}");
+	}
+
+	@Override
+	public IMatcherBuilder<Parsed, Regex> repeat(int min, Integer max) {
+		return pattern("{" + min + "," + ((max == null) ? "" : max) + "}");
+	}
+
+	@Override
 	public IMatcherBuilder<Parsed, Regex> star() {
 		return pattern("*");
 	}
