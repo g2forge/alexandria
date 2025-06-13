@@ -56,6 +56,10 @@ public interface IMatcherBuilder<Parsed, Pattern extends IPattern> {
 
 	public IMatcherBuilder<Parsed, Pattern> plus();
 
+	public IMatcherBuilder<Parsed, Pattern> repeat(int min, Integer max);
+	
+	public IMatcherBuilder<Parsed, Pattern> repeat(int repeat);
+
 	public IMatcherBuilder<Parsed, Pattern> star();
 
 	public IMatcherBuilder<Parsed, Pattern> text(String text);
