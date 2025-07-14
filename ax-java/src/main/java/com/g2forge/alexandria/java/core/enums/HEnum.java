@@ -12,8 +12,36 @@ import lombok.experimental.UtilityClass;
 @Helpers
 @UtilityClass
 public class HEnum {
-	public static <E extends Enum<E>> E valueOfInsensitive(Class<E> klass, String text) {
-		return valueOf(klass, Enum::name, true, String::toLowerCase, text);
+	public static <E extends Enum<E>> Class<E> getEnumClass(E object) {
+		final Class<?> klass = object.getClass();
+		final Class<?> enclosing = klass.getEnclosingClass();
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		final Class<E> retVal = (Class) (((enclosing != null) && enclosing.isEnum() && enclosing.isInstance(object)) ? enclosing : klass);
+		return retVal;
+	}
+
+	@SafeVarargs
+	public static <E extends Enum<E>> E max(E... input) {
+		Objects.requireNonNull(input);
+		if (input.length < 1) throw new IllegalArgumentException();
+
+		E retVal = input[0];
+		for (int i = 1; i < input.length; i++) {
+			if (retVal.compareTo(input[i]) < 0) retVal = input[i];
+		}
+		return retVal;
+	}
+
+	@SafeVarargs
+	public static <E extends Enum<E>> E min(E... input) {
+		Objects.requireNonNull(input);
+		if (input.length < 1) throw new IllegalArgumentException();
+
+		E retVal = input[0];
+		for (int i = 1; i < input.length; i++) {
+			if (retVal.compareTo(input[i]) > 0) retVal = input[i];
+		}
+		return retVal;
 	}
 
 	/**
@@ -32,46 +60,28 @@ public class HEnum {
 	 * @throws IllegalArgumentException if the {@code value} does not match any enum member.
 	 */
 	public static <E extends Enum<E>, T> E valueOf(Class<E> klass, IFunction1<? super E, ? extends T> represent, boolean ignoreNull, IFunction1<? super T, ? extends T> mangle, T value) {
+		return valueOfMultiRepresent(klass, e -> {
+			@SuppressWarnings("unchecked")
+			final T[] retVal = (T[]) new Object[] { represent.apply(e) };
+			return retVal;
+		}, ignoreNull, mangle, value);
+	}
+
+	public static <E extends Enum<E>> E valueOfInsensitive(Class<E> klass, String text) {
+		return valueOf(klass, Enum::name, true, String::toLowerCase, text);
+	}
+
+	public static <E extends Enum<E>, T> E valueOfMultiRepresent(Class<E> klass, IFunction1<? super E, ? extends T[]> represent, boolean ignoreNull, IFunction1<? super T, ? extends T> mangle, T value) {
 		final Map<T, E> map = new LinkedHashMap<>();
 		for (E member : klass.getEnumConstants()) {
-			final T mangled = mangle.apply(represent.apply(member));
-			if (ignoreNull && (mangled == null)) continue;
-			if (map.put(mangled, member) != null) throw new IllegalArgumentException(String.format("Cannot perform matching on enum \"%1$s\" because the members are not unique under %2$s and %3$s!", klass, represent, mangle));
+			for (T representation : represent.apply(member)) {
+				final T mangled = mangle.apply(representation);
+				if (ignoreNull && (mangled == null)) continue;
+				if (map.put(mangled, member) != null) throw new IllegalArgumentException(String.format("Cannot perform matching on enum \"%1$s\" because the members are not unique under %2$s and %3$s - %4$s appears twice!", klass, represent, mangle, mangled));
+			}
 		}
 		final T mangled = mangle.apply(value);
 		if (!map.containsKey(mangled)) throw new IllegalArgumentException(String.format("Cannot find \"%1$s\" (mangled from \"%3$s\") in %2$s!", mangled, map.keySet(), value));
 		return map.get(mangled);
-	}
-
-	public static <E extends Enum<E>> Class<E> getEnumClass(E object) {
-		final Class<?> klass = object.getClass();
-		final Class<?> enclosing = klass.getEnclosingClass();
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		final Class<E> retVal = (Class) (((enclosing != null) && enclosing.isEnum() && enclosing.isInstance(object)) ? enclosing : klass);
-		return retVal;
-	}
-
-	@SafeVarargs
-	public static <E extends Enum<E>> E min(E... input) {
-		Objects.requireNonNull(input);
-		if (input.length < 1) throw new IllegalArgumentException();
-
-		E retVal = input[0];
-		for (int i = 1; i < input.length; i++) {
-			if (retVal.compareTo(input[i]) > 0) retVal = input[i];
-		}
-		return retVal;
-	}
-
-	@SafeVarargs
-	public static <E extends Enum<E>> E max(E... input) {
-		Objects.requireNonNull(input);
-		if (input.length < 1) throw new IllegalArgumentException();
-
-		E retVal = input[0];
-		for (int i = 1; i < input.length; i++) {
-			if (retVal.compareTo(input[i]) < 0) retVal = input[i];
-		}
-		return retVal;
 	}
 }
