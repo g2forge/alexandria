@@ -10,6 +10,11 @@ import com.g2forge.alexandria.java.io.HPath;
 import com.g2forge.alexandria.path.path.IPath;
 
 public class Filename extends com.g2forge.alexandria.path.path.Path<String> {
+	public static Path addExtension(Path path, String extension) {
+		final IPath<String> filename = Filename.fromPath(path).resolve(new com.g2forge.alexandria.path.path.Path<>(extension));
+		return HPath.replaceFilename(path, filename.toString());
+	}
+
 	public static Filename fromPath(Path path) {
 		return FilenamePathFormat.create().toPath(path.getFileName().toString());
 	}
@@ -26,6 +31,12 @@ public class Filename extends com.g2forge.alexandria.path.path.Path<String> {
 	 */
 	public static String getExtension(Path path) {
 		return Filename.fromPath(path).getLast();
+	}
+
+	public static Path removeExtension(Path path, String extension) {
+		final Filename withExtension = Filename.fromPath(path);
+		final IPath<String> withoutExtension = withExtension.subPath(0, withExtension.size() - new com.g2forge.alexandria.path.path.Path<>(extension).size());
+		return HPath.replaceFilename(path, withoutExtension.toString());
 	}
 
 	public static Path replaceExtension(Path path, String extension) {
