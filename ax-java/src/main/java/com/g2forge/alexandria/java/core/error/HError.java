@@ -75,8 +75,8 @@ public class HError {
 	public static void throwQuietly(Throwable throwable) {
 		if (throwable instanceof Error) throw (Error) throwable;
 		if (throwable instanceof RuntimeException) throw (RuntimeException) throwable;
-		if (throwable instanceof IOException) throw (RuntimeIOException) throwable;
-		if (throwable instanceof InterruptedException) throw (RuntimeInterruptedException) throwable;
+		if (throwable instanceof IOException) throw new RuntimeIOException((IOException) throwable);
+		if (throwable instanceof InterruptedException) throw new RuntimeInterruptedException((InterruptedException) throwable);
 		throw new RuntimeWrappingException(throwable);
 	}
 
