@@ -25,6 +25,10 @@ import lombok.experimental.UtilityClass;
 @Helpers
 @UtilityClass
 public class HStream {
+	public static <T> Stream<T> concat(Collection<? extends Stream<? extends T>> streams) {
+		return streams.stream().filter(Objects::nonNull).map(s -> (Stream<? extends T>) s).reduce(Stream::concat).get().map(t -> t);
+	}
+
 	@SafeVarargs
 	public static <T> Stream<T> concat(Stream<? extends T>... streams) {
 		return Arrays.stream(streams).filter(Objects::nonNull).reduce(Stream::concat).get().map(t -> t);
