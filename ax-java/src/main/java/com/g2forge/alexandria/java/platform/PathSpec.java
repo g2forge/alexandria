@@ -13,10 +13,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum PathSpec {
-	WinBack(";", "\\", DriveSpec.WINDOWS, false),
-	WinForward(";", "/", DriveSpec.WINDOWS, false),
-	CygWin(":", "/", DriveSpec.CYGWIN, true),
-	UNIX(":", "/", DriveSpec.ROOTED, true);
+	WinBack(";", "\\", DriveSpec.WINDOWS, false, new char[] { '"', '*', ':', '<', '>', '?', '\\', '|', 0x7F }),
+	WinForward(";", "/", DriveSpec.WINDOWS, false, new char[] { '"', '*', ':', '<', '>', '?', '\\', '|', 0x7F }),
+	CygWin(":", "/", DriveSpec.CYGWIN, true, new char[] { '\000' }),
+	UNIX(":", "/", DriveSpec.ROOTED, true, new char[] { '\000' });
 
 	protected final String pathSeparator;
 
@@ -25,6 +25,8 @@ public enum PathSpec {
 	protected final DriveSpec driveSpec;
 
 	protected final boolean caseSensitive;
+
+	protected final char[] invalidCharacters;
 
 	public String canonizePath(String path) {
 		// Convert everyone else's file separators to ours
@@ -47,6 +49,22 @@ public enum PathSpec {
 
 	public String joinPaths(String... paths) {
 		return Stream.of(paths).map(this::canonizePath).collect(Collectors.joining(getPathSeparator()));
+	}
+
+	/**
+	 * Sanitize file name removing invalid chars, and replacing them with URL-like escape sequences
+	 *
+	 * @param filename
+	 * @return a file name without invalid chars
+	 */
+	public String sanitize(final String filename) {
+		if (filename == null) return null;
+
+		String retVal = filename;
+		for (char invalidChar : getInvalidCharacters()) {
+			retVal = retVal.replace(String.valueOf(invalidChar), "%" + Integer.toHexString((int) invalidChar));
+		}
+		return retVal;
 	}
 
 	public String[] splitPaths(String path) {
