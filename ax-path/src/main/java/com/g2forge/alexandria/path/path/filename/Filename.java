@@ -33,6 +33,15 @@ public class Filename extends com.g2forge.alexandria.path.path.Path<String> {
 		return Filename.fromPath(path).getLast();
 	}
 
+	public static Path insertExtension(Path path, String extension) {
+		final Filename filename = fromPath(path);
+		final List<String> oldComponents = HCollection.asList(filename.getComponents().toCollection());
+		final int size = oldComponents.size();
+		if (size < 2) throw new IllegalArgumentException(path + " has only one file name component, cannot insert an extension!");
+		final IPath<String> newFilename = filename.getPrefix().resolve(fromString(extension)).resolve(fromString(filename.getLast()));
+		return HPath.replaceFilename(path, newFilename.toString());
+	}
+
 	public static Path removeExtension(Path path, String extension) {
 		final Filename withExtension = Filename.fromPath(path);
 		final IPath<String> withoutExtension = withExtension.subPath(0, withExtension.size() - new com.g2forge.alexandria.path.path.Path<>(extension).size());
