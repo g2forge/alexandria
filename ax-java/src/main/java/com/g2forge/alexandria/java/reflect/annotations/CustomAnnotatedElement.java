@@ -13,7 +13,7 @@ public class CustomAnnotatedElement implements AnnotatedElement {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
-		for (Annotation element : annotations) {
+		for (Annotation element : this.annotations) {
 			if (annotationClass.isInstance(element)) return (T) element;
 		}
 		return null;
