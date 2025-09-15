@@ -10,9 +10,9 @@ import org.junit.Test;
 public class TestHCollector {
 	@Test
 	public void joining() {
-		Assert.assertEquals("", HCollection.emptyList().stream().map(Object::toString).collect(HCollector.joining()));
-		Assert.assertEquals("A", HCollection.asList("A").stream().collect(HCollector.joining()));
-		Assert.assertEquals("AB", HCollection.asList("A", "B").stream().collect(HCollector.joining()));
+		Assert.assertEquals("", HCollection.emptyList().stream().map(Object::toString).collect(HCollector.joiningConcat()));
+		Assert.assertEquals("A", HCollection.asList("A").stream().collect(HCollector.joiningConcat()));
+		Assert.assertEquals("AB", HCollection.asList("A", "B").stream().collect(HCollector.joiningConcat()));
 	}
 
 	@Test

@@ -66,7 +66,7 @@ public class DispatchCommand implements IStandardCommand {
 	protected final Map<String, IStandardCommand> commands;
 
 	protected String getKnownSubCommands() {
-		return getCommands().keySet().stream().map(s -> '"' + s + '"').collect(HCollector.joining(", ", ", & "));
+		return getCommands().keySet().stream().map(s -> '"' + s + '"').collect(HCollector.joiningHuman());
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class DispatchCommand implements IStandardCommand {
 		final String name = arguments.get(0);
 		final IStandardCommand subcommand = getCommands().get(name);
 		if (subcommand == null) {
-			invocation.getIo().getStandardError().println(String.format("Unrecognized sub-command \"%1$s\", known sub commands are: %2$s!", name, getCommands().keySet().stream().map(s -> '"' + s + '"').collect(HCollector.joining(", ", ", & "))));
+			invocation.getIo().getStandardError().println(String.format("Unrecognized sub-command \"%1$s\", known sub commands are: %2$s!", name, getCommands().keySet().stream().map(s -> '"' + s + '"').collect(HCollector.joiningHuman())));
 			return IStandardCommand.FAIL;
 		}
 
