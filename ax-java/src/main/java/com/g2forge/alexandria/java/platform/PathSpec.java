@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.g2forge.alexandria.java.function.IFunction1;
 import com.g2forge.alexandria.java.text.HString;
 
 import lombok.Getter;
@@ -58,13 +59,21 @@ public enum PathSpec {
 	 * @return a file name without invalid chars
 	 */
 	public String sanitize(final String filename) {
+		return sanitize(filename, invalidChar -> "%" + Integer.toHexString((int) invalidChar));
+	}
+
+	public String sanitize(final String filename, IFunction1<Character, String> replacement) {
 		if (filename == null) return null;
 
 		String retVal = filename;
 		for (char invalidChar : getInvalidCharacters()) {
-			retVal = retVal.replace(String.valueOf(invalidChar), "%" + Integer.toHexString((int) invalidChar));
+			retVal = retVal.replace(String.valueOf(invalidChar), replacement.apply(invalidChar));
 		}
 		return retVal;
+	}
+
+	public String sanitize(final String filename, String replacement) {
+		return sanitize(filename, IFunction1.create(replacement));
 	}
 
 	public String[] splitPaths(String path) {
