@@ -9,6 +9,7 @@ public class TestHProject {
 		final Location location = HProject.getLocation(getClass());
 		Assert.assertNotNull(location);
 		Assert.assertNotNull(location.getLayout());
+		Assert.assertTrue(location.getLayout().isTest());
 		Assert.assertNotNull(location.getProject().getRoot());
 		Assert.assertNotNull(location.getTarget());
 	}
