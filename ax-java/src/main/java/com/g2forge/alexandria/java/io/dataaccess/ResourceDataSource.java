@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class ResourceDataSource implements IDataSource {
+public class ResourceDataSource implements INamedDataSource {
 	protected final IResource resource;
 
 	@Note(type = NoteType.TODO, value = "Use static type switch", issue = "G2-432")
@@ -25,6 +25,11 @@ public class ResourceDataSource implements IDataSource {
 		@SuppressWarnings("unchecked")
 		final T retVal = (T) Channels.newChannel(getResource().getResourceAsStream(true));
 		return retVal;
+	}
+
+	@Override
+	public String getName() {
+		return getResource().getResource();
 	}
 
 	@Override
