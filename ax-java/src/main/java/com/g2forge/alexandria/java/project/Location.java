@@ -23,8 +23,15 @@ public class Location {
 	protected final Path resources;
 
 	/**
-	 * The directory in which the outputs of the compilation process (source and resources) exist. May not be {@code null}, but it may be the directory
-	 * containing the JAR file if this location denotes a JAR.
+	 * The directory in which the outputs of the compilation process (source and resources) exist. May be {@code null}, or the directory containing the JAR file
+	 * if this location denotes a JAR.
 	 */
 	protected final Path target;
+
+	/**
+	 * The JAR file, if this location is a JAR. {@code null} otherwise.
+	 * 
+	 * @see Layout#isJar()
+	 */
+	protected final Path jar;
 }
