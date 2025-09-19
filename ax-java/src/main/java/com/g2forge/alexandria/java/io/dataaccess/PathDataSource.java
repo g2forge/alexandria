@@ -15,9 +15,9 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class PathDataSource implements IDataSource {
+public class PathDataSource implements INamedDataSource {
 	protected final Path path;
-	
+
 	protected final OpenOption[] openOptions;
 
 	public PathDataSource(Path path, OpenOption... openOptions) {
@@ -35,6 +35,11 @@ public class PathDataSource implements IDataSource {
 		} catch (IOException e) {
 			throw new RuntimeIOException(e);
 		}
+	}
+
+	@Override
+	public String getName() {
+		return getPath().getFileName().toString();
 	}
 
 	@Override
