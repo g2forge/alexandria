@@ -1,11 +1,13 @@
 package com.g2forge.alexandria.java.nestedstate;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 import java.util.function.Function;
 
 import com.g2forge.alexandria.java.close.ICloseable;
 
-public class StackGlobalState<T> implements ICloseableNestedState<T> {
+public class StackGlobalState<T> implements ICloseableNestedState<T>, ITransparentNestedState<T> {
 	protected final Stack<T> stack = new Stack<>();
 
 	public StackGlobalState() {}
@@ -19,6 +21,7 @@ public class StackGlobalState<T> implements ICloseableNestedState<T> {
 		stack.pop();
 	}
 
+	@Override
 	public int depth() {
 		return stack.size();
 	}
@@ -26,6 +29,11 @@ public class StackGlobalState<T> implements ICloseableNestedState<T> {
 	@Override
 	public T get() {
 		return stack.peek();
+	}
+
+	@Override
+	public List<T> getCurrent() {
+		return new ArrayList<>(stack);
 	}
 
 	public ICloseable modify(Function<? super T, ? extends T> function) {

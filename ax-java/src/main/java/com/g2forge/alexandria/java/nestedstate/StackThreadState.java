@@ -1,5 +1,7 @@
 package com.g2forge.alexandria.java.nestedstate;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -7,7 +9,7 @@ import java.util.function.Supplier;
 import com.g2forge.alexandria.java.close.ICloseable;
 import com.g2forge.alexandria.java.function.LiteralSupplier;
 
-public class StackThreadState<T> implements INestedState<T> {
+public class StackThreadState<T> implements INestedState<T>, ITransparentNestedState<T> {
 	protected final ThreadLocal<Stack<T>> local;
 
 	public StackThreadState() {
@@ -31,8 +33,14 @@ public class StackThreadState<T> implements INestedState<T> {
 		if (expectedStack.pop() != expectedValue) throw new IllegalStateException();
 	}
 
+	@Override
 	public int depth() {
 		return local.get().size();
+	}
+	
+	@Override
+	public List<T> getCurrent() {
+		return new ArrayList<>(local.get());
 	}
 
 	@Override
