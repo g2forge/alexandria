@@ -10,6 +10,6 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class HTestData {
 	public static String randomEmail(final int length) {
-		return RandomStringUtils.randomAlphanumeric(length) + "@example.com";
+		return RandomStringUtils.insecure().nextAlphanumeric(length) + "@example.com";
 	}
 }

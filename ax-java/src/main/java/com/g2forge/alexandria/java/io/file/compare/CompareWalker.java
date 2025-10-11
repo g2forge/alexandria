@@ -123,16 +123,10 @@ public class CompareWalker implements IFileTreeWalker {
 		public FileVisitResult preVisitDirectory(Path path, BasicFileAttributes attributes) {
 			final Path relative = getStart().relativize(path);
 			final Map<OrThrowable<List<String>>, Set<Path>> grouped = getRoots().stream().map(p -> {
-				Stream<Path> list = null;
-				try {
-					try {
-						list = Files.list(p.resolve(relative));
-					} catch (IOException exception) {
-						return new Tuple2G_O<>(p, new OrThrowable<List<String>>(exception));
-					}
+				try (Stream<Path> list = Files.list(p.resolve(relative))) {
 					return new Tuple2G_O<>(p, new OrThrowable<List<String>>(list.map(Path::getFileName).map(Object::toString).sorted().collect(Collectors.toList())));
-				} finally {
-					if (list != null) list.close();
+				} catch (IOException exception) {
+					return new Tuple2G_O<>(p, new OrThrowable<List<String>>(exception));
 				}
 			}).collect(Collectors.groupingBy(ITuple2G_::get1, Collectors.mapping(ITuple2G_::get0, Collectors.toSet())));
 			if (grouped.size() > 1) throw new MismatchError(new DirectoryMismatch(relative, grouped));
