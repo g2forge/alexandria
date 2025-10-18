@@ -65,6 +65,8 @@ public class FileWatcher extends AThreadActor {
 	}
 
 	protected final Map<FileSystem, FileSystemContext> fileSystems = new IdentityHashMap<>();
+	
+	protected boolean started = false;
 
 	@Override
 	public FileWatcher open() {

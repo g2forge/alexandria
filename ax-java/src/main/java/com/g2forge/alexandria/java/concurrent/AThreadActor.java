@@ -8,6 +8,7 @@ public abstract class AThreadActor implements IWaitCloseable {
 	protected enum State {
 		Initialized,
 		Opened,
+		Running,
 		Closed;
 	}
 
@@ -18,7 +19,7 @@ public abstract class AThreadActor implements IWaitCloseable {
 
 	@Override
 	public synchronized void close() {
-		final boolean wasOpen = state == State.Opened;
+		final boolean wasOpen = state == State.Opened || state == State.Running;
 		if (wasOpen) shutdown();
 		state = State.Closed;
 		if (wasOpen) {
@@ -28,13 +29,31 @@ public abstract class AThreadActor implements IWaitCloseable {
 	}
 
 	public boolean isOpen() {
-		return state == State.Opened;
+		return (state == State.Opened) || (state == State.Running);
+	}
+
+	public boolean isRunning() {
+		return state == State.Running;
+	}
+
+	public synchronized void awaitRun() {
+		while (state == State.Opened) {
+			try {
+				this.wait();
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 
 	public synchronized AThreadActor open() {
 		if (state != State.Initialized) throw new IllegalStateException();
 		thread = new Thread(() -> {
 			try {
+				synchronized (this) {
+					state = State.Running;
+					notifyAll();
+				}
 				run();
 			} finally {
 				close();

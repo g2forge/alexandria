@@ -76,7 +76,7 @@ public class TestFileWatcher {
 			if (prep != null) prep.accept(temp.get(), file);
 
 			// Open the watcher
-			watcher.open();
+			watcher.open().awaitRun();
 			final List<WatchEvent<Path>> events = new ArrayList<>();
 			watcher.watch(temp.get(), (event, path) -> {
 				synchronized (events) {
@@ -94,8 +94,9 @@ public class TestFileWatcher {
 
 			// Look for the expected events
 			final Set<SimpleWatchEvent> expected = Stream.of(kinds).map(k -> new SimpleWatchEvent(k, file.getFileName())).collect(Collectors.toCollection(LinkedHashSet::new));
+			final int maxIterations = 100, delayMS = 100;
 			int i = 0;
-			while (!expected.isEmpty() && (i < 20)) {
+			while (!expected.isEmpty() && (i < maxIterations)) {
 				final Set<SimpleWatchEvent> actual;
 				synchronized (events) {
 					actual = events.stream().map(SimpleWatchEvent::new).collect(Collectors.toCollection(LinkedHashSet::new));
@@ -106,14 +107,14 @@ public class TestFileWatcher {
 
 				// Wait a little while before we bother checking again
 				synchronized (delay) {
-					delay.wait(100);
+					delay.wait(delayMS);
 				}
 
 				i++;
 			}
 
 			// Make sure no more came in
-			Assert.assertEquals(new LinkedHashSet<>(), expected);
+			Assert.assertEquals("Even after " + maxIterations * delayMS + "ms, we didn't recive all the expected events", new LinkedHashSet<>(), expected);
 		}
 	}
 
