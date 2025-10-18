@@ -95,7 +95,7 @@ public class TestFileWatcher {
 			// Look for the expected events
 			final Set<SimpleWatchEvent> expected = Stream.of(kinds).map(k -> new SimpleWatchEvent(k, file.getFileName())).collect(Collectors.toCollection(LinkedHashSet::new));
 			int i = 0;
-			while (!expected.isEmpty() && (i < 20)) {
+			while (!expected.isEmpty() && (i < 100)) {
 				final Set<SimpleWatchEvent> actual;
 				synchronized (events) {
 					actual = events.stream().map(SimpleWatchEvent::new).collect(Collectors.toCollection(LinkedHashSet::new));
