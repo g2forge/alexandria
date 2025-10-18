@@ -42,6 +42,7 @@
 		<module>ax-media</module>
 		<module>ax-parse</module>
 		<module>ax-match</module>
+		<module>ax-workqueue</module>
 	</modules>
 
 	<profiles>
