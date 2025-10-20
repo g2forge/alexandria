@@ -8,9 +8,12 @@ import java.util.Map;
 
 import com.g2forge.alexandria.command.exit.IExit;
 import com.g2forge.alexandria.command.invocation.CommandInvocation;
+import com.g2forge.alexandria.java.core.error.DependencyNotLoadedError;
 import com.g2forge.alexandria.java.core.helpers.HCollector;
 import com.g2forge.alexandria.java.function.IFunction1;
 import com.g2forge.alexandria.java.function.builder.IBuilder;
+import com.g2forge.alexandria.service.BasicServiceLoader;
+import com.g2forge.alexandria.service.DefaultInstantiator;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -60,6 +63,17 @@ public class DispatchCommand implements IStandardCommand {
 			commands.put(getNamer().apply(command), command);
 			return this;
 		}
+	}
+
+	public static <T extends IStandardCommand> DispatchCommand createAnnotation(Class<T> type) {
+		final HashMap<String, IStandardCommand> commands = new HashMap<>();
+		for (IStandardCommand command : DependencyNotLoadedError.tryWithModule("ax-service", () -> new BasicServiceLoader<>(null, type, null, new DefaultInstantiator<>(type))).load()) {
+			final Command annotation = command.getClass().getAnnotation(Command.class);
+			if (annotation == null) throw new IllegalArgumentException("Command with type " + command.getClass().getSimpleName() + " marked with service " + type.getSimpleName() + ", not not " + Command.class.getName() + " annotation");
+			final String name = annotation.value().isEmpty() ? command.getClass().getSimpleName() : annotation.value();
+			commands.put(name, command);
+		}
+		return new DispatchCommand(commands);
 	}
 
 	@Singular

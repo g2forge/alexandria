@@ -27,6 +27,13 @@ public class TestDispatchCommand {
 	}
 
 	@Test
+	public void annotated() throws Throwable {
+		final DispatchCommand command = DispatchCommand.createAnnotation(IAnnotatedTestCommand.class);
+		Assert.assertEquals(1, command.test(AnnotatedTestCommand1.class.getSimpleName()).getExit().getCode());
+		Assert.assertEquals(2, command.test("2").getExit().getCode());
+	}
+
+	@Test
 	public void naming() throws Throwable {
 		final IStandardCommand command = new DispatchCommand.NamingBuilder<NamedCommand>(IStringNamed::getName).command(new NamedCommand("a")).build();
 		Assert.assertEquals(IStandardCommand.SUCCESS, command.test("a").getExit());
