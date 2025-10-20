@@ -89,6 +89,7 @@ public class Win32CommandLineBuilder implements ICommandLineBuilder, ISingleton 
 	}
 
 	protected boolean isAllowAmbiguousCommands() {
+		@SuppressWarnings("removal")
 		final SecurityManager security = System.getSecurityManager();
 		if (security != null) return true;
 

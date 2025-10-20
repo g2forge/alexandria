@@ -90,7 +90,7 @@ public interface IStandardCommand extends IStructuredCommand {
 
 	IExit FAIL = new Exit(ICommand.FAIL);
 
-	static void main(String[] args, IStandardCommand command) throws Throwable {
+	public static void main(String[] args, IStandardCommand command) throws Throwable {
 		final CommandInvocation<InputStream, PrintStream> invocation = CommandInvocation.of(args);
 		final IExit exit = command.invoke(invocation);
 		System.exit(exit.getCode());

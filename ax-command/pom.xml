@@ -17,11 +17,18 @@
 	<description>Library for command line programming.</description>
 
 	<dependencies>
+		<!-- ax-adt is needed for annotation dispatch and other tests, provided includes test scope -->
 		<dependency>
 			<groupId>com.g2forge.alexandria</groupId>
 			<artifactId>ax-adt</artifactId>
 			<version>${project.version}</version>
-			<scope>test</scope>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.g2forge.alexandria</groupId>
+			<artifactId>ax-service</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>
