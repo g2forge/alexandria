@@ -67,7 +67,7 @@ public class DispatchCommand implements IStandardCommand {
 
 	public static <T extends IStandardCommand> DispatchCommand createAnnotation(Class<T> type) {
 		final HashMap<String, IStandardCommand> commands = new HashMap<>();
-		for (IStandardCommand command : DependencyNotLoadedError.tryWithModule("ax-service", () -> new BasicServiceLoader<>(null, type, null, new DefaultInstantiator<>(type))).load()) {
+		for (IStandardCommand command : DependencyNotLoadedError.tryWithModule(() -> new BasicServiceLoader<>(null, type, null, new DefaultInstantiator<>(type)).load(), "ax-service")) {
 			final Command annotation = command.getClass().getAnnotation(Command.class);
 			if (annotation == null) throw new IllegalArgumentException("Command with type " + command.getClass().getSimpleName() + " marked with service " + type.getSimpleName() + ", not not " + Command.class.getName() + " annotation");
 			final String name = annotation.value().isEmpty() ? command.getClass().getSimpleName() : annotation.value();
