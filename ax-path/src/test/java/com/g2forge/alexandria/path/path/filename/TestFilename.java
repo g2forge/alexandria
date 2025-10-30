@@ -1,5 +1,7 @@
 package com.g2forge.alexandria.path.path.filename;
 
+import java.nio.file.Paths;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -33,5 +35,16 @@ public class TestFilename {
 		Assert.assertEquals("ext2", filename.getExtension());
 		Assert.assertEquals("ext1.ext2", filename.getSuffix().toString());
 		Assert.assertEquals("file.ext1.ext2", filename.toString());
+	}
+
+	@Test
+	public void removeExtension() {
+		Assert.assertEquals(Paths.get("A"), Filename.removeExtension(Paths.get("A.B"), "B"));
+		Assert.assertEquals(Paths.get("A"), Filename.removeExtension(Paths.get("A.B.C"), "B.C"));
+		Assert.assertEquals(Paths.get("A.B"), Filename.removeExtension(Paths.get("A.B.C"), "C"));
+		try {
+			Filename.removeExtension(Paths.get("A.B.C"), "D");
+			Assert.fail();
+		} catch (IllegalArgumentException exception) {}
 	}
 }

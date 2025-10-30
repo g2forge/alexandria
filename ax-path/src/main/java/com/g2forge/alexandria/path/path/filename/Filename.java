@@ -44,7 +44,10 @@ public class Filename extends com.g2forge.alexandria.path.path.Path<String> {
 
 	public static Path removeExtension(Path path, String extension) {
 		final Filename withExtension = Filename.fromPath(path);
-		final IPath<String> withoutExtension = withExtension.subPath(0, withExtension.size() - new com.g2forge.alexandria.path.path.Path<>(extension).size());
+		final IPath<String> expected = fromString(extension);
+		final IPath<String> actual = withExtension.subPath(withExtension.size() - expected.size(), withExtension.size());
+		if (!expected.equals(actual)) throw new IllegalArgumentException(String.format("%1$s does not have extension %2$s", path, extension));
+		final IPath<String> withoutExtension = withExtension.subPath(0, withExtension.size() - expected.size());
 		return HPath.replaceFilename(path, withoutExtension.toString());
 	}
 
