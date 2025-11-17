@@ -19,6 +19,14 @@ public class StandardIO<I, O> implements IStandardIO<I, O> {
 		return retVal.build();
 	}
 
+	public static final <T> StandardIO<T, T> of(T redirect) {
+		final StandardIO.StandardIOBuilder<T, T> retVal = StandardIO.builder();
+		retVal.standardInput(redirect);
+		retVal.standardOutput(redirect);
+		retVal.standardError(redirect);
+		return retVal.build();
+	}
+
 	protected final I standardInput;
 
 	protected final O standardOutput;
