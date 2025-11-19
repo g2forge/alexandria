@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import com.g2forge.alexandria.java.fluent.IFluent1_;
 
@@ -39,7 +40,6 @@ public abstract class AOptional<T> implements IOptional<T> {
 		public boolean isEmpty() {
 			return override.isEmpty() && fallback.isEmpty();
 		}
-
 	}
 
 	protected abstract <U> AOptional<U> create();
@@ -112,6 +112,12 @@ public abstract class AOptional<T> implements IOptional<T> {
 
 	protected <_T> _T require(_T value) {
 		return value;
+	}
+
+	@Override
+	public Stream<T> toStream() {
+		if (isEmpty()) Stream.empty();
+		return Stream.of(get());
 	}
 
 	@Override

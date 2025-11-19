@@ -1,6 +1,7 @@
 package com.g2forge.alexandria.java.fluent.optional;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import com.g2forge.alexandria.java.fluent.optional.factory.IOptionalFactory;
 
@@ -36,6 +37,10 @@ public class NonNullOptional<T> extends AValueOptional<T> {
 
 	public static <T> NonNullOptional<T> ofNullable(T value) {
 		return value == null ? empty() : of(value);
+	}
+
+	public static <T> NonNullOptional<T> ofOptional(Optional<? extends T> value) {
+		return value.isEmpty() ? empty() : of(value.get());
 	}
 
 	protected NonNullOptional() {

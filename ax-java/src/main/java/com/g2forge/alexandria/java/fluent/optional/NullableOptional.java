@@ -1,5 +1,7 @@
 package com.g2forge.alexandria.java.fluent.optional;
 
+import java.util.Optional;
+
 import com.g2forge.alexandria.java.fluent.optional.factory.IOptionalFactory;
 
 public class NullableOptional<T> extends AValueOptional<T> {
@@ -34,6 +36,10 @@ public class NullableOptional<T> extends AValueOptional<T> {
 
 	public static <T> NullableOptional<T> ofNullable(T value) {
 		return value == null ? empty() : of(value);
+	}
+
+	public static <T> NullableOptional<T> ofOptional(Optional<? extends T> value) {
+		return value.isEmpty() ? empty() : of(value.get());
 	}
 
 	protected final boolean isValid;
