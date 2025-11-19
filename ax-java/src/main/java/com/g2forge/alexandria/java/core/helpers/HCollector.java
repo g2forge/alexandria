@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 import com.g2forge.alexandria.java.adt.tuple.ITuple2G_;
 import com.g2forge.alexandria.java.adt.tuple.implementations.Tuple2G_O;
 import com.g2forge.alexandria.java.core.marker.Helpers;
+import com.g2forge.alexandria.java.fluent.optional.IOptional;
+import com.g2forge.alexandria.java.fluent.optional.NullableOptional;
 import com.g2forge.alexandria.java.function.IFunction1;
 
 import lombok.AccessLevel;
@@ -283,6 +285,14 @@ public class HCollector {
 
 	public static <T> Collector<T, ?, T> toFirst() {
 		return Collectors.collectingAndThen(Collectors.toList(), HCollection::getFirst);
+	}
+
+	public static <T> Collector<T, ?, IOptional<T>> toIOptional() {
+		return Collectors.collectingAndThen(Collectors.toList(), list -> {
+			if (list.size() > 1) throw new IllegalStateException("Result set had " + list.size() + " elements instead of 0 or 1!");
+			if (list.isEmpty()) return NullableOptional.empty();
+			return NullableOptional.of(list.get(0));
+		});
 	}
 
 	public static <K, V> Collector<Map.Entry<K, V>, ?, Map<K, V>> toMapEntries() {

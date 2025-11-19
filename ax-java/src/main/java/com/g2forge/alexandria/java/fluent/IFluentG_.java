@@ -1,6 +1,7 @@
 package com.g2forge.alexandria.java.fluent;
 
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public interface IFluentG_<T> extends IFluent__<T> {
 	public boolean isEmpty();
@@ -9,5 +10,7 @@ public interface IFluentG_<T> extends IFluent__<T> {
 		return !isEmpty();
 	}
 
+	public Stream<T> toStream();
+	
 	public void visit(Consumer<? super T> consumer);
 }
