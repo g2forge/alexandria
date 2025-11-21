@@ -34,4 +34,47 @@ public class HCloseable {
 		}
 		if (!throwables.isEmpty()) throw HError.withSuppressed(new RuntimeException(), throwables);
 	}
+	
+	public static void closeAny(Iterable<? extends Object> objects) {
+		final List<Throwable> throwables = new ArrayList<>();
+		for (Object object : objects) {
+			try {
+				closeAny(object);
+			} catch (Throwable throwable) {
+				throwables.add(throwable);
+			}
+		}
+		if (!throwables.isEmpty()) throw HError.withSuppressed(new RuntimeException(), throwables);
+	}
+
+	public static void closeAny(Object... objects) {
+		final List<Throwable> throwables = new ArrayList<>();
+		for (Object object : objects) {
+			try {
+				closeAny(object);
+			} catch (Throwable throwable) {
+				throwables.add(throwable);
+			}
+		}
+		if (!throwables.isEmpty()) throw HError.withSuppressed(new RuntimeException(), throwables);
+	}
+
+	public static void closeAny(Object object) throws Exception {
+		if ((object != null) && (object instanceof AutoCloseable)) {
+			((AutoCloseable) object).close();
+		}
+	}
+
+	public static void closeAnyQuietly(Object object) {
+		if ((object != null) && (object instanceof AutoCloseable)) {
+			if (object instanceof ICloseable) ((ICloseable) object).close();
+			else {
+				try {
+					((AutoCloseable) object).close();
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}
+	}
 }
