@@ -63,4 +63,9 @@ public class HPath {
 	public static Path resolveFS(Path base, Path path) {
 		return base.resolve(ensureFS(base.getFileSystem(), path));
 	}
+
+	public static Path withBase(Path base, Path path) {
+		if (path.isAbsolute() || (base == null)) return path;
+		return base.resolve(path);
+	}
 }
