@@ -3,6 +3,7 @@ package com.g2forge.alexandria.java.io.file;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import com.g2forge.alexandria.java.core.resource.ResourceRenderer;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
@@ -19,11 +20,17 @@ public class TempDirectory extends CloseablePath {
 		}
 	}
 
+	protected static Path getDefaultParent() {
+		final String string = System.getProperty(TempDirectory.class.getSimpleName().toLowerCase() + ".parent");
+		return string == null ? null : Paths.get(string);
+	}
+
 	@Getter(lazy = true)
 	private final ResourceRenderer resource = new ResourceRenderer(get());
 
 	public TempDirectory() {
-		this(null, null, true);
+		this(getDefaultParent(), null, true);
+
 	}
 
 	public TempDirectory(Path parent, String prefix, boolean autodelete) {
