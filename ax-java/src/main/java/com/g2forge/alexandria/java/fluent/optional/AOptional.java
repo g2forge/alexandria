@@ -116,7 +116,7 @@ public abstract class AOptional<T> implements IOptional<T> {
 
 	@Override
 	public Stream<T> toStream() {
-		if (isEmpty()) Stream.empty();
+		if (isEmpty()) return Stream.empty();
 		return Stream.of(get());
 	}
 
