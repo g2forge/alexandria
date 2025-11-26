@@ -11,6 +11,6 @@ public interface IFluentG_<T> extends IFluent__<T> {
 	}
 
 	public Stream<T> toStream();
-	
+
 	public void visit(Consumer<? super T> consumer);
 }
