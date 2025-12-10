@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 
 import com.g2forge.alexandria.java.function.IFunction1;
 import com.g2forge.alexandria.java.text.HString;
+import com.g2forge.alexandria.java.text.escape.SanitizedEscapeType;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -59,17 +60,13 @@ public enum PathSpec {
 	 * @return a file name without invalid chars
 	 */
 	public String sanitize(final String filename) {
-		return sanitize(filename, invalidChar -> "%" + Integer.toHexString((int) invalidChar));
+		if (filename == null) return null;
+		return new SanitizedEscapeType(String.valueOf(getInvalidCharacters())).getEscaper().escape(filename);
 	}
 
 	public String sanitize(final String filename, IFunction1<Character, String> replacement) {
 		if (filename == null) return null;
-
-		String retVal = filename;
-		for (char invalidChar : getInvalidCharacters()) {
-			retVal = retVal.replace(String.valueOf(invalidChar), replacement.apply(invalidChar));
-		}
-		return retVal;
+		return new SanitizedEscapeType(String.valueOf(getInvalidCharacters()), replacement).getEscaper().escape(filename);
 	}
 
 	public String sanitize(final String filename, String replacement) {
