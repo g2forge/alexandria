@@ -58,7 +58,7 @@ public class NonNullOptional<T> extends AValueOptional<T> {
 
 	@Override
 	protected <U> AValueOptional<U> create(U value) {
-		return NonNullOptional.of(value);
+		return NonNullOptional.ofNullable(value);
 	}
 
 	@Override

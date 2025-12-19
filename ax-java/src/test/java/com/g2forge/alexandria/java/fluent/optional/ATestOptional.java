@@ -94,10 +94,14 @@ public abstract class ATestOptional {
 		getFactory().empty().map(null);
 	}
 
+	public abstract void mapToNull();
+
 	@Test
 	public void mapValue() {
 		Assert.assertEquals(2, getFactory().of(1).map(i -> i + 1).get().intValue());
 	}
+
+	public abstract void ofNull();
 
 	@Test
 	public void ofNullable() {
