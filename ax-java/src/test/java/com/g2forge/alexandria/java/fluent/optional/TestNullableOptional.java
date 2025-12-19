@@ -15,4 +15,10 @@ public class TestNullableOptional extends ATestOptional {
 	public void ofNull() {
 		Assert.assertFalse(getFactory().of(null).isEmpty());
 	}
+	
+	@Test
+	@Override
+	public void mapToNull() {
+		Assert.assertFalse(getFactory().of(0).map(i -> null).isEmpty());
+	}
 }
