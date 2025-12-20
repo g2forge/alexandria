@@ -4,6 +4,12 @@ import java.util.Optional;
 
 import com.g2forge.alexandria.java.fluent.optional.factory.IOptionalFactory;
 
+/**
+ * An optional which holds a value which may be {@code null} without being empty. This class differs from {@link java.util.Optional} and {@link NonNullOptional}
+ * in that {@code null} is not the same as empty, {@code null} is a valid value which this optional may hold.
+ * 
+ * @param <T> The type of the value, if any, held.
+ */
 public class NullableOptional<T> extends AValueOptional<T> {
 	protected static final NullableOptional<?> EMPTY = new NullableOptional<>();
 
@@ -30,10 +36,24 @@ public class NullableOptional<T> extends AValueOptional<T> {
 		return retVal;
 	}
 
+	/**
+	 * Create a new instance to hold the specified value.
+	 * 
+	 * @param <T> The type of the value, if any, held.
+	 * @param value The null value to hold.
+	 * @return An optional holding the specified value.
+	 */
 	public static <T> NullableOptional<T> of(T value) {
 		return new NullableOptional<>(value);
 	}
 
+	/**
+	 * Create a new instance to hold the specified value, or an empty optional if the specified value is {@code null}.
+	 * 
+	 * @param <T> The type of the value, if any, held.
+	 * @param value The value to hold. If {@code null} the resulting optional will be empty.
+	 * @return An optional holding the specified value, or an empty optional.
+	 */
 	public static <T> NullableOptional<T> ofNullable(T value) {
 		return value == null ? empty() : of(value);
 	}
