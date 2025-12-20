@@ -7,6 +7,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import com.g2forge.alexandria.java.fluent.IFluent10;
 import com.g2forge.alexandria.java.fluent.IFluent1_;
 
 import lombok.AllArgsConstructor;
@@ -16,9 +17,9 @@ public abstract class AOptional<T> implements IOptional<T> {
 	@EqualsAndHashCode(callSuper = false)
 	@AllArgsConstructor
 	protected static class FallbackOptional<T> extends AOptional<T> {
-		protected final IOptional<? extends T> override;
+		protected final IFluent10<? extends T> override;
 
-		protected final IOptional<? extends T> fallback;
+		protected final IFluent10<? extends T> fallback;
 
 		@Override
 		protected <U> AOptional<U> create() {
@@ -64,7 +65,7 @@ public abstract class AOptional<T> implements IOptional<T> {
 	}
 
 	@Override
-	public IOptional<T> fallback(IOptional<? extends T> fallback) {
+	public IOptional<T> fallback(IFluent10<? extends T> fallback) {
 		return new FallbackOptional<T>(this, fallback);
 	}
 
@@ -106,7 +107,7 @@ public abstract class AOptional<T> implements IOptional<T> {
 	}
 
 	@Override
-	public IOptional<T> override(IOptional<? extends T> override) {
+	public IOptional<T> override(IFluent10<? extends T> override) {
 		return new FallbackOptional<T>(override, this);
 	}
 
