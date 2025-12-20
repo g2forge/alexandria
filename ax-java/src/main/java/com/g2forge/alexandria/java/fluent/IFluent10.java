@@ -22,7 +22,7 @@ public interface IFluent10<T> extends IFluent1_<T>, IFluent_0<T> {
 	 * Create a fluent holder with the value of the specified holder, if any, and the value of this one, if the specified holder is empty. This is the opposite
 	 * of {@link #fallback(IFluent10)}.
 	 * 
-	 * @param fallback The fallback holder to use if it has a value.
+	 * @param override The fallback holder to use if it has a value, fallback to this holders value if the specified one is empty.
 	 * @return The created fluent holder.
 	 */
 	public IFluent10<T> override(IFluent10<? extends T> override);
