@@ -23,9 +23,11 @@ public enum MediaType implements IMediaType {
 	HTML(true, new SimpleFileExtensions("html", "htm"), new MimeType("text", "html")),
 	CSS(true, new SimpleFileExtensions("css"), new MimeType("text", "css")),
 	Markdown(true, new SimpleFileExtensions("md"), new MimeType("text", "markdown")),
-	MP3(true, new SimpleFileExtensions("mp3"), new MimeType("audio", "mpeg")),
-	M4A(true, new SimpleFileExtensions("m4a"), new MimeType("audio", "mp4")),
-	M4V(true, new SimpleFileExtensions("m4v"), new MimeType("video", "mp4"));
+	MP3(false, new SimpleFileExtensions("mp3"), new MimeType("audio", "mpeg")),
+	M4A(false, new SimpleFileExtensions("m4a"), new MimeType("audio", "mp4")),
+	M4V(false, new SimpleFileExtensions("m4v", "mp4"), new MimeType("video", "mp4")),
+	MKV(false, new SimpleFileExtensions("mkv"), new MimeType("video", "x-matroska")),
+	M3U8(true, new SimpleFileExtensions("m3u8"), new MimeType("application", "vnd.apple.mpegurl"));
 
 	@Getter(lazy = true)
 	private static final IMediaRegistry registry = new MediaRegistry(MediaType.values());
