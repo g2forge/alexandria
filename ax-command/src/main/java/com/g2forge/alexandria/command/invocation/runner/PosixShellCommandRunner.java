@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.command.invocation.CommandInvocation;
 import com.g2forge.alexandria.command.invocation.format.BashCommandFormat;
+import com.g2forge.alexandria.java.core.enums.EnumException;
 import com.g2forge.alexandria.java.platform.Shell;
 
 import lombok.Getter;
@@ -23,6 +24,17 @@ public class PosixShellCommandRunner extends AShellCommandRunner {
 		retVal.add(getShellExecutable());
 		retVal.addAll(shellArguments);
 		retVal.add(invocation.getArguments().stream().collect(Collectors.joining(" ")));
-		return invocation.toBuilder().format(BashCommandFormat.create()).clearArguments().arguments(retVal).build();
+		final BashCommandFormat format = computeFormat();
+		return invocation.toBuilder().format(format).clearArguments().arguments(retVal).build();
+	}
+
+	protected BashCommandFormat computeFormat() {
+		final Shell shell = getShell();
+		switch (shell) {
+			case BASH:
+				return BashCommandFormat.create();
+			default:
+				throw new EnumException(Shell.class, shell);
+		}
 	}
 }
