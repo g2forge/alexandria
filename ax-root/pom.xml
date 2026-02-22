@@ -14,13 +14,16 @@
 		<project.resources.sourceEncoding>${encoding}</project.resources.sourceEncoding>
 		<archetype.encoding>${encoding}</archetype.encoding>
 
-		<mavencompiler.version>3.8.1</mavencompiler.version>
+		<mavencompiler.version>3.15.0</mavencompiler.version>
 		<mavencompiler.javaversion>17</mavencompiler.javaversion>
-		<mavenjar.version>3.1.2</mavenjar.version>
-		<mavensurefire.version>3.0.0-M5</mavensurefire.version>
-		<mavenfailsafe.version>3.0.0-M5</mavenfailsafe.version>
-		<mavenresources.version>3.2.0</mavenresources.version>
-		<mavenassembly.version>3.3.0</mavenassembly.version>
+		<mavenjar.version>3.5.0</mavenjar.version>
+		<mavensurefire.version>3.5.5</mavensurefire.version>
+		<mavenfailsafe.version>3.5.5</mavenfailsafe.version>
+		<mavenrelease.version>3.3.1</mavenrelease.version>
+		<mavensource.version>3.4.0</mavensource.version>
+		<mavenjavadoc.version>3.12.0</mavenjavadoc.version>
+		<mavenresources.version>3.4.0</mavenresources.version>
+		<mavenassembly.version>3.8.0</mavenassembly.version>
 
 		<lombok.version>1.18.30</lombok.version>
 		<lombok-maven.version>1.18.20.0</lombok-maven.version>
@@ -150,7 +153,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>3.0.0-M1</version>
+				<version>${mavenrelease.version}</version>
 				<configuration>
 					<tagNameFormat>@{project.version}</tagNameFormat>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
@@ -172,7 +175,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>3.2.1</version>
+						<version>${mavensource.version}</version>
 						<executions>
 							<execution>
 								<id>attach-sources</id>
@@ -209,7 +212,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.2.0</version>
+						<version>${mavenjavadoc.version}</version>
 						<configuration>
 							<sourcepath>target/generated-sources/delombok</sourcepath>
 						</configuration>
@@ -232,7 +235,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>3.2.7</version>
+						<version>3.2.8</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -246,7 +249,7 @@
 					<plugin>
 						<groupId>org.sonatype.plugins</groupId>
 						<artifactId>nexus-staging-maven-plugin</artifactId>
-						<version>1.6.8</version>
+						<version>1.7.0</version>
 						<extensions>true</extensions>
 						<configuration>
 							<serverId>ossrh</serverId>
