@@ -15,10 +15,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class Walker<Node, Visitor> {
+public class Walker<Node, Visitor> implements IWalker<Node, Visitor> {
 	@Getter(AccessLevel.PUBLIC)
 	protected final IFunction1<Node, IWalkNodeAccessor<Node, Visitor>> accessorFunction;
 
+	@Override
 	public void walk(Node root, Visitor visitor) {
 		final Stack<Node> stack = new Stack<>();
 		final LinkedList<Step<Node>> queue = new LinkedList<>();
@@ -29,7 +30,12 @@ public class Walker<Node, Visitor> {
 			final boolean isPre = StepType.Pre.equals(currentStep.getType());
 			if (!isPre && (stack.pop() != currentStep.getNode())) throw new IllegalStateException("Post step node did not match top of stack!");
 
-			final IWalkNodeAccessor<Node, Visitor> accessor = getAccessorFunction().apply(currentStep.getNode());
+			final IWalkNodeAccessor<Node, Visitor> accessor;
+			try {
+				accessor = getAccessorFunction().apply(currentStep.getNode());
+			} catch (Throwable throwable) {
+				throw new NoWalkNodeAccessorException(currentStep.getNode(), null, throwable);
+			}
 			final ISupplier<List<? extends Node>> context = () -> Collections.unmodifiableList(stack);
 			final VisitResult visitResult;
 			switch (currentStep.getType()) {
