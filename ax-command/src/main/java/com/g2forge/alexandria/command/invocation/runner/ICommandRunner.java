@@ -42,5 +42,5 @@ public interface ICommandRunner {
 		}
 	}
 
-	public <I, O> CommandInvocation<I, O> wrap(CommandInvocation<I, O> invocation);
+	public <A, I, O> CommandInvocation<A, I, O> wrap(CommandInvocation<A, I, O> invocation);
 }

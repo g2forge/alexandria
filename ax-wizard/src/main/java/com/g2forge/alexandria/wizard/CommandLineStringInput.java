@@ -13,14 +13,14 @@ import lombok.Getter;
 @EqualsAndHashCode(callSuper = false)
 @Getter
 public class CommandLineStringInput extends AInput<String> {
-	protected final CommandInvocation<InputStream, PrintStream> invocation;
+	protected final CommandInvocation<?, InputStream, PrintStream> invocation;
 
 	protected final int index;
 
 	@Override
 	public String get() {
 		if (isEmpty()) { throw new InputUnspecifiedException("There were too few command line arguments!"); }
-		return getInvocation().getArguments().get(getIndex());
+		return getInvocation().getArgumentAsString(getIndex());
 	}
 
 	@Override

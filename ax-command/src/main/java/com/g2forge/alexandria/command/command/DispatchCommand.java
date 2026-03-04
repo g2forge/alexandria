@@ -84,7 +84,7 @@ public class DispatchCommand implements IStandardCommand {
 	}
 
 	@Override
-	public IExit invoke(CommandInvocation<InputStream, PrintStream> invocation) throws Throwable {
+	public IExit invoke(CommandInvocation<String, InputStream, PrintStream> invocation) throws Throwable {
 		final List<String> arguments = invocation.getArguments();
 		if (arguments.size() < 1) {
 			invocation.getIo().getStandardError().println(String.format("No sub-command (or any arguments) were specified, known sub commands are: %1$s!", getKnownSubCommands()));
@@ -98,7 +98,7 @@ public class DispatchCommand implements IStandardCommand {
 			return IStandardCommand.FAIL;
 		}
 
-		final CommandInvocation<InputStream, PrintStream> subinvocation = invocation.toBuilder().clearArguments().arguments(arguments.subList(1, arguments.size())).build();
+		final CommandInvocation<String, InputStream, PrintStream> subinvocation = invocation.toBuilder().clearArguments().arguments(arguments.subList(1, arguments.size())).build();
 		return subcommand.invoke(subinvocation);
 	}
 

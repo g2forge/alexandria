@@ -16,7 +16,7 @@ import lombok.experimental.UtilityClass;
 @Helpers
 @UtilityClass
 public class HProcess {
-	public static ProcessBuilder createProcessBuilder(CommandInvocation<ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocation) {
+	public static ProcessBuilder createProcessBuilder(CommandInvocation<String, ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocation) {
 		final ProcessBuilder builder = new ProcessBuilder();
 		working(builder, invocation);
 		arguments(builder, invocation);
@@ -25,7 +25,7 @@ public class HProcess {
 		return builder;
 	}
 
-	protected static void environment(final ProcessBuilder builder, CommandInvocation<ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocation) {
+	protected static void environment(final ProcessBuilder builder, CommandInvocation<String, ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocation) {
 		final IEnvironment environment = invocation.getEnvironment();
 		if (environment == null) return;
 		if (environment instanceof SystemEnvironment) return;
@@ -35,11 +35,11 @@ public class HProcess {
 		map.putAll(environment.toMap());
 	}
 
-	public static void working(final ProcessBuilder builder, CommandInvocation<ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocation) {
+	public static void working(final ProcessBuilder builder, CommandInvocation<String, ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocation) {
 		if (invocation.getWorking() != null) builder.directory(invocation.getWorking().toFile());
 	}
 
-	public static void redirects(final ProcessBuilder builder, CommandInvocation<ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocation) {
+	public static void redirects(final ProcessBuilder builder, CommandInvocation<String, ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocation) {
 		final IStandardIO<ProcessBuilder.Redirect, ProcessBuilder.Redirect> redirects = invocation.getIo();
 		if (redirects != null) {
 			final ProcessBuilder.Redirect standardInput = redirects.getStandardInput();
@@ -51,7 +51,7 @@ public class HProcess {
 		}
 	}
 
-	public static void arguments(final ProcessBuilder builder, CommandInvocation<ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocation) {
+	public static void arguments(final ProcessBuilder builder, CommandInvocation<String, ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocation) {
 		final ICommandLineBuilder commandLineBuilder = HCommandLineBuilder.getCommandLineBuilder();
 		final List<String> line = commandLineBuilder.build(invocation.getFormat(), invocation.getArguments());
 		builder.command(line);

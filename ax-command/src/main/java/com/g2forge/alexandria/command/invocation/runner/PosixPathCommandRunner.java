@@ -22,7 +22,7 @@ public class PosixPathCommandRunner implements ICommandRunner, ISingleton {
 	private PosixPathCommandRunner() {}
 
 	@Override
-	public <I, O> CommandInvocation<I, O> wrap(CommandInvocation<I, O> invocation) {
+	public <A, I, O> CommandInvocation<A, I, O> wrap(CommandInvocation<A, I, O> invocation) {
 		final String pathAsString = invocation.getEnvironment().apply(HPlatform.PATH);
 		// If the invocation PATH and system PATH are the same, then we can delegate to the underlying JVM code
 		if (Objects.equals(SystemEnvironment.create().apply(HPlatform.PATH), pathAsString)) return invocation;
@@ -31,10 +31,10 @@ public class PosixPathCommandRunner implements ICommandRunner, ISingleton {
 		// We have to do this here because the JVM doesn't allow us to do this down at the process builder level
 		final String[] pathAsArray = HPlatform.getPlatform().getPathSpec().splitPaths(pathAsString);
 		for (String directory : pathAsArray) {
-			final Path resolved = Paths.get(directory).resolve(invocation.getArguments().get(0));
+			final Path resolved = Paths.get(directory).resolve(invocation.getArgumentAsString(0));
 			if (Files.exists(resolved) && Files.isExecutable(resolved)) {
-				final List<String> arguments = new ArrayList<>(invocation.getArguments());
-				arguments.set(0, resolved.toString());
+				final List<A> arguments = new ArrayList<>(invocation.getArguments());
+				arguments.set(0, invocation.getType().create(resolved.toString()));
 				return invocation.toBuilder().clearArguments().arguments(arguments).build();
 			}
 		}

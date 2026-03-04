@@ -9,7 +9,7 @@ import com.g2forge.alexandria.java.function.IFunction1;
 
 @FunctionalInterface
 public interface IConstructorCommand extends IStructuredCommand {
-	public static void main(String[] args, IFunction1<? super CommandInvocation<InputStream, PrintStream>, ? extends IConstructorCommand> factory) throws Throwable {
+	public static void main(String[] args, IFunction1<? super CommandInvocation<String, InputStream, PrintStream>, ? extends IConstructorCommand> factory) throws Throwable {
 		IStandardCommand.main(args, IStandardCommand.of(factory));
 	}
 
