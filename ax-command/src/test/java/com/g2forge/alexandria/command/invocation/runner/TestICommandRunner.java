@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import com.g2forge.alexandria.command.clireport.HCLIReport;
 import com.g2forge.alexandria.command.invocation.CommandInvocation;
+import com.g2forge.alexandria.command.invocation.StringCommandArgumentType;
 import com.g2forge.alexandria.command.invocation.environment.SystemEnvironment;
 import com.g2forge.alexandria.command.invocation.format.ICommandFormat;
 import com.g2forge.alexandria.command.process.HProcess;
@@ -96,6 +97,7 @@ public class TestICommandRunner {
 	protected void test(String... arguments) throws IOException, InterruptedException {
 		final CommandInvocation.CommandInvocationBuilder<String, ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocationBuilder = CommandInvocation.builder();
 		invocationBuilder.format(ICommandFormat.getDefault());
+		invocationBuilder.type(StringCommandArgumentType.create());
 		invocationBuilder.argument(HPlatform.getPlatform().getCategory().convertExecutablePathToString(getCliReport()));
 		invocationBuilder.arguments(HCollection.asList(arguments));
 		invocationBuilder.io(new StandardIO<>(ProcessBuilder.Redirect.INHERIT, ProcessBuilder.Redirect.PIPE, ProcessBuilder.Redirect.DISCARD));
