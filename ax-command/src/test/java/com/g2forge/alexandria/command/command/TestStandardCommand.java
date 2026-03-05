@@ -18,7 +18,7 @@ import com.g2forge.alexandria.java.io.HTextIO;
 public class TestStandardCommand {
 	public static class Cat implements IStandardCommand {
 		@Override
-		public IExit invoke(CommandInvocation<String, InputStream, PrintStream> invocation) throws Throwable {
+		public IExit invoke(CommandInvocation<?, InputStream, PrintStream> invocation) throws Throwable {
 			final IStandardIO<InputStream, PrintStream> io = invocation.getIo();
 			final InputStream input = io.getStandardInput();
 			final PrintStream output = io.getStandardOutput();
@@ -35,7 +35,7 @@ public class TestStandardCommand {
 
 	public static class Echo implements IStandardCommand {
 		@Override
-		public IExit invoke(CommandInvocation<String, InputStream, PrintStream> invocation) throws Throwable {
+		public IExit invoke(CommandInvocation<?, InputStream, PrintStream> invocation) throws Throwable {
 			final PrintStream output = invocation.getIo().getStandardOutput();
 			invocation.getArguments().forEach(output::print);
 			return IStandardCommand.SUCCESS;
@@ -44,7 +44,7 @@ public class TestStandardCommand {
 
 	public static class EnvVar implements IStandardCommand {
 		@Override
-		public IExit invoke(CommandInvocation<String, InputStream, PrintStream> invocation) throws Throwable {
+		public IExit invoke(CommandInvocation<?, InputStream, PrintStream> invocation) throws Throwable {
 			final PrintStream output = invocation.getIo().getStandardOutput();
 			output.print(invocation.getEnvironment().apply(getClass().getSimpleName()));
 			return IStandardCommand.SUCCESS;

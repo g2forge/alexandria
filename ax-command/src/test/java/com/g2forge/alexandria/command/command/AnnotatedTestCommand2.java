@@ -12,7 +12,7 @@ import com.g2forge.alexandria.command.invocation.CommandInvocation;
 @Service(IAnnotatedTestCommand.class)
 public class AnnotatedTestCommand2 implements IAnnotatedTestCommand {
 	@Override
-	public IExit invoke(CommandInvocation<String, InputStream, PrintStream> invocation) throws Throwable {
+	public IExit invoke(CommandInvocation<?, InputStream, PrintStream> invocation) throws Throwable {
 		return new Exit(2);
 	}
 }

@@ -16,14 +16,28 @@ import com.g2forge.alexandria.java.function.builder.IBuilder;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Singular;
+import lombok.ToString;
 
 @Data
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
 public class CommandInvocation<A, I, O> {
 	public static class CommandInvocationBuilder<A, I, O> implements IBuilder<CommandInvocation<A, I, O>> {}
+
+	public static CommandInvocation<String, InputStream, PrintStream> createFromArgumentsOnly(List<String> args) {
+		final CommandInvocation.CommandInvocationBuilder<String, InputStream, PrintStream> retVal = CommandInvocation.builder();
+		retVal.type(StringCommandArgumentType.create());
+		retVal.arguments(args);
+		return retVal.build();
+	}
+
+	public static CommandInvocation<String, InputStream, PrintStream> createFromArgumentsOnly(String... args) {
+		return createFromArgumentsOnly(HCollection.asList(args));
+	}
 
 	public static CommandInvocation<String, InputStream, PrintStream> of(String... args) {
 		final CommandInvocation.CommandInvocationBuilder<String, InputStream, PrintStream> retVal = CommandInvocation.builder();
@@ -49,20 +63,12 @@ public class CommandInvocation<A, I, O> {
 
 	protected final IEnvironment environment;
 
-	public Path getArgumentAsPath(int index) {
-		final String string = getArgumentAsString(index);
-		if (string == null) return null;
+	@Getter(lazy = true)
+	@ToString.Exclude
+	@EqualsAndHashCode.Exclude
+	private final List<CommandArgument<A>> argumentsAsArguments = computeArgumentsAsArguments();
 
-		final Path path = Paths.get(string);
-		if (path.isAbsolute()) return path;
-		final Path working = getWorking();
-		if (working == null) return path;
-		return working.resolve(path);
-	}
-
-	public String getArgumentAsString(int index) {
-		final A argument = getArguments().get(index);
-		if (argument == null) return null;
-		return getType().get(argument);
+	protected List<CommandArgument<A>> computeArgumentsAsArguments() {
+		return getArguments().stream().map(a -> new CommandArgument<>(getType(), getWorking(), a)).toList();
 	}
 }

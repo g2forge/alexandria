@@ -31,7 +31,7 @@ public class PosixPathCommandRunner implements ICommandRunner, ISingleton {
 		// We have to do this here because the JVM doesn't allow us to do this down at the process builder level
 		final String[] pathAsArray = HPlatform.getPlatform().getPathSpec().splitPaths(pathAsString);
 		for (String directory : pathAsArray) {
-			final Path resolved = Paths.get(directory).resolve(invocation.getArgumentAsString(0));
+			final Path resolved = Paths.get(directory).resolve(invocation.getArgumentsAsArguments().get(0).getString());
 			if (Files.exists(resolved) && Files.isExecutable(resolved)) {
 				final List<A> arguments = new ArrayList<>(invocation.getArguments());
 				arguments.set(0, invocation.getType().create(resolved.toString()));

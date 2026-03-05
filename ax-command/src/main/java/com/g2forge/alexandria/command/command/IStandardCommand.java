@@ -92,16 +92,24 @@ public interface IStandardCommand extends IStructuredCommand {
 	IExit FAIL = new Exit(ICommand.FAIL);
 
 	public static void main(String[] args, IStandardCommand command) throws Throwable {
-		final CommandInvocation<String, InputStream, PrintStream> invocation = CommandInvocation.of(args);
+		final CommandInvocation<?, InputStream, PrintStream> invocation = CommandInvocation.of(args);
 		final IExit exit = command.invoke(invocation);
 		System.exit(exit.getCode());
 	}
 
-	public static IStandardCommand of(IFunction1<? super CommandInvocation<String, InputStream, PrintStream>, ? extends IConstructorCommand> factory) {
+	public static IStandardCommand of(IFunction1<? super CommandInvocation<?, InputStream, PrintStream>, ? extends IConstructorCommand> factory) {
 		return invocation -> factory.apply(invocation).invoke();
 	}
 
-	public IExit invoke(CommandInvocation<String, InputStream, PrintStream> invocation) throws Throwable;
+	/**
+	 * Invoke this command and get the exit value.
+	 * 
+	 * @param invocation The command invocation. Note that the argument type is {@code ?} rather than using a method-level generic in order to allow
+	 *            {@link IStandardCommand} to be a functional interface.
+	 * @return The exit value.
+	 * @throws Throwable Any throwable.
+	 */
+	public IExit invoke(CommandInvocation<?, InputStream, PrintStream> invocation) throws Throwable;
 
 	public default TestResult test() throws Throwable {
 		return tester().invoke();

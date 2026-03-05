@@ -20,7 +20,7 @@ public class CommandLineStringInput extends AInput<String> {
 	@Override
 	public String get() {
 		if (isEmpty()) { throw new InputUnspecifiedException("There were too few command line arguments!"); }
-		return getInvocation().getArgumentAsString(getIndex());
+		return getInvocation().getArgumentsAsArguments().get(getIndex()).getString();
 	}
 
 	@Override
