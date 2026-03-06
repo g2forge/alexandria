@@ -12,6 +12,7 @@ import java.util.List;
 import com.g2forge.alexandria.command.exit.Exit;
 import com.g2forge.alexandria.command.exit.IExit;
 import com.g2forge.alexandria.command.invocation.CommandInvocation;
+import com.g2forge.alexandria.command.invocation.StringCommandArgumentType;
 import com.g2forge.alexandria.command.invocation.environment.IEnvironment;
 import com.g2forge.alexandria.command.invocation.environment.SystemEnvironment;
 import com.g2forge.alexandria.command.invocation.format.ICommandFormat;
@@ -59,7 +60,7 @@ public interface IStandardCommand extends IStructuredCommand {
 			final ByteArrayOutputStream standardOutput = new ByteArrayOutputStream();
 			final ByteArrayOutputStream standardError = new ByteArrayOutputStream();
 			final StandardIO<InputStream, PrintStream> io = new StandardIO<>(getStandardInput(), new PrintStream(standardOutput), new PrintStream(standardError));
-			final CommandInvocation<InputStream, PrintStream> invocation = new CommandInvocation<>(ICommandFormat.getDefault(), arguments, io, getWorking(), getEnvironment());
+			final CommandInvocation<String, InputStream, PrintStream> invocation = new CommandInvocation<>(ICommandFormat.getDefault(), StringCommandArgumentType.create(), arguments, io, getWorking(), getEnvironment());
 			final IExit exit = getCommand().invoke(invocation);
 			return new TestResult(exit, new ByteArrayInputStream(standardOutput.toByteArray()), new ByteArrayInputStream(standardError.toByteArray()));
 		}
@@ -91,16 +92,24 @@ public interface IStandardCommand extends IStructuredCommand {
 	IExit FAIL = new Exit(ICommand.FAIL);
 
 	public static void main(String[] args, IStandardCommand command) throws Throwable {
-		final CommandInvocation<InputStream, PrintStream> invocation = CommandInvocation.of(args);
+		final CommandInvocation<?, InputStream, PrintStream> invocation = CommandInvocation.of(args);
 		final IExit exit = command.invoke(invocation);
 		System.exit(exit.getCode());
 	}
 
-	public static IStandardCommand of(IFunction1<? super CommandInvocation<InputStream, PrintStream>, ? extends IConstructorCommand> factory) {
+	public static IStandardCommand of(IFunction1<? super CommandInvocation<?, InputStream, PrintStream>, ? extends IConstructorCommand> factory) {
 		return invocation -> factory.apply(invocation).invoke();
 	}
 
-	public IExit invoke(CommandInvocation<InputStream, PrintStream> invocation) throws Throwable;
+	/**
+	 * Invoke this command and get the exit value.
+	 * 
+	 * @param invocation The command invocation. Note that the argument type is {@code ?} rather than using a method-level generic in order to allow
+	 *            {@link IStandardCommand} to be a functional interface.
+	 * @return The exit value.
+	 * @throws Throwable Any throwable.
+	 */
+	public IExit invoke(CommandInvocation<?, InputStream, PrintStream> invocation) throws Throwable;
 
 	public default TestResult test() throws Throwable {
 		return tester().invoke();

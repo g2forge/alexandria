@@ -12,24 +12,24 @@ public class TestCommandInvocation {
 	@Test
 	public void getArgumentAsPathAbsolute() {
 		final Path absolutePath = CommandInvocation.of().getWorking().toAbsolutePath();
-		HAssert.assertEquals(absolutePath, new CommandInvocation<>(null, HCollection.asList(absolutePath.toString()), null, null, null).getArgumentAsPath(0));
+		HAssert.assertEquals(absolutePath, new CommandInvocation<>(null, StringCommandArgumentType.create(), HCollection.asList(absolutePath.toString()), null, null, null).getArgumentsAsArguments().get(0).getPath());
 	}
 
 	@Test
 	public void getArgumentAsPathNull() {
-		HAssert.assertNull(new CommandInvocation<>(null, HCollection.asList((String) null), null, null, null).getArgumentAsPath(0));
+		HAssert.assertNull(new CommandInvocation<>(null, StringCommandArgumentType.create(), HCollection.asList((String) null), null, null, null).getArgumentsAsArguments().get(0).getPath());
 	}
 
 	@Test
 	public void getArgumentAsPathRelative() {
 		final Path relativePath = CommandInvocation.of().getWorking();
-		HAssert.assertEquals(relativePath, new CommandInvocation<>(null, HCollection.asList(relativePath.toString()), null, null, null).getArgumentAsPath(0));
+		HAssert.assertEquals(relativePath, new CommandInvocation<>(null, StringCommandArgumentType.create(), HCollection.asList(relativePath.toString()), null, null, null).getArgumentsAsArguments().get(0).getPath());
 	}
 
 	@Test
 	public void getArgumentAsPathWorkingRelative() {
 		final Path relativePath = Paths.get("relative");
 		final Path working = CommandInvocation.of().getWorking();
-		HAssert.assertEquals(working.resolve(relativePath), new CommandInvocation<>(null, HCollection.asList(relativePath.toString()), null, working, null).getArgumentAsPath(0));
+		HAssert.assertEquals(working.resolve(relativePath), new CommandInvocation<>(null, StringCommandArgumentType.create(), HCollection.asList(relativePath.toString()), null, working, null).getArgumentsAsArguments().get(0).getPath());
 	}
 }

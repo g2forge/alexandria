@@ -21,7 +21,7 @@ public class TestDispatchCommand {
 		protected final String name;
 
 		@Override
-		public IExit invoke(CommandInvocation<InputStream, PrintStream> invocation) throws Throwable {
+		public IExit invoke(CommandInvocation<?, InputStream, PrintStream> invocation) throws Throwable {
 			return IStandardCommand.SUCCESS;
 		}
 	}

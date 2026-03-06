@@ -84,22 +84,25 @@ public class DispatchCommand implements IStandardCommand {
 	}
 
 	@Override
-	public IExit invoke(CommandInvocation<InputStream, PrintStream> invocation) throws Throwable {
-		final List<String> arguments = invocation.getArguments();
-		if (arguments.size() < 1) {
+	public IExit invoke(CommandInvocation<?, InputStream, PrintStream> invocation) throws Throwable {
+		if (invocation.getArguments().size() < 1) {
 			invocation.getIo().getStandardError().println(String.format("No sub-command (or any arguments) were specified, known sub commands are: %1$s!", getKnownSubCommands()));
 			return IStandardCommand.FAIL;
 		}
 
-		final String name = arguments.get(0);
+		final String name = invocation.getArgumentsAsArguments().get(0).getString();
 		final IStandardCommand subcommand = getCommands().get(name);
 		if (subcommand == null) {
 			invocation.getIo().getStandardError().println(String.format("Unrecognized sub-command \"%1$s\", known sub commands are: %2$s!", name, getCommands().keySet().stream().map(s -> '"' + s + '"').collect(HCollector.joiningHuman())));
 			return IStandardCommand.FAIL;
 		}
 
-		final CommandInvocation<InputStream, PrintStream> subinvocation = invocation.toBuilder().clearArguments().arguments(arguments.subList(1, arguments.size())).build();
-		return subcommand.invoke(subinvocation);
+		return subcommand.invoke(createSubinvocation(invocation));
+	}
+
+	protected static <A> CommandInvocation<A, InputStream, PrintStream> createSubinvocation(CommandInvocation<A, InputStream, PrintStream> invocation) {
+		final List<A> arguments = invocation.getArguments();
+		return invocation.toBuilder().clearArguments().arguments(arguments.subList(1, arguments.size())).build();
 	}
 
 }

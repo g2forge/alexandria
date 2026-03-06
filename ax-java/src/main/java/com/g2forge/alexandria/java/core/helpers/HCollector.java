@@ -18,7 +18,6 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import com.g2forge.alexandria.java.adt.tuple.ITuple2G_;
-import com.g2forge.alexandria.java.adt.tuple.implementations.Tuple2G_O;
 import com.g2forge.alexandria.java.core.marker.Helpers;
 import com.g2forge.alexandria.java.fluent.optional.IOptional;
 import com.g2forge.alexandria.java.fluent.optional.NullableOptional;
@@ -299,7 +298,7 @@ public class HCollector {
 		return Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, mergeFail(), () -> new LinkedHashMap<>());
 	}
 
-	public static <K, V> Collector<Tuple2G_O<K, V>, ?, Map<K, V>> toMapTuples() {
+	public static <K, V> Collector<ITuple2G_<K, V>, ?, Map<K, V>> toMapTuples() {
 		return Collectors.toMap(ITuple2G_::get0, ITuple2G_::get1, mergeFail(), () -> new LinkedHashMap<>());
 	}
 

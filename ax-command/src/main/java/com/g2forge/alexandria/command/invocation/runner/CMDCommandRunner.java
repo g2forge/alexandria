@@ -22,10 +22,10 @@ public class CMDCommandRunner extends AShellCommandRunner {
 	private final Shell shell;
 
 	@Override
-	public <I, O> CommandInvocation<I, O> wrap(CommandInvocation<I, O> invocation) {
-		final List<? extends String> shellArguments = getShellArguments();
-		final List<String> retVal = new ArrayList<>(1 + shellArguments.size() + invocation.getArguments().size());
-		retVal.add(getShellExecutable());
+	public <A, I, O> CommandInvocation<A, I, O> wrap(CommandInvocation<A, I, O> invocation) {
+		final List<? extends A> shellArguments = getShellArguments().stream().map(invocation.getType()::create).toList();
+		final List<A> retVal = new ArrayList<>(1 + shellArguments.size() + invocation.getArguments().size());
+		retVal.add(invocation.getType().create(getShellExecutable()));
 		retVal.addAll(shellArguments);
 		retVal.addAll(invocation.getArguments());
 		final ICommandFormat format = CMDCommandRunner.getPassthrough() ? PassthroughCommandFormat.create() : NotExpressableCommandFormat.create();
