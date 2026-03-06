@@ -3,6 +3,7 @@ package com.g2forge.alexandria.command.process;
 import java.util.List;
 import java.util.Map;
 
+import com.g2forge.alexandria.command.invocation.CommandArgument;
 import com.g2forge.alexandria.command.invocation.CommandInvocation;
 import com.g2forge.alexandria.command.invocation.environment.IEnvironment;
 import com.g2forge.alexandria.command.invocation.environment.SystemEnvironment;
@@ -16,7 +17,14 @@ import lombok.experimental.UtilityClass;
 @Helpers
 @UtilityClass
 public class HProcess {
-	public static ProcessBuilder createProcessBuilder(CommandInvocation<String, ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocation) {
+	public static void arguments(final ProcessBuilder builder, CommandInvocation<?, ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocation) {
+		final ICommandLineBuilder commandLineBuilder = HCommandLineBuilder.getCommandLineBuilder();
+		final List<String> arguments = invocation.getArgumentsAsArguments().stream().map(CommandArgument::getString).toList();
+		final List<String> line = commandLineBuilder.build(invocation.getFormat(), arguments);
+		builder.command(line);
+	}
+
+	public static ProcessBuilder createProcessBuilder(CommandInvocation<?, ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocation) {
 		final ProcessBuilder builder = new ProcessBuilder();
 		working(builder, invocation);
 		arguments(builder, invocation);
@@ -25,7 +33,7 @@ public class HProcess {
 		return builder;
 	}
 
-	protected static void environment(final ProcessBuilder builder, CommandInvocation<String, ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocation) {
+	protected static void environment(final ProcessBuilder builder, CommandInvocation<?, ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocation) {
 		final IEnvironment environment = invocation.getEnvironment();
 		if (environment == null) return;
 		if (environment instanceof SystemEnvironment) return;
@@ -35,11 +43,7 @@ public class HProcess {
 		map.putAll(environment.toMap());
 	}
 
-	public static void working(final ProcessBuilder builder, CommandInvocation<String, ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocation) {
-		if (invocation.getWorking() != null) builder.directory(invocation.getWorking().toFile());
-	}
-
-	public static void redirects(final ProcessBuilder builder, CommandInvocation<String, ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocation) {
+	public static void redirects(final ProcessBuilder builder, CommandInvocation<?, ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocation) {
 		final IStandardIO<ProcessBuilder.Redirect, ProcessBuilder.Redirect> redirects = invocation.getIo();
 		if (redirects != null) {
 			final ProcessBuilder.Redirect standardInput = redirects.getStandardInput();
@@ -51,9 +55,7 @@ public class HProcess {
 		}
 	}
 
-	public static void arguments(final ProcessBuilder builder, CommandInvocation<String, ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocation) {
-		final ICommandLineBuilder commandLineBuilder = HCommandLineBuilder.getCommandLineBuilder();
-		final List<String> line = commandLineBuilder.build(invocation.getFormat(), invocation.getArguments());
-		builder.command(line);
+	public static void working(final ProcessBuilder builder, CommandInvocation<?, ProcessBuilder.Redirect, ProcessBuilder.Redirect> invocation) {
+		if (invocation.getWorking() != null) builder.directory(invocation.getWorking().toFile());
 	}
 }
