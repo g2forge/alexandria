@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import com.g2forge.alexandria.parse.IMatcher;
 import com.g2forge.alexandria.parse.NamedCharacterClass;
+import com.g2forge.alexandria.parse.QuanitifierVariant;
 import com.g2forge.alexandria.test.HAssert;
 
 public class TestBasicRegexMatcher {
@@ -19,6 +20,23 @@ public class TestBasicRegexMatcher {
 		final IMatcher<?, Regex> pattern = RegexMatcher.builder(RegexMatcher.Flag.CASE_INSENSITIVE).text("a").build();
 		HAssert.assertFalse(pattern.match("a").isEmpty());
 		HAssert.assertFalse(pattern.match("A").isEmpty());
+	}
+
+	@Test(timeout = 5000)
+	public void catastrophicBacktrackingAvoidedWithPossessive() {
+		// Build a pattern similar to one that would cause catastrophic backtracking without possessive quantifiers
+		// Pattern: text("X") group( charClass(-, _, space).starPossessive() charClass(a-z, A-Z, 0-9).plusPossessive() ).plus().opt()
+		final IMatcher<?, Regex> pattern = RegexMatcher.builder().text("X").group(g -> {
+			g.charClass(false, cc -> cc.character('-').character('_').named(NamedCharacterClass.Space)).star(QuanitifierVariant.POSSESSIVE);
+			g.charClass(false, cc -> cc.range('a', 'z').range('A', 'Z').range('0', '9')).plus(QuanitifierVariant.POSSESSIVE);
+		}).plus().opt().build();
+		final long preTime = System.currentTimeMillis();
+		// This should quickly return empty (no match) rather than hanging
+		HAssert.assertTrue(pattern.match("X-abc-def-ghi.jkl-mno").isEmpty());
+		// Make sure it finishes in 10ms or less.
+		// This is very generous to ensure swapping or concurrency doesn't lead to spurious failures during testing.
+		// Real backtracking would lead to an apparent hang, well well over 10ms.
+		HAssert.assertTrue(System.currentTimeMillis() - preTime < 10);
 	}
 
 	@Test
@@ -71,8 +89,23 @@ public class TestBasicRegexMatcher {
 	}
 
 	@Test
+	public void optPossessive() {
+		final IMatcher<?, Regex> pattern = RegexMatcher.builder().text("a").group(g -> g.text("b")).opt(QuanitifierVariant.POSSESSIVE).build();
+		HAssert.assertFalse(pattern.match("a").isEmpty());
+		HAssert.assertFalse(pattern.match("ab").isEmpty());
+	}
+
+	@Test
 	public void plus() {
 		final IMatcher<?, Regex> pattern = RegexMatcher.builder().text("a").text("b").plus().build();
+		HAssert.assertTrue(pattern.match("a").isEmpty());
+		HAssert.assertFalse(pattern.match("ab").isEmpty());
+		HAssert.assertFalse(pattern.match("abb").isEmpty());
+	}
+
+	@Test
+	public void plusPossessive() {
+		final IMatcher<?, Regex> pattern = RegexMatcher.builder().text("a").text("b").plus(QuanitifierVariant.POSSESSIVE).build();
 		HAssert.assertTrue(pattern.match("a").isEmpty());
 		HAssert.assertFalse(pattern.match("ab").isEmpty());
 		HAssert.assertFalse(pattern.match("abb").isEmpty());
@@ -107,6 +140,14 @@ public class TestBasicRegexMatcher {
 	@Test
 	public void star() {
 		final IMatcher<?, Regex> pattern = RegexMatcher.builder().text("a").text("b").star().build();
+		HAssert.assertFalse(pattern.match("a").isEmpty());
+		HAssert.assertFalse(pattern.match("ab").isEmpty());
+		HAssert.assertFalse(pattern.match("abb").isEmpty());
+	}
+
+	@Test
+	public void starPossessive() {
+		final IMatcher<?, Regex> pattern = RegexMatcher.builder().text("a").text("b").star(QuanitifierVariant.POSSESSIVE).build();
 		HAssert.assertFalse(pattern.match("a").isEmpty());
 		HAssert.assertFalse(pattern.match("ab").isEmpty());
 		HAssert.assertFalse(pattern.match("abb").isEmpty());

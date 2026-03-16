@@ -52,15 +52,27 @@ public interface IMatcherBuilder<Parsed, Pattern extends IPattern> {
 
 	public IMatcherBuilder<Parsed, Pattern> named(NamedCharacterClass named);
 
-	public IMatcherBuilder<Parsed, Pattern> opt();
+	public default IMatcherBuilder<Parsed, Pattern> opt() {
+		return opt(QuanitifierVariant.DEFAULT);
+	}
 
-	public IMatcherBuilder<Parsed, Pattern> plus();
+	public IMatcherBuilder<Parsed, Pattern> opt(QuanitifierVariant variant);
 
-	public IMatcherBuilder<Parsed, Pattern> repeat(int min, Integer max);
-	
+	public default IMatcherBuilder<Parsed, Pattern> plus() {
+		return plus(QuanitifierVariant.DEFAULT);
+	}
+
+	public IMatcherBuilder<Parsed, Pattern> plus(QuanitifierVariant variant);
+
 	public IMatcherBuilder<Parsed, Pattern> repeat(int repeat);
 
-	public IMatcherBuilder<Parsed, Pattern> star();
+	public IMatcherBuilder<Parsed, Pattern> repeat(int min, Integer max);
+
+	public default IMatcherBuilder<Parsed, Pattern> star() {
+		return star(QuanitifierVariant.DEFAULT);
+	}
+
+	public IMatcherBuilder<Parsed, Pattern> star(QuanitifierVariant variant);
 
 	public IMatcherBuilder<Parsed, Pattern> text(String text);
 

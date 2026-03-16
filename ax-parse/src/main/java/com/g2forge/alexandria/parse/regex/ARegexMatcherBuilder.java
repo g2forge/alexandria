@@ -4,11 +4,13 @@ import java.util.Collection;
 import java.util.regex.Pattern;
 
 import com.g2forge.alexandria.analysis.ISerializableFunction1;
+import com.g2forge.alexandria.java.core.enums.EnumException;
 import com.g2forge.alexandria.java.function.IConsumer1;
 import com.g2forge.alexandria.parse.ICharacterClassBuilder;
 import com.g2forge.alexandria.parse.IMatcher;
 import com.g2forge.alexandria.parse.IMatcherBuilder;
 import com.g2forge.alexandria.parse.NamedCharacterClass;
+import com.g2forge.alexandria.parse.QuanitifierVariant;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -135,8 +137,8 @@ abstract class ARegexMatcherBuilder<Parsed> implements IMatcherBuilder<Parsed, R
 	}
 
 	@Override
-	public IMatcherBuilder<Parsed, Regex> opt() {
-		return pattern("?");
+	public IMatcherBuilder<Parsed, Regex> opt(QuanitifierVariant variant) {
+		return quantifier("?", variant);
 	}
 
 	protected IMatcherBuilder<Parsed, Regex> pattern(final String string) {
@@ -146,8 +148,26 @@ abstract class ARegexMatcherBuilder<Parsed> implements IMatcherBuilder<Parsed, R
 	}
 
 	@Override
-	public IMatcherBuilder<Parsed, Regex> plus() {
-		return pattern("+");
+	public IMatcherBuilder<Parsed, Regex> plus(QuanitifierVariant variant) {
+		return quantifier("+", variant);
+	}
+
+	protected IMatcherBuilder<Parsed, Regex> quantifier(String quanitifier, QuanitifierVariant variant) {
+		final String variantString;
+		switch (variant) {
+			case GREEDY:
+				variantString = "";
+				break;
+			case RELUCTANT:
+				variantString = "?";
+				break;
+			case POSSESSIVE:
+				variantString = "+";
+				break;
+			default:
+				throw new EnumException(QuanitifierVariant.class, variant);
+		}
+		return pattern(quanitifier + variantString);
 	}
 
 	@Override
@@ -161,8 +181,8 @@ abstract class ARegexMatcherBuilder<Parsed> implements IMatcherBuilder<Parsed, R
 	}
 
 	@Override
-	public IMatcherBuilder<Parsed, Regex> star() {
-		return pattern("*");
+	public IMatcherBuilder<Parsed, Regex> star(QuanitifierVariant variant) {
+		return quantifier("*", variant);
 	}
 
 	@Override
