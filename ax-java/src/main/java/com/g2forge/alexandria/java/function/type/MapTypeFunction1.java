@@ -11,19 +11,17 @@ import lombok.ToString;
 public class MapTypeFunction1<T> implements ITypeFunction1<T> {
 	protected final Map<Class<?>, Object> map = new HashMap<>();
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <_T extends T> _T apply(final Class<_T> type) {
-		return (_T) map.get(type);
+		return type.cast(map.get(type));
 	}
 
 	public boolean containsType(Class<?> type) {
 		return map.containsKey(type);
 	}
 
-	@SuppressWarnings("unchecked")
 	public <_T extends T> _T put(final Class<_T> type, final _T value) {
-		return (_T) map.put(type, value);
+		return type.cast(map.put(type, value));
 	}
 
 	public void remove(Class<?> type) {

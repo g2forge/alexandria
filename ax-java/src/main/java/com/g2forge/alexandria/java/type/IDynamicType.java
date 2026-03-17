@@ -20,6 +20,8 @@ public interface IDynamicType<T> {
 		return Optional.of(cast(value));
 	}
 
+	public String getSimpleName();
+
 	@Note(type = NoteType.TODO, value = "All implementations of this method need to be implemented in a generic-safe manner")
 	public default boolean isAssignableFrom(IDynamicType<?> type) {
 		throw new NotYetImplementedError();

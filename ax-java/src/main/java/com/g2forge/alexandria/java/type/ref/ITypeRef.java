@@ -24,6 +24,11 @@ public interface ITypeRef<T> extends IDynamicType<T> {
 	@Getter
 	public static class ClassTypeRef<T> extends ATypeRefIdentity<T> {
 		protected final Class<T> type;
+
+		@Override
+		public String getSimpleName() {
+			return getType().getSimpleName();
+		}
 	}
 
 	/**
@@ -53,6 +58,12 @@ public interface ITypeRef<T> extends IDynamicType<T> {
 		@SuppressWarnings("unchecked")
 		final Class<T> klass = (Class<T>) type;
 		return klass;
+	}
+
+	@Note(type = NoteType.TODO, value = "Implement a recursive algorithm that computes simple types with generics? Or will the result be too complex?")
+	@Override
+	public default String getSimpleName() {
+		return getErasedType().getSimpleName();
 	}
 
 	/**
