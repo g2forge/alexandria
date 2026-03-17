@@ -24,6 +24,10 @@ import lombok.Singular;
 @RequiredArgsConstructor
 public class DispatchCommand implements IStandardCommand {
 	public interface IDispatchCommandBuilder extends IBuilder<DispatchCommand> {
+		public default IExit invoke(CommandInvocation<?, InputStream, PrintStream> invocation) throws Throwable {
+			return build().invoke(invocation);
+		}
+
 		public default void main(String[] args) throws Throwable {
 			IStandardCommand.main(args, build());
 		}
@@ -69,11 +73,15 @@ public class DispatchCommand implements IStandardCommand {
 		final HashMap<String, IStandardCommand> commands = new HashMap<>();
 		for (IStandardCommand command : DependencyNotLoadedError.tryWithModule(() -> new BasicServiceLoader<>(null, type, null, new DefaultInstantiator<>(type)).load(), "ax-service")) {
 			final Command annotation = command.getClass().getAnnotation(Command.class);
-			if (annotation == null) throw new IllegalArgumentException("Command with type " + command.getClass().getSimpleName() + " marked with service " + type.getSimpleName() + ", not not " + Command.class.getName() + " annotation");
-			final String name = annotation.value().isEmpty() ? command.getClass().getSimpleName() : annotation.value();
+			final String name = ((annotation == null) || annotation.value().isEmpty()) ? command.getClass().getSimpleName().toLowerCase() : annotation.value();
 			commands.put(name, command);
 		}
 		return new DispatchCommand(commands);
+	}
+
+	protected static <A> CommandInvocation<A, InputStream, PrintStream> createSubinvocation(CommandInvocation<A, InputStream, PrintStream> invocation) {
+		final List<A> arguments = invocation.getArguments();
+		return invocation.toBuilder().clearArguments().arguments(arguments.subList(1, arguments.size())).build();
 	}
 
 	@Singular
@@ -98,11 +106,6 @@ public class DispatchCommand implements IStandardCommand {
 		}
 
 		return subcommand.invoke(createSubinvocation(invocation));
-	}
-
-	protected static <A> CommandInvocation<A, InputStream, PrintStream> createSubinvocation(CommandInvocation<A, InputStream, PrintStream> invocation) {
-		final List<A> arguments = invocation.getArguments();
-		return invocation.toBuilder().clearArguments().arguments(arguments.subList(1, arguments.size())).build();
 	}
 
 }
