@@ -1,5 +1,8 @@
 package com.g2forge.alexandria.java.io;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -45,6 +48,21 @@ public class TextRangeSpecifier {
 		if ((startLine < 0) || (endLine < 0) || (startCharacter < 0) || (endCharacter < 0)) throw new IllegalArgumentException("All inputs must be >=0");
 		if (endLine < startLine) throw new IllegalArgumentException(String.format("Start line (%1$s) must be greater than or equal to end line (%2$s)", startLine, endLine));
 		if ((getStartLine() == getEndLine()) && (endCharacter <= startCharacter)) throw new IllegalArgumentException(String.format("Start character (%1$s) must be strictly less than end character (%2$s), because this is a one line range (line %3$s)", startCharacter, endCharacter, startLine));
+	}
+
+	public TextRangeSpecifier(String rangeString) {
+		final Pattern PATTERN = Pattern.compile("(?<startLine>\\d+)((:(?<startCharacter>\\d+))?\\s*to\\s*(?<endLine>\\d+)(:(?<endCharacter>\\d+))?)?");
+		final Matcher matcher = PATTERN.matcher(rangeString);
+		if (!matcher.matches()) throw new IllegalArgumentException();
+		this.startLine = Integer.valueOf(matcher.group("startLine"));
+
+		final String endLine = matcher.group("endLine");
+		this.endLine = (endLine == null) || endLine.isBlank() ? (this.startLine + 1) : Integer.valueOf(endLine);
+
+		final String startCharacter = matcher.group("startCharacter");
+		this.startCharacter = (startCharacter == null) || startCharacter.isBlank() ? 0 : Integer.valueOf(startCharacter);
+		final String endCharacter = matcher.group("endCharacter");
+		this.endCharacter = (endCharacter == null) || endCharacter.isBlank() ? 0 : Integer.valueOf(endCharacter);
 	}
 
 	public boolean isSingleLine() {
