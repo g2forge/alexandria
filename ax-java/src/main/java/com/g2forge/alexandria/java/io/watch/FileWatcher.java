@@ -12,6 +12,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -65,7 +66,9 @@ public class FileWatcher extends AThreadActor {
 	}
 
 	protected final Map<FileSystem, FileSystemContext> fileSystems = new IdentityHashMap<>();
-	
+
+	protected final AtomicBoolean fileSystemsChanged = new AtomicBoolean(false);
+
 	protected boolean started = false;
 
 	@Override
@@ -78,6 +81,7 @@ public class FileWatcher extends AThreadActor {
 		List<FileSystemContext> list;
 		synchronized (fileSystems) {
 			list = new ArrayList<>(fileSystems.values());
+			fileSystemsChanged.set(false);
 		}
 		int i = 0;
 		while (isOpen()) {
@@ -87,6 +91,7 @@ public class FileWatcher extends AThreadActor {
 						fileSystems.wait();
 					} catch (InterruptedException e) {}
 					list = new ArrayList<>(fileSystems.values());
+					fileSystemsChanged.set(false);
 				}
 			} else {
 				final FileSystemContext current = list.get(i);
@@ -111,8 +116,7 @@ public class FileWatcher extends AThreadActor {
 				// Look through all the events on the key
 				for (WatchEvent<?> event : key.pollEvents()) {
 					final WatchEvent.Kind<?> kind = event.kind();
-					if (StandardWatchEventKinds.OVERFLOW.equals(kind)) throw new UnsupportedOperationException(/* TODO */);
-					else if (StandardWatchEventKinds.ENTRY_CREATE.equals(kind) || StandardWatchEventKinds.ENTRY_MODIFY.equals(kind) || StandardWatchEventKinds.ENTRY_DELETE.equals(kind)) {
+					if (StandardWatchEventKinds.ENTRY_CREATE.equals(kind) || StandardWatchEventKinds.ENTRY_MODIFY.equals(kind) || StandardWatchEventKinds.ENTRY_DELETE.equals(kind)) {
 						@SuppressWarnings("unchecked")
 						final WatchEvent<Path> eventPath = (WatchEvent<Path>) event;
 
@@ -121,25 +125,27 @@ public class FileWatcher extends AThreadActor {
 
 						// Handle the event
 						value.getHandler().accept(eventPath, child);
-					}
-
+					} else throw new UnsupportedOperationException(String.format("Watch events of kind %1$s are not supported", kind));
 				}
 
 				// Reset the key, and remove it if it's not accessible any more
 				if (!key.reset()) {
 					synchronized (current.getKeys()) {
 						current.getKeys().remove(key);
-						synchronized (fileSystems) {
-							// If there are no more keys
-							if (current.getKeys().isEmpty()) {
+						// If there are no more keys
+						if (current.getKeys().isEmpty()) {
+							synchronized (fileSystems) {
 								fileSystems.remove(current.getFileSystem());
+								fileSystemsChanged.set(true);
 							}
 						}
 					}
 				}
 
-				synchronized (fileSystems) {
-					list = new ArrayList<>(fileSystems.values());
+				if (fileSystemsChanged.getAndSet(false)) {
+					synchronized (fileSystems) {
+						list = new ArrayList<>(fileSystems.values());
+					}
 				}
 				final int found = list.indexOf(current);
 				final int modulus = list.isEmpty() ? 1 : list.size();
@@ -159,6 +165,7 @@ public class FileWatcher extends AThreadActor {
 				}
 			});
 			final ICloseable retVal = context.watch(path, handler, kinds);
+			fileSystemsChanged.set(true);
 			fileSystems.notifyAll();
 			return retVal;
 		}
