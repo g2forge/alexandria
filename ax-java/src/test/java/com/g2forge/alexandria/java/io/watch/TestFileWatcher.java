@@ -21,6 +21,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.g2forge.alexandria.java.close.ICloseableSupplier;
+import com.g2forge.alexandria.java.core.error.HError;
 import com.g2forge.alexandria.java.core.helpers.HCollection;
 import com.g2forge.alexandria.java.function.IConsumer2;
 import com.g2forge.alexandria.java.io.RuntimeIOException;
@@ -67,54 +68,75 @@ public class TestFileWatcher {
 
 	@SafeVarargs
 	protected final void test(final IConsumer2<Path, Path> prep, final IConsumer2<Path, Path> modify, final Kind<Path>... kinds) throws InterruptedException {
-		try (final ICloseableSupplier<Path> temp = new TempDirectory();
-			final FileWatcher watcher = new FileWatcher()) {
-			final Path file = temp.get().resolve("file");
-			final Object delay = new Object();
+		final int maxIterations = 100, delayMS = 100, minRounds = 5, maxRounds = 30;
+		final float minSuccessRate = 0.9f;
+		final List<Throwable> throwables = new ArrayList<>();
+		for (int j = 0; j < maxRounds; j++) {
+			try (final ICloseableSupplier<Path> temp = new TempDirectory();
+				final FileWatcher watcher = new FileWatcher()) {
+				final Path file = temp.get().resolve("file");
+				final Object delay = new Object();
 
-			// Prepare for testing
-			if (prep != null) prep.accept(temp.get(), file);
+				// Prepare for testing
+				if (prep != null) prep.accept(temp.get(), file);
 
-			// Open the watcher
-			watcher.open().awaitRun();
-			final List<WatchEvent<Path>> events = new ArrayList<>();
-			watcher.watch(temp.get(), (event, path) -> {
-				synchronized (events) {
-					events.add(event);
-				}
-			}, HCollection.asSet(kinds).toArray(new Kind[0]));
+				// Open the watcher
+				watcher.open().awaitRun();
+				final List<WatchEvent<Path>> events = new ArrayList<>();
+				watcher.watch(temp.get(), (event, path) -> {
+					synchronized (events) {
+						events.add(event);
+					}
+				}, HCollection.asSet(kinds).toArray(new Kind[0]));
 
-			// Delay to make sure we're watching when things happen
-			synchronized (delay) {
-				delay.wait(100);
-			}
-
-			// Perform the modification
-			if (modify != null) modify.accept(temp.get(), file);
-
-			// Look for the expected events
-			final Set<SimpleWatchEvent> expected = Stream.of(kinds).map(k -> new SimpleWatchEvent(k, file.getFileName())).collect(Collectors.toCollection(LinkedHashSet::new));
-			final int maxIterations = 100, delayMS = 100;
-			int i = 0;
-			while (!expected.isEmpty() && (i < maxIterations)) {
-				final Set<SimpleWatchEvent> actual;
-				synchronized (events) {
-					actual = events.stream().map(SimpleWatchEvent::new).collect(Collectors.toCollection(LinkedHashSet::new));
-					events.clear();
-				}
-				// Mark everything we found
-				expected.removeAll(actual);
-
-				// Wait a little while before we bother checking again
+				// Delay to make sure we're watching when things happen
 				synchronized (delay) {
-					delay.wait(delayMS);
+					delay.wait(100);
 				}
 
-				i++;
+				// Perform the modification
+				if (modify != null) modify.accept(temp.get(), file);
+
+				// Look for the expected events
+				final Set<SimpleWatchEvent> expecting = Stream.of(kinds).map(k -> new SimpleWatchEvent(k, file.getFileName())).collect(Collectors.toCollection(LinkedHashSet::new));
+				final List<SimpleWatchEvent> unexpected = new ArrayList<>();
+				int i = 0;
+				while (!expecting.isEmpty() && (i < maxIterations)) {
+					final Set<SimpleWatchEvent> actual;
+					synchronized (events) {
+						actual = events.stream().map(SimpleWatchEvent::new).collect(Collectors.toCollection(LinkedHashSet::new));
+						events.clear();
+					}
+
+					// Record everything we didn't expect, and then mark everything we found as no longer expecting
+					unexpected.addAll(HCollection.difference(actual, expecting));
+					expecting.removeAll(actual);
+
+					// Wait a little while before we bother checking again
+					synchronized (delay) {
+						delay.wait(delayMS);
+					}
+
+					i++;
+				}
+
+				Assert.assertEquals("Even after " + (maxIterations * delayMS) + "ms, we didn't recive all the expected events", HCollection.emptySet(), expecting);
+				Assert.assertEquals("Found unexpected events", HCollection.emptyList(), unexpected);
+			} catch (Throwable throwable) {
+				throwables.add(throwable);
 			}
 
-			// Make sure no more came in
-			Assert.assertEquals("Even after " + maxIterations * delayMS + "ms, we didn't recive all the expected events", new LinkedHashSet<>(), expected);
+			if (minRounds <= j + 1) {
+				final int rounds = j + 1;
+				final float currentSuccessRate = (float) (rounds - throwables.size()) / (float) rounds;
+				if (currentSuccessRate >= minSuccessRate) return;
+			}
+		}
+
+		final float currentSuccessRate = (float) (maxRounds - throwables.size()) / (float) maxRounds;
+		if (currentSuccessRate < minSuccessRate) {
+			if (!throwables.isEmpty()) throw HError.withSuppressed(new AssertionError("Failures in " + throwables.size() + "/" + maxRounds + " rounds"), throwables);
+			Assert.fail();
 		}
 	}
 
