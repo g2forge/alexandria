@@ -256,6 +256,8 @@
 							<publishingServerId>central</publishingServerId>
 							<autoPublish>true</autoPublish>
 							<waitUntil>published</waitUntil>
+							<waitPollingInterval>30</waitPollingInterval>
+							<waitMaxTime>3600</waitMaxTime>
 						</configuration>
 					</plugin>
 				</plugins>
