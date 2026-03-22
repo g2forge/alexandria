@@ -39,15 +39,19 @@ public class CommandInvocation<A, I, O> {
 		return createFromArgumentsOnly(HCollection.asList(args));
 	}
 
-	public static CommandInvocation<String, InputStream, PrintStream> of(String... args) {
+	public static CommandInvocation<String, InputStream, PrintStream> of(Path working, String... args) {
 		final CommandInvocation.CommandInvocationBuilder<String, InputStream, PrintStream> retVal = CommandInvocation.builder();
 		retVal.format(ICommandFormat.getDefault());
 		retVal.type(StringCommandArgumentType.create());
 		retVal.arguments(HCollection.asList(args));
 		retVal.io(StandardIO.of());
-		retVal.working(Paths.get(System.getProperty("user.dir")));
+		retVal.working(working);
 		retVal.environment(SystemEnvironment.create());
 		return retVal.build();
+	}
+
+	public static CommandInvocation<String, InputStream, PrintStream> of(String... args) {
+		return of(Paths.get(System.getProperty("user.dir")), args);
 	}
 
 	protected final ICommandFormat format;
