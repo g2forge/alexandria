@@ -23,12 +23,8 @@ abstract class ANode<O, N extends ANode<O, N>> {
 		N root = null;
 		for (F function : functions) {
 			final N node = createNode.apply(function);
-			if (root == null) {
-				root = node;
-				continue;
-			}
-
-			if (root.isDescendant(node)) {
+			if (root == null) root = node;
+			else if (root.isDescendant(node)) {
 				// We're adding a new root above the existing one
 				node.getChildren().add(root);
 				root = node;
