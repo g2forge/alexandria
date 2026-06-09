@@ -25,20 +25,20 @@ public interface ICommandRunner {
 	}
 
 	public static ICommandRunner create(Shell shell) {
-		final Shell actualShell = (shell == null) ? HPlatform.getPlatform().getShell() : shell;
-		switch (actualShell.getCategory()) {
+		final Shell platformShell = (shell == null) ? HPlatform.getPlatform().getShell() : shell;
+		switch (platformShell.getCategory()) {
 			case Posix:
 				if (shell == null) return ICommandRunner.create();
-				return new PosixShellCommandRunner(actualShell);
+				return new PosixShellCommandRunner(platformShell);
 			case Microsoft:
-				switch (actualShell) {
+				switch (platformShell) {
 					case CMD:
-						return new CMDCommandRunner(actualShell);
+						return new CMDCommandRunner(platformShell);
 					default:
-						throw new EnumException(Shell.class, actualShell);
+						throw new EnumException(Shell.class, platformShell);
 				}
 			default:
-				throw new EnumException(PlatformCategory.class, actualShell.getCategory());
+				throw new EnumException(PlatformCategory.class, platformShell.getCategory());
 		}
 	}
 
